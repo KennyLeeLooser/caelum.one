@@ -58,6 +58,8 @@
   .card p { color: var(--text-soft); font-size: 15px; margin: 0 0 16px; }
   .card ul { color: var(--muted); font-size: 14px; padding-left: 18px; margin: 0 0 20px; }
   .card .more { margin-top: auto; font-size: 15px; }
+  .card p.small { color: var(--muted); font-size: 13px; margin-top: -8px; }
+  .card code { font-size: 12px; word-break: break-all; }
 
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .steps div b { color: var(--accent); font-size: 18px; display: block; margin-bottom: 4px; }
@@ -129,12 +131,13 @@
         <article class="card">
           <div class="tag"><i style="background:var(--info)"></i>Freeware</div>
           <h3>Caelum 3D-Viewer</h3>
-          <p>3D-Dateien ansehen und als Bild, PDF-Datenblatt oder GIF ausgeben – auch direkt aus Claude Code und Codex.</p>
+          <p>3D-Dateien ansehen und als Bild, PDF-Datenblatt oder GIF ausgeben – direkt im Chat von ChatGPT und Claude oder aus Claude Code und Codex.</p>
           <ul>
+            <li>Echte 3D-Ansicht im Chat: drehen, zoomen, Animationen, GIF</li>
             <li>GLB, glTF, OBJ, STL, 3MF, DXF; FBX, USDZ, BLEND über Blender</li>
             <li>360°-Drehung und Kamerafahrten ohne Abschneiden</li>
-            <li>Läuft ohne Grafikkarte und ohne Installation</li>
           </ul>
+          <p class="small">Ohne Installation: in ChatGPT oder claude.ai als Connector <code>https://api.caelum.one/viewer/mcp</code> hinzufügen (keine Anmeldung).</p>
           <a class="more" href="https://github.com/KennyLeeLooser/caelum-viewer-plugin">Herunterladen →</a>
         </article>
         <article class="card">
