@@ -1,0 +1,32 @@
+{
+  "downloads": [
+    {
+      "product": "Caelum 3D-Viewer",
+      "version": "1.3.0",
+      "date": "2026-11-17",
+      "page": "https://github.com/KennyLeeLooser/caelum-viewer-plugin/releases/tag/v1.3.0",
+      "files": [
+        {
+          "name": "CaelumViewer.exe",
+          "size": 23867964,
+          "url": "https://github.com/KennyLeeLooser/caelum-viewer-plugin/releases/download/v1.3.0/CaelumViewer.exe",
+          "sha256": "93c19ee17a2e9b22f5b6b6dcc47a1dafd0522de6faf7bf1c757e3c933ef6e2eb"
+        }
+      ]
+    },
+    {
+      "product": "Good Goose",
+      "version": "0.4.2",
+      "date": "2026-11-15",
+      "page": "https://github.com/KennyLeeLooser/good-goose-plugin/releases/tag/v0.4.2",
+      "files": [
+        {
+          "name": "GoodGoose-Windows-0.4.2.zip",
+          "size": 40483227,
+          "url": "https://github.com/KennyLeeLooser/good-goose-plugin/releases/download/v0.4.2/GoodGoose-Windows-0.4.2.zip",
+          "sha256": "6c147af958982344f4230ec005f6b7d54c4f5aea0daf9186ad5cb9f0da757cd4"
+        }
+      ]
+    }
+  ]
+}

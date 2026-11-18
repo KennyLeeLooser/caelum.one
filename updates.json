@@ -1,0 +1,53 @@
+{
+  "_hinweis": "Neueste zuerst. Neuer Eintrag = neues Objekt oben einfügen. status: release | vorschau | intern (intern wird nicht angezeigt).",
+  "updates": [
+    {
+      "date": "2026-11-18",
+      "product": "Caelum Gravur",
+      "version": "0.7.0",
+      "status": "vorschau",
+      "title": "Startbild, Umriss-Schrift und Abstände mit Schiebern",
+      "points": [
+        "Schrift gefüllt oder nur als Umriss, auch je Zeile, mit eigener SVG-Ebene",
+        "Abstände visuell mit Schiebern und Hilfslinien einstellen",
+        "Neues Programmsymbol"
+      ]
+    },
+    {
+      "date": "2026-11-18",
+      "product": "Caelum Gravur",
+      "version": "0.6.0",
+      "status": "vorschau",
+      "title": "Eigener Stil je Schild, Datentabelle und Bestellformular",
+      "points": [
+        "Änderungen gelten nur für die ausgewählten Schilder",
+        "Eigene Vorlagen speichern, Kategorien einklappbar",
+        "Druckfertiges Bestellformular mit Lieferant und Kunde"
+      ]
+    },
+    {
+      "date": "2026-11-17",
+      "product": "Caelum 3D-Viewer",
+      "version": "1.3.0",
+      "status": "release",
+      "title": "Echte 3D-Ansicht im Chat",
+      "points": [
+        "Modelle in ChatGPT und claude.ai drehen, zoomen und als GIF ausgeben",
+        "Connector-Adresse https://api.caelum.one/viewer/mcp"
+      ],
+      "link": "https://github.com/KennyLeeLooser/caelum-viewer-plugin/releases/tag/v1.3.0"
+    },
+    {
+      "date": "2026-11-15",
+      "product": "Good Goose",
+      "version": "0.4.2",
+      "status": "release",
+      "title": "Aktuelle Version für Windows",
+      "points": [
+        "Notizen, Aufgaben und Roadmaps aus dem Chat",
+        "Plugin für Claude Code und Codex"
+      ],
+      "link": "https://github.com/KennyLeeLooser/good-goose-plugin/releases/tag/v0.4.2"
+    }
+  ]
+}

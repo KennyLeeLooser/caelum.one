@@ -60,6 +60,23 @@
   .card .more { margin-top: auto; font-size: 15px; }
   .card p.small { color: var(--muted); font-size: 13px; margin-top: -8px; }
   .card code { font-size: 12px; word-break: break-all; }
+  .dl-file { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; font-size: 14px; }
+  .dl-file .size { color: var(--muted); margin-left: 6px; }
+  .dl-file code { display: block; color: var(--faint); margin-top: 4px; }
+
+  .cards.auto { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .card .tag.soon { color: var(--accent); }
+  .card .btn.off { background: var(--hover); color: var(--muted); cursor: default; align-self: flex-start; margin-top: auto; font-size: 14px; }
+  .updates { display: grid; gap: 16px; }
+  .upd { display: grid; grid-template-columns: 120px 1fr; gap: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; }
+  .upd time { color: var(--muted); font-size: 14px; }
+  .upd .ver { display: block; color: var(--text-soft); font-size: 13px; margin-top: 4px; }
+  .upd h3 { font-size: 17px; margin: 0 0 6px; font-weight: 600; }
+  .upd h3 small { display: block; color: var(--text-soft); font-weight: 400; font-size: 15px; margin-top: 2px; }
+  .upd ul { color: var(--muted); font-size: 14px; padding-left: 18px; margin: 0; }
+  .upd .badge { display: inline-block; font-size: 12px; font-weight: 400; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); margin-left: 8px; vertical-align: 2px; }
+  .upd .badge.release { color: var(--ok); border-color: var(--ok); }
+  .upd a { font-size: 14px; display: inline-block; margin-top: 8px; }
 
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .steps div b { color: var(--accent); font-size: 18px; display: block; margin-bottom: 4px; }
@@ -78,7 +95,8 @@
 
   @media (max-width: 860px) {
     .hero { padding: 56px 0 40px; }
-    .hero .wrap, .cards, .steps, .contact { grid-template-columns: 1fr; }
+    .hero .wrap, .cards, .steps, .contact, .upd { grid-template-columns: 1fr; }
+    .upd { gap: 8px; }
     .hero img { max-width: 200px; order: -1; justify-self: start; }
     nav { gap: 16px; font-size: 14px; }
     nav a.opt { display: none; }
@@ -94,6 +112,9 @@
     <a class="brand" href="#"><img src="assets/logo-linie-hell-128.png" alt=""><span>Caelum GmbH</span></a>
     <nav>
       <a href="#produkte">Produkte</a>
+      <a class="opt" href="#updates">Updates</a>
+      <a href="#portale">Kundenportale</a>
+      <a class="opt" href="#downloads">Downloads</a>
       <a class="opt" href="#arbeitsweise">Arbeitsweise</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
@@ -115,8 +136,8 @@
   <section id="produkte" class="alt">
     <div class="wrap">
       <h2>Produkte</h2>
-      <p class="hint">Drei eigenständige Programme für Windows, die zusammenpassen.</p>
-      <div class="cards">
+      <p class="hint">Eigenständige Programme für Windows, die zusammenpassen.</p>
+      <div class="cards auto">
         <article class="card">
           <div class="tag"><i style="background:var(--accent)"></i>Fusionssoftware</div>
           <h3>CAELUM Pandora</h3>
@@ -151,6 +172,66 @@
           </ul>
           <a class="more" href="https://github.com/KennyLeeLooser/good-goose-plugin">Herunterladen →</a>
         </article>
+        <article class="card">
+          <div class="tag"><i style="background:var(--muted)"></i>Freeware · Datenpunkt engineering AG</div>
+          <h3>Caelum Gravur</h3>
+          <p>Gravurschilder aus Excel oder direkt im Programm gestalten und als SVG für den Laser ausgeben – mit Material- und Bestellrechnung.</p>
+          <ul>
+            <li>Echte Materialfarben, Logo, QR-Code, laufende Nummern</li>
+            <li>SVG-Ebenen für Gravieren, Löcher und Kanten</li>
+            <li>Bestellformular und Montageverzeichnis</li>
+          </ul>
+          <p class="small">Freeware der Datenpunkt engineering AG, erstellt von Caelum GmbH.</p>
+          <a class="more" href="#portale">Zum Kundenportal →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="updates">
+    <div class="wrap">
+      <h2>Updates</h2>
+      <p class="hint">Was sich in unseren Programmen zuletzt geändert hat.</p>
+      <div class="updates" id="upd-list">
+        <div class="upd"><div></div><div><p style="margin:0;color:var(--muted)">Updates werden geladen …</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="portale" class="alt">
+    <div class="wrap">
+      <h2>Kundenportale</h2>
+      <p class="hint">Für Kunden, die direkt mit unseren Programmen bestellen oder arbeiten – im Browser, auf Handy, Tablet und PC.</p>
+      <div class="cards auto">
+        <article class="card">
+          <div class="tag soon"><i style="background:var(--accent)"></i>In Entwicklung</div>
+          <h3>Gravurschilder bestellen</h3>
+          <p>Bauleiter und Endkunden gestalten Schilder selbst auf der Baustelle und schicken den Auftrag direkt an uns.</p>
+          <ul>
+            <li>Anmeldung mit dem Baustellen-Code</li>
+            <li>Schilder in echten Materialfarben mit Massen</li>
+            <li>Montageort je Schild, Punkte im Stockwerksplan</li>
+            <li>Unverbindlicher Richtpreis, Offerte folgt</li>
+          </ul>
+          <span class="btn off">Bald unter www.caelum.one/gravur</span>
+        </article>
+        <article class="card">
+          <div class="tag"><i style="background:var(--info)"></i>Geplant</div>
+          <h3>Weitere Portale</h3>
+          <p>Zu jedem Programm, das wir entwickeln, kann ein eigenes Portal folgen – etwa für Lizenzen, Updates oder Aufträge.</p>
+          <p class="small">Ideen oder Bedarf? Schreib uns.</p>
+          <a class="more" href="#kontakt">Kontakt →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="downloads">
+    <div class="wrap">
+      <h2>Downloads</h2>
+      <p class="hint">Die neuesten Versionen, direkt von GitHub. Die Prüfsumme (SHA-256) zeigt, dass die Datei unverändert ist.</p>
+      <div class="cards" id="dl-list">
+        <article class="card"><p>Downloads werden geladen … Falls nichts erscheint: <a href="https://github.com/KennyLeeLooser/caelum-viewer-plugin/releases">3D-Viewer</a> · <a href="https://github.com/KennyLeeLooser/good-goose-plugin/releases">Good Goose</a></p></article>
       </div>
     </div>
   </section>
@@ -210,5 +291,47 @@
   </div>
 </footer>
 
+<script>
+// Downloads aus downloads.json (schreibt CAELUM Pandora aus den GitHub-Releases). Ohne Datei bleiben die Links oben stehen.
+(function () {
+  var list = document.getElementById('dl-list');
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function mb(n) { return n >= 1048576 ? (n / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+  function date(d) { if (!d) return ''; var p = d.split('-'); return p[2] + '.' + p[1] + '.' + p[0]; }
+  fetch('downloads.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (data) {
+    if (!data || !data.downloads || !data.downloads.length) return;
+    list.innerHTML = data.downloads.map(function (d) {
+      var files = (d.files || []).map(function (f) {
+        return '<div class="dl-file"><a href="' + esc(f.url) + '">' + esc(f.name) + '</a><span class="size">' + mb(f.size) + '</span>'
+          + (f.sha256 ? '<code>SHA-256 ' + esc(f.sha256) + '</code>' : '') + '</div>';
+      }).join('');
+      return '<article class="card"><div class="tag"><i style="background:var(--info)"></i>Version ' + esc(d.version) + ' · ' + esc(date(d.date)) + '</div>'
+        + '<h3>' + esc(d.product) + '</h3>' + (files || '<p>Noch keine Datei in diesem Release.</p>')
+        + '<a class="more" href="' + esc(d.page) + '">Versionshinweise →</a></article>';
+    }).join('');
+  }).catch(function () { /* Links oben bleiben stehen */ });
+})();
+</script>
+<script>
+// Updates aus updates.json (neueste zuerst; status "intern" wird nicht gezeigt).
+(function () {
+  var list = document.getElementById('upd-list');
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function date(d) { if (!d) return ''; var p = d.split('-'); return p[2] + '.' + p[1] + '.' + p[0]; }
+  function fail() { list.innerHTML = '<div class="upd"><div></div><div><p style="margin:0;color:var(--muted)">Die Updates lassen sich gerade nicht laden. Siehe <a href="#downloads">Downloads</a>.</p></div></div>'; }
+  fetch('updates.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (data) {
+    var items = ((data && data.updates) || []).filter(function (u) { return u.status !== 'intern'; });
+    if (!items.length) return fail();
+    list.innerHTML = items.slice(0, 8).map(function (u) {
+      var badge = u.status === 'release' ? '<span class="badge release">Release</span>' : '<span class="badge">Vorschau</span>';
+      var pts = (u.points || []).map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('');
+      return '<article class="upd"><div><time datetime="' + esc(u.date) + '">' + esc(date(u.date)) + '</time><span class="ver">Version ' + esc(u.version) + '</span></div>'
+        + '<div><h3>' + esc(u.product) + badge + '<small>' + esc(u.title) + '</small></h3>'
+        + (pts ? '<ul>' + pts + '</ul>' : '')
+        + (u.link ? '<a href="' + esc(u.link) + '">Versionshinweise →</a>' : '') + '</div></article>';
+    }).join('');
+  }).catch(fail);
+})();
+</script>
 </body>
 </html>
