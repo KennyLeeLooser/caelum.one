@@ -2,9 +2,10 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Caelum GmbH</title>
-<meta name="description" content="Caelum GmbH, Regensdorf: Software für Teams, die mit Unity, Blender, Claude und Codex arbeiten – CAELUM Pandora, Caelum 3D-Viewer und Good Goose.">
+<meta name="description" content="Caelum GmbH, Regensdorf: Software für Teams, die mit Unity, Blender, Claude und Codex arbeiten – CAELUM Pandora, Caelum 3D-Viewer, Caelum Gravur und Good Goose.">
+<link rel="icon" type="image/svg+xml" href="assets/logo-linie.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo-32.png">
 <link rel="apple-touch-icon" href="assets/logo-180.png">
 <meta property="og:title" content="Caelum GmbH">
@@ -16,7 +17,11 @@
     --bg-deep: #1F1E1D; --bg: #262624; --surface: #30302E; --hover: #33332F; --line: #3D3D3A;
     --text: #E8E6E1; --text-soft: #C9C6BF; --muted: #9C9A94; --faint: #6E6C66;
     --accent: #D97757; --ok: #6BAF73; --info: #7FA3D6;
+    /* Farbkonzept aus dem Startsignet: Himmel (Caelum, Cloud) violett, Terra warm, je Programm eine Farbe */
+    --sky: #A58BF5;
+    --c-pandora: #D97757; --c-viewer: #F2B05A; --c-gravur: #E2557A; --c-goose: #6BAF73; --c-vision: #C44FD6;
   }
+  [id] { scroll-margin-top: 80px; }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
@@ -60,6 +65,9 @@
   .card .more { margin-top: auto; font-size: 15px; }
   .card p.small { color: var(--muted); font-size: 13px; margin-top: -8px; }
   .card code { font-size: 12px; word-break: break-all; }
+  .card .links { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+  .card .links a { font-size: 14px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; color: var(--text-soft); }
+  .card .links a:hover { text-decoration: none; border-color: var(--accent); color: var(--text); }
   .dl-file { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; font-size: 14px; }
   .dl-file .size { color: var(--muted); margin-left: 6px; }
   .dl-file code { display: block; color: var(--faint); margin-top: 4px; }
@@ -78,6 +86,89 @@
   .upd .badge.release { color: var(--ok); border-color: var(--ok); }
   .upd a { font-size: 14px; display: inline-block; margin-top: 8px; }
 
+  /* Startsignet (aus Caelum Startsignet.html): Felder springen auf, Linien drehen sich ein, Schriftzug steigt auf */
+  @property --sweep { syntax: "<angle>"; inherits: false; initial-value: 360deg; }
+  @property --drift { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+  .signet { justify-self: center; display: grid; justify-items: center; gap: 20px; width: 100%; }
+  .signet .logo { width: min(100%, 340px); aspect-ratio: 1; position: relative; }
+  .signet .tile { position: absolute; inset: 5.4%; background: #fff8f0; transform-origin: 50% 50%; }
+  .signet img { position: absolute; display: block; user-select: none; -webkit-user-drag: none; }
+  .signet .cell { transform-origin: var(--ox) var(--oy); filter: hue-rotate(var(--drift)); }
+  .signet .lines { inset: 0; width: 100%; height: 100%;
+    -webkit-mask: conic-gradient(from 0deg at 50% 50%, #000 var(--sweep), transparent 0); mask: conic-gradient(from 0deg at 50% 50%, #000 var(--sweep), transparent 0); }
+  .signet .glint { position: absolute; inset: 5.4%; overflow: hidden; pointer-events: none; }
+  .signet .glint::after { content: ""; position: absolute; top: -20%; bottom: -20%; width: 24%; left: -40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent); transform: skewX(-18deg); opacity: 0; }
+  .signet .word { font: 600 clamp(20px, 3.4vw, 30px) "Segoe UI", Inter, system-ui, sans-serif; letter-spacing: .5em; padding-left: .5em; display: flex; color: var(--text); }
+  .signet .word span { display: inline-block; opacity: 0; }
+  .signet .tile { animation: pop .5s cubic-bezier(.2,1.6,.4,1) .1s both; }
+  .signet .cell { animation: cell .5s cubic-bezier(.2,1.7,.4,1) both; animation-delay: calc(.25s + var(--k) * .045s); }
+  .signet .lines { animation: sweep 1.1s cubic-bezier(.55,0,.25,1) 1.2s both; }
+  .signet .logo { animation: thump .5s cubic-bezier(.2,1.8,.4,1) 2.3s both, drift 9s ease-in-out 3.2s infinite alternate; }
+  .signet .glint::after { animation: glint .9s ease-in-out 2.5s both; }
+  .signet .word span { animation: rise .5s cubic-bezier(.2,1.4,.4,1) both; animation-delay: calc(2.4s + var(--i) * .06s); }
+  @keyframes pop { 0% { transform: scale(0) rotate(-45deg); } 100% { transform: scale(1) rotate(0); } }
+  @keyframes cell { 0% { transform: scale(0); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes sweep { from { --sweep: 0deg; } to { --sweep: 360deg; } }
+  @keyframes thump { 0% { transform: scale(1.06); } 100% { transform: scale(1); } }
+  @keyframes glint { 0% { opacity: 0; left: -40%; } 20% { opacity: 1; } 100% { opacity: 0; left: 120%; } }
+  @keyframes rise { 0% { opacity: 0; transform: translateY(.9em) scale(.8); } 100% { opacity: 1; transform: none; } }
+  @keyframes drift { from { --drift: 0deg; } to { --drift: 42deg; } }
+  .hero .copy > * { opacity: 0; transform: translateY(12px); animation: rise .7s ease-out forwards; }
+  .hero .copy > :nth-child(2) { animation-delay: .15s; } .hero .copy > :nth-child(n+3) { animation-delay: .3s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  /* Pandora: Caelum (Cloud-Server) oben, Terra mit Pandora und Programmen unten */
+  .heart { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: center; }
+  .heart ul { color: var(--text-soft); padding-left: 18px; margin: 0 0 24px; }
+  .heart li { margin-bottom: 6px; }
+  .heart li b { color: var(--text); font-weight: 600; }
+  .hydra { width: 100%; height: auto; }
+  .hydra text { font-family: Inter, "Segoe UI", system-ui, sans-serif; text-anchor: middle; }
+  .hydra .edge { stroke: var(--line); stroke-width: 2; }
+  .hydra .flow { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 4 14; animation: flow 1.8s linear infinite; opacity: .8; }
+  .hydra .flow.up { animation-direction: reverse; }
+  .hydra .node rect { fill: var(--surface); stroke: var(--c, var(--line)); stroke-width: 1.5; transition: fill .15s; }
+  .hydra a.node:hover rect, .hydra a.node:focus-visible rect { fill: var(--hover); }
+  .hydra a.node:focus-visible { outline: none; }
+  .hydra a.node:focus-visible rect { stroke-width: 3; }
+  .hydra .edge.sky { stroke: var(--sky); opacity: .45; }
+  .hydra .flow.script { stroke: var(--sky); stroke-dasharray: 3 9; }
+  .hydra .tiny { fill: var(--muted); font-size: 10px; text-anchor: start; }
+  .hydra .node text { fill: var(--text-soft); font-size: 14px; font-weight: 500; }
+  .hydra .sub { fill: var(--muted) !important; font-size: 11px !important; font-weight: 400 !important; }
+  .hydra .cloud circle { fill: var(--bg-deep); stroke: var(--sky); stroke-width: 2; }
+  .hydra .cloud text { fill: var(--text); font-size: 16px; font-weight: 600; }
+  .hydra .app rect { fill: var(--bg-deep) !important; stroke: var(--c-pandora); stroke-width: 2; }
+  .hydra .app text { fill: var(--text); font-size: 15px; font-weight: 600; }
+  .hydra .ground { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 6; }
+  .hydra .lbl { fill: var(--faint); font-size: 11px; letter-spacing: .08em; text-anchor: start; }
+  @keyframes flow { to { stroke-dashoffset: -36; } }
+
+  /* Kundenzugang und Formular */
+  .access { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; }
+  .access b { margin-right: 8px; }
+  .access .note { flex-basis: 100%; color: var(--muted); font-size: 13px; margin: 0; }
+  input, textarea { font: inherit; color: var(--text); background: var(--bg-deep); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; width: 100%; }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  .access input { width: 200px; text-transform: uppercase; }
+  button.btn { border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+  button.btn[disabled] { background: var(--hover); color: var(--muted); cursor: default; filter: none; }
+  form.kontakt { display: grid; gap: 12px; }
+  form.kontakt label { font-size: 14px; color: var(--muted); display: grid; gap: 4px; }
+  form.kontakt .hp { position: absolute; left: -9999px; }
+  form.kontakt .msg { font-size: 14px; color: var(--muted); margin: 0; min-height: 1.4em; }
+  form.kontakt .msg.ok { color: var(--ok); }
+
+  /* Downloads nach Plattform */
+  .plat { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); margin-left: 6px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signet *, .signet *::after { animation: none !important; } .signet .word span { opacity: 1; }
+    .hero .copy > * { opacity: 1; transform: none; animation: none; }
+    .hydra .flow { animation: none; }
+  }
+
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .steps div b { color: var(--accent); font-size: 18px; display: block; margin-bottom: 4px; }
   .steps div p { color: var(--text-soft); margin: 0; font-size: 15px; }
@@ -95,12 +186,28 @@
 
   @media (max-width: 860px) {
     .hero { padding: 56px 0 40px; }
-    .hero .wrap, .cards, .steps, .contact, .upd { grid-template-columns: 1fr; }
+    .hero .wrap, .cards, .steps, .contact, .upd, .heart { grid-template-columns: 1fr; }
+    .signet { order: -1; justify-items: start; } .signet .logo { width: 200px; }
+    .access input { width: 100%; }
     .upd { gap: 8px; }
     .hero img { max-width: 200px; order: -1; justify-self: start; }
     nav { gap: 16px; font-size: 14px; }
     nav a.opt { display: none; }
     .btn.plain { margin: 8px 0 0; }
+  }
+  @media (orientation: landscape) and (max-height: 520px) {
+    header { position: static; }
+    header .wrap, .wrap { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
+    .hero { padding: 24px 0; }
+    .hero .wrap { grid-template-columns: 1.4fr 1fr; gap: 24px; }
+    .signet { order: 0; justify-items: center; gap: 10px; } .signet .logo { width: min(52vh, 240px); }
+    .hero h1 { font-size: 30px; } .hero p { font-size: 16px; margin-bottom: 16px; }
+    section { padding: 40px 0; }
+    .heart { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .hydra { max-height: 80vh; }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .upd { grid-template-columns: 110px 1fr; }
+    nav a.opt { display: none; }
   }
   @media (max-width: 420px) { .wrap { padding: 0 16px; } .brand span { display: none; } }
 </style>
@@ -109,8 +216,9 @@
 
 <header>
   <div class="wrap">
-    <a class="brand" href="#"><img src="assets/logo-linie-hell-128.png" alt=""><span>Caelum GmbH</span></a>
+    <a class="brand" href="#"><img src="assets/logo-linie-hell.svg" alt=""><span>Caelum GmbH</span></a>
     <nav>
+      <a class="opt" href="#pandora">Pandora</a>
       <a href="#produkte">Produkte</a>
       <a class="opt" href="#updates">Updates</a>
       <a href="#portale">Kundenportale</a>
@@ -124,22 +232,66 @@
 <main>
   <div class="hero">
     <div class="wrap">
-      <div>
+      <div class="copy">
         <h1>Werkzeuge für Teams, die <span>Welten bauen</span>.</h1>
-        <p>Caelum entwickelt Software für Studios und Teams, die mit Unity, Blender, Claude und Codex arbeiten: Projekte zusammenführen, 3D-Dateien prüfen, den Überblick behalten.</p>
-        <a class="btn" href="#produkte">Produkte ansehen</a><a class="btn plain" href="#kontakt">Kontakt</a>
+        <p>Caelum entwickelt Software für Studios und Teams, die mit Unity, Blender, Claude und Codex arbeiten. Zentrale Anwendung ist CAELUM Pandora: Projekte zusammenführen, sichern und neue Versionen ausliefern.</p>
+        <div><a class="btn" href="#pandora">Pandora entdecken</a><a class="btn plain" href="#produkte">Alle Produkte</a></div>
       </div>
-      <img src="assets/logo-linie-orange-640.png" alt="Caelum Logo">
+      <div class="signet" aria-label="Caelum Startsignet" role="img">
+        <div class="logo">
+          <div class="tile"></div>
+          <img class="cell" alt="" style="left:27.344%;top:39.648%;width:45.41%;height:40.527%;--ox:49.7%;--oy:48.7%;--k:0" src="assets/signet/cell-00.png">
+          <img class="cell" alt="" style="left:62.207%;top:55.859%;width:14.551%;height:22.168%;--ox:67.1%;--oy:56.8%;--k:1" src="assets/signet/cell-01.png">
+          <img class="cell" alt="" style="left:23.145%;top:55.469%;width:14.746%;height:22.559%;--ox:31.1%;--oy:56.7%;--k:2" src="assets/signet/cell-02.png">
+          <img class="cell" alt="" style="left:31.348%;top:24.414%;width:37.598%;height:21.777%;--ox:49.6%;--oy:49.8%;--k:3" src="assets/signet/cell-03.png">
+          <img class="cell" alt="" style="left:24.121%;top:72.754%;width:51.563%;height:20.801%;--ox:49.8%;--oy:54.9%;--k:4" src="assets/signet/cell-04.png">
+          <img class="cell" alt="" style="left:76.563%;top:63.281%;width:3.906%;height:6.738%;--ox:42.5%;--oy:53.6%;--k:5" src="assets/signet/cell-05.png">
+          <img class="cell" alt="" style="left:19.531%;top:63.574%;width:3.809%;height:6.348%;--ox:53.8%;--oy:52.3%;--k:6" src="assets/signet/cell-06.png">
+          <img class="cell" alt="" style="left:65.723%;top:68.457%;width:18.945%;height:21.582%;--ox:61.3%;--oy:45.2%;--k:7" src="assets/signet/cell-07.png">
+          <img class="cell" alt="" style="left:15.332%;top:68.457%;width:18.75%;height:21.484%;--ox:37.5%;--oy:45%;--k:8" src="assets/signet/cell-08.png">
+          <img class="cell" alt="" style="left:50.684%;top:6.445%;width:42.969%;height:60.547%;--ox:58%;--oy:42.7%;--k:9" src="assets/signet/cell-09.png">
+          <img class="cell" alt="" style="left:6.445%;top:6.445%;width:42.969%;height:60.645%;--ox:41.4%;--oy:42.7%;--k:10" src="assets/signet/cell-10.png">
+          <img class="cell" alt="" style="left:80.859%;top:50.977%;width:12.695%;height:24.121%;--ox:50%;--oy:57.5%;--k:11" src="assets/signet/cell-11.png">
+          <img class="cell" alt="" style="left:35.742%;top:7.813%;width:28.418%;height:28.613%;--ox:49.8%;--oy:49.1%;--k:12" src="assets/signet/cell-12.png">
+          <img class="cell" alt="" style="left:6.445%;top:50.977%;width:12.793%;height:24.121%;--ox:48.1%;--oy:57.5%;--k:13" src="assets/signet/cell-13.png">
+          <img class="cell" alt="" style="left:62.891%;top:77.051%;width:29.98%;height:16.602%;--ox:60.3%;--oy:65.3%;--k:14" src="assets/signet/cell-14.png">
+          <img class="cell" alt="" style="left:7.129%;top:77.051%;width:29.98%;height:16.504%;--ox:39.1%;--oy:65.7%;--k:15" src="assets/signet/cell-15.png">
+          <img class="cell" alt="" style="left:84.961%;top:62.793%;width:8.691%;height:27.148%;--ox:61.8%;--oy:50.7%;--k:16" src="assets/signet/cell-16.png">
+          <img class="cell" alt="" style="left:6.445%;top:62.891%;width:8.691%;height:27.051%;--ox:36%;--oy:50.9%;--k:17" src="assets/signet/cell-17.png">
+          <img class="cell" alt="" style="left:69.824%;top:6.445%;width:23.828%;height:23.828%;--ox:69.3%;--oy:30.3%;--k:18" src="assets/signet/cell-18.png">
+          <img class="cell" alt="" style="left:6.445%;top:6.445%;width:23.73%;height:23.828%;--ox:30%;--oy:29.9%;--k:19" src="assets/signet/cell-19.png">
+          <img class="lines" alt="" src="assets/signet/linien.png">
+          <div class="glint"></div>
+        </div>
+        <div class="word" aria-hidden="true"><span style="--i:0">C</span><span style="--i:1">A</span><span style="--i:2">E</span><span style="--i:3">L</span><span style="--i:4">U</span><span style="--i:5">M</span></div>
+      </div>
     </div>
   </div>
 
-  <section id="produkte" class="alt">
+  <section id="pandora" class="alt">
+    <div class="wrap heart">
+      <div>
+        <h2>CAELUM Pandora</h2>
+        <p class="hint" style="margin-bottom:24px">Caelum steht für den Himmel, Terra für die Erde. Pandora ist eine Windows-Anwendung auf den Rechnern des Teams und verbindet sich mit dem Caelum-Server in der Cloud.</p>
+        <ul>
+          <li><b>Hydra:</b> Jeder PC hat eine eigene Installation. Fällt einer aus, arbeiten die anderen weiter.</li>
+          <li><b>Fusion:</b> Unity- und Blender-Projekte mehrerer PCs zu einem Stand zusammenführen</li>
+          <li><b>Sicherung:</b> verschlüsselt, auf USB-Stick und in der Cloud</li>
+          <li><b>Wissen:</b> Regeln, Notizen und Skripte der Firma an einem Ort</li>
+          <li><b>Veröffentlichen:</b> ein Pandora-Skript führt caelum.one nach – neue Versionen, Downloads und Updates</li>
+        </ul>
+      </div>
+      <svg class="hydra" viewBox="0 0 640 430" role="img" aria-label="Oben Caelum, der Cloud-Server, mit Sicherung, GitHub und caelum.one. Darunter, auf Terra, CAELUM Pandora auf jedem PC, verbunden mit 3D-Viewer, Caelum Gravur, Good Goose und Caelum Vision."><text class="lbl" x="0" y="14">CAELUM · HIMMEL</text><line class="ground" x1="0" y1="210" x2="640" y2="210"/><text class="lbl" x="0" y="228">TERRA · ERDE</text><line class="edge sky" x1="170" y1="96" x2="260" y2="96"/><line class="edge sky" x1="470" y1="46" x2="372" y2="68"/><line class="edge sky" x1="470" y1="146" x2="372" y2="124"/><line class="edge sky" x1="550" y1="68" x2="550" y2="124"/><text class="tiny" x="556" y="100">Pages</text><line class="edge" x1="320" y1="156" x2="320" y2="246"/><line class="flow up" x1="314" y1="156" x2="314" y2="246"/><line class="flow" x1="326" y1="156" x2="326" y2="246"/><line class="edge sky" x1="420" y1="258" x2="550" y2="168"/><line class="flow script" x1="420" y1="258" x2="550" y2="168"/><text class="tiny" x="492" y="232">Pandora-Skript</text><g class="cloud"><circle cx="320" cy="96" r="60"/><text x="320" y="92">Caelum</text><text class="sub" x="320" y="110">Cloud-Server</text></g><a class="node" href="#pandora" style="--c:var(--sky)"><rect x="10" y="74" width="160" height="44" rx="10"/><text x="90" y="94">Sicherung</text><text class="sub" x="90" y="109">Google Drive · verschlüsselt</text></a><a class="node" href="https://github.com/KennyLeeLooser" target="_blank" rel="noopener" style="--c:var(--sky)"><rect x="470" y="24" width="160" height="44" rx="10"/><text x="550" y="44">GitHub</text><text class="sub" x="550" y="59">Quellcode · Releases</text></a><a class="node" href="#downloads" style="--c:var(--sky)"><rect x="470" y="124" width="160" height="44" rx="10"/><text x="550" y="144">caelum.one</text><text class="sub" x="550" y="159">Updates · Downloads</text></a><a class="node app" href="#p-pandora"><rect x="220" y="246" width="200" height="52" rx="10"/><text x="320" y="269">CAELUM Pandora</text><text class="sub" x="320" y="286">Anwendung auf jedem PC</text></a><line class="edge" x1="74" y1="370" x2="320" y2="298"/><line class="edge" x1="238" y1="370" x2="320" y2="298"/><line class="edge" x1="402" y1="370" x2="320" y2="298"/><line class="edge" x1="566" y1="370" x2="320" y2="298"/><a class="node" href="#p-viewer" style="--c:var(--c-viewer)"><rect x="0" y="370" width="148" height="44" rx="10"/><text x="74" y="390">3D-Viewer</text><text class="sub" x="74" y="405">Ansehen · Ausgeben</text></a><a class="node" href="#p-gravur" style="--c:var(--c-gravur)"><rect x="164" y="370" width="148" height="44" rx="10"/><text x="238" y="390">Caelum Gravur</text><text class="sub" x="238" y="405">Schilder · Laser</text></a><a class="node" href="#p-goose" style="--c:var(--c-goose)"><rect x="328" y="370" width="148" height="44" rx="10"/><text x="402" y="390">Good Goose</text><text class="sub" x="402" y="405">Notizen · Hinweise</text></a><a class="node" href="#p-vision" style="--c:var(--c-vision)"><rect x="492" y="370" width="148" height="44" rx="10"/><text x="566" y="390">Caelum Vision</text><text class="sub" x="566" y="405">Handy als Scanner</text></a></svg>
+    </div>
+  </section>
+
+  <section id="produkte">
     <div class="wrap">
       <h2>Produkte</h2>
       <p class="hint">Eigenständige Programme für Windows, die zusammenpassen.</p>
       <div class="cards auto">
-        <article class="card">
-          <div class="tag"><i style="background:var(--accent)"></i>Fusionssoftware</div>
+        <article class="card" id="p-pandora" style="border-top:3px solid var(--c-pandora)">
+          <div class="tag"><i style="background:var(--c-pandora)"></i>Hauptprodukt</div>
           <h3>CAELUM Pandora</h3>
           <p>Ein Team auf mehreren PCs fusioniert seine Unity- und Blender-Projekte zu einem Master – über USB-Stick, LAN oder direkt auf der Festplatte.</p>
           <ul>
@@ -147,10 +299,10 @@
             <li>Regeln der Golden Base, versiegelte Hauptmatrix</li>
             <li>Brücken in Unity und Blender, Backups, Spiel-Builds</li>
           </ul>
-          <a class="more" href="#kontakt">Auf Anfrage →</a>
+          <div class="links"><a href="#kontakt">Auf Anfrage</a><a href="#pandora">Aufbau</a></div>
         </article>
-        <article class="card">
-          <div class="tag"><i style="background:var(--info)"></i>Freeware</div>
+        <article class="card" id="p-viewer" style="border-top:3px solid var(--c-viewer)">
+          <div class="tag"><i style="background:var(--c-viewer)"></i>Freeware</div>
           <h3>Caelum 3D-Viewer</h3>
           <p>3D-Dateien ansehen und als Bild, PDF-Datenblatt oder GIF ausgeben – direkt im Chat von ChatGPT und Claude oder aus Claude Code und Codex.</p>
           <ul>
@@ -159,10 +311,10 @@
             <li>360°-Drehung und Kamerafahrten ohne Abschneiden</li>
           </ul>
           <p class="small">Ohne Installation: in ChatGPT oder claude.ai als Connector <code>https://api.caelum.one/viewer/mcp</code> hinzufügen (keine Anmeldung).</p>
-          <a class="more" href="https://github.com/KennyLeeLooser/caelum-viewer-plugin">Herunterladen →</a>
+          <div class="links"><a href="#downloads">Download</a><a href="https://github.com/KennyLeeLooser/caelum-viewer-plugin">GitHub</a><a href="https://api.caelum.one/viewer/mcp">Server</a></div>
         </article>
-        <article class="card">
-          <div class="tag"><i style="background:var(--ok)"></i>Freeware</div>
+        <article class="card" id="p-goose" style="border-top:3px solid var(--c-goose)">
+          <div class="tag"><i style="background:var(--c-goose)"></i>Freeware</div>
           <h3>Good Goose</h3>
           <p>Eine Desktop-Gans für die Taskleiste. Sie merkt sich Notizen und Aufgaben und meldet sich, wenn Claude Code oder Codex auf dich wartet.</p>
           <ul>
@@ -170,10 +322,10 @@
             <li>Hinweis bei fertigen Aufgaben und vollem Kontext</li>
             <li>Plugin für Claude Code und Codex</li>
           </ul>
-          <a class="more" href="https://github.com/KennyLeeLooser/good-goose-plugin">Herunterladen →</a>
+          <div class="links"><a href="#downloads">Download</a><a href="https://github.com/KennyLeeLooser/good-goose-plugin">GitHub</a></div>
         </article>
-        <article class="card">
-          <div class="tag"><i style="background:var(--muted)"></i>Freeware · Datenpunkt engineering AG</div>
+        <article class="card" id="p-gravur" style="border-top:3px solid var(--c-gravur)">
+          <div class="tag"><i style="background:var(--c-gravur)"></i>Freeware · Datenpunkt engineering AG</div>
           <h3>Caelum Gravur</h3>
           <p>Gravurschilder aus Excel oder direkt im Programm gestalten und als SVG für den Laser ausgeben – mit Material- und Bestellrechnung.</p>
           <ul>
@@ -182,7 +334,18 @@
             <li>Bestellformular und Montageverzeichnis</li>
           </ul>
           <p class="small">Freeware der Datenpunkt engineering AG, erstellt von Caelum GmbH.</p>
-          <a class="more" href="#portale">Zum Kundenportal →</a>
+          <div class="links"><a href="#portale">Kundenportal</a><a href="#updates">Updates</a></div>
+        </article>
+        <article class="card" id="p-vision" style="border-top:3px solid var(--c-vision)">
+          <div class="tag"><i style="background:var(--c-vision)"></i>In Entwicklung</div>
+          <h3>Caelum Vision</h3>
+          <p>Das Handy wird zum Scanner: Fotos aus einer Scan-Sitzung kommen per USB oder WLAN direkt auf den PC und werden wie ein Scan aufbereitet.</p>
+          <ul>
+            <li>Koppeln per Code oder QR</li>
+            <li>Aufbereitung wie ein Flachbettscanner</li>
+            <li>Schnittstelle für die anderen Caelum-Programme</li>
+          </ul>
+          <div class="links"><a href="#downloads">Android · bald</a><a href="#updates">Updates</a></div>
         </article>
       </div>
     </div>
@@ -191,7 +354,7 @@
   <section id="updates">
     <div class="wrap">
       <h2>Updates</h2>
-      <p class="hint">Was sich in unseren Programmen zuletzt geändert hat.</p>
+      <p class="hint">Was sich in unseren Programmen zuletzt geändert hat. Die Liste führt Pandora beim Veröffentlichen selbst nach.</p>
       <div class="updates" id="upd-list">
         <div class="upd"><div></div><div><p style="margin:0;color:var(--muted)">Updates werden geladen …</p></div></div>
       </div>
@@ -223,13 +386,20 @@
           <a class="more" href="#kontakt">Kontakt →</a>
         </article>
       </div>
+      <form class="access" id="zugang" autocomplete="off">
+        <b>Kundenzugang</b>
+        <input id="zugang-code" name="code" placeholder="Baustellen-Code" aria-label="Baustellen-Code" maxlength="24">
+        <button class="btn" type="submit">Öffnen</button>
+        <button class="btn plain" type="button" id="zugang-google" disabled title="Folgt mit dem Konto bei Google Workspace">Mit Google anmelden</button>
+        <p class="note" id="zugang-msg">Den Code bekommst du von uns zusammen mit der Baustelle. Die Anmeldung mit Google folgt.</p>
+      </form>
     </div>
   </section>
 
   <section id="downloads">
     <div class="wrap">
       <h2>Downloads</h2>
-      <p class="hint">Die neuesten Versionen, direkt von GitHub. Die Prüfsumme (SHA-256) zeigt, dass die Datei unverändert ist.</p>
+      <p class="hint">Die neuesten Versionen für Windows und Android, direkt von GitHub. Die Prüfsumme (SHA-256) zeigt, dass die Datei unverändert ist.</p>
       <div class="cards" id="dl-list">
         <article class="card"><p>Downloads werden geladen … Falls nichts erscheint: <a href="https://github.com/KennyLeeLooser/caelum-viewer-plugin/releases">3D-Viewer</a> · <a href="https://github.com/KennyLeeLooser/good-goose-plugin/releases">Good Goose</a></p></article>
       </div>
@@ -264,19 +434,33 @@
         </div>
         <div class="card">
           <address>
-            E-Mail: <a href="mailto:kennyleelooser@outlook.com">kennyleelooser@outlook.com</a><br>
+            E-Mail: <a href="mailto:info@caelum.one">info@caelum.one</a><br>
             Telefon: <a href="tel:+41793693693">+41 79 369 36 93</a><br>
             Web: www.caelum.one
           </address>
         </div>
       </div>
 
+      <div class="card" style="margin-top:24px">
+        <h3>Nachricht schreiben</h3>
+        <form class="kontakt" id="kontakt-form">
+          <div class="contact">
+            <label>Name<input name="name" required maxlength="120" autocomplete="name"></label>
+            <label>E-Mail<input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+          </div>
+          <label>Nachricht<textarea name="nachricht" rows="5" required maxlength="5000"></textarea></label>
+          <label class="hp" aria-hidden="true">Bitte leer lassen<input name="website" tabindex="-1" autocomplete="off"></label>
+          <div><button class="btn" type="submit">Senden</button></div>
+          <p class="msg" id="kontakt-msg" role="status"></p>
+        </form>
+      </div>
+
       <div class="legal" id="impressum">
         <h3>Impressum</h3>
-        <p>Caelum GmbH, Ringstrasse 1, 8105 Regensdorf, Schweiz. Vertreten durch Kenny Looser. E-Mail: kennyleelooser@outlook.com, Telefon: +41 79 369 36 93.</p>
+        <p>Caelum GmbH, Ringstrasse 1, 8105 Regensdorf, Schweiz. Vertreten durch Kenny Looser. E-Mail: info@caelum.one, Telefon: +41 79 369 36 93.</p>
         <p>Alle Inhalte dieser Website, insbesondere Texte, Logos und Bilder, sind urheberrechtlich geschützt. © 2026 Caelum GmbH, Kenny Looser.</p>
         <h3 id="datenschutz">Datenschutz</h3>
-        <p>Diese Website setzt keine Cookies, verwendet keine Analyse- oder Tracking-Dienste und lädt keine Inhalte von Drittanbietern. Sie wird über GitHub Pages (GitHub Inc., USA) ausgeliefert; dabei verarbeitet GitHub technisch notwendige Daten wie die IP-Adresse, um die Seite anzuzeigen und vor Missbrauch zu schützen. Wenn du uns per E-Mail oder Telefon kontaktierst, verwenden wir deine Angaben nur, um deine Anfrage zu beantworten. Auskunft und Löschung: kennyleelooser@outlook.com.</p>
+        <p>Diese Website setzt keine Cookies, verwendet keine Analyse- oder Tracking-Dienste und lädt keine Inhalte von Drittanbietern. Sie wird über GitHub Pages (GitHub Inc., USA) ausgeliefert; dabei verarbeitet GitHub technisch notwendige Daten wie die IP-Adresse, um die Seite anzuzeigen und vor Missbrauch zu schützen. Wenn du uns per E-Mail, Telefon oder Kontaktformular kontaktierst, verwenden wir deine Angaben nur, um deine Anfrage zu beantworten. Nachrichten aus dem Formular werden über Google Workspace (Google Ireland Ltd.) an unser Postfach info@caelum.one zugestellt. Auskunft und Löschung: info@caelum.one.</p>
         <h3>Haftung</h3>
         <p>Wir prüfen die Inhalte sorgfältig, übernehmen aber keine Gewähr für Richtigkeit, Vollständigkeit und Aktualität. Für Inhalte verlinkter Seiten sind ausschliesslich deren Betreiber verantwortlich.</p>
       </div>
@@ -305,10 +489,13 @@
         return '<div class="dl-file"><a href="' + esc(f.url) + '">' + esc(f.name) + '</a><span class="size">' + mb(f.size) + '</span>'
           + (f.sha256 ? '<code>SHA-256 ' + esc(f.sha256) + '</code>' : '') + '</div>';
       }).join('');
-      return '<article class="card"><div class="tag"><i style="background:var(--info)"></i>Version ' + esc(d.version) + ' · ' + esc(date(d.date)) + '</div>'
-        + '<h3>' + esc(d.product) + '</h3>' + (files || '<p>Noch keine Datei in diesem Release.</p>')
+      var plat = (d.platform || 'windows') === 'android' ? 'Android' : 'Windows';
+      return '<article class="card"><div class="tag"><i style="background:var(--info)"></i>Version ' + esc(d.version) + ' · ' + esc(date(d.date)) + '<span class="plat">' + plat + '</span></div>'
+        + '<h3>' + esc(d.product) + '</h3>' + (plat === 'Android' ? '<p class="small">Installation: APK auf dem Handy öffnen und „Aus dieser Quelle installieren“ einmal erlauben. Vorher die Prüfsumme vergleichen.</p>' : '') + (files || '<p>Noch keine Datei in diesem Release.</p>')
         + '<a class="more" href="' + esc(d.page) + '">Versionshinweise →</a></article>';
-    }).join('');
+    }).join('') + (data.downloads.some(function (d) { return d.platform === 'android'; }) ? '' :
+      '<article class="card"><div class="tag"><i style="background:var(--ok)"></i>Bald<span class="plat">Android</span></div><h3>Apps für Android</h3>'
+      + '<p>Unsere Handy-Apps kommen als APK direkt hier zum Download – mit Prüfsumme, ohne Umweg über einen Store.</p></article>');
   }).catch(function () { /* Links oben bleiben stehen */ });
 })();
 </script>
@@ -331,6 +518,44 @@
         + (u.link ? '<a href="' + esc(u.link) + '">Versionshinweise →</a>' : '') + '</div></article>';
     }).join('');
   }).catch(fail);
+})();
+</script>
+<script>
+// Einstellungen der Seite. KONTAKT_URL = Web-App-Adresse des Google Apps Script (Konto kenny@caelum.one); leer = E-Mail-Programm öffnen.
+var CAELUM_SITE = {
+  KONTAKT_URL: '',
+  PORTALE: { gravur: { live: false, pfad: 'gravur/' } }
+};
+(function () {
+  // Kontaktformular
+  var f = document.getElementById('kontakt-form'), msg = document.getElementById('kontakt-msg');
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = { name: f.elements.name.value.trim(), email: f.elements.email.value.trim(), nachricht: f.elements.nachricht.value.trim(), website: f.elements.website.value };
+    if (d.website) return;
+    if (!CAELUM_SITE.KONTAKT_URL) {
+      location.href = 'mailto:info@caelum.one?subject=' + encodeURIComponent('Anfrage von ' + d.name)
+        + '&body=' + encodeURIComponent(d.nachricht + '\n\n' + d.name + ' <' + d.email + '>');
+      msg.textContent = 'Dein E-Mail-Programm öffnet sich mit der Nachricht.';
+      return;
+    }
+    var b = f.querySelector('button'); b.disabled = true; msg.className = 'msg'; msg.textContent = 'Wird gesendet …';
+    fetch(CAELUM_SITE.KONTAKT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(d) })
+      .then(function () { f.reset(); msg.className = 'msg ok'; msg.textContent = 'Danke! Deine Nachricht ist unterwegs zu uns.'; })
+      .catch(function () { msg.textContent = 'Senden ging nicht. Bitte schreib direkt an info@caelum.one.'; })
+      .then(function () { b.disabled = false; });
+  });
+
+  // Kundenzugang mit Baustellen-Code
+  var z = document.getElementById('zugang'), zm = document.getElementById('zugang-msg');
+  z.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var code = document.getElementById('zugang-code').value.trim().toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    if (!code) { zm.textContent = 'Bitte den Baustellen-Code eingeben.'; return; }
+    var p = CAELUM_SITE.PORTALE.gravur;
+    if (!p.live) { zm.textContent = 'Das Portal ist noch nicht freigeschaltet. Wir melden uns, sobald es bereit ist.'; return; }
+    location.href = p.pfad + '?code=' + encodeURIComponent(code);
+  });
 })();
 </script>
 </body>
