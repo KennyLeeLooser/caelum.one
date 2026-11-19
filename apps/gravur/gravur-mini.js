@@ -4,6 +4,7 @@
 // Ein Schild: Material aus dem Katalog der App, Textfelder, Abstände mit Schiebern, Loch, QR, Rahmen, Export SVG für
 // xTool Studio. Läuft nur im Browser, nichts wird hochgeladen. Logik in schild.js (Master: SignGeometry.cs/SvgExport.cs).
 import { aufbauen, svg, VORGABE, FARBEN } from "./schild.js";
+import { koerper, texturMalen, glbSchreiben } from "./glb.js";
 
 const SPEICHER = "caelum.gravur.web.v1";
 const BEISPIEL = { code: "S35", zeilen: 3, schrifthoehe: 4, felder: ["LÜF 01", "Abluft Temperatur", "B02"] };
@@ -69,6 +70,7 @@ export async function mount(root, ctx) {
   const kopf = h("p", { class: "cw-hint" });
   const matInfo = h("div", { class: "gv-mat" });
   const knopfSvg = h("button", { class: "cw-primary", type: "button", onclick: speichernSvg }, "SVG für den Laser speichern");
+  const knopf3d = h("button", { type: "button", onclick: zeige3d }, "Im 3D-Viewer ansehen");
   const legende = h("div", { class: "gv-legende" },
     ...[["gravieren", "Gravieren"], ["schriftUmriss", "Schrift-Umriss"], ["detailSchneiden", "Löcher schneiden"], ["kantenSchneiden", "Kante schneiden"], ["gravieren2", "2. Tiefe"]]
       .map(([k, t]) => h("span", {}, h("i", { class: "cw-dot", style: "background:" + FARBEN[k] }), t)));
@@ -164,7 +166,7 @@ export async function mount(root, ctx) {
       h("label", { class: "cw-c" }, hilfsHaken, "Hilfslinien (Textfelder)"),
       h("p", { class: "cw-hint" }, "Text je Feld wie auf dem Schild. Enter = neue Zeile im Feld."),
       felderBox, hinweise,
-      h("div", { class: "cw-row" }, knopfSvg),
+      h("div", { class: "cw-row" }, knopfSvg, knopf3d),
       legende,
       h("p", { class: "cw-hint", style: "margin-top:12px" }, "Nur in der App: Excel-Listen, Serien, Logo, Freiform-Design, Plattenbelegung, Bestellung und Montageverzeichnis. Freeware der Datenpunkt engineering AG, erstellt von Caelum GmbH.")),
     einstellungen));
@@ -217,6 +219,21 @@ export async function mount(root, ctx) {
     const text = svg(s, g, { typName: t.name, code: f.code, name: f.name, zweiTiefen: t.zweiTiefen });
     const name = "Schild_" + (s.felder.find(x => x.trim()) || "Caelum").replace(/\s+/g, "_").replace(/[^\p{L}\p{N}_-]/gu, "").slice(0, 40) + ".svg";
     ctx.speichern(new Blob([text], { type: "image/svg+xml" }), name);
+  }
+
+  // Schild als GLB (wie „Im 3D-Viewer“ der App) an das Viewer-Modul geben
+  async function zeige3d() {
+    if (!letzte) return;
+    const { g, f } = letzte, alt = knopf3d.textContent;
+    knopf3d.disabled = true; knopf3d.textContent = "3D-Modell entsteht …";
+    try {
+      const [oben, unten] = await Promise.all([texturMalen(g, f, true), texturMalen(g, f, false)]);
+      const glb = glbSchreiben(koerper(g, s.dicke), f, oben, unten);
+      const name = "Schild_" + (s.felder.find(x => x.trim()) || "Caelum").replace(/\s+/g, "_").replace(/[^\p{L}\p{N}_-]/gu, "").slice(0, 40) + ".glb";
+      await ctx.geben("schild-glb", new Blob([glb], { type: "model/gltf-binary" }), { name });
+    } catch (e) {
+      hinweise.replaceChildren(h("li", {}, "3D-Ansicht nicht möglich: " + (e?.message || e)));
+    } finally { knopf3d.disabled = false; knopf3d.textContent = alt; }
   }
 
   typWechsel();

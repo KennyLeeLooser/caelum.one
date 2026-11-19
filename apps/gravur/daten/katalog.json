@@ -1,6 +1,6 @@
 {
  "_kopf": "Erzeugt aus src/Caelum.Gravur.Core/katalog.json mit web/werkzeuge/daten.mjs – nicht von Hand ändern.",
- "appVersion": "0.8.0",
+ "appVersion": "0.9.0",
  "lieferant": "gravurshop24.ch",
  "typen": [
   {
@@ -23,7 +23,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": false
     },
     {
      "code": "S39",
@@ -32,7 +33,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#D9342F",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S27",
@@ -41,7 +43,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#22578F",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S35",
@@ -50,7 +53,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": false
     },
     {
      "code": "S37",
@@ -59,7 +63,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#D9342F",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S77",
@@ -68,7 +73,8 @@
      "oberflaeche": "#EE7D2E",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S38",
@@ -77,7 +83,8 @@
      "oberflaeche": "#EE7D2E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S48",
@@ -86,7 +93,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": false
     },
     {
      "code": "S49",
@@ -95,7 +103,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S51",
@@ -104,7 +113,8 @@
      "oberflaeche": "#9C2F48",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LBLB"
+     "lieferbar": "-LBLB",
+     "metall": false
     },
     {
      "code": "S82",
@@ -113,7 +123,8 @@
      "oberflaeche": "#8C3F7C",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "--LL-"
+     "lieferbar": "--LL-",
+     "metall": false
     },
     {
      "code": "S60",
@@ -122,7 +133,8 @@
      "oberflaeche": "#45A23F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S61",
@@ -131,7 +143,8 @@
      "oberflaeche": "#45A23F",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S59",
@@ -140,7 +153,8 @@
      "oberflaeche": "#1C5A33",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LBLB"
+     "lieferbar": "-LBLB",
+     "metall": false
     },
     {
      "code": "S26",
@@ -149,7 +163,8 @@
      "oberflaeche": "#22578F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": false
     },
     {
      "code": "S33",
@@ -158,7 +173,8 @@
      "oberflaeche": "#7EA6C9",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S34",
@@ -167,7 +183,8 @@
      "oberflaeche": "#7EA6C9",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S90",
@@ -176,7 +193,8 @@
      "oberflaeche": "#4A2716",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "--LLB"
+     "lieferbar": "--LLB",
+     "metall": false
     },
     {
      "code": "S71",
@@ -185,7 +203,8 @@
      "oberflaeche": "#A8A8A8",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S72",
@@ -194,7 +213,8 @@
      "oberflaeche": "#A8A8A8",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": false
     },
     {
      "code": "S10",
@@ -203,7 +223,8 @@
      "oberflaeche": "#161616",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": false
     },
     {
      "code": "S50",
@@ -212,7 +233,8 @@
      "oberflaeche": "#E4E4E2",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S66",
@@ -221,7 +243,8 @@
      "oberflaeche": "#F5D78E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S68",
@@ -230,7 +253,8 @@
      "oberflaeche": "#DEDEDE",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": true
     },
     {
      "code": "S69",
@@ -239,7 +263,8 @@
      "oberflaeche": "#F3D27E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLB"
+     "lieferbar": "-LLLB",
+     "metall": true
     },
     {
      "code": "S55",
@@ -248,7 +273,8 @@
      "oberflaeche": "#D6D6D6",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": true
     },
     {
      "code": "Q33",
@@ -257,7 +283,8 @@
      "oberflaeche": "#D9A630",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LBLB"
+     "lieferbar": "-LBLB",
+     "metall": true
     },
     {
      "code": "S63",
@@ -266,7 +293,8 @@
      "oberflaeche": "#F2CC78",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LBLB"
+     "lieferbar": "-LBLB",
+     "metall": true
     },
     {
      "code": "S80",
@@ -275,7 +303,8 @@
      "oberflaeche": "#E9C26C",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "BLBLB"
+     "lieferbar": "BLBLB",
+     "metall": true
     },
     {
      "code": "S88",
@@ -284,7 +313,8 @@
      "oberflaeche": "#CFCFCF",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LLLLL"
+     "lieferbar": "LLLLL",
+     "metall": true
     },
     {
      "code": "S89",
@@ -293,7 +323,8 @@
      "oberflaeche": "#4A4E52",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S81",
@@ -302,7 +333,8 @@
      "oberflaeche": "#EE8872",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S43",
@@ -311,7 +343,8 @@
      "oberflaeche": "#F2A273",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S44",
@@ -320,7 +353,8 @@
      "oberflaeche": "#F2A273",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S45",
@@ -329,7 +363,8 @@
      "oberflaeche": "#EE8244",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": true
     },
     {
      "code": "S46",
@@ -338,7 +373,8 @@
      "oberflaeche": "#A67B46",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LLLLB"
+     "lieferbar": "LLLLB",
+     "metall": true
     },
     {
      "code": "S21",
@@ -347,7 +383,8 @@
      "oberflaeche": "#232323",
      "kern": "#E2BE68",
      "kern2": null,
-     "lieferbar": "LL-B-"
+     "lieferbar": "LL-B-",
+     "metall": false
     },
     {
      "code": "Q21",
@@ -356,7 +393,8 @@
      "oberflaeche": "#0E0E0E",
      "kern": "#E2BE68",
      "kern2": null,
-     "lieferbar": "-L-L-"
+     "lieferbar": "-L-L-",
+     "metall": false
     },
     {
      "code": "S98",
@@ -365,7 +403,8 @@
      "oberflaeche": "#1F2B57",
      "kern": "#E2BE68",
      "kern2": null,
-     "lieferbar": "-L-L-"
+     "lieferbar": "-L-L-",
+     "metall": false
     },
     {
      "code": "S99",
@@ -374,7 +413,8 @@
      "oberflaeche": "#6B1B1B",
      "kern": "#E2BE68",
      "kern2": null,
-     "lieferbar": "-L-L-"
+     "lieferbar": "-L-L-",
+     "metall": false
     },
     {
      "code": "S83",
@@ -383,7 +423,8 @@
      "oberflaeche": "#E2338A",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": false
     },
     {
      "code": "S84",
@@ -392,7 +433,8 @@
      "oberflaeche": "#8E3A8E",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "-LLLL"
+     "lieferbar": "-LLLL",
+     "metall": false
     }
    ]
   },
@@ -412,7 +454,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#D9342F",
      "kern2": "#161616",
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "F43",
@@ -421,7 +464,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#D9342F",
      "kern2": "#161616",
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "F18",
@@ -430,7 +474,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#F7DF1E",
      "kern2": "#161616",
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "F19",
@@ -439,7 +484,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#22578F",
      "kern2": "#161616",
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     }
    ]
   },
@@ -462,7 +508,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LLLL"
+     "lieferbar": "LLLL",
+     "metall": false
     },
     {
      "code": "F12",
@@ -471,7 +518,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#D9342F",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F14",
@@ -480,7 +528,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#22578F",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F40",
@@ -489,7 +538,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F42",
@@ -498,7 +548,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#D9342F",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F77",
@@ -507,7 +558,8 @@
      "oberflaeche": "#EE7D2E",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F38",
@@ -516,7 +568,8 @@
      "oberflaeche": "#EE7D2E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F30",
@@ -525,7 +578,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F49",
@@ -534,7 +588,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F80",
@@ -543,7 +598,8 @@
      "oberflaeche": "#2F7D3A",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F61",
@@ -552,7 +608,8 @@
      "oberflaeche": "#2F7D3A",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F60",
@@ -561,7 +618,8 @@
      "oberflaeche": "#45A23F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F70",
@@ -570,7 +628,8 @@
      "oberflaeche": "#22578F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F86",
@@ -579,7 +638,8 @@
      "oberflaeche": "#A8A8A8",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F20",
@@ -588,7 +648,8 @@
      "oberflaeche": "#161616",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": false
     },
     {
      "code": "F55",
@@ -597,7 +658,8 @@
      "oberflaeche": "#D6D6D6",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": true
     },
     {
      "code": "F65",
@@ -606,7 +668,8 @@
      "oberflaeche": "#E2BE68",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "LL-L"
+     "lieferbar": "LL-L",
+     "metall": true
     }
    ]
   },
@@ -628,7 +691,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "BLL"
+     "lieferbar": "BLL",
+     "metall": false
     },
     {
      "code": "G12",
@@ -637,7 +701,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#D9342F",
      "kern2": null,
-     "lieferbar": "BLB"
+     "lieferbar": "BLB",
+     "metall": false
     },
     {
      "code": "G14",
@@ -646,7 +711,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#22578F",
      "kern2": null,
-     "lieferbar": "BBB"
+     "lieferbar": "BBB",
+     "metall": false
     },
     {
      "code": "G40",
@@ -655,7 +721,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "BLB"
+     "lieferbar": "BLB",
+     "metall": false
     },
     {
      "code": "G42",
@@ -664,7 +731,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#D9342F",
      "kern2": null,
-     "lieferbar": "BBB"
+     "lieferbar": "BBB",
+     "metall": false
     },
     {
      "code": "G77",
@@ -673,7 +741,8 @@
      "oberflaeche": "#EE7D2E",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "BBB"
+     "lieferbar": "BBB",
+     "metall": false
     },
     {
      "code": "G30",
@@ -682,7 +751,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "BLL"
+     "lieferbar": "BLL",
+     "metall": false
     },
     {
      "code": "G80",
@@ -691,7 +761,8 @@
      "oberflaeche": "#2F7D3A",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "BLB"
+     "lieferbar": "BLB",
+     "metall": false
     },
     {
      "code": "G70",
@@ -700,7 +771,8 @@
      "oberflaeche": "#22578F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "BLB"
+     "lieferbar": "BLB",
+     "metall": false
     },
     {
      "code": "G86",
@@ -709,7 +781,8 @@
      "oberflaeche": "#A8A8A8",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "BLB"
+     "lieferbar": "BLB",
+     "metall": false
     },
     {
      "code": "G20",
@@ -718,7 +791,8 @@
      "oberflaeche": "#161616",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "BLL"
+     "lieferbar": "BLL",
+     "metall": false
     },
     {
      "code": "G55",
@@ -727,7 +801,8 @@
      "oberflaeche": "#D6D6D6",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "BBB"
+     "lieferbar": "BBB",
+     "metall": true
     },
     {
      "code": "G65",
@@ -736,7 +811,8 @@
      "oberflaeche": "#E2BE68",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "BBB"
+     "lieferbar": "BBB",
+     "metall": true
     }
    ]
   },
@@ -756,7 +832,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X35",
@@ -765,7 +842,8 @@
      "oberflaeche": "#F7DF1E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X59",
@@ -774,7 +852,8 @@
      "oberflaeche": "#1C5A33",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "Y33",
@@ -783,7 +862,8 @@
      "oberflaeche": "#E2BE68",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X63",
@@ -792,7 +872,8 @@
      "oberflaeche": "#F0CB7A",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X81",
@@ -801,7 +882,8 @@
      "oberflaeche": "#E9C26C",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X65",
@@ -810,7 +892,8 @@
      "oberflaeche": "#F3D27E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X87",
@@ -819,7 +902,8 @@
      "oberflaeche": "#CFCFCF",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X55",
@@ -828,7 +912,8 @@
      "oberflaeche": "#DEDEDE",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X49",
@@ -837,7 +922,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X33",
@@ -846,7 +932,8 @@
      "oberflaeche": "#7EA6C9",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X60",
@@ -855,7 +942,8 @@
      "oberflaeche": "#62B86A",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X99",
@@ -864,7 +952,8 @@
      "oberflaeche": "#6B1B1B",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X98",
@@ -873,7 +962,8 @@
      "oberflaeche": "#1F2B57",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X97",
@@ -882,7 +972,8 @@
      "oberflaeche": "#4A2A18",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X96",
@@ -891,7 +982,8 @@
      "oberflaeche": "#2E6B2B",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X95",
@@ -900,7 +992,8 @@
      "oberflaeche": "#A67B46",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X94",
@@ -909,7 +1002,8 @@
      "oberflaeche": "#A67B46",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X01",
@@ -918,7 +1012,8 @@
      "oberflaeche": "#FAFAF8",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X74",
@@ -927,7 +1022,8 @@
      "oberflaeche": "#F9C93E",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X73",
@@ -936,7 +1032,8 @@
      "oberflaeche": "#D9342F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X78",
@@ -945,7 +1042,8 @@
      "oberflaeche": "#7D8742",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X70",
@@ -954,7 +1052,8 @@
      "oberflaeche": "#22578F",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X10",
@@ -963,7 +1062,8 @@
      "oberflaeche": "#161616",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X86",
@@ -972,7 +1072,8 @@
      "oberflaeche": "#DCDAD6",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X66",
@@ -981,7 +1082,8 @@
      "oberflaeche": "#E9C26C",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X56",
@@ -990,7 +1092,8 @@
      "oberflaeche": "#CFCFCF",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X89",
@@ -999,7 +1102,8 @@
      "oberflaeche": "#4A4E52",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X67",
@@ -1008,7 +1112,8 @@
      "oberflaeche": "#EE8872",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X43",
@@ -1017,7 +1122,8 @@
      "oberflaeche": "#F2A273",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X44",
@@ -1026,7 +1132,8 @@
      "oberflaeche": "#F2A273",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": true
     },
     {
      "code": "X83",
@@ -1035,7 +1142,8 @@
      "oberflaeche": "#E2338A",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X82",
@@ -1044,7 +1152,8 @@
      "oberflaeche": "#E2338A",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X84",
@@ -1053,7 +1162,8 @@
      "oberflaeche": "#8E3A8E",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X85",
@@ -1062,7 +1172,8 @@
      "oberflaeche": "#8E3A8E",
      "kern": "#F4F4F1",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X50",
@@ -1071,7 +1182,8 @@
      "oberflaeche": "#F9A800",
      "kern": "#161616",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X90",
@@ -1080,7 +1192,8 @@
      "oberflaeche": "#F4F4F1",
      "kern": "#E2BE68",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X21",
@@ -1089,7 +1202,8 @@
      "oberflaeche": "#0E0E0E",
      "kern": "#E2BE68",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     },
     {
      "code": "X22",
@@ -1098,7 +1212,8 @@
      "oberflaeche": "#0E0E0E",
      "kern": "#D6D6D6",
      "kern2": null,
-     "lieferbar": "L"
+     "lieferbar": "L",
+     "metall": false
     }
    ]
   }

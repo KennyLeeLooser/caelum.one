@@ -6,15 +6,30 @@
       "produkt": "Caelum Gravur",
       "titel": "Schild gestalten",
       "karte": "p-gravur",
-      "version": "0.8.0",
+      "version": "0.9.0",
       "status": "vorschau",
       "einstieg": "gravur-mini.js",
-      "hash": "d48df69dd71b",
+      "hash": "f55ea047d715",
       "vollversion": "#downloads",
       "liefert": [
         "schild-glb"
       ],
       "nimmt": []
+    },
+    {
+      "id": "viewer",
+      "produkt": "Caelum 3D-Viewer",
+      "titel": "3D-Datei ansehen",
+      "karte": "p-viewer",
+      "version": "1.3.0",
+      "status": "vorschau",
+      "einstieg": "viewer-mini.js",
+      "hash": "e1bbd2f61002",
+      "vollversion": "#downloads",
+      "liefert": [],
+      "nimmt": [
+        "schild-glb"
+      ]
     }
   ]
 }

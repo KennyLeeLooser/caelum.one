@@ -4,6 +4,29 @@
     {
       "date": "2026-11-19",
       "product": "Caelum Gravur · Web",
+      "version": "0.9.0",
+      "status": "vorschau",
+      "title": "Web-Fassung nachgeführt",
+      "points": [
+        "Gleich wie Caelum Gravur 0.9.0"
+      ],
+      "link": "#p-gravur"
+    },
+    {
+      "date": "2026-11-19",
+      "product": "Caelum 3D-Viewer · Web",
+      "version": "1.3.0",
+      "status": "vorschau",
+      "title": "3D-Datei ansehen – direkt im Browser",
+      "points": [
+        "3D-Datei ansehen ohne Installation, nichts wird hochgeladen",
+        "Gleich wie Caelum 3D-Viewer 1.3.0 (geprüft)"
+      ],
+      "link": "#p-viewer"
+    },
+    {
+      "date": "2026-11-19",
+      "product": "Caelum Gravur · Web",
       "version": "0.8.0",
       "status": "vorschau",
       "title": "Schild gestalten – direkt im Browser",
