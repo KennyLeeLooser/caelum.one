@@ -565,7 +565,24 @@ var CAELUM_SITE = {
   // Kundenzugang mit Google: lädt das Google-Skript erst nach dem Klick (Datenschutz)
   var gb = document.getElementById('zugang-google'), G = CAELUM_SITE.GOOGLE;
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  // Nach der Anmeldung: Google-Knopf ausblenden, „Abmelden“ zeigen. Abmelden setzt alles zurück und
+  // sagt Google, kein Konto mehr automatisch vorzuschlagen – so kann sich ein anderes Konto anmelden.
+  function angemeldet(email) {
+    var box = document.getElementById('zugang-google-box'); if (box) box.hidden = true;
+    var out = document.getElementById('zugang-abmelden');
+    if (!out) {
+      out = document.createElement('button'); out.type = 'button'; out.id = 'zugang-abmelden'; out.className = 'btn plain';
+      out.addEventListener('click', function () {
+        try { google.accounts.id.disableAutoSelect(); } catch (e) {}
+        out.remove(); if (box) box.hidden = false;
+        zm.textContent = 'Abgemeldet. Du kannst dich mit einem anderen Google-Konto anmelden (Pfeil im Google-Knopf).';
+      });
+      (box || gb).after(out);
+    }
+    out.textContent = 'Abmelden (' + email + ')';
+  }
   function baustellen(r) {
+    if (r && r.ok) angemeldet(r.email);
     if (!r || !r.ok) { zm.textContent = 'Anmeldung ging nicht: ' + ((r && r.fehler) || 'unbekannter Fehler') + '.'; return; }
     if (!r.baustellen.length) { zm.textContent = 'Angemeldet als ' + r.email + '. Für diese Adresse ist noch keine Baustelle freigeschaltet – schreib uns an info@caelum.one.'; return; }
     var p = CAELUM_SITE.PORTALE.gravur;
