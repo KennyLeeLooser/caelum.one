@@ -2,7 +2,7 @@
 // Caelum Analyse – Codes lesen: Kamera (nur über HTTPS oder localhost) und Bilder. Zuerst der eingebaute BarcodeDetector des
 // Browsers (Android-Chrome, schnell), sonst ZXing-js (vendor/, Apache-2.0) – beide ganz auf dem Gerät, kein Hochladen.
 // Formate: QR, Data Matrix, Aztec, PDF417, EAN-13/-8, UPC-A/-E, Code 128/39/93, ITF, Codabar (Wunsch Kenny: auch Barcodes).
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 const FORMATE = ["qr_code", "data_matrix", "aztec", "pdf417", "ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39", "code_93", "itf", "codabar"];
 let zxing = null;
 

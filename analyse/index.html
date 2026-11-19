@@ -2,7 +2,7 @@
 <!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
      Caelum Analyse · Web-App (Entscheid Kenny 19.11.2026: Nr. 1 Web-App, Nr. 2 Android über Pandoras Bau, Nr. 3 native Store-App).
      Gegenstück zu Caelum Rorschach: liest Rorschach-Codes und spielt die Überraschung in 3D ab, prüft fremde QR- und Barcodes.
-     KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). -->
+     KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8). -->
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
@@ -56,6 +56,9 @@ dt{color:var(--muted)}dd{margin:0;font-family:var(--mono);word-break:break-all}
 #buehne.zeigen #bBotschaft{opacity:1;transform:none}
 #bNochmal{pointer-events:auto}
 footer{color:var(--faint);font-size:12px;text-align:center}
+ul.kreisliste{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+ul.kreisliste li{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
+ul.kreisliste li span{font-family:var(--mono);font-size:13px}
 </style></head>
 <body>
 <div class="seite">
@@ -86,7 +89,12 @@ footer{color:var(--faint);font-size:12px;text-align:center}
     <dl id="eFelder"></dl>
     <div class="knoepfe" id="eAktion"></div>
   </section>
-  <footer>© 2026 Caelum GmbH · Caelum Analyse <span id="ver">0.1.0</span> · Lesen über <span id="weg">…</span></footer>
+  <section class="karte" id="kreise" hidden aria-label="Gekoppelte Kreise">
+    <div class="kopf"><h2>Gekoppelte Kreise</h2><span class="format">nur auf diesem Gerät</span></div>
+    <p class="hint">Verschlüsselte Rorschach-Codes dieser Kreise öffnen sich hier. Koppeln: in Caelum Rorschach am PC „Handy koppeln“ wählen und den Code scannen.</p>
+    <ul id="kListe" class="kreisliste"></ul>
+  </section>
+  <footer>© 2026 Caelum GmbH · Caelum Analyse <span id="ver">0.2.0</span> · Lesen über <span id="weg">…</span></footer>
 </div>
 
 <div id="buehne" aria-label="Überraschung in 3D">

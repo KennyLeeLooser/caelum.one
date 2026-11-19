@@ -2,7 +2,7 @@
 // Caelum Rorschach – kleiner GLB-Leser für die Überraschung: Knoten-Hierarchie (TRS/Matrix), Dreiecke, Normalen,
 // Vertexfarben, baseColorFactor und baseColorTexture. Alles wird in Weltkoordinaten gebacken und auf Höhe 1 normiert
 // (Fuß auf y = 0, Mitte auf x = z = 0). Kein fremder Code.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 const KOMP = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4, MAT4: 16 };
 const TYP = { 5120: Int8Array, 5121: Uint8Array, 5122: Int16Array, 5123: Uint16Array, 5125: Uint32Array, 5126: Float32Array };
 const NORM = { 5120: 127, 5121: 255, 5122: 32767, 5123: 65535 };

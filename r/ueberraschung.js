@@ -4,7 +4,7 @@
 // Ablauf (Sekunden): 0–0,9 Karte · 0,9–2,6 Aufsteigen + spiegelgleiche Faltung · 2,6–4,0 Ei · 4,0–5,4 Aufbrechen, Objekt + Botschaft
 // · ab 7,4 Aktion des Objekts (Rakete: zündet, startet, kommt zurück). Danach schwebt das Objekt.
 // Sammlung und Logo werden relativ zu diesem Modul geladen, damit es von jeder Seite aus funktioniert.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 import * as QR from "./qr.js";
 import * as BEF from "./befehl.js";
 import { ink, safe, PAPER, DEEP, fbm } from "./tinte.js";
@@ -27,13 +27,14 @@ export async function katalog() {
 /**
  * Spielt eine Überraschung auf einer Leinwand.
  * opt.adresse   gescannte Adresse (aus ihr wird der Code als Würfel nachgebaut)
+ * opt.befehl    schon geöffneter Befehl {objekt, farbe, botschaft} (R2: Analyse entschlüsselt vorher); sonst aus der Adresse (R1)
  * opt.schleife  nach DAUER von vorn beginnen (Startseite)
  * opt.still     nur ein Standbild zu dieser Zeit (Selbsttest)
  * opt.zeigen(an) wird gerufen, wenn die Botschaft erscheinen bzw. verschwinden soll
  * Rückgabe: { befehl, objekt, stand, neu(), stop() } – wirft, wenn kein Rorschach-Befehl oder kein WebGL2.
  */
 export async function spielen(canvas, opt) {
-  const r = BEF.lesen(opt.adresse);
+  const r = opt.befehl ? { ok: true, u: opt.befehl } : BEF.lesen(opt.adresse);
   if (!r.ok) throw Object.assign(new Error(r.fehler), { art: "befehl" });
   const u = r.u, pal = BEF.FARBEN[u.farbe] || "caelum";
   const obj = (await katalog()).find(o => o.id === u.objekt) || null;

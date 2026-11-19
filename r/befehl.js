@@ -1,7 +1,7 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // Caelum Rorschach – Befehlsformat R1, JavaScript-Fassung von Befehl.cs (Master). <Basis>#r1.<Base64url([Typ][Objekt][Farbe][Botschaft][CRC-16])>
 // Was hinter „#“ steht, schickt der Browser nie an einen Server.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 export const KENNUNG = "r1.";
 export const TYP_UEBERRASCHUNG = 1;
 export const MAX_BOTSCHAFT = 58;

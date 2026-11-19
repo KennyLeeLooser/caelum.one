@@ -3,7 +3,7 @@
 // Kontrast-Sicherung (dunkle Module höchstens Leuchtdichte 0,12 → ≥ 5 : 1 gegen das Papier; nur die Helligkeit sinkt,
 // der Farbton bleibt) und das Linien-Logo (aus CAELUM\Branding verlinkt, Datei logo-linie.svg neben der Seite).
 // Übernommen aus dem abgenommenen Entwurf CaelumLink\entwurf\qr-fluss.html (Kenny 19.11.2026: „besonders dieses Design“).
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 const P = new Uint8Array(512);
 { const p = [...Array(256).keys()]; let s = 1337; for (let i = 255; i > 0; i--) { s = (s * 16807) % 2147483647; const j = s % (i + 1); [p[i], p[j]] = [p[j], p[i]]; } for (let i = 0; i < 512; i++) P[i] = p[i & 255]; }
 const sm = t => t * t * (3 - 2 * t);

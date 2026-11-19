@@ -1,7 +1,7 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // Caelum Rorschach – kleiner WebGL2-Renderer für die Scan-Seite: viele Würfel als Instanzen (Position, Größe, Farbe, Drehung)
 // und Netze aus der GLB-Sammlung (Vertexfarben, Grundfarbe, Textur). Eigener Code, keine fremde Bibliothek.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 import { mul4 } from "./glb.js";
 
 const VS_WUERFEL = `#version 300 es

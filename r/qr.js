@@ -1,7 +1,7 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // Caelum Rorschach – QR-Erzeuger (ISO 18004, Byte-Modus, Stufe H, Version 1–40). JavaScript-Fassung von QrCode.cs (Master);
 // der Gleichheitstest im Selbsttest und web/test/gleich.mjs vergleichen Modul für Modul.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 const ECC_H = [-1,17,28,22,16,22,28,26,26,24,28,24,28,22,24,24,30,28,28,26,28,30,24,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30];
 const BLK_H = [-1,1,1,2,4,4,4,5,6,8,8,11,11,16,16,18,16,19,21,25,25,25,34,30,32,35,37,40,42,45,48,51,54,57,60,63,66,70,74,77,81];
 const size = v => v * 4 + 17;

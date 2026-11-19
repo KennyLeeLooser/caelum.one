@@ -3,7 +3,7 @@
 // und andere Codes). Rein lokal, ohne Netz: Der Inhalt verlässt das Gerät nie.
 // analysieren(text, format) → { art, titel, stufe: "ok"|"hinweis"|"vorsicht"|"gefahr", gruende: [..], felder: [[name, wert]], aktion }
 // Link-Regeln angelehnt an den Mailschutz der Gans (GoodGoose\Browser\src\mailcheck.js: Punycode, Kurzlinks, Markennamen).
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 
 const STUFEN = ["ok", "hinweis", "vorsicht", "gefahr"];
 const KURZLINKS = ["bit.ly", "tinyurl.com", "cutt.ly", "is.gd", "rb.gy", "shorturl.at", "ow.ly", "t.ly", "tiny.cc", "rebrand.ly", "s.id", "goo.su", "t.co", "qrco.de", "qr.link", "bl.ink"];
@@ -92,15 +92,45 @@ export function pruefeLink(text) {
 export function pruefeRorschach(text, befehlLesen) {
   const r = neu("rorschach", "Rorschach-Befehl");
   const h = text.slice(text.indexOf("#") + 1);
-  if (h.startsWith("r2.")) { r.titel = "Verschlüsselter Rorschach-Code"; grund(r, "hinweis", "Verschlüsselt und signiert (Format R2). Entschlüsseln kommt mit dem Schlüssel aus Rorschach (Stufe 2)."); return r; }
+  if (h.startsWith("r2.")) { r.art = "rorschach2"; r.titel = "Verschlüsselter Rorschach-Code"; grund(r, "hinweis", "Verschlüsselt und signiert (Format R2) – wird mit den gekoppelten Kreisen geöffnet."); r.aktion = { art: "r2", adresse: text }; return r; }
+  if (h.startsWith("k1.")) { r.art = "kopplung"; r.titel = "Kopplung mit einem Kreis"; grund(r, "hinweis", "Kopplungs-Code aus Caelum Rorschach."); r.aktion = { art: "k1", adresse: text }; return r; }
   const b = befehlLesen(text);
   if (!b.ok) { grund(r, "gefahr", b.fehler); return r; }
   let host = ""; try { host = new URL(text).hostname; } catch { }
   r.felder.push(["Befehl", "Überraschung"], ["Objekt", String(b.u.objekt)], ["Botschaft", "versteckt – erscheint beim Öffnen"]);
   if (host && !VERTRAUT_RORSCHACH.includes(host) && !istPrivateIp(host)) grund(r, "vorsicht", `Rorschach-Befehl auf einer fremden Seite (${host}). Analyse spielt ihn trotzdem nur hier ab.`);
   else grund(r, "ok", "Echter Rorschach-Aufbau mit gültiger Prüfsumme. Wird hier abgespielt, ohne eine Seite zu öffnen.");
-  grund(r, "hinweis", "Noch nicht signiert (Format R1) – die Echtheit des Absenders ist erst mit R2 prüfbar.");
+  grund(r, "hinweis", "Offener Code (Format R1): nicht signiert – wer ihn erstellt hat, ist nicht geprüft.");
   r.befehl = b.u; r.aktion = { art: "ueberraschung", adresse: text };
+  return r;
+}
+
+/** Ergebnis von R2.oeffnen (r2.js) als Prüfergebnis. o = { ok, u, kreis, name, verschluesselt, fingerabdruck } oder { ok:false, art, fehler, kreis } */
+export function pruefeR2(text, o) {
+  const r = neu("rorschach2", "Verschlüsselter Rorschach-Code");
+  if (!o.ok) {
+    r.felder.push(["Kreis", String(o.kreis ?? "?")]);
+    if (o.art === "fremd") grund(r, "hinweis", o.fehler + " Den Kopplungs-Code bekommst du vom Absender (Caelum Rorschach am PC).");
+    else grund(r, "gefahr", o.fehler);
+    return r;
+  }
+  r.titel = "Rorschach-Befehl · echt";
+  r.felder.push(["Befehl", "Überraschung"], ["Objekt", String(o.u.objekt)], ["Kreis", `${o.name} (${o.fingerabdruck || o.kreis})`]);
+  grund(r, "ok", `Echt: signiert vom Kreis „${o.name}“. Der Code wurde nicht verändert.`);
+  grund(r, "ok", o.verschluesselt ? "Inhalt war verschlüsselt – nur gekoppelte Geräte können ihn lesen." : "Nur signiert, nicht verschlüsselt.");
+  r.befehl = o.u; r.aktion = { art: "ueberraschung", adresse: text, befehl: o.u };
+  return r;
+}
+
+/** Kopplungs-Code (r2.js → kopplung) prüfen, bevor gespeichert wird. k = { ok, kreis, bis, name, fingerabdruck }, schon = Kreis bereits da */
+export function pruefeKopplung(k, jetzt = new Date(), schon = false) {
+  const r = neu("kopplung", "Kopplung mit einem Kreis");
+  if (!k.ok) { grund(r, "gefahr", k.fehler); return r; }
+  r.felder.push(["Kreis", k.name], ["Fingerabdruck", k.fingerabdruck || "?"], ["Gültig bis", k.bis.toLocaleString("de-CH")]);
+  if (k.bis < jetzt) { grund(r, "gefahr", "Der Kopplungs-Code ist abgelaufen. Am PC in Rorschach einen neuen zeigen lassen."); return r; }
+  grund(r, "vorsicht", "Mit der Kopplung kann dieses Gerät alle Codes dieses Kreises lesen. Nur koppeln, wenn der Code gerade an deinem PC angezeigt wird, und den Fingerabdruck vergleichen.");
+  if (schon) grund(r, "hinweis", "Dieser Kreis ist schon gekoppelt – Koppeln ersetzt die alten Schlüssel (z. B. nach einem Widerruf).");
+  r.aktion = { art: "koppeln", kreis: k.kreis };
   return r;
 }
 
@@ -146,7 +176,7 @@ export function analysieren(text, format = "", befehlLesen = () => ({ ok: false,
   text = (text ?? "").replace(/^﻿/, "");
   const f = (format || "").toLowerCase();
   let r;
-  if (/#r[12]\./.test(text) || /^r[12]\./.test(text)) r = pruefeRorschach(text, befehlLesen);
+  if (/#(r[12]|k1)\./.test(text) || /^(r[12]|k1)\./.test(text)) r = pruefeRorschach(text, befehlLesen);
   else if (/^(ean|upc)/.test(f) || (/^\d{8}$|^\d{12,13}$/.test(text) && !f.includes("qr"))) r = pruefeProdukt(text, format);
   else if (/^WIFI:/i.test(text)) r = pruefeWlan(text);
   else if (/^BEGIN:VCARD/i.test(text) || /^MECARD:/i.test(text)) r = pruefeKontakt(text.replace(/^MECARD:/i, "").replace(/;/g, "\n"));
