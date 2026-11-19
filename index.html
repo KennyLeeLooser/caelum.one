@@ -460,7 +460,7 @@
         <p>Caelum GmbH, Ringstrasse 1, 8105 Regensdorf, Schweiz. Vertreten durch Kenny Looser. E-Mail: info@caelum.one, Telefon: +41 79 369 36 93.</p>
         <p>Alle Inhalte dieser Website, insbesondere Texte, Logos und Bilder, sind urheberrechtlich geschützt. © 2026 Caelum GmbH, Kenny Looser.</p>
         <h3 id="datenschutz">Datenschutz</h3>
-        <p>Diese Website setzt keine Cookies, verwendet keine Analyse- oder Tracking-Dienste und lädt keine Inhalte von Drittanbietern. Sie wird über GitHub Pages (GitHub Inc., USA) ausgeliefert; dabei verarbeitet GitHub technisch notwendige Daten wie die IP-Adresse, um die Seite anzuzeigen und vor Missbrauch zu schützen. Wenn du uns per E-Mail, Telefon oder Kontaktformular kontaktierst, verwenden wir deine Angaben nur, um deine Anfrage zu beantworten. Nachrichten aus dem Formular werden über Google Workspace (Google Ireland Ltd.) an unser Postfach info@caelum.one zugestellt. Auskunft und Löschung: info@caelum.one.</p>
+        <p>Diese Website setzt keine Cookies, verwendet keine Analyse- oder Tracking-Dienste und lädt keine Inhalte von Drittanbietern. Sie wird über GitHub Pages (GitHub Inc., USA) ausgeliefert; dabei verarbeitet GitHub technisch notwendige Daten wie die IP-Adresse, um die Seite anzuzeigen und vor Missbrauch zu schützen. Wenn du uns per E-Mail, Telefon oder Kontaktformular kontaktierst, verwenden wir deine Angaben nur, um deine Anfrage zu beantworten. Nachrichten aus dem Formular werden über Google Workspace (Google Ireland Ltd.) an unser Postfach info@caelum.one zugestellt. Erst wenn du beim Kundenzugang auf „Mit Google anmelden“ klickst, lädt die Seite ein Skript von Google (accounts.google.com); nach deiner Zustimmung erhalten wir Name und E-Mail-Adresse deines Google-Kontos, nur um dir deine Baustellen anzuzeigen. Gespeichert wird dabei nichts. Auskunft und Löschung: info@caelum.one.</p>
         <h3>Haftung</h3>
         <p>Wir prüfen die Inhalte sorgfältig, übernehmen aber keine Gewähr für Richtigkeit, Vollständigkeit und Aktualität. Für Inhalte verlinkter Seiten sind ausschliesslich deren Betreiber verantwortlich.</p>
       </div>
@@ -524,7 +524,12 @@
 // Einstellungen der Seite. KONTAKT_URL = Web-App-Adresse des Google Apps Script (Konto kenny@caelum.one); leer = E-Mail-Programm öffnen.
 var CAELUM_SITE = {
   KONTAKT_URL: 'https://script.google.com/macros/s/AKfycbz7ljrIvnuA9frpcRCMdNliun200wI8iYmvCF26dgl_3swiT5yiRbfo8obZZncS9r33/exec',
-  PORTALE: { gravur: { live: false, pfad: 'gravur/' } }
+  PORTALE: { gravur: { live: false, pfad: 'gravur/' } },
+  // Google-Anmeldung: OAuth-Client (Projekt caelum-web) und Web-App „Caelum Kunden“. Beide leer = Knopf aus.
+  GOOGLE: {
+    CLIENT_ID: '787870908248-adg8d7ulv5ihiie4ahgefe5l63of6ecq.apps.googleusercontent.com',
+    ZUGANG_URL: 'https://script.google.com/macros/s/AKfycby2-eYtWh-42XLM6Rq3k6PWXg_6TnZzL2eX3rnk4gHhyHwD8FhXPKMJ4MhaciZsDlSoeQ/exec'
+  }
 };
 (function () {
   // Kontaktformular
@@ -556,6 +561,40 @@ var CAELUM_SITE = {
     if (!p.live) { zm.textContent = 'Das Portal ist noch nicht freigeschaltet. Wir melden uns, sobald es bereit ist.'; return; }
     location.href = p.pfad + '?code=' + encodeURIComponent(code);
   });
+
+  // Kundenzugang mit Google: lädt das Google-Skript erst nach dem Klick (Datenschutz)
+  var gb = document.getElementById('zugang-google'), G = CAELUM_SITE.GOOGLE;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function baustellen(r) {
+    if (!r || !r.ok) { zm.textContent = 'Anmeldung ging nicht: ' + ((r && r.fehler) || 'unbekannter Fehler') + '.'; return; }
+    if (!r.baustellen.length) { zm.textContent = 'Angemeldet als ' + r.email + '. Für diese Adresse ist noch keine Baustelle freigeschaltet – schreib uns an info@caelum.one.'; return; }
+    var p = CAELUM_SITE.PORTALE.gravur;
+    if (p.live && r.baustellen.length === 1) { location.href = p.pfad + '?code=' + encodeURIComponent(r.baustellen[0]); return; }
+    zm.innerHTML = 'Angemeldet als ' + esc(r.email) + '. Deine Baustellen: ' + r.baustellen.map(function (c) {
+      return p.live ? '<a href="' + p.pfad + '?code=' + encodeURIComponent(c) + '">' + esc(c) + '</a>' : '<b>' + esc(c) + '</b>';
+    }).join(', ') + (p.live ? '' : ' – das Portal wird bald freigeschaltet.');
+  }
+  if (G.CLIENT_ID && G.ZUGANG_URL) {
+    gb.disabled = false; gb.title = 'Anmeldung mit deinem Google-Konto';
+    zm.textContent = 'Den Code bekommst du von uns zusammen mit der Baustelle – oder melde dich mit Google an.';
+    gb.addEventListener('click', function () {
+      gb.disabled = true; zm.textContent = 'Google-Anmeldung wird geladen …';
+      var s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
+      s.onerror = function () { gb.disabled = false; zm.textContent = 'Google ist gerade nicht erreichbar. Bitte den Baustellen-Code verwenden.'; };
+      s.onload = function () {
+        google.accounts.id.initialize({ client_id: G.CLIENT_ID, ux_mode: 'popup', callback: function (c) {
+          zm.textContent = 'Anmeldung wird geprüft …';
+          fetch(G.ZUGANG_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ idToken: c.credential }) })
+            .then(function (r) { return r.json(); }).then(baustellen)
+            .catch(function () { zm.textContent = 'Prüfung ging nicht. Bitte später nochmals oder mit dem Baustellen-Code.'; });
+        } });
+        var box = document.createElement('div'); box.id = 'zugang-google-box'; gb.replaceWith(box);
+        google.accounts.id.renderButton(box, { theme: 'filled_black', text: 'signin_with', shape: 'pill', locale: 'de' });
+        zm.textContent = 'Bitte jetzt mit Google fortfahren.';
+      };
+      document.head.appendChild(s);
+    });
+  }
 })();
 </script>
 </body>
