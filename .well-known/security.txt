@@ -1,0 +1,6 @@
+# Sicherheitsmeldungen für www.caelum.one und die Programme der Caelum GmbH
+# Security contact for www.caelum.one and Caelum GmbH software (RFC 9116)
+Contact: mailto:info@caelum.one
+Expires: 2027-11-19T00:00:00.000Z
+Preferred-Languages: de, en
+Canonical: https://www.caelum.one/.well-known/security.txt

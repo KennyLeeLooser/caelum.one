@@ -1,0 +1,3 @@
+# GitHub Pages: Ordner mit Punkt werden sonst weggelassen (security.txt nach RFC 9116)
+include:
+  - .well-known
