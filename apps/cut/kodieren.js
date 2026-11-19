@@ -70,20 +70,25 @@ async function videoKonfig(plan, notizen) {
   if (plan.hevc) kandidaten.push({ ...basis, codec: gross ? "hvc1.1.6.L153.B0" : "hvc1.1.6.L123.B0", hevc: { format: "hevc" }, art: "hevc" });
   kandidaten.push({ ...basis, codec: gross ? "avc1.640033" : "avc1.640028", avc: { format: "avc" }, art: "avc" });
   kandidaten.push({ ...basis, codec: gross ? "avc1.4d0033" : "avc1.4d0028", avc: { format: "avc" }, art: "avc" });
-  for (const k of kandidaten) {
-    const { art, ...cfg } = k;
-    try {
-      const r = await VideoEncoder.isConfigSupported(cfg);
-      if (r.supported) {
-        if (plan.hevc && art === "avc") {
-          // H.265 kann dieser Browser nicht kodieren: H.264 mit mehr Daten (Faustregel aus der App: x265-CRF ≈ x264-CRF + 4)
-          cfg.bitrate = Math.round(cfg.bitrate * 1.75);
-          notizen.push("Dieser Browser kodiert kein H.265 – es wird H.264 (etwas grösser). Die App kann H.265.");
+  // Zuerst „quantizer“ (fester QP je Bild, wie CRF in der App: die Datenmenge folgt dem Inhalt), sonst feste Bitrate.
+  for (const mitQp of plan.qp ? [true, false] : [false])
+    for (const k of kandidaten) {
+      const { art, ...cfg } = k;
+      if (mitQp && art === "hevc") continue;   // H.265 + quantizer: Chrome meldet „geht“, hält den QP aber nicht (19.11.2026) – siehe hevcMitMessung
+      if (mitQp) { cfg.bitrateMode = "quantizer"; delete cfg.bitrate; }
+      try {
+        const r = await VideoEncoder.isConfigSupported(cfg);
+        if (r.supported) {
+          if (plan.hevc && art === "avc") {
+            // H.265 kann dieser Browser nicht kodieren: H.264 mit mehr Daten (Faustregel aus der App: x265-CRF ≈ x264-CRF + 4)
+            if (cfg.bitrate) cfg.bitrate = Math.round(cfg.bitrate * 1.75);
+            notizen.push("Dieser Browser kodiert kein H.265 – es wird H.264 (etwas grösser). Die App kann H.265.");
+          }
+          if (!mitQp && plan.qp) notizen.push("Dieser Browser kodiert nur mit fester Bitrate – die Grösse ist dann nur grob geschätzt.");
+          return { cfg, art, qp: mitQp ? plan.qp[art] : null };
         }
-        return { cfg, art };
-      }
-    } catch { /* nächster Versuch */ }
-  }
+      } catch { /* nächster Versuch */ }
+    }
   throw new KodierFehler(`Dieser Browser kann kein ${plan.w}×${plan.h}-Video kodieren. Bitte Chrome oder Edge nehmen – oder die App.`);
 }
 
@@ -136,6 +141,11 @@ function zeichnen(g, frame, clip, w, h, fuellen) {
  */
 export async function kodieren(teile, plan, melde = () => {}, signal) {
   if (!kannKodieren()) throw new KodierFehler("Dieser Browser kann kein WebCodecs (Video-Encoder). Bitte Chrome, Edge oder ein aktuelles Safari nehmen – oder die App.");
+  if (await hevcMitMessung(plan)) {
+    melde(0, "Bild wird vermessen …");
+    const m = await messen(teile, { ...plan, hevc: false }, signal);
+    plan = { ...plan, qp: null, videoKbps: Math.max(150, Math.round(m.video * 8 / plan.total / 1000 * HEVC_ANTEIL)) };
+  }
   const notizen = [];
   const v = await videoKonfig(plan, notizen);
   const t = plan.ton ? await tonKonfig(plan, notizen) : null;
@@ -146,13 +156,19 @@ export async function kodieren(teile, plan, melde = () => {}, signal) {
     ...(t ? { audio: { codec: t.art, numberOfChannels: 2, sampleRate: 48000 } } : {}),
   });
   let encFehler = null;
-  const enc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: e => { encFehler = e; } });
+  const stat = { keyBytes: 0, keys: 0, otherBytes: 0, frames: 0, audioBytes: 0 };   // für schaetzen()
+  const enc = new VideoEncoder({
+    output: (c, m) => { muxer.addVideoChunk(c, m); stat.frames++; if (c.type === "key") { stat.keyBytes += c.byteLength; stat.keys++; } else stat.otherBytes += c.byteLength; },
+    error: e => { encFehler = e; },
+  });
   enc.configure(v.cfg);
-  const aenc = t ? new AudioEncoder({ output: (c, m) => muxer.addAudioChunk(c, m), error: e => { encFehler = e; } }) : null;
+  const qp = v.cfg.bitrateMode === "quantizer" ? v.qp : null;             // wie CRF: Datenmenge folgt dem Inhalt
+  const qOpt = qp == null ? {} : v.art === "hevc" ? { hevc: { quantizer: qp } } : { avc: { quantizer: qp } };
+  const aenc = t ? new AudioEncoder({ output: (c, m) => { muxer.addAudioChunk(c, m); stat.audioBytes += c.byteLength; }, error: e => { encFehler = e; } }) : null;
   if (aenc) aenc.configure(t.cfg);
 
   const leinwand = new OffscreenCanvas(plan.w, plan.h), g = leinwand.getContext("2d", { alpha: false });
-  const schritt = 1e6 / plan.fps, gop = Math.max(1, Math.round(plan.fps * 2));
+  const schritt = 1e6 / plan.fps, gop = Math.max(1, Math.round(plan.fps * (plan.gopSek ?? 2)));
   let bildNr = 0, offset = 0;                                               // Ausgabe-Bildnummer, Startzeit des Clips (µs)
   const prueft = () => { if (signal?.aborted) throw new DOMException("Abgebrochen", "AbortError"); if (encFehler) throw encFehler; };
   const warte = async () => { while (enc.encodeQueueSize > 6 || (aenc && aenc.encodeQueueSize > 12)) { prueft(); await new Promise(r => setTimeout(r, 4)); } };
@@ -177,7 +193,7 @@ export async function kodieren(teile, plan, melde = () => {}, signal) {
             zeichnen(g, f, clip, plan.w, plan.h, plan.fuellen);
             const vf = new VideoFrame(leinwand, { timestamp: Math.round(bildNr * schritt), duration: Math.round(schritt) });
             await warte();
-            enc.encode(vf, { keyFrame: bildNr % gop === 0 });
+            enc.encode(vf, { keyFrame: bildNr % gop === 0, ...qOpt });
             vf.close(); bildNr++;
           }
           melde(Math.min(0.98, tOut / 1e6 / plan.total), `Clip ${ti + 1}/${teile.length}: ${clip.name}`);
@@ -217,5 +233,53 @@ export async function kodieren(teile, plan, melde = () => {}, signal) {
   prueft();
   muxer.finalize();
   enc.close(); aenc?.close();
-  return { blob: new Blob([ziel.buffer], { type: "video/mp4" }), art: v.art, notizen };
+  return { blob: new Blob([ziel.buffer], { type: "video/mp4" }), art: v.art, notizen, stat, quantizer: qp != null };
+}
+
+/**
+ * Grösse vorab schätzen wie Jobs.Estimate der App: Teile bis 30 s ganz kodieren, längere mit 3–6 Probestücken à 4 s
+ * (eines je 10 s), Keyframes getrennt hochrechnen (einer je Keyframe-Abstand), Ton messen. Höchstens 12 Probestücke,
+ * weitere Teile nach Durchschnitt. Ergebnis in Bytes. Gemessen 19.11.2026: App ±4 %.
+ */
+export async function schaetzen(teile, plan, signal) {
+  if (await hevcMitMessung(plan)) { const m = await messen(teile, { ...plan, hevc: false }, signal); return (m.video * HEVC_ANTEIL + m.ton) * 1.005; }
+  const m = await messen(teile, plan, signal);
+  return (m.video + m.ton) * 1.005;                                          // MP4-Verwaltung
+}
+
+/** H.265 ohne brauchbaren „quantizer“: erst mit H.264-QP messen, dann H.265 mit diesem Anteil der Bitrate (App: x265 ≈ 57 %). */
+const HEVC_ANTEIL = 0.6;
+async function hevcMitMessung(plan) {
+  if (!plan.hevc || !plan.qp || typeof VideoEncoder === "undefined") return false;
+  const gross = plan.w * plan.h > 1920 * 1088;
+  try {
+    const r = await VideoEncoder.isConfigSupported({ codec: gross ? "hvc1.1.6.L153.B0" : "hvc1.1.6.L123.B0", width: plan.w, height: plan.h, bitrate: 1e6, bitrateMode: "variable", framerate: plan.fps, hevc: { format: "hevc" } });
+    return !!r.supported;
+  } catch { return false; }
+}
+
+/** Probestücke kodieren und hochrechnen → { video, ton } in Bytes (ohne MP4-Verwaltung). */
+async function messen(teile, plan, signal) {
+  const gopBilder = Math.max(1, Math.round(plan.fps * (plan.gopSek ?? 2)));
+  let video = 0, tonAlle = 0, gesehen = 0, rest = 0, frei = 12;
+  for (let i = 0; i < teile.length; i++) {
+    const { clip, von, bis } = teile[i], laenge = bis - von;
+    if (frei <= 0) { rest += laenge; continue; }
+    const ganz = laenge <= 30;
+    let n = ganz ? 1 : Math.min(6, Math.max(3, Math.ceil(laenge / 10)));
+    n = Math.min(n, Math.max(1, Math.floor(frei / Math.max(1, teile.length - i)))); frei -= n;
+    const s = ganz ? laenge : Math.min(4, laenge / n);
+    let other = 0, keySum = 0, keys = 0, frames = 0, ton = 0, probeSek = 0;
+    for (let k = 0; k < n; k++) {
+      const a = von + Math.min(Math.max(0, laenge * (k + 0.5) / n - s / 2), laenge - s);
+      const r = await kodieren([{ clip, von: a, bis: a + s }], { ...plan, total: s }, () => {}, signal);
+      other += r.stat.otherBytes; keySum += r.stat.keyBytes; keys += r.stat.keys; frames += r.stat.frames; ton += r.stat.audioBytes; probeSek += s;
+    }
+    const fps = frames > 0 ? frames / probeSek : plan.fps;
+    const keyAnzahl = laenge * fps / gopBilder + 1;                          // der Web-Kodierer setzt sie fest (kein Szenenwechsel)
+    video += other / probeSek * laenge + (keys ? keySum / keys : 0) * keyAnzahl;
+    tonAlle += ton / probeSek * laenge; gesehen += laenge;
+  }
+  if (rest > 0 && gesehen > 0) { video += video / gesehen * rest; tonAlle += tonAlle / gesehen * rest; }
+  return { video, ton: tonAlle };
 }

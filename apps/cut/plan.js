@@ -2,7 +2,9 @@
 // KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch einen Menschen ausstehend (GB-8).
 // Caelum Cut · Web-Fassung der Regeln, MASTER ist die App: Options (Stufen, Profil), Jobs.Canvas (Bildfläche), Jobs.TargetKbps
 // (Zielgrösse), Jobs.Render (Bildrate, kleineres Bild bei wenig Daten), Profiles.LengthWarning, Store.Time.
-// Dazu nur im Web: Bitrate statt CRF (der Browser-Encoder kennt kein CRF) aus der Kalibrierung der App (profile.json).
+// Dazu nur im Web: Der Browser-Encoder kennt kein CRF. Er bekommt einen festen QP je Bild („quantizer“, CRF + Versatz aus
+// profile.json → kalibrierung.qpVersatz, gemessen 19.11.2026), sonst als Rückfall eine Bitrate aus Bit je Bildpunkt
+// (gemessen an echten Videos). Keyframe alle 250 Bilder wie x264/x265 in der App.
 // Reine Logik ohne DOM – web/test/gleich.mjs prüft sie gegen 160 Referenzfälle der App.
 
 /** C# Math.Round (bei .5 zur geraden Zahl). */
@@ -62,6 +64,8 @@ export function laengeWarnung(p, sek) {
   return p?.maxSekunden != null && sek > p.maxSekunden + 0.05 ? `${p.name} erlaubt bis ${zeit(p.maxSekunden)}, das Video ist ${zeit(sek)} lang.` : null;
 }
 
+const qpGrenze = q => Math.min(51, Math.max(10, Math.round(q)));
+
 /** Bit je Bildpunkt für Codec + CRF aus der Kalibrierung der App; fehlt die Stufe: +6 CRF ≈ halbe Datenmenge. */
 export function bitJePunkt(kalib, hevc, crf) {
   const art = hevc ? "hevc" : "h264";
@@ -88,8 +92,11 @@ export function planen(o, clips, daten) {
   const [w, h] = flaeche(clips[0].w, clips[0].h, op, lang);
   const hevc = op.ziel ? false : op.hevc;                                   // Zielgrösse immer H.264 (wie Encode)
   const videoKbps = kbps ?? Math.max(150, Math.round(bitJePunkt(daten.kalibrierung, hevc, op.crf) * w * h * fps / 1000));
+  const qv = daten.kalibrierung?.qpVersatz;
+  const qp = kbps == null && qv ? { avc: qpGrenze((hevc ? op.crf - 4 : op.crf) + qv.avc) } : null;   // H.265: siehe kodieren.js hevcVorbereiten
   return {
     w, h, fps, hevc, crf: op.crf, tonKbps: op.tonKbps, zielKbps: kbps, warnung: laengeWarnung(op.p, total), ton, total, text: op.text,
-    fuellen: op.fuellen, videoKbps, groesseMB: (videoKbps + (ton ? op.tonKbps : 0)) * 1000 * total / 8 / 1024 / 1024 / 0.97,
+    fuellen: op.fuellen, videoKbps, qp, gopSek: 250 / fps,
+    groesseMB: (videoKbps + (ton ? op.tonKbps : 0)) * 1000 * total / 8 / 1024 / 1024 / 0.97,   // grob; genau: kodieren.js schaetzen()
   };
 }

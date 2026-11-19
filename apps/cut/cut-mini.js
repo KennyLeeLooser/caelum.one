@@ -4,7 +4,7 @@
 // Videos hineinziehen, je Clip Von/Bis schneiden, Reihenfolge ändern, Stufe oder Geräteprofil wählen, komprimieren, speichern.
 // Regeln aus plan.js (= Jobs.cs/Profiles.cs der App), Kodieren in kodieren.js (WebCodecs). Nichts wird hochgeladen.
 import { planen, zeit, PlanFehler } from "./plan.js";
-import { lesen, kodieren, kannKodieren, KodierFehler } from "./kodieren.js";
+import { lesen, kodieren, schaetzen, kannKodieren, KodierFehler } from "./kodieren.js";
 
 const css = `
 .ct-drop { border:2px dashed var(--line); border-radius:10px; padding:20px; text-align:center; color:var(--muted); }
@@ -100,7 +100,22 @@ export async function mount(root, ctx) {
     const [art, id] = wahl.auswahl.split(":");
     return { stufe: art === "stufe" ? id : null, form: wahl.form, profil: art === "profil" ? daten.profile.find(p => p.id === id) : null, quer: wahl.quer, zielMB: wahl.zielMB, fuellen: wahl.fuellen };
   }
-  let plan = null;
+  let plan = null, schaetzAbbruch = null, schaetzUhr = 0;
+  /** Grösse wie in der App mit Probestücken schätzen: 0,7 s nach der letzten Änderung, im Hintergrund, neueste gewinnt. */
+  function neuSchaetzen(zeile) {
+    schaetzAbbruch?.abort(); clearTimeout(schaetzUhr);
+    if (!plan || abbruch || !kannKodieren()) return;
+    const p = plan, teile = clips.map(c => ({ clip: c.clip, von: c.von, bis: c.bis }));
+    if (p.zielKbps != null) { zeile.textContent = zeile.dataset.vor + mb(p.groesseMB * 1024 * 1024) + zeile.dataset.nach; return; }
+    zeile.textContent = "Grösse wird geschätzt …";
+    schaetzUhr = setTimeout(async () => {
+      const ac = schaetzAbbruch = new AbortController();
+      try {
+        const bytes = await schaetzen(teile, p, ac.signal);
+        if (!ac.signal.aborted && plan === p) zeile.textContent = zeile.dataset.vor + mb(bytes) + zeile.dataset.nach;
+      } catch (e) { if (e?.name !== "AbortError" && plan === p) zeile.textContent = "Schätzen ging nicht: " + (e?.message || e); }
+    }, 700);
+  }
   function neuPlanen() {
     const o = optionen();
     zeileForm.hidden = !!o.profil; zeileQuer.hidden = !o.profil; zeileZiel.hidden = !(o.stufe === "Ziel");
@@ -109,10 +124,12 @@ export async function mount(root, ctx) {
     try {
       plan = planen(o, clips.map(c => ({ w: c.clip.breite, h: c.clip.hoehe, fps: c.clip.fps, dauer: Math.max(0, c.bis - c.von), ton: c.clip.ton })), daten);
       const vorher = clips.reduce((s, c) => s + c.clip.groesse, 0);
+      const groesse = h("div", { "data-vor": "Geschätzt etwa ", "data-nach": ` (vorher ${mb(vorher)})` });
       planText.replaceChildren(...[
         h("div", {}, `${plan.w} × ${plan.h} · ${Math.round(plan.fps * 100) / 100} fps · ${plan.hevc ? "H.265" : "H.264"} · ${zeit(plan.total)}`),
-        h("div", {}, `Geschätzt ${mb(plan.groesseMB * 1024 * 1024)} (vorher ${mb(vorher)})`),
+        groesse,
         plan.warnung ? h("div", { style: "color:#E5484D" }, "Achtung: " + plan.warnung) : null].filter(Boolean));
+      neuSchaetzen(groesse);
     } catch (e) {
       knStart.disabled = true;
       planText.replaceChildren(h("div", { style: "color:#E5484D" }, e instanceof PlanFehler ? e.message : String(e)));
@@ -172,6 +189,7 @@ export async function mount(root, ctx) {
   let abbruch = null, letzteUrl = null;
   async function start() {
     if (!plan) return;
+    schaetzAbbruch?.abort(); clearTimeout(schaetzUhr);
     abbruch = new AbortController();
     knStart.disabled = true; knStop.hidden = false; balken.hidden = false; ergebnis.replaceChildren();
     const i = balken.firstChild, t0 = performance.now();
