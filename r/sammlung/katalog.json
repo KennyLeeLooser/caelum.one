@@ -1,0 +1,7 @@
+{
+  "_kopf": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "_hinweis": "GLB-Sammlung für den Befehl „Überraschung“. Der QR trägt nur die id (1–255). Neue Objekte: GLB in diesen Ordner, Eintrag ergänzen, ids nie neu vergeben. KI-Beitrag (Claude, GB-7), 19.11.2026.",
+  "objekte": [
+    { "id": 1, "name": "Rakete", "datei": "rakete.glb", "aktion": "starten", "quelle": "blender/rakete.py" }
+  ]
+}

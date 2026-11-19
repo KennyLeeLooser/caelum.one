@@ -1,0 +1,98 @@
+<!doctype html>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
+     Caelum Analyse · Web-App (Entscheid Kenny 19.11.2026: Nr. 1 Web-App, Nr. 2 Android über Pandoras Bau, Nr. 3 native Store-App).
+     Gegenstück zu Caelum Rorschach: liest Rorschach-Codes und spielt die Überraschung in 3D ab, prüft fremde QR- und Barcodes.
+     KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). -->
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#1F1E1D">
+<title>Caelum Analyse</title>
+<style>
+:root{ --deep:#1F1E1D; --bg:#262624; --surface:#30302E; --hover:#33332F; --line:#3D3D3A; --text:#E8E6E1; --soft:#C9C6BF; --muted:#9C9A94; --faint:#6E6C66;
+  --accent:#D97757; --ok:#6BAF73; --info:#7FA3D6; --danger:#E5484D; --warn:#E3C35A; --ui:"Inter","Segoe UI",system-ui,sans-serif; --mono:"Cascadia Mono",Consolas,monospace; color-scheme:dark; }
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--deep);color:var(--text);font:15px/1.45 var(--ui)}
+.seite{max-width:560px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom));display:grid;gap:14px}
+header{display:flex;align-items:center;gap:10px}
+header svg{width:26px;height:26px}
+header h1{margin:0;font-size:18px;font-weight:600}header h1 b{color:var(--accent);font-weight:600}
+header p{margin:0;color:var(--muted);font-size:12px}
+.hint{margin:0;color:var(--muted);font-size:13px}
+.sucher{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:#141312;border:1px solid var(--line)}
+.sucher video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.sucher.an video{display:block}
+.rahmen{position:absolute;inset:18%;border:2px solid rgba(232,230,225,.55);border-radius:18px}
+.sucher .leer{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:13px}
+.sucher.an .leer{display:none}
+.knoepfe{display:flex;gap:8px;flex-wrap:wrap}
+button,label.knopf{font:500 14px var(--ui);color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--deep);border-radius:10px;font-weight:600}
+button:focus-visible,label.knopf:focus-within,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+label.knopf input{display:none}
+textarea{width:100%;min-height:64px;font:13px var(--mono);color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+details summary{cursor:pointer;color:var(--muted);font-size:13px}
+#meldung{font-size:13px;color:var(--soft);min-height:1.2em}
+.karte{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.karte[hidden]{display:none}
+.kopf{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.kopf h2{margin:0;font-size:17px;font-weight:600}
+.format{font:12px var(--mono);color:var(--muted)}
+.ampel{display:flex;gap:8px;align-items:center;font-weight:600}
+.ampel i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.ok i{background:var(--ok)}.hinweis i{background:var(--info)}.vorsicht i{background:var(--warn)}.gefahr i{background:var(--danger)}
+ul.gruende{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+ul.gruende li{display:grid;grid-template-columns:12px 1fr;gap:8px;font-size:14px;color:var(--soft)}
+ul.gruende li::before{content:"";width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--faint)}
+ul.gruende li.ok::before{background:var(--ok)}ul.gruende li.hinweis::before{background:var(--info)}ul.gruende li.vorsicht::before{background:var(--warn)}ul.gruende li.gefahr::before{background:var(--danger)}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}
+dt{color:var(--muted)}dd{margin:0;font-family:var(--mono);word-break:break-all}
+#buehne{position:fixed;inset:0;background:var(--deep);display:none;z-index:5}
+#buehne.an{display:block}
+#buehne canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#buehne .oben{position:absolute;top:max(12px,env(safe-area-inset-top));left:16px;right:16px;display:flex;justify-content:space-between;align-items:center}
+#buehne .unten{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));display:grid;justify-items:center;gap:10px;padding:0 16px;text-align:center;pointer-events:none}
+#bBotschaft{font-size:clamp(22px,6.4vw,34px);font-weight:600;opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s;text-wrap:balance}
+#buehne.zeigen #bBotschaft{opacity:1;transform:none}
+#bNochmal{pointer-events:auto}
+footer{color:var(--faint);font-size:12px;text-align:center}
+</style></head>
+<body>
+<div class="seite">
+  <header>
+    <svg id="markeLogo" viewBox="44 44 936 936" aria-hidden="true"><path fill="#E8E6E1" fill-rule="evenodd"></path></svg>
+    <div><h1>Caelum <b>Analyse</b></h1><p>Codes lesen, prüfen und entschlüsseln</p></div>
+  </header>
+  <p class="hint">Halte einen QR- oder Barcode in den Rahmen. Rorschach-Codes werden hier als 3D-Überraschung abgespielt, fremde Codes geprüft, bevor du etwas öffnest. Nichts verlässt dein Gerät.</p>
+  <div class="sucher" id="sucher">
+    <video id="video" muted playsinline></video>
+    <div class="rahmen" aria-hidden="true"></div>
+    <div class="leer">Kamera starten oder ein Bild mit einem Code wählen.</div>
+  </div>
+  <div class="knoepfe">
+    <button class="primary" id="start" type="button">Kamera starten</button>
+    <label class="knopf">Bild wählen<input id="datei" type="file" accept="image/*"></label>
+  </div>
+  <details><summary>Inhalt selbst einfügen</summary>
+    <textarea id="eingabe" spellcheck="false" placeholder="z. B. https://www.caelum.one/r/#r1.…"></textarea>
+    <div class="knoepfe"><button id="pruefen" type="button">Prüfen</button></div>
+  </details>
+  <div id="meldung" aria-live="polite"></div>
+
+  <section class="karte" id="ergebnis" hidden aria-live="polite">
+    <div class="kopf"><h2 id="eTitel"></h2><span class="format" id="eFormat"></span></div>
+    <div class="ampel" id="eAmpel"><i></i><span></span></div>
+    <ul class="gruende" id="eGruende"></ul>
+    <dl id="eFelder"></dl>
+    <div class="knoepfe" id="eAktion"></div>
+  </section>
+  <footer>© 2026 Caelum GmbH · Caelum Analyse <span id="ver">0.1.0</span> · Lesen über <span id="weg">…</span></footer>
+</div>
+
+<div id="buehne" aria-label="Überraschung in 3D">
+  <canvas id="bild"></canvas>
+  <div class="oben"><strong>Caelum <span style="color:var(--accent)">Rorschach</span></strong><button id="bZu" type="button">Schließen</button></div>
+  <div class="unten"><div id="bBotschaft"></div><button id="bNochmal" type="button">Nochmal</button></div>
+</div>
+<script type="module" src="analyse.js"></script>
+</body></html>
