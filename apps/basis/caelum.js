@@ -86,7 +86,7 @@ async function start() {
       el("span", {}, "Im Browser ausprobieren"),
       el("span", { class: "caelum-try-titel" }, app.titel || ""),
       app.status === "vorschau" ? el("span", { class: "caelum-try-badge" }, "Vorschau") : null);
-    const details = el("details", { class: "caelum-try", "data-app": app.id }, kopf, body,
+    const details = el("details", { class: "caelum-try", id: "try-" + app.id, "data-app": app.id }, kopf, body,
       el("p", { class: "caelum-try-fuss" },
         "Läuft nur in deinem Browser – nichts wird hochgeladen. Web-Fassung von ", el("b", {}, app.produkt || app.id), " " + (app.version || "") + ". ",
         el("a", { href: app.vollversion || "#downloads" }, "Volle Version")));
@@ -95,7 +95,12 @@ async function start() {
     details.addEventListener("toggle", () => { if (details.open) laden(m).catch(() => {}); });
     const links = karte.querySelector(".links");
     karte.insertBefore(details, links || null);
-    if (location.hash === "#try-" + app.id) { details.open = true; }
+    if (location.hash === "#try-" + app.id) {
+      // Direktlink: aufklappen und nach dem Laden hinscrollen (das Feld entsteht erst nach dem Laden der Seite)
+      details.open = true;
+      const hin = () => window.scrollTo({ top: details.getBoundingClientRect().top + window.scrollY - 80, behavior: "instant" });
+      laden(m).then(() => { hin(); setTimeout(hin, 600); }).catch(() => {});
+    }
   }
 }
 
