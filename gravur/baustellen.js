@@ -1,0 +1,23 @@
+// Baustellen-Codes (verschlüsselt). Erzeugt mit Caelum Gravur (Admin) bzw. werkzeuge/baustelle.mjs – nicht von Hand ändern.
+window.CAELUM_BAUSTELLEN = {
+  "51ce224ad0a23287672d1fd51cc920e74874ff1a744a4228fb6bd974d7aee421": {
+    "salt": "pnUWCAYk0SqVCO5hQK8DsQ==",
+    "iv": "5r0ZOFGD0GSwyHWo",
+    "data": "VRVfyG6/ZYVsHKO6LWiLyd9g30EfH4BHmHUMMHZT9LVp\u002B8/gT6pbILa\u002BM7yPEUevEVfJhP03Xl7TP4AdcBI98aTwpcZ28NqencU4v8P29ugBR\u002BkI4QGsTk0MgjV38xmkwT2cL4B9NXuzJE72PO\u002BglSraXm/LGO6UHMvup1VgqALEsidYFDONm5e4LP9oegftypyGAPQZJJlei/42Pa3Oj\u002BUm1LiIvY2dqFdbHFNpcohwG0VjzElyw8Ova\u002BRoSzHacKUFq0VfyBfvj8F1FSB/vrYeJpbYhLwdkT36LQ2x3ozUpGgt9RsgQtI7\u002B\u002BZEeGpNWDIvREFkxpcefbD6Gq2V/A6q0BOmCRk78pJqhQScg\u002Brn6AA4bYuxnX/TZA43r03A3jtQW1LP8UgrAgrGzVfB0K24OdEi2ljiB6ZRWMZUbaXZD3fQUL2RTOxzNy7qkcOw8l704BFqgngacgCs8lZHYZh\u002B2HAF9OIr36ucv2NEuLevGxPCSM4sVkCHHh4KnB5i74Ye08VgADQqZlR/gEbFyahgwkDH5Nl5MvEqoBEsnis9TW2EksBv6pb5dol/fT3oQoB367IRE1wdGw=="
+  },
+  "662c6b3e935c0b868412d639e77d48d714a55184bd4c127c7f9ba5507db11b2b": {
+    "salt": "EAO3uFpTZnJ1i/hGVpNgnA==",
+    "iv": "wAAIQY/Vgpzt1Yz1",
+    "data": "caAAuRPHwUFcuiFsWXuLB7olBx6bbJaghQigCdL7NCRDAxieG0Hzu1IPzH0Ri\u002B2P7wgf2PSOE2hlSSIPs1OSiz3oGnHAofmLyTmyayrsbew/m5MhyYuZAPvnixoPVYpmOJuACab5p7Z71H3x0USIKXxAqqy2ocrBAniNvkEOCKyzwJAdL8Ps5vqSiuKL3A30ADX/qZu\u002Bfc3mPkdam1yJeRzb\u002Buj5funxT\u002Bi\u002BRxjCG2GK70G27RMt"
+  },
+  "d27f9fbd8552a5ea659510867306889c78f7131977285d1455091ed9fab9634d": {
+    "salt": "/BngEJiwZhWmN\u002BRy6yAJiA==",
+    "iv": "Pensb9D/KYOcd16k",
+    "data": "iTmpfNFGcBOHLHfomIM\u002Br38UsHQj9IpNfFY1EutL8VjxDQWWfuVfoQR\u002BCo0qVyN\u002B7Z0RNM5LvZfdEkmzAnQRFQZv5\u002BJVFQPA8xdGKuPbu28hbcfCN1zT24LOW1btBeQ4fOuktC01iHTRxoc41kKbH6ugrDnH/a0PAPzw8\u002BQWMwX6DKxLJRoGF7Vw/eDb09Vw5Io9hsv/hUe9oZEYaectPV2XYYFbq39lwuWVLk4zOOzsDgQ="
+  },
+  "d4b491f389dff5a7f484db6c8c1371e9c50a40cc454a4c5ab34a000e801e8280": {
+    "salt": "KzdpTV8qV7KeSwCsfoobew==",
+    "iv": "I4WYUL1S9uwmSvIK",
+    "data": "Bk5l5WkQj/0HQRHJGdfK89GdIrZEXiJjRwUmP8JlhxpSWtUxmQN5uVH8OkbIg6Takwmk6CcA4bOwknYkcrafmM0AGPZ6z1lsH98Pmv7\u002Bg6\u002B4No8k2QoAq\u002BmPDoKzDzssVUjRd2MEL2RPXFWcDjyImJI30Z1cS5NSe02TaIivxko5C\u002Bdyhmo6fLsHlaCR7UhDmFOMeYLj3Jpn3Vd3TzTTJKvb"
+  }
+};

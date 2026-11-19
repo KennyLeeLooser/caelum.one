@@ -1,0 +1,178 @@
+<!doctype html>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. -->
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/logo-32.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caelum Gravurschilder</title>
+<meta name="description" content="Gravurschilder aus Gravierkunststoff selbst gestalten und bestellen – Caelum GmbH">
+<link rel="stylesheet" href="portal.css?v=fc5730a2f2">
+</head>
+<body>
+<header class="top">
+  <span class="brand">CAELUM</span><span class="title">Gravurschilder</span>
+  <span class="site" id="siteHead"></span>
+</header>
+
+<main>
+  <!-- Baustellen-Code -->
+  <section id="gate" class="gate card">
+    <h1>Schilder für Ihre Baustelle</h1>
+    <p class="hint">Gestalten Sie Gravurschilder aus lasergeschnittenem Gravierkunststoff selbst (LASERPLY, LASERTEC, HARIGLAS Lasertec, HARIFOIL): Grösse, Form, Farbe, Löcher und Text. Sie sehen jedes Schild in echten Farben und Massen und erhalten ein Montageverzeichnis.</p>
+    <label for="codeIn" class="hint">Baustellen-Code (von Caelum erhalten)</label>
+    <input id="codeIn" autocomplete="off" spellcheck="false" placeholder="z. B. DEMO-2026">
+    <div class="err" id="codeErr"></div>
+    <div class="actions"><button class="primary" id="codeBtn">Weiter</button></div>
+    <p class="hint" style="margin-top:14px">Noch kein Code? Schreiben Sie an <a href="mailto:info@caelum.one">info@caelum.one</a>.</p>
+  </section>
+
+  <section id="app" class="hidden">
+    <div id="siteInfo" class="hint"></div>
+    <div class="positions" id="positions"></div>
+
+    <div class="grid">
+      <!-- Einstellungen -->
+      <div class="card">
+        <h2>Schildtyp <span id="posLabel"></span></h2>
+        <label class="f">Bezeichnung <input id="pName" placeholder="z. B. Schaltschrank Lüftung"></label>
+
+        <h3>Grösse und Form</h3>
+        <div class="row2">
+          <label class="f" style="grid-template-columns:60px 1fr">Breite <input id="pW" type="number" min="10" max="590" step="1" inputmode="decimal"></label>
+          <label class="f" style="grid-template-columns:50px 1fr">Höhe <input id="pH" type="number" min="5" max="298" step="1" inputmode="decimal"></label>
+        </div>
+        <div class="seg" id="sizePresets"></div>
+        <label class="f">Form
+          <select id="pShape">
+            <option value="rect">Rechteckig</option>
+            <option value="round">Abgerundete Ecken</option>
+            <option value="custom" disabled>Eigene Form (folgt)</option>
+          </select>
+        </label>
+        <label class="f" id="radiusRow">Eckenradius <input id="pR" type="number" min="0" max="100" step="0.5" inputmode="decimal"></label>
+
+        <h3>Material</h3>
+        <div class="fams" id="families"></div>
+        <h3>Farbe (Oberfläche / Gravur)</h3>
+        <div class="swatches" id="swatches"></div>
+        <button class="link" id="moreColors"></button>
+        <div class="matinfo" id="matInfo"></div>
+
+        <h3>Dicke</h3>
+        <div class="seg" id="thick"></div>
+
+        <h3>Löcher</h3>
+        <label class="f">Anordnung
+          <select id="pHoles">
+            <option value="Keine">keine (kleben)</option>
+            <option value="Links">1 Loch links</option>
+            <option value="Rechts">1 Loch rechts</option>
+            <option value="Beide">2 Löcher links + rechts</option>
+            <option value="ObenMitte">1 Loch oben Mitte</option>
+            <option value="VierEcken">4 Löcher in den Ecken</option>
+          </select>
+        </label>
+        <div class="row2" id="holeRow">
+          <label class="f" style="grid-template-columns:60px 1fr">Ø mm <input id="pHD" type="number" min="1" max="20" step="0.5" inputmode="decimal"></label>
+          <label class="f" style="grid-template-columns:70px 1fr">Abstand <input id="pHO" type="number" min="1" max="50" step="0.5" inputmode="decimal" title="Lochmitte bis Kante"></label>
+        </div>
+
+        <h3>Text</h3>
+        <div class="row2">
+          <label class="f" style="grid-template-columns:60px 1fr">Zeilen <input id="pRows" type="number" min="1" max="8" step="1"></label>
+          <label class="f" style="grid-template-columns:60px 1fr">Spalten <input id="pCols" type="number" min="1" max="6" step="1"></label>
+        </div>
+        <label class="f">Schrifthöhe mm <input id="pTH" type="number" min="1" max="60" step="0.5" inputmode="decimal" title="Höhe der Grossbuchstaben"></label>
+        <label class="f">Ausrichtung
+          <select id="pAlign"><option value="Links">links</option><option value="Mitte">Mitte</option><option value="Rechts">rechts</option><option value="Blocksatz">Blocksatz</option></select>
+        </label>
+        <label class="f">Schrift <span><input type="checkbox" id="pBold"> fett &nbsp; <input type="checkbox" id="pLines"> Trennlinien zwischen Spalten</span></label>
+        <div class="actions"><button class="link" id="delPos">Schildtyp entfernen</button></div>
+      </div>
+
+      <!-- Vorschau + Liste -->
+      <div>
+        <div class="card sticky">
+          <h2>Vorschau <span class="hint" id="pvWhich"></span></h2>
+          <div class="preview" id="preview"></div>
+          <ul class="warn" id="warnList"></ul>
+          <ul class="note" id="noteList"></ul>
+          <div class="totals" id="posTotals"></div>
+        </div>
+
+        <div class="card section">
+          <h2>Schilder dieses Typs</h2>
+          <p class="hint">Ein Schild pro Zeile. Montageort hilft beim Zuordnen auf der Baustelle (wird nicht graviert). Aus Excel kopierte Zeilen lassen sich direkt in ein Feld einfügen.</p>
+          <div class="tablewrap"><table class="signs" id="signTable"></table></div>
+          <div class="actions">
+            <button id="addSign">+ Schild</button>
+            <button id="pasteBtn">Aus Excel einfügen …</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pläne -->
+    <div class="card section" id="planCard">
+      <h2>Pläne und Stockwerke <span class="hint">freiwillig</span></h2>
+      <p class="hint">Grundriss oder Schema als Bild laden (Foto, Screenshot oder PNG/JPG aus dem PDF), dann Schild in der Liste wählen und auf das Gerät bzw. die Anlage im Plan tippen. Die Nummer erscheint im Plan und im Montageverzeichnis, so weiss der Monteur, welches Schild wohin gehört.</p>
+      <div class="positions" id="planTabs"></div>
+      <div id="planBody" class="hidden">
+        <div class="row2" style="grid-template-columns:minmax(0,1fr) auto;align-items:center">
+          <label class="f" style="grid-template-columns:118px minmax(0,1fr)">Stockwerk / Plan <input id="planName" placeholder="z. B. UG Technikzentrale"></label>
+          <span><button class="link" id="planDel">Plan entfernen</button></span>
+        </div>
+        <p class="hint" id="planHint"></p>
+        <div class="preview" style="padding:0;overflow:auto"><div id="planView" style="position:relative;cursor:crosshair"></div></div>
+        <div class="actions"><button id="pinDel">Punkt für dieses Schild entfernen</button></div>
+      </div>
+      <input type="file" id="planFile" accept="image/*" class="hidden">
+    </div>
+
+    <!-- Auftrag -->
+    <div class="card section" id="orderCard">
+      <h2>Auftrag</h2>
+      <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+        <div>
+          <label class="f">Name * <input id="cName" autocomplete="name"></label>
+          <label class="f">Firma <input id="cFirm" autocomplete="organization"></label>
+          <label class="f">E-Mail * <input id="cMail" type="email" autocomplete="email"></label>
+          <label class="f">Telefon <input id="cTel" type="tel" autocomplete="tel"></label>
+        </div>
+        <div>
+          <label class="f">Lieferung an <input id="cAddr" placeholder="Baustelle oder Adresse"></label>
+          <label class="f">Wunschtermin <input id="cDate" type="date"></label>
+          <label class="f">Bemerkung <textarea id="cNote" rows="2"></textarea></label>
+        </div>
+      </div>
+      <div class="totals" id="orderTotals"></div>
+      <div class="err" id="orderErr"></div>
+      <div class="actions">
+        <button id="dirBtn">Montageverzeichnis ansehen</button>
+        <button class="primary" id="zipBtn">Auftrag herunterladen (.zip)</button>
+        <button id="mailBtn">E-Mail an Caelum öffnen</button>
+        <button id="shareBtn" class="hidden">Teilen …</button>
+      </div>
+      <p class="hint" style="margin-top:10px">So kommt Ihr Auftrag an: Datei herunterladen, dann E-Mail öffnen und die Datei anhängen (auf dem Handy direkt über „Teilen“). Caelum prüft den Auftrag und schickt eine Offerte. Der Preis ist ein unverbindlicher Richtpreis exkl. MWST.</p>
+    </div>
+  </section>
+</main>
+
+<dialog id="pasteDlg">
+  <h2>Aus Excel einfügen</h2>
+  <p class="hint">Zellen in Excel markieren, kopieren und hier einfügen. Spalten der Reihe nach: Anzahl, Montageort, dann die Textfelder (Zeile 1, Zeile 2 …). Eine Überschrift wird erkannt.</p>
+  <textarea id="pasteBox" rows="10" style="font-family:Consolas,monospace;font-size:13px"></textarea>
+  <div class="actions"><button class="primary" id="pasteOk">Anhängen</button><button id="pasteReplace">Ersetzen</button><button id="pasteCancel">Abbrechen</button></div>
+</dialog>
+
+<footer>© 2026 Caelum GmbH · Ringstrasse 1 · 8105 Regensdorf · <a href="https://www.caelum.one/">www.caelum.one</a> · <a href="https://www.caelum.one/impressum.html">Impressum</a> · <a href="https://www.caelum.one/datenschutz.html">Datenschutz</a> · <a href="https://www.caelum.one/agb.html">AGB</a> · Gravierkunststoff von gravurshop24.ch</footer>
+
+<script src="katalog.js?v=71cbee4626"></script>
+<script src="preise.js?v=12b7851caf"></script>
+<script src="baustellen.js?v=dd9811a36b"></script>
+<script src="portal.js?v=1b3c177399"></script>
+</body>
+</html>

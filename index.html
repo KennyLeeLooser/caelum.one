@@ -445,7 +445,7 @@
       <p class="hint">Für Kunden, die direkt mit unseren Programmen bestellen oder arbeiten – im Browser, auf Handy, Tablet und PC.</p>
       <div class="cards auto">
         <article class="card">
-          <div class="tag soon"><i style="background:var(--accent)"></i>In Entwicklung</div>
+          <div class="tag"><i style="background:var(--ok)"></i>Verfügbar</div>
           <h3>Gravurschilder bestellen</h3>
           <p>Bauleiter und Endkunden gestalten Schilder selbst auf der Baustelle und schicken den Auftrag direkt an uns.</p>
           <ul>
@@ -454,7 +454,7 @@
             <li>Montageort je Schild, Punkte im Stockwerksplan</li>
             <li>Unverbindlicher Richtpreis, Offerte folgt</li>
           </ul>
-          <span class="btn off">Bald unter www.caelum.one/gravur</span>
+          <a class="btn" href="gravur/">Zum Portal</a> <span class="small">Mit Baustellen-Code oder Google-Anmeldung (unten)</span>
         </article>
         <article class="card">
           <div class="tag"><i style="background:var(--info)"></i>Geplant</div>
@@ -607,7 +607,7 @@
 // Einstellungen der Seite. KONTAKT_URL = Web-App-Adresse des Google Apps Script (Konto kenny@caelum.one); leer = E-Mail-Programm öffnen.
 var CAELUM_SITE = {
   KONTAKT_URL: 'https://script.google.com/macros/s/AKfycbz7ljrIvnuA9frpcRCMdNliun200wI8iYmvCF26dgl_3swiT5yiRbfo8obZZncS9r33/exec',
-  PORTALE: { gravur: { live: false, pfad: 'gravur/' } },
+  PORTALE: { gravur: { live: true, pfad: 'gravur/' } },
   // Google-Anmeldung: OAuth-Client (Projekt caelum-web) und Web-App „Caelum Kunden“. Beide leer = Knopf aus.
   GOOGLE: {
     CLIENT_ID: '787870908248-adg8d7ulv5ihiie4ahgefe5l63of6ecq.apps.googleusercontent.com',

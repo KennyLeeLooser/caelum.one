@@ -3,6 +3,19 @@
   "updates": [
     {
       "date": "2026-11-19",
+      "product": "Kundenportal Gravurschilder",
+      "version": "1.0",
+      "status": "release",
+      "title": "Gravurschilder online gestalten und bestellen",
+      "points": [
+        "Anmeldung mit Baustellen-Code oder Google, Schilder in echten Materialfarben",
+        "Montageort je Schild, Punkte im Stockwerksplan, unverbindlicher Richtpreis",
+        "Auftrag als ZIP per E-Mail – gleiches Format wie Caelum Gravur"
+      ],
+      "link": "gravur/"
+    },
+    {
+      "date": "2026-11-19",
       "product": "Caelum QR · Web",
       "version": "0.1.0",
       "status": "vorschau",
