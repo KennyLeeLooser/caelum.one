@@ -1,0 +1,11 @@
+Caelum Cut · Web-Fassung
+Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
+
+Fremde Bestandteile (unverändert, liegen auf caelum.one selbst, keine CDN):
+
+- mp4box.js 0.5.2 (vendor/mp4box.mjs) – BSD-3-Clause, (c) Télécom Paris / GPAC. Als ES-Modul verpackt (zwei Export-Zeilen
+  ergänzt). Lizenztext: vendor/LICENSE-mp4box.txt. https://github.com/gpac/mp4box.js
+- mp4-muxer 5.1.3 (vendor/mp4-muxer.mjs) – MIT-Lizenz, (c) Vanilagy. Lizenztext: vendor/LICENSE-mp4-muxer.txt.
+  https://github.com/Vanilagy/mp4-muxer
+
+Kodiert wird mit dem Video- und Ton-Encoder des Browsers (WebCodecs); es wird kein Codec mitgeliefert.

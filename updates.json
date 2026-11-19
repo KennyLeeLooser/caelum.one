@@ -3,6 +3,18 @@
   "updates": [
     {
       "date": "2026-11-19",
+      "product": "Caelum Cut · Web",
+      "version": "0.1.0",
+      "status": "vorschau",
+      "title": "Video fürs Handy – direkt im Browser",
+      "points": [
+        "Video fürs Handy ohne Installation, nichts wird hochgeladen",
+        "Gleich wie Caelum Cut 0.1.0 (geprüft)"
+      ],
+      "link": "#p-cut"
+    },
+    {
+      "date": "2026-11-19",
       "product": "Caelum Gravur · Web",
       "version": "0.9.0",
       "status": "vorschau",

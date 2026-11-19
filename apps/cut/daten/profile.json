@@ -1,0 +1,191 @@
+{
+  "_kopf": "Erzeugt aus Caelum Cut (Profiles.cs, Jobs.cs) mit web/export – nicht von Hand ändern.",
+  "appVersion": "0.1.0",
+  "profile": [
+    {
+      "id": "redmi-note-14",
+      "gruppe": "Android",
+      "name": "Redmi Note 14",
+      "w": 1080,
+      "h": 2400,
+      "hevc": true,
+      "crf": 30,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": null,
+      "hinweis": "20:9, Kennys Handy"
+    },
+    {
+      "id": "galaxy-s",
+      "gruppe": "Android",
+      "name": "Samsung Galaxy S",
+      "w": 1080,
+      "h": 2340,
+      "hevc": true,
+      "crf": 30,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": null,
+      "hinweis": "19,5:9"
+    },
+    {
+      "id": "android",
+      "gruppe": "Android",
+      "name": "Android allgemein",
+      "w": 1080,
+      "h": 1920,
+      "hevc": false,
+      "crf": 26,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": null,
+      "hinweis": "16:9, läuft auf jedem Gerät"
+    },
+    {
+      "id": "iphone",
+      "gruppe": "Apple",
+      "name": "iPhone 12–16",
+      "w": 1170,
+      "h": 2532,
+      "hevc": true,
+      "crf": 30,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": null,
+      "hinweis": "19,5:9, H.265 mit hvc1"
+    },
+    {
+      "id": "iphone-se",
+      "gruppe": "Apple",
+      "name": "iPhone SE / älter",
+      "w": 750,
+      "h": 1334,
+      "hevc": false,
+      "crf": 26,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": null,
+      "hinweis": "16:9"
+    },
+    {
+      "id": "messenger",
+      "gruppe": "Messenger",
+      "name": "WhatsApp, Signal, Telegram",
+      "w": 720,
+      "h": 1280,
+      "hevc": false,
+      "crf": 28,
+      "fps": 30,
+      "tonKbps": 96,
+      "maxMB": null,
+      "maxSekunden": null,
+      "hinweis": "lädt schnell"
+    },
+    {
+      "id": "messenger-16",
+      "gruppe": "Messenger",
+      "name": "Messenger klein (≤ 16 MB)",
+      "w": 720,
+      "h": 1280,
+      "hevc": false,
+      "crf": 28,
+      "fps": 30,
+      "tonKbps": 96,
+      "maxMB": 16,
+      "maxSekunden": null,
+      "hinweis": "zwei Durchgänge"
+    },
+    {
+      "id": "reels",
+      "gruppe": "Social Media",
+      "name": "Instagram Reels",
+      "w": 1080,
+      "h": 1920,
+      "hevc": false,
+      "crf": 23,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": 180,
+      "hinweis": "Stand 2025"
+    },
+    {
+      "id": "tiktok",
+      "gruppe": "Social Media",
+      "name": "TikTok",
+      "w": 1080,
+      "h": 1920,
+      "hevc": false,
+      "crf": 23,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": 600,
+      "hinweis": "Stand 2025"
+    },
+    {
+      "id": "shorts",
+      "gruppe": "Social Media",
+      "name": "YouTube Shorts",
+      "w": 1080,
+      "h": 1920,
+      "hevc": false,
+      "crf": 23,
+      "fps": 30,
+      "tonKbps": 128,
+      "maxMB": null,
+      "maxSekunden": 180,
+      "hinweis": "Stand 2025"
+    }
+  ],
+  "stufen": {
+    "Handy": {
+      "text": "Handy (1080p)",
+      "langeSeite": 1920,
+      "crf": 26,
+      "hevc": false,
+      "tonKbps": 128,
+      "maxFps": 30,
+      "ziel": false
+    },
+    "Klein": {
+      "text": "Handy klein (720p)",
+      "langeSeite": 1280,
+      "crf": 30,
+      "hevc": false,
+      "tonKbps": 96,
+      "maxFps": 30,
+      "ziel": false
+    },
+    "Stark": {
+      "text": "Stark (H.265, 1080p)",
+      "langeSeite": 1920,
+      "crf": 30,
+      "hevc": true,
+      "tonKbps": 96,
+      "maxFps": 30,
+      "ziel": false
+    },
+    "Ziel": {
+      "text": "Zielgrösse (MB)",
+      "langeSeite": 1920,
+      "crf": 26,
+      "hevc": false,
+      "tonKbps": 128,
+      "maxFps": 30,
+      "ziel": true
+    }
+  },
+  "kalibrierung": {
+    "h264_26": 0.07778,
+    "h264_30": 0.02217,
+    "hevc_30": 0.04218,
+    "h264_23": 0.15407,
+    "h264_28": 0.02968
+  }
+}

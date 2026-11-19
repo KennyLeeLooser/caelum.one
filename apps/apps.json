@@ -2,6 +2,19 @@
   "_kopf": "Erzeugt mit CAELUM/tools/web-module.mjs aus den caelum.web.json der Apps – nicht von Hand ändern.",
   "apps": [
     {
+      "id": "cut",
+      "produkt": "Caelum Cut",
+      "titel": "Video fürs Handy",
+      "karte": "p-cut",
+      "version": "0.1.0",
+      "status": "vorschau",
+      "einstieg": "cut-mini.js",
+      "hash": "9802896663ee",
+      "vollversion": "#p-cut",
+      "liefert": [],
+      "nimmt": []
+    },
+    {
       "id": "gravur",
       "produkt": "Caelum Gravur",
       "titel": "Schild gestalten",
