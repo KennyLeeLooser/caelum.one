@@ -1,0 +1,20 @@
+{
+  "_kopf": "Erzeugt mit CAELUM/tools/web-module.mjs aus den caelum.web.json der Apps – nicht von Hand ändern.",
+  "apps": [
+    {
+      "id": "gravur",
+      "produkt": "Caelum Gravur",
+      "titel": "Schild gestalten",
+      "karte": "p-gravur",
+      "version": "0.8.0",
+      "status": "vorschau",
+      "einstieg": "gravur-mini.js",
+      "hash": "d48df69dd71b",
+      "vollversion": "#downloads",
+      "liefert": [
+        "schild-glb"
+      ],
+      "nimmt": []
+    }
+  ]
+}

@@ -1,0 +1,1106 @@
+{
+ "_kopf": "Erzeugt aus src/Caelum.Gravur.Core/katalog.json mit web/werkzeuge/daten.mjs – nicht von Hand ändern.",
+ "appVersion": "0.8.0",
+ "lieferant": "gravurshop24.ch",
+ "typen": [
+  {
+   "id": "LASERPLY",
+   "name": "LASERPLY",
+   "kurz": "2 Schichten · Laser · innen und aussen",
+   "zweiTiefen": false,
+   "dicken": [
+    0.4,
+    0.6,
+    0.8,
+    1.5,
+    3
+   ],
+   "farben": [
+    {
+     "code": "S00",
+     "name": "weiss / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "S39",
+     "name": "weiss / rot",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#D9342F",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S27",
+     "name": "weiss / blau",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#22578F",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S35",
+     "name": "gelb / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "S37",
+     "name": "gelb / rot",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#D9342F",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S77",
+     "name": "orange / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#EE7D2E",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S38",
+     "name": "orange / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#EE7D2E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S48",
+     "name": "rot / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#D9342F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "S49",
+     "name": "rot / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#D9342F",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S51",
+     "name": "weinrot / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#9C2F48",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LBLB"
+    },
+    {
+     "code": "S82",
+     "name": "violett / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#8C3F7C",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "--LL-"
+    },
+    {
+     "code": "S60",
+     "name": "apfelgrün / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#45A23F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S61",
+     "name": "apfelgrün / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#45A23F",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S59",
+     "name": "dunkelgrün / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#1C5A33",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LBLB"
+    },
+    {
+     "code": "S26",
+     "name": "blau / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#22578F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "S33",
+     "name": "hellblau / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#7EA6C9",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S34",
+     "name": "hellblau / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#7EA6C9",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S90",
+     "name": "dunkelbraun / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#4A2716",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "--LLB"
+    },
+    {
+     "code": "S71",
+     "name": "grau / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#A8A8A8",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S72",
+     "name": "grau / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#A8A8A8",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S10",
+     "name": "schwarz / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#161616",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "S50",
+     "name": "chrom silber geb. / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#E4E4E2",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S66",
+     "name": "chrom gold geb. / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#F5D78E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S68",
+     "name": "silber hochglänzend / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#DEDEDE",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S69",
+     "name": "gold hochglänzend / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#F3D27E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLB"
+    },
+    {
+     "code": "S55",
+     "name": "silber / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#D6D6D6",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "Q33",
+     "name": "gold matt / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#D9A630",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LBLB"
+    },
+    {
+     "code": "S63",
+     "name": "gold sat. matt / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#F2CC78",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LBLB"
+    },
+    {
+     "code": "S80",
+     "name": "gold gebürstet / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#E9C26C",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "BLBLB"
+    },
+    {
+     "code": "S88",
+     "name": "silber gebürstet / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#CFCFCF",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LLLLL"
+    },
+    {
+     "code": "S89",
+     "name": "anthrazit gebürstet / weiss",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#4A4E52",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S81",
+     "name": "rosa gold geb. / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#EE8872",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S43",
+     "name": "kupfer glänzend / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#F2A273",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S44",
+     "name": "kupfer matt / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#F2A273",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S45",
+     "name": "kupfer gebürstet / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#EE8244",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S46",
+     "name": "bronze gebürstet / schwarz",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#A67B46",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LLLLB"
+    },
+    {
+     "code": "S21",
+     "name": "schwarz matt / gold",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#232323",
+     "kern": "#E2BE68",
+     "kern2": null,
+     "lieferbar": "LL-B-"
+    },
+    {
+     "code": "Q21",
+     "name": "schwarz glänzend / gold",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#0E0E0E",
+     "kern": "#E2BE68",
+     "kern2": null,
+     "lieferbar": "-L-L-"
+    },
+    {
+     "code": "S98",
+     "name": "blau marmoriert / gold",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#1F2B57",
+     "kern": "#E2BE68",
+     "kern2": null,
+     "lieferbar": "-L-L-"
+    },
+    {
+     "code": "S99",
+     "name": "rot marmoriert / gold",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#6B1B1B",
+     "kern": "#E2BE68",
+     "kern2": null,
+     "lieferbar": "-L-L-"
+    },
+    {
+     "code": "S83",
+     "name": "pink matt / weiss",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#E2338A",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    },
+    {
+     "code": "S84",
+     "name": "lila matt / weiss",
+     "gruppe": "Metalleffekt-Farben",
+     "oberflaeche": "#8E3A8E",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "-LLLL"
+    }
+   ]
+  },
+  {
+   "id": "LASERTEC2PLY",
+   "name": "LASERTEC 2-Ply",
+   "kurz": "3 Schichten · zweifarbige Gravur in zwei Tiefen",
+   "zweiTiefen": true,
+   "dicken": [
+    1.8
+   ],
+   "farben": [
+    {
+     "code": "F17",
+     "name": "weiss / rot / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#D9342F",
+     "kern2": "#161616",
+     "lieferbar": "L"
+    },
+    {
+     "code": "F43",
+     "name": "gelb / rot / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#D9342F",
+     "kern2": "#161616",
+     "lieferbar": "L"
+    },
+    {
+     "code": "F18",
+     "name": "weiss / gelb / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#F7DF1E",
+     "kern2": "#161616",
+     "lieferbar": "L"
+    },
+    {
+     "code": "F19",
+     "name": "weiss / blau / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#22578F",
+     "kern2": "#161616",
+     "lieferbar": "L"
+    }
+   ]
+  },
+  {
+   "id": "LASERTECMATT",
+   "name": "HARIGLAS Lasertec matt",
+   "kurz": "2 Schichten · Acryl matt · Industrie, UV-stabil",
+   "zweiTiefen": false,
+   "dicken": [
+    0.7,
+    1.5,
+    2.3,
+    3.1
+   ],
+   "farben": [
+    {
+     "code": "F10",
+     "name": "weiss / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LLLL"
+    },
+    {
+     "code": "F12",
+     "name": "weiss / rot",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#D9342F",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F14",
+     "name": "weiss / blau",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#22578F",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F40",
+     "name": "gelb / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F42",
+     "name": "gelb / rot",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#D9342F",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F77",
+     "name": "orange / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#EE7D2E",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F38",
+     "name": "orange / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#EE7D2E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F30",
+     "name": "rot / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#D9342F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F49",
+     "name": "rot / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#D9342F",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F80",
+     "name": "grün / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#2F7D3A",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F61",
+     "name": "grün / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#2F7D3A",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F60",
+     "name": "apfelgrün / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#45A23F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F70",
+     "name": "blau / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#22578F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F86",
+     "name": "grau / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#A8A8A8",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F20",
+     "name": "schwarz / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#161616",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F55",
+     "name": "silber / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#D6D6D6",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    },
+    {
+     "code": "F65",
+     "name": "gold / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#E2BE68",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "LL-L"
+    }
+   ]
+  },
+  {
+   "id": "LASERTECPOL",
+   "name": "HARIGLAS Lasertec poliert",
+   "kurz": "2 Schichten · Acryl poliert · aussen und innen",
+   "zweiTiefen": false,
+   "dicken": [
+    0.7,
+    1.5,
+    3.1
+   ],
+   "farben": [
+    {
+     "code": "G10",
+     "name": "weiss / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "BLL"
+    },
+    {
+     "code": "G12",
+     "name": "weiss / rot",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#D9342F",
+     "kern2": null,
+     "lieferbar": "BLB"
+    },
+    {
+     "code": "G14",
+     "name": "weiss / blau",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#22578F",
+     "kern2": null,
+     "lieferbar": "BBB"
+    },
+    {
+     "code": "G40",
+     "name": "gelb / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "BLB"
+    },
+    {
+     "code": "G42",
+     "name": "gelb / rot",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#D9342F",
+     "kern2": null,
+     "lieferbar": "BBB"
+    },
+    {
+     "code": "G77",
+     "name": "orange / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#EE7D2E",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "BBB"
+    },
+    {
+     "code": "G30",
+     "name": "rot / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#D9342F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "BLL"
+    },
+    {
+     "code": "G80",
+     "name": "grün / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#2F7D3A",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "BLB"
+    },
+    {
+     "code": "G70",
+     "name": "blau / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#22578F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "BLB"
+    },
+    {
+     "code": "G86",
+     "name": "grau / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#A8A8A8",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "BLB"
+    },
+    {
+     "code": "G20",
+     "name": "schwarz / weiss",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#161616",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "BLL"
+    },
+    {
+     "code": "G55",
+     "name": "silber / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#D6D6D6",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "BBB"
+    },
+    {
+     "code": "G65",
+     "name": "gold / schwarz",
+     "gruppe": "Normalgravur auf der Vorderseite",
+     "oberflaeche": "#E2BE68",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "BBB"
+    }
+   ]
+  },
+  {
+   "id": "HARIFOIL2",
+   "name": "HARIFOIL 2",
+   "kurz": "Gravierfolie 0,2 mm · selbstklebend · für gewölbte Flächen",
+   "zweiTiefen": false,
+   "dicken": [
+    0.2
+   ],
+   "farben": [
+    {
+     "code": "X00",
+     "name": "weiss / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X35",
+     "name": "gelb / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F7DF1E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X59",
+     "name": "dunkelgrün / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#1C5A33",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "Y33",
+     "name": "gold / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#E2BE68",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X63",
+     "name": "messing matt sat. / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F0CB7A",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X81",
+     "name": "gold gebürstet / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#E9C26C",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X65",
+     "name": "gold hochglänzend / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F3D27E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X87",
+     "name": "silber gebürstet / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#CFCFCF",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X55",
+     "name": "silber hochglänzend / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#DEDEDE",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X49",
+     "name": "rot / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#D9342F",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X33",
+     "name": "hellblau / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#7EA6C9",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X60",
+     "name": "hellgrün / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#62B86A",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X99",
+     "name": "rot marmoriert / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#6B1B1B",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X98",
+     "name": "blau marmoriert / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#1F2B57",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X97",
+     "name": "wurzelholz / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#4A2A18",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X96",
+     "name": "grün marmoriert / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#2E6B2B",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X95",
+     "name": "bronze gebürstet / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#A67B46",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X94",
+     "name": "bronze gebürstet / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#A67B46",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X01",
+     "name": "weiss glänzend / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#FAFAF8",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X74",
+     "name": "dunkelgelb / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F9C93E",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X73",
+     "name": "rot / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#D9342F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X78",
+     "name": "moosgrün / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#7D8742",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X70",
+     "name": "blau / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#22578F",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X10",
+     "name": "schwarz / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#161616",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X86",
+     "name": "silber matt / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#DCDAD6",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X66",
+     "name": "gold gebürstet / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#E9C26C",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X56",
+     "name": "silber gebürstet / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#CFCFCF",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X89",
+     "name": "anthrazit gebürstet / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#4A4E52",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X67",
+     "name": "rosé gold geb. / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#EE8872",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X43",
+     "name": "kupfer glänzend / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F2A273",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X44",
+     "name": "kupfer matt / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F2A273",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X83",
+     "name": "pink matt / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#E2338A",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X82",
+     "name": "pink glänzend / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#E2338A",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X84",
+     "name": "lila matt / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#8E3A8E",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X85",
+     "name": "lila glänzend / weiss",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#8E3A8E",
+     "kern": "#F4F4F1",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X50",
+     "name": "signalgelb (RAL 1003) / schwarz",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F9A800",
+     "kern": "#161616",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X90",
+     "name": "weiss / gold",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#F4F4F1",
+     "kern": "#E2BE68",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X21",
+     "name": "schwarz glänzend / gold",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#0E0E0E",
+     "kern": "#E2BE68",
+     "kern2": null,
+     "lieferbar": "L"
+    },
+    {
+     "code": "X22",
+     "name": "schwarz glänzend / silber",
+     "gruppe": "Aussen- und Innenanwendung",
+     "oberflaeche": "#0E0E0E",
+     "kern": "#D6D6D6",
+     "kern2": null,
+     "lieferbar": "L"
+    }
+   ]
+  }
+ ]
+}

@@ -2,6 +2,18 @@
   "_hinweis": "Neueste zuerst. Neuer Eintrag = neues Objekt oben einfügen. status: release | vorschau | intern (intern wird nicht angezeigt).",
   "updates": [
     {
+      "date": "2026-11-19",
+      "product": "Caelum Gravur · Web",
+      "version": "0.8.0",
+      "status": "vorschau",
+      "title": "Schild gestalten – direkt im Browser",
+      "points": [
+        "Schild gestalten ohne Installation, nichts wird hochgeladen",
+        "Gleich wie Caelum Gravur 0.8.0 (geprüft)"
+      ],
+      "link": "#p-gravur"
+    },
+    {
       "date": "2026-11-18",
       "product": "Caelum Gravur",
       "version": "0.7.0",

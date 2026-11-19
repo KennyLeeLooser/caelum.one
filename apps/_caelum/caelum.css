@@ -1,0 +1,50 @@
+/* Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. */
+/* Web-Grundmodul: Aufklappfeld „Im Browser ausprobieren“ und gemeinsame Bausteine der Web-Module (DESIGN.md). */
+
+.card:has(> details.caelum-try[open]) { grid-column: 1 / -1; }
+
+details.caelum-try { margin: 8px 0 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+details.caelum-try > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 15px; color: var(--text); padding: 8px 12px; border-radius: 8px; background: var(--hover);
+}
+details.caelum-try > summary::-webkit-details-marker { display: none; }
+details.caelum-try > summary:hover { filter: brightness(1.12); }
+details.caelum-try > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.caelum-try-pfeil { color: var(--accent); transition: transform .15s; display: inline-block; }
+details.caelum-try[open] .caelum-try-pfeil { transform: rotate(90deg); }
+.caelum-try-titel { color: var(--muted); font-size: 13px; }
+.caelum-try-badge { margin-left: auto; font-size: 11px; color: var(--info); border: 1px solid var(--info); border-radius: 6px; padding: 0 6px; }
+.caelum-try-body { margin-top: 16px; }
+.caelum-try-wait, .caelum-try-fuss { color: var(--muted); font-size: 13px; }
+.caelum-try-err { color: #E5484D; font-size: 14px; }
+.caelum-try-fuss { margin: 12px 0 0; }
+details.caelum-try:not([open]) .caelum-try-fuss { display: none; }
+
+/* gemeinsame Bausteine (Klassen mit Präfix cw-) */
+.cw { font-size: 14px; line-height: 1.45; color: var(--text); }
+.cw-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 760px) { .cw-grid { grid-template-columns: minmax(0, 1fr); } }
+.cw-well { background: var(--bg-deep); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.cw h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; }
+.cw h4:first-child { margin-top: 0; }
+.cw .cw-hint { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+.cw label.cw-f { display: grid; grid-template-columns: 112px minmax(0, 1fr) 64px; align-items: center; gap: 8px; margin: 4px 0; color: var(--text-soft); }
+.cw label.cw-f.cw-2 { grid-template-columns: 112px minmax(0, 1fr); }
+.cw label.cw-f output { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text); }
+.cw input[type=text], .cw input[type=number], .cw select, .cw textarea {
+  font: inherit; color: var(--text); background: var(--bg-deep); border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 8px; width: 100%; min-width: 0;
+}
+.cw input:focus-visible, .cw select:focus-visible, .cw textarea:focus-visible, .cw button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cw input[type=range] { width: 100%; accent-color: var(--accent); }
+.cw input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; }
+.cw label.cw-c { display: flex; align-items: center; gap: 8px; margin: 6px 0; color: var(--text-soft); cursor: pointer; }
+.cw button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line); background: var(--hover); color: var(--text); padding: 8px 14px; }
+.cw button:hover { filter: brightness(1.15); }
+.cw button.cw-primary { background: var(--accent); border-color: var(--accent); color: #1F1E1D; font-weight: 600; border-radius: 10px; }
+.cw button:disabled { opacity: .5; cursor: default; filter: none; }
+.cw .cw-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.cw .cw-note { color: var(--muted); font-size: 12.5px; margin: 4px 0 0; padding-left: 18px; }
+.cw .cw-note li { margin: 2px 0; }
+.cw .cw-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
