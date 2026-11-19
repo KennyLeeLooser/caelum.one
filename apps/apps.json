@@ -30,6 +30,19 @@
       "nimmt": []
     },
     {
+      "id": "qr",
+      "produkt": "Caelum QR",
+      "titel": "QR-Code gestalten",
+      "karte": "p-qr",
+      "version": "0.1.0",
+      "status": "vorschau",
+      "einstieg": "qr-mini.js",
+      "hash": "64e3146cbf2b",
+      "vollversion": "#p-qr",
+      "liefert": [],
+      "nimmt": []
+    },
+    {
       "id": "viewer",
       "produkt": "Caelum 3D-Viewer",
       "titel": "3D-Datei ansehen",

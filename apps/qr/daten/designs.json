@@ -1,0 +1,224 @@
+{
+  "_kopf": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. Erzeugt von CaelumQr/web/export aus der App – nicht von Hand ändern.",
+  "designs": [
+    {
+      "id": "caelum-fluss",
+      "name": "Caelum Fluss",
+      "gruppe": "Caelum",
+      "beschreibung": "Orange, Violett und Blau fließen ineinander, großes Logo im Muster, Rorschach-Wechsel. Am Redmi gelesen (19.11.2026).",
+      "papier": "#EEEBE5",
+      "farbe": {
+        "art": "fluss",
+        "farben": [
+          "#D97757",
+          "#A585D6",
+          "#6E9BD8"
+        ]
+      },
+      "modul": "quadrat",
+      "augen": {
+        "form": "rund",
+        "ring": "#141312",
+        "kern": "farbe"
+      },
+      "logo": {
+        "muster": true,
+        "mitte": true,
+        "farbe": "#000000"
+      },
+      "wechsel": "rorschach",
+      "gravur": false,
+      "EccLevel": 3
+    },
+    {
+      "id": "caelum-spektrum",
+      "name": "Caelum Spektrum",
+      "gruppe": "Caelum",
+      "beschreibung": "Alle Farbtöne fließen langsam durch den Code, Logo im Muster, Rorschach-Wechsel. Helle Töne werden automatisch abgedunkelt.",
+      "papier": "#EEEBE5",
+      "farbe": {
+        "art": "spektrum",
+        "farben": []
+      },
+      "modul": "quadrat",
+      "augen": {
+        "form": "rund",
+        "ring": "#141312",
+        "kern": "farbe"
+      },
+      "logo": {
+        "muster": true,
+        "mitte": true,
+        "farbe": "#000000"
+      },
+      "wechsel": "rorschach",
+      "gravur": false,
+      "EccLevel": 3
+    },
+    {
+      "id": "caelum-violett",
+      "name": "Caelum QR Violett",
+      "gruppe": "Caelum",
+      "beschreibung": "Programmfarbe von Caelum QR: tiefes Violett, runde Module, Logo in der Mitte, Auflösen beim Wechsel.",
+      "papier": "#F1EEF6",
+      "farbe": {
+        "art": "verlauf",
+        "farben": [
+          "#4B3A73",
+          "#6B4FA0",
+          "#3E4F86"
+        ]
+      },
+      "modul": "rund",
+      "augen": {
+        "form": "rund",
+        "ring": "#2A2140",
+        "kern": "#A585D6"
+      },
+      "logo": {
+        "muster": false,
+        "mitte": true,
+        "farbe": "#2A2140"
+      },
+      "wechsel": "blende",
+      "gravur": false,
+      "EccLevel": 3
+    },
+    {
+      "id": "schlicht",
+      "name": "Schlicht",
+      "gruppe": "Klassisch",
+      "beschreibung": "Schwarz auf Weiß, eckig, ohne Logo – am dichtesten und am sichersten lesbar, auch von weit weg und auf schlechtem Druck.",
+      "papier": "#FFFFFF",
+      "farbe": {
+        "art": "einfarbig",
+        "farben": [
+          "#000000"
+        ]
+      },
+      "modul": "quadrat",
+      "augen": {
+        "form": "quadrat",
+        "ring": "#000000",
+        "kern": "#000000"
+      },
+      "logo": {
+        "muster": false,
+        "mitte": false,
+        "farbe": "#000000"
+      },
+      "wechsel": "blende",
+      "gravur": false,
+      "EccLevel": 1
+    },
+    {
+      "id": "schlicht-logo",
+      "name": "Schlicht mit Logo",
+      "gruppe": "Klassisch",
+      "beschreibung": "Schwarz auf Papier, runde Augen, Logo in der Mitte. Ruhig und seriös, für Briefe, Visitenkarten und Rechnungen.",
+      "papier": "#FFFFFF",
+      "farbe": {
+        "art": "einfarbig",
+        "farben": [
+          "#141312"
+        ]
+      },
+      "modul": "quadrat",
+      "augen": {
+        "form": "rund",
+        "ring": "#141312",
+        "kern": "#141312"
+      },
+      "logo": {
+        "muster": false,
+        "mitte": true,
+        "farbe": "#141312"
+      },
+      "wechsel": "blende",
+      "gravur": false,
+      "EccLevel": 3
+    },
+    {
+      "id": "punkte",
+      "name": "Punkte",
+      "gruppe": "Klassisch",
+      "beschreibung": "Runde Punkte im Verlauf von Orange nach Violett, Augen als Kreise, Logo in der Mitte. Verspielt, für Plakate und Flyer.",
+      "papier": "#FFFFFF",
+      "farbe": {
+        "art": "verlauf",
+        "farben": [
+          "#B4532F",
+          "#6B4FA0"
+        ]
+      },
+      "modul": "punkt",
+      "augen": {
+        "form": "punkt",
+        "ring": "#2B2A28",
+        "kern": "farbe"
+      },
+      "logo": {
+        "muster": false,
+        "mitte": true,
+        "farbe": "#2B2A28"
+      },
+      "wechsel": "rorschach",
+      "gravur": false,
+      "EccLevel": 3
+    },
+    {
+      "id": "firmenfarbe",
+      "name": "Firmenfarbe (Vorlage)",
+      "gruppe": "Kunde",
+      "beschreibung": "Vorlage für Kunden: eine Firmenfarbe, eigenes Logo (PNG oder SVG) in der Mitte. Im Fenster Farbe und Logo wählen, dann als eigenes Design speichern.",
+      "papier": "#FFFFFF",
+      "farbe": {
+        "art": "einfarbig",
+        "farben": [
+          "#1E4E8C"
+        ]
+      },
+      "modul": "rund",
+      "augen": {
+        "form": "rund",
+        "ring": "#1E4E8C",
+        "kern": "#1E4E8C"
+      },
+      "logo": {
+        "muster": false,
+        "mitte": true,
+        "farbe": "#1E4E8C"
+      },
+      "wechsel": "blende",
+      "gravur": false,
+      "EccLevel": 3
+    },
+    {
+      "id": "gravur-laser",
+      "name": "Gravur (Laser)",
+      "gruppe": "Gravur",
+      "beschreibung": "Für Caelum Gravur und xTool: eine Farbe, eckige Module, kein Verlauf, Logo in der Mitte. SVG in mm, reine Vektoren.",
+      "papier": "#FFFFFF",
+      "farbe": {
+        "art": "einfarbig",
+        "farben": [
+          "#000000"
+        ]
+      },
+      "modul": "quadrat",
+      "augen": {
+        "form": "quadrat",
+        "ring": "#000000",
+        "kern": "#000000"
+      },
+      "logo": {
+        "muster": false,
+        "mitte": true,
+        "farbe": "#000000"
+      },
+      "wechsel": "keiner",
+      "gravur": true,
+      "EccLevel": 3
+    }
+  ]
+}

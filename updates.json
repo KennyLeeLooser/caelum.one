@@ -3,6 +3,18 @@
   "updates": [
     {
       "date": "2026-11-19",
+      "product": "Caelum QR · Web",
+      "version": "0.1.0",
+      "status": "vorschau",
+      "title": "QR-Code gestalten – direkt im Browser",
+      "points": [
+        "QR-Code gestalten ohne Installation, nichts wird hochgeladen",
+        "Gleich wie Caelum QR 0.1.0 (geprüft)"
+      ],
+      "link": "#p-qr"
+    },
+    {
+      "date": "2026-11-19",
       "product": "Caelum Cut · Web",
       "version": "0.1.0",
       "status": "vorschau",
