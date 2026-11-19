@@ -1,0 +1,168 @@
+{
+  "_kopf": "Quelle der Produkt-Unterseiten /produkte/<id>/. Seiten erzeugen: node CAELUM/tools/produktseiten.mjs (schreibt auch sitemap.xml nach). Texte sachlich, nur was das Programm heute kann.",
+  "stand": "2026-11-19",
+  "produkte": [
+    {
+      "id": "pandora",
+      "name": "CAELUM Pandora",
+      "farbe": "#D97757",
+      "tag": "Hauptprodukt",
+      "titel": "CAELUM Pandora – Unity- und Blender-Projekte im Team zusammenführen",
+      "beschreibung": "CAELUM Pandora führt die Unity- und Blender-Projekte eines Teams auf mehreren PCs zu einem Master zusammen – über USB-Stick, LAN oder direkt auf der Festplatte.",
+      "lead": "Ein Team auf mehreren PCs fusioniert seine Unity- und Blender-Projekte zu einem Master – über USB-Stick, LAN oder direkt auf der Festplatte.",
+      "absaetze": [
+        "Pandora ist eine Windows-Anwendung auf den Rechnern des Teams. Sie vergleicht die Stände der einzelnen PCs nach MASTER und SLAVE und führt sie nach festen Regeln zusammen, damit kein Arbeitsstand verloren geht.",
+        "Oben steht der Caelum-Server in der Cloud mit Sicherung, GitHub und caelum.one, darunter auf jedem PC Pandora mit den Caelum-Programmen. Wie das zusammenhängt, zeigt das Schaubild auf der Startseite."
+      ],
+      "funktionen": [
+        "Vergleichen und Fusionieren nach MASTER und SLAVE",
+        "Regeln der Golden Base, versiegelte Hauptmatrix",
+        "Brücken in Unity und Blender",
+        "Backups und Spiel-Builds",
+        "Austausch über USB-Stick, LAN oder Festplatte"
+      ],
+      "fakten": [["Plattform", "Windows"], ["Für", "Teams mit Unity und Blender"], ["Bezug", "Auf Anfrage"]],
+      "links": [["Auf Anfrage", "/#kontakt"], ["Aufbau ansehen", "/#pandora"]],
+      "ld": { "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows" }
+    },
+    {
+      "id": "viewer",
+      "name": "Caelum 3D-Viewer",
+      "farbe": "#F2B05A",
+      "tag": "Freeware",
+      "titel": "Caelum 3D-Viewer – 3D-Dateien ansehen, als Bild, PDF oder GIF ausgeben",
+      "beschreibung": "Kostenloser 3D-Viewer für GLB, glTF, OBJ, STL, 3MF und DXF: ansehen und als Bild, PDF-Datenblatt oder GIF ausgeben – im Browser, unter Windows und direkt im Chat von ChatGPT und Claude.",
+      "lead": "3D-Dateien ansehen und als Bild, PDF-Datenblatt oder GIF ausgeben – direkt im Chat von ChatGPT und Claude oder aus Claude Code und Codex.",
+      "absaetze": [
+        "Der Viewer öffnet GLB, glTF, OBJ, STL, 3MF und DXF direkt; FBX, USDZ und BLEND laufen über Blender. 2D-Zeichnungen aus DXF erscheinen in der Draufsicht.",
+        "Ohne Installation funktioniert er als Connector in ChatGPT oder claude.ai: Adresse <code>https://api.caelum.one/viewer/mcp</code> hinzufügen, keine Anmeldung nötig. Im Chat lässt sich das Modell drehen, zoomen und als GIF ausgeben.",
+        "Zum Ausprobieren gibt es eine Web-Fassung direkt auf der Startseite: Datei hineinziehen, fertig. Die Datei bleibt dabei im Browser."
+      ],
+      "funktionen": [
+        "Echte 3D-Ansicht im Chat: drehen, zoomen, Animationen, GIF",
+        "GLB, glTF, OBJ, STL, 3MF, DXF; FBX, USDZ, BLEND über Blender",
+        "Ansichten Vorne, Hinten, Links, Rechts, Oben, Unten, Iso oder eigene Winkel",
+        "PNG, JPG, PDF-Datenblatt und GIF",
+        "360°-Drehung und Kamerafahrten ohne Abschneiden"
+      ],
+      "fakten": [["Plattform", "Windows, Browser, ChatGPT, Claude"], ["Lizenz", "Freeware"], ["Version", "1.3.0"]],
+      "links": [["Im Browser ausprobieren", "/#p-viewer"], ["Download", "/#downloads"], ["GitHub", "https://github.com/KennyLeeLooser/caelum-viewer-plugin"]],
+      "ld": { "applicationCategory": "MultimediaApplication", "operatingSystem": "Windows, Web", "softwareVersion": "1.3.0", "kostenlos": true,
+        "downloadUrl": "https://github.com/KennyLeeLooser/caelum-viewer-plugin/releases/tag/v1.3.0" }
+    },
+    {
+      "id": "gravur",
+      "name": "Caelum Gravur",
+      "farbe": "#E2557A",
+      "tag": "Freeware · Datenpunkt engineering AG",
+      "titel": "Caelum Gravur – Gravurschilder gestalten und als SVG für den Laser ausgeben",
+      "beschreibung": "Gravurschilder aus Excel oder direkt im Programm gestalten und als SVG für den Laser ausgeben – mit echten Materialfarben, Logo, QR-Code, Material- und Bestellrechnung.",
+      "lead": "Gravurschilder aus Excel oder direkt im Programm gestalten und als SVG für den Laser ausgeben – mit Material- und Bestellrechnung.",
+      "absaetze": [
+        "Caelum Gravur zeigt jedes Schild in der echten Materialfarbe, mit Logo, QR-Code und laufender Nummer. Die Ausgabe trennt Gravieren, Löcher und Kanten in eigene SVG-Ebenen.",
+        "Zum Auftrag gehören ein Bestellformular und ein Montageverzeichnis. Eine Web-Fassung zum Ausprobieren liegt auf der Startseite; ein Kundenportal zum Bestellen ist in Entwicklung.",
+        "Caelum Gravur ist Freeware der Datenpunkt engineering AG, erstellt von der Caelum GmbH."
+      ],
+      "funktionen": [
+        "Echte Materialfarben, Logo, QR-Code, laufende Nummern",
+        "SVG-Ebenen für Gravieren, Löcher und Kanten",
+        "Schilder aus Excel übernehmen",
+        "Bestellformular und Montageverzeichnis",
+        "3D-Ansicht des Schilds"
+      ],
+      "fakten": [["Plattform", "Windows, Browser"], ["Lizenz", "Freeware der Datenpunkt engineering AG"], ["Status", "Vorschau"]],
+      "links": [["Im Browser ausprobieren", "/#p-gravur"], ["Kundenportal", "/#portale"], ["Updates", "/#updates"]],
+      "ld": { "applicationCategory": "DesignApplication", "operatingSystem": "Windows, Web", "softwareVersion": "0.9.0", "kostenlos": true }
+    },
+    {
+      "id": "cut",
+      "name": "Caelum Cut",
+      "farbe": "#4FB3C4",
+      "tag": "In Entwicklung",
+      "titel": "Caelum Cut – Videos fürs Handy schneiden und für Messenger verkleinern",
+      "beschreibung": "Videos fürs Handy zusammenfügen, schneiden und so komprimieren, dass sie in jeden Messenger passen – mit Zielgrösse in MB und Geräteprofilen, ohne Cloud.",
+      "lead": "Videos fürs Handy: zusammenfügen, schneiden und so komprimieren, dass sie in jeden Messenger passen – ohne Cloud.",
+      "absaetze": [
+        "Du gibst die Zielgrösse in MB vor und wählst ein Profil für Android, iPhone, Messenger, Reels, TikTok oder Shorts. Cut schätzt die Grösse vorher und rechnet hochkant oder quer, eingepasst oder gefüllt.",
+        "Die Web-Fassung auf der Startseite arbeitet ganz im Browser: Das Video verlässt deinen Rechner nicht."
+      ],
+      "funktionen": [
+        "Geräteprofile für Android, iPhone, Messenger, Reels, TikTok und Shorts",
+        "Zielgrösse in MB, hochkant oder quer, Einpassen oder Füllen",
+        "Mehrere Videos zusammenfügen und schneiden",
+        "Editor mit Spuren, Übergängen, Musik und Titeln",
+        "Ohne Cloud: alles läuft lokal"
+      ],
+      "fakten": [["Plattform", "Windows, Browser"], ["Status", "In Entwicklung"], ["Web-Fassung", "0.1.0"]],
+      "links": [["Im Browser ausprobieren", "/#p-cut"], ["Updates", "/#updates"]],
+      "ld": { "applicationCategory": "MultimediaApplication", "operatingSystem": "Windows, Web", "softwareVersion": "0.1.0" }
+    },
+    {
+      "id": "qr",
+      "name": "Caelum QR",
+      "farbe": "#A585D6",
+      "tag": "In Entwicklung",
+      "titel": "Caelum QR – QR-Codes mit eigenem Design, Logo und Farbverlauf",
+      "beschreibung": "QR-Codes mit eigenem Design gestalten: Farben, die ineinanderfliessen, Logo im Muster und ein animierter Wechsel, bei dem der Code lesbar bleibt – als PNG oder SVG.",
+      "lead": "QR-Codes mit eigenem Design: Farben, die ineinanderfliessen, Logo im Muster und ein Wechsel, bei dem der Code lesbar bleibt.",
+      "absaetze": [
+        "Caelum QR gestaltet Codes für Firmen und Kunden und gibt sie als PNG oder SVG aus – SVG auch für den Laser. Beim animierten Wechsel bleiben Augen und Logo stehen, damit der Code jederzeit lesbar ist.",
+        "Caelum QR ist der Kern für alle QR-Codes der Caelum-Programme. Die Web-Fassung liegt auf der Startseite."
+      ],
+      "funktionen": [
+        "Designs für Firmen und Kunden",
+        "Logo im Muster, Farbverläufe",
+        "Ausgabe als PNG oder SVG, auch für den Laser",
+        "Animierter Wechsel – Augen und Logo bleiben stehen",
+        "Kern für alle QR-Codes der Caelum-Programme"
+      ],
+      "fakten": [["Plattform", "Browser"], ["Status", "In Entwicklung"], ["Web-Fassung", "0.1.0"]],
+      "links": [["Im Browser ausprobieren", "/#p-qr"], ["Updates", "/#updates"]],
+      "ld": { "applicationCategory": "DesignApplication", "operatingSystem": "Web", "softwareVersion": "0.1.0" }
+    },
+    {
+      "id": "goose",
+      "name": "Good Goose",
+      "farbe": "#6BAF73",
+      "tag": "Freeware",
+      "titel": "Good Goose – Desktop-Gans für Claude Code und Codex",
+      "beschreibung": "Good Goose ist eine kostenlose Desktop-Gans für Windows: Sie merkt sich Notizen und Aufgaben und meldet sich, wenn Claude Code oder Codex auf dich wartet.",
+      "lead": "Eine Desktop-Gans für die Taskleiste. Sie merkt sich Notizen und Aufgaben und meldet sich, wenn Claude Code oder Codex auf dich wartet.",
+      "absaetze": [
+        "Good Goose sitzt in der Taskleiste und hält fest, was im Chat mit der KI anfällt: Notizen, Aufgaben und Roadmaps. Ist eine Aufgabe fertig oder der Kontext fast voll, zeigt sie es mit einer Sprechblase.",
+        "Sie kommt als Plugin für Claude Code und Codex und als Windows-Programm."
+      ],
+      "funktionen": [
+        "Notizen, Aufgaben und Roadmaps aus dem Chat",
+        "Hinweis bei fertigen Aufgaben und vollem Kontext",
+        "Plugin für Claude Code und Codex"
+      ],
+      "fakten": [["Plattform", "Windows"], ["Lizenz", "Freeware"], ["Version", "0.4.2"]],
+      "links": [["Download", "/#downloads"], ["GitHub", "https://github.com/KennyLeeLooser/good-goose-plugin"]],
+      "ld": { "applicationCategory": "UtilitiesApplication", "operatingSystem": "Windows", "softwareVersion": "0.4.2", "kostenlos": true,
+        "downloadUrl": "https://github.com/KennyLeeLooser/good-goose-plugin/releases/tag/v0.4.2" }
+    },
+    {
+      "id": "vision",
+      "name": "Caelum Vision",
+      "farbe": "#C44FD6",
+      "tag": "In Entwicklung",
+      "titel": "Caelum Vision – das Handy als Scanner für den PC",
+      "beschreibung": "Caelum Vision macht das Handy zum Scanner: Fotos aus einer Scan-Sitzung kommen per USB oder WLAN direkt auf den PC und werden wie ein Scan aufbereitet.",
+      "lead": "Das Handy wird zum Scanner: Fotos aus einer Scan-Sitzung kommen per USB oder WLAN direkt auf den PC und werden wie ein Scan aufbereitet.",
+      "absaetze": [
+        "Handy und PC koppeln sich per Code oder QR. Die Bilder landen ohne Umweg über die Cloud auf dem PC und werden aufbereitet wie von einem Flachbettscanner.",
+        "Vision ist eine Schnittstelle für die anderen Caelum-Programme. Die App für Android folgt."
+      ],
+      "funktionen": [
+        "Koppeln per Code oder QR",
+        "Übertragung per USB oder WLAN",
+        "Aufbereitung wie ein Flachbettscanner",
+        "Schnittstelle für die anderen Caelum-Programme"
+      ],
+      "fakten": [["Plattform", "Windows, Android (bald)"], ["Status", "In Entwicklung"]],
+      "links": [["Android · bald", "/#downloads"], ["Updates", "/#updates"]],
+      "ld": { "applicationCategory": "UtilitiesApplication", "operatingSystem": "Windows, Android" }
+    }
+  ]
+}
