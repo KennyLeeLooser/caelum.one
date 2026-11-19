@@ -1,0 +1,472 @@
+{
+  "_kopf": "Begriffe für das Impressum (versteckter Teil „Was der Zweck bedeutet“). Einbauen mit: node CAELUM/tools/begriffe.mjs --einbauen. Einträge mit status \"entwurf\" erscheinen nicht auf der Seite.",
+  "stand": "2026-11-19",
+  "schluss": "Diese Liste wächst mit: Ein Skript durchsucht unsere Projekte nach neu eingesetzten Sprachen, Werkzeugen und Diensten. Neue Begriffe kommen hier dazu, sobald ein Mensch sie geprüft und beschrieben hat.",
+  "gruppen": [
+    {
+      "id": "web",
+      "titel": "Web und Skripte",
+      "begriffe": [
+        {
+          "name": "HTML",
+          "text": "HyperText Markup Language: beschreibt Aufbau und Inhalt einer Webseite.",
+          "spuren": [
+            "ext:.html"
+          ],
+          "link": "https://developer.mozilla.org/de/docs/Web/HTML"
+        },
+        {
+          "name": "CSS",
+          "text": "Cascading Style Sheets: legt das Aussehen fest, also Farben, Schriften und Anordnung.",
+          "spuren": [
+            "ext:.css"
+          ],
+          "link": "https://developer.mozilla.org/de/docs/Web/CSS"
+        },
+        {
+          "name": "JavaScript",
+          "text": "Programmiersprache des Browsers, macht Webseiten bedienbar (nicht verwandt mit Java).",
+          "spuren": [
+            "ext:.js",
+            "ext:.mjs"
+          ],
+          "link": "https://developer.mozilla.org/de/docs/Web/JavaScript",
+          "bei": "#produkte"
+        },
+        {
+          "name": "JSON",
+          "text": "Einfaches Textformat für Daten, das Mensch und Programm gleichermassen lesen.",
+          "spuren": [
+            "ext:.json"
+          ],
+          "link": "https://www.json.org/json-de.html"
+        },
+        {
+          "name": "Node.js",
+          "text": "Führt JavaScript ausserhalb des Browsers aus; damit laufen unsere Werkzeuge für Webseite und Web-Module.",
+          "link": "https://nodejs.org/",
+          "spuren": [
+            "datei:package.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sprachen",
+      "titel": "Programmiersprachen",
+      "begriffe": [
+        {
+          "name": "Python",
+          "text": "Gut lesbare Sprache für Werkzeuge, Automatisierung und Skripte in Blender.",
+          "spuren": [
+            "ext:.py"
+          ],
+          "link": "https://www.python.org/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "C#",
+          "text": "Sprache von Microsoft für .NET-Programme und für Spiele in Unity.",
+          "spuren": [
+            "ext:.cs"
+          ],
+          "link": "https://learn.microsoft.com/de-de/dotnet/csharp/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "C++",
+          "text": "Schnelle, maschinennahe Sprache für Spiel-Engines und rechenintensive Programme.",
+          "spuren": [
+            "ext:.cpp",
+            "ext:.hpp"
+          ],
+          "link": "https://isocpp.org/"
+        },
+        {
+          "name": "PowerShell",
+          "text": "Befehlssprache von Windows, mit der wir Einrichtung, Sicherung und Prüfungen automatisieren.",
+          "spuren": [
+            "ext:.ps1"
+          ],
+          "link": "https://learn.microsoft.com/de-de/powershell/"
+        },
+        {
+          "name": "SQL",
+          "text": "Structured Query Language: Abfragesprache für Datenbanken; damit fragen wir etwa unsere Lern-Datenbank gezielt ab.",
+          "link": "https://de.wikipedia.org/wiki/SQL",
+          "spuren": [
+            "ext:.sql"
+          ]
+        },
+        {
+          "name": "SQLite",
+          "text": "Kleine Datenbank in einer einzigen Datei, abgefragt mit SQL – ohne eigenen Server.",
+          "link": "https://www.sqlite.org/",
+          "spuren": [
+            "text:sqlite"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "systeme",
+      "titel": "Betriebssysteme und Laufzeit",
+      "begriffe": [
+        {
+          "name": "Windows · Linux · macOS",
+          "text": "Die drei verbreiteten Betriebssysteme für Computer; macOS ist das System der Macintosh-Rechner von Apple."
+        },
+        {
+          "name": ".NET",
+          "text": "Plattform von Microsoft, auf der C#-Programme unter Windows, Linux und macOS laufen.",
+          "spuren": [
+            "ext:.csproj"
+          ],
+          "link": "https://dotnet.microsoft.com/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "Android",
+          "text": "Betriebssystem von Google für Handys und Tablets.",
+          "spuren": [
+            "datei:AndroidManifest.xml",
+            "text:android"
+          ],
+          "link": "https://developer.android.com/",
+          "bei": "#p-vision"
+        },
+        {
+          "name": "winget",
+          "text": "Paketverwaltung von Windows: installiert und aktualisiert Programme mit einem Befehl, etwa beim Einrichten neuer PCs.",
+          "link": "https://learn.microsoft.com/de-de/windows/package-manager/",
+          "spuren": [
+            "text:winget"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "android",
+      "titel": "Werkzeuge für Android",
+      "begriffe": [
+        {
+          "name": "APK",
+          "text": "Android Package: die Installationsdatei einer Android-App.",
+          "spuren": [
+            "ext:.apk",
+            "text:apk"
+          ],
+          "link": "https://developer.android.com/studio/build",
+          "bei": "#downloads"
+        },
+        {
+          "name": "SDK",
+          "text": "Software Development Kit: Werkzeugkasten, um Programme für eine bestimmte Plattform zu entwickeln.",
+          "spuren": [
+            "text:sdk"
+          ],
+          "link": "https://developer.android.com/studio"
+        },
+        {
+          "name": "JDK",
+          "text": "Java Development Kit: Werkzeuge zum Erstellen von Java-Programmen, auch für Android-Apps nötig.",
+          "spuren": [
+            "text:jdk"
+          ],
+          "link": "https://openjdk.org/"
+        },
+        {
+          "name": "NDK",
+          "text": "Native Development Kit: erlaubt Android-Apps, Teile in C und C++ auszuführen.",
+          "spuren": [
+            "text:ndk"
+          ],
+          "link": "https://developer.android.com/ndk"
+        },
+        {
+          "name": "adb",
+          "text": "Android Debug Bridge: verbindet den PC mit dem Handy, um Apps zu installieren und Messungen zu starten.",
+          "spuren": [
+            "text:adb"
+          ],
+          "link": "https://developer.android.com/tools/adb",
+          "bei": "#p-vision"
+        }
+      ]
+    },
+    {
+      "id": "werkzeuge",
+      "titel": "Entwicklungssoftware",
+      "begriffe": [
+        {
+          "name": "Blender",
+          "text": "Freie Software für 3D-Modelle, Animation und Darstellung (Rendering).",
+          "spuren": [
+            "ext:.blend",
+            "text:bpy"
+          ],
+          "link": "https://www.blender.org/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "Unity",
+          "text": "Entwicklungsumgebung (Engine) für Spiele und interaktive 3D-Anwendungen.",
+          "spuren": [
+            "ext:.unity",
+            "text:UnityEngine"
+          ],
+          "link": "https://unity.com/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "FFmpeg",
+          "text": "Freies Werkzeug zum Umwandeln, Verkleinern und Zusammenfügen von Videos und Ton.",
+          "spuren": [
+            "text:ffmpeg"
+          ],
+          "link": "https://ffmpeg.org/",
+          "bei": "#p-cut"
+        },
+        {
+          "name": "Avalonia",
+          "text": "Freies Oberflächen-Framework für .NET; darauf läuft das Fenster von CAELUM Pandora unter Windows, Linux und macOS.",
+          "link": "https://avaloniaui.net/",
+          "bei": "#p-pandora",
+          "spuren": [
+            "text:avalonia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "formate",
+      "titel": "3D, Grafik und Dateiformate",
+      "begriffe": [
+        {
+          "name": "GLB / glTF",
+          "text": "Offenes Format für 3D-Modelle samt Material; damit tauschen wir Modelle zwischen Blender, Unity und Browser aus.",
+          "spuren": [
+            "ext:.glb",
+            "ext:.gltf"
+          ],
+          "link": "https://www.khronos.org/gltf/",
+          "bei": "#p-viewer"
+        },
+        {
+          "name": "SVG",
+          "text": "Scalable Vector Graphics: Grafik aus Linien und Flächen, beliebig vergrösserbar, etwa für Logos und Gravurdateien.",
+          "spuren": [
+            "ext:.svg"
+          ],
+          "link": "https://developer.mozilla.org/de/docs/Web/SVG",
+          "bei": "#p-gravur"
+        },
+        {
+          "name": "WebGL",
+          "text": "Schnittstelle, mit der der Browser 3D-Grafik direkt über die Grafikkarte zeichnet.",
+          "spuren": [
+            "text:webgl"
+          ],
+          "link": "https://developer.mozilla.org/de/docs/Web/API/WebGL_API",
+          "bei": "#p-viewer"
+        },
+        {
+          "name": "QR-Code",
+          "text": "Zweidimensionaler Code, den eine Handykamera liest; bei uns für Kopplung, Links und Befehle.",
+          "spuren": [
+            "text:qr-code"
+          ],
+          "bei": "#p-qr"
+        },
+        {
+          "name": "SkiaSharp",
+          "text": "Grafikbibliothek für .NET (auf Basis von Skia aus Chrome und Android); zeichnet bei uns Schilder, QR-Codes und Vorschaubilder.",
+          "link": "https://github.com/mono/SkiaSharp",
+          "bei": "#p-gravur",
+          "spuren": [
+            "text:skiasharp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ki",
+      "titel": "Künstliche Intelligenz – state of the art",
+      "einleitung": "Wir arbeiten mit den jeweils neuesten Sprachmodellen, dem aktuellen Stand der Technik (state of the art). Was die KI schreibt, prüft und gibt bei uns immer ein Mensch frei.",
+      "begriffe": [
+        {
+          "name": "KI",
+          "text": "Künstliche Intelligenz: Programme, die aus Beispielen lernen; bei uns Assistenz beim Planen, Schreiben und Prüfen von Code."
+        },
+        {
+          "name": "LLM",
+          "text": "Large Language Model (grosses Sprachmodell): KI, die Sprache und Programmcode versteht und selbst schreibt."
+        },
+        {
+          "name": "Claude",
+          "text": "State-of-the-art-Sprachmodelle von Anthropic. Über das Werkzeug Claude Code plant, schreibt und prüft Claude Programme direkt in unseren Projekten.",
+          "spuren": [
+            "text:claude"
+          ],
+          "link": "https://www.anthropic.com/claude"
+        },
+        {
+          "name": "Codex",
+          "text": "State-of-the-art-Programmierassistent von OpenAI. Arbeitet ebenfalls direkt im Code und ergänzt Claude bei Umsetzung und Gegenprüfung.",
+          "spuren": [
+            "text:codex"
+          ],
+          "link": "https://openai.com/codex/"
+        },
+        {
+          "name": "MCP",
+          "text": "Model Context Protocol: offene Schnittstelle, über die KI-Modelle Werkzeuge bedienen, etwa den Caelum 3D-Viewer, Blender oder Unity.",
+          "spuren": [
+            "text:mcp"
+          ],
+          "link": "https://modelcontextprotocol.io/",
+          "bei": "#p-viewer"
+        }
+      ]
+    },
+    {
+      "id": "schnittstellen",
+      "titel": "Schnittstellen, Plattformen und Vernetzung",
+      "begriffe": [
+        {
+          "name": "API",
+          "text": "Application Programming Interface: festgelegte Schnittstelle, über die Programme miteinander sprechen.",
+          "spuren": [
+            "text:api"
+          ]
+        },
+        {
+          "name": "Git",
+          "text": "Versionsverwaltung: hält jeden Stand des Codes fest und führt Arbeit mehrerer Personen zusammen.",
+          "spuren": [
+            "datei:.gitignore"
+          ],
+          "link": "https://git-scm.com/"
+        },
+        {
+          "name": "GitHub",
+          "text": "Plattform für Git-Projekte, Downloads (Releases) und GitHub Pages, auf dem diese Website läuft.",
+          "spuren": [
+            "text:github"
+          ],
+          "link": "https://github.com/",
+          "bei": "#downloads"
+        },
+        {
+          "name": "Cloudflare",
+          "text": "Dienst für die Namensauflösung (DNS) unserer Domain und für gesicherte Tunnel zu unseren Servern.",
+          "spuren": [
+            "text:cloudflare"
+          ],
+          "link": "https://www.cloudflare.com/"
+        },
+        {
+          "name": "Tailscale",
+          "text": "Verschlüsseltes privates Netz (VPN), das unsere Rechner direkt miteinander verbindet.",
+          "spuren": [
+            "text:tailscale"
+          ],
+          "link": "https://tailscale.com/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "Syncthing",
+          "text": "Gleicht Ordner direkt zwischen unseren Rechnern ab, ohne Cloud-Speicher dazwischen.",
+          "spuren": [
+            "text:syncthing"
+          ],
+          "link": "https://syncthing.net/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "Google Workspace",
+          "text": "E-Mail, Kontaktformular und Kundenzugang der Caelum GmbH.",
+          "spuren": [
+            "text:google workspace"
+          ],
+          "link": "https://workspace.google.com/",
+          "bei": "#portale"
+        },
+        {
+          "name": "OAuth",
+          "text": "Standard für die Anmeldung mit einem bestehenden Konto („Mit Google anmelden“), ohne das Passwort weiterzugeben.",
+          "spuren": [
+            "text:oauth"
+          ],
+          "link": "https://oauth.net/2/",
+          "bei": "#portale"
+        },
+        {
+          "name": "DNS",
+          "text": "Domain Name System: übersetzt Namen wie caelum.one in Adressen von Servern.",
+          "spuren": [
+            "text:dns"
+          ]
+        },
+        {
+          "name": "HTTPS",
+          "text": "Verschlüsselte Verbindung zwischen Browser und Server – angewandte Kryptografie im Alltag.",
+          "spuren": [
+            "text:https"
+          ]
+        },
+        {
+          "name": "Steam",
+          "text": "Grösste Vertriebsplattform für PC-Spiele; Pandora bereitet Spiele für den Upload dorthin vor.",
+          "link": "https://partner.steamgames.com/",
+          "bei": "#p-pandora",
+          "spuren": [
+            "text:steamcmd"
+          ]
+        },
+        {
+          "name": "Apps Script",
+          "text": "Skriptsprache von Google Workspace; verarbeitet bei uns Kontaktformular und Kundenzugang.",
+          "link": "https://developers.google.com/apps-script",
+          "bei": "#kontakt",
+          "spuren": [
+            "ext:.gs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sicherung",
+      "titel": "Sicherung und Verschlüsselung",
+      "einleitung": "Hier wird Kryptologie praktisch: Daten werden verschlüsselt, bevor sie den Rechner verlassen.",
+      "begriffe": [
+        {
+          "name": "restic",
+          "text": "Sicherungsprogramm, das jede Sicherung verschlüsselt und doppelte Daten nur einmal speichert.",
+          "spuren": [
+            "text:restic"
+          ],
+          "link": "https://restic.net/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "rclone",
+          "text": "Verbindet Programme mit Cloud-Speichern wie Google Drive und überträgt Dateien geprüft.",
+          "spuren": [
+            "text:rclone"
+          ],
+          "link": "https://rclone.org/",
+          "bei": "#p-pandora"
+        },
+        {
+          "name": "BitLocker",
+          "text": "Laufwerksverschlüsselung von Windows: Ohne Schlüssel sind Festplatte und USB-Stick unlesbar.",
+          "spuren": [
+            "text:bitlocker"
+          ],
+          "link": "https://learn.microsoft.com/de-de/windows/security/operating-system-security/data-protection/bitlocker/"
+        }
+      ]
+    }
+  ]
+}
