@@ -3,8 +3,11 @@
 // Caelum Cut · Web-Modul „Video fürs Handy“ (CAELUM-STANDARD.md C3). Vorbild: Schnellfenster der App (CutWindow).
 // Videos hineinziehen, je Clip Von/Bis schneiden, Reihenfolge ändern, Stufe oder Geräteprofil wählen, komprimieren, speichern.
 // Regeln aus plan.js (= Jobs.cs/Profiles.cs der App), Kodieren in kodieren.js (WebCodecs). Nichts wird hochgeladen.
-import { planen, zeit, PlanFehler } from "./plan.js";
-import { lesen, kodieren, schaetzen, kannKodieren, KodierFehler } from "./kodieren.js";
+// Teile mit derselben Versionsangabe laden wie dieses Grundmodul (caelum.js hängt ?v=<hash> an) – sonst mischt der Browser
+// nach einem Update bis ~10 min alte plan.js/kodieren.js/profile.json mit dem neuen cut-mini.js.
+const V = new URL(import.meta.url).search;
+const { planen, zeit, PlanFehler } = await import("./plan.js" + V);
+const { lesen, kodieren, schaetzen, kannKodieren, KodierFehler } = await import("./kodieren.js" + V);
 
 const css = `
 .ct-drop { border:2px dashed var(--line); border-radius:10px; padding:20px; text-align:center; color:var(--muted); }
@@ -44,7 +47,7 @@ function zeitLesen(s) {
 const mb = b => (b / 1024 / 1024).toLocaleString("de-CH", { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + " MB";
 
 export async function mount(root, ctx) {
-  const daten = await fetch(new URL("daten/profile.json", import.meta.url)).then(r => r.json());
+  const daten = await fetch(new URL("daten/profile.json" + V, import.meta.url)).then(r => r.json());
   root.append(h("style", {}, css));
   const SPEICHER = "caelum.cut.web.v1";
   let wahl = { auswahl: "stufe:Handy", form: "Original", quer: false, zielMB: 16, fuellen: false };

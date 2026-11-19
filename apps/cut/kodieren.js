@@ -56,9 +56,18 @@ export async function lesen(datei) {
     hdr: /hvc1\.2|hev1\.2|vp09\.02|av01\.\d\.\d\dM\.10/.test(v.codec),
     video: {
       config: { codec: v.codec.startsWith("avc3") ? v.codec.replace("avc3", "avc1") : v.codec, codedWidth: breit, codedHeight: hoch, description: beschreibung(mp4.getTrackById(v.id)) },
-      proben: proben.get(v.id), timescale: v.timescale,
+      proben: proben.get(v.id), timescale: v.timescale, t0: erstesBild(proben.get(v.id)),
     },
   };
+}
+
+// Videos mit B-Bildern (x264, Handy-HEVC) zeigen das erste Bild erst bei cts = 1–2 Bildern (Composition-Offset, sonst per
+// Edit-Liste ausgeglichen). ffmpeg und Player beginnen dort bei 0 – ohne Abzug lag das Web-Ergebnis 2 Bilder zu spät
+// (Bild 0 dreifach, SSIM 0,92 statt 0,97; 19.11.2026). Zeiten darum immer ab dem ersten angezeigten Bild.
+function erstesBild(pr) {
+  let t = Infinity;
+  for (const p of pr) if (p.cts < t) t = p.cts;
+  return Number.isFinite(t) ? t : 0;
 }
 
 // ───────────────────────── Encoder wählen ─────────────────────────
@@ -180,7 +189,8 @@ export async function kodieren(teile, plan, melde = () => {}, signal) {
     // Video: ab dem letzten Schlüsselbild vor „Von“ dekodieren, Bilder ausserhalb Von/Bis verwerfen, Bildrate begrenzen
     const pr = clip.video.proben, ts = clip.video.timescale;
     let start = 0;
-    for (let i = 0; i < pr.length; i++) { if (pr[i].cts / ts > von + 1e-6) break; if (pr[i].is_sync) start = i; }
+    const t0 = clip.video.t0 ?? 0, sekVon = p => (p.cts - t0) / ts;
+    for (let i = 0; i < pr.length; i++) { if (sekVon(pr[i]) > von + 1e-6) break; if (pr[i].is_sync) start = i; }
     // Der Decoder hat nur wenige Bildpuffer: jedes Bild sofort verarbeiten und freigeben (sonst warten Decoder und Ablauf
     // aufeinander). Die Bilder kommen in Anzeigereihenfolge; die Kette arbeitet sie nacheinander ab.
     let decFehler = null, kette = Promise.resolve(), offen = 0;
@@ -207,9 +217,9 @@ export async function kodieren(teile, plan, melde = () => {}, signal) {
     dec.configure(clip.video.config);
     for (let i = start; i < pr.length; i++) {
       const p = pr[i];
-      if (p.cts / ts > bis + 1) break;                                     // B-Bilder: etwas Vorlauf über „Bis“ hinaus
+      if (sekVon(p) > bis + 1) break;                                      // B-Bilder: etwas Vorlauf über „Bis“ hinaus
       prueft(); if (decFehler) throw new KodierFehler(`${clip.name}: Bild nicht dekodierbar (${decFehler.message}).`);
-      dec.decode(new EncodedVideoChunk({ type: p.is_sync ? "key" : "delta", timestamp: Math.round(p.cts / ts * 1e6), duration: Math.round(p.duration / ts * 1e6), data: p.data }));
+      dec.decode(new EncodedVideoChunk({ type: p.is_sync ? "key" : "delta", timestamp: Math.round(sekVon(p) * 1e6), duration: Math.round(p.duration / ts * 1e6), data: p.data }));
       while (dec.decodeQueueSize > 6 || offen > 3) { prueft(); await new Promise(r => setTimeout(r, 2)); }
     }
     await dec.flush(); await kette; dec.close();
