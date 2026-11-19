@@ -1,5 +1,5 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch einen Menschen ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 // Caelum QR · Web – zeichnet einen QR-Code nach Design: ruhend, Rorschach-Wirbel und Blende beim Wechsel. Augen und
 // Logo-Feld bleiben beim Wechsel stehen. JavaScript-Fassung von src/CaelumQr/Design.cs (Rgb, Ink, Noise) und Painter.cs
 // (Static, Eyes, Plate, Pairs, Transition, SvgSurface) – die App ist Master. Der Gleichheitstest vergleicht das SVG

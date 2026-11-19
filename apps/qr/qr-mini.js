@@ -1,5 +1,5 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch einen Menschen ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 // Caelum QR · Web-Modul „QR-Code gestalten“ (CAELUM-STANDARD.md Teil B). Bildet das Fenster der App nach (QrWindow.cs,
 // Entscheid Kenny 19.11.2026: „emulieren“ = grafisch erstellen wie in der App): links die Designs, Mitte die lebende
 // Vorschau mit Wechsel und Lesetest, rechts Inhalt, Anpassen und Speichern. Die App ist Master: Designs aus
@@ -70,6 +70,12 @@ const css = `
   .qa-liste { grid-auto-flow:column; grid-auto-columns:minmax(196px, 1fr); overflow-x:auto; padding-bottom:6px; }
   .qa-rechts { border:0; border-top:1px solid var(--qa-linie); }
   .qa-kopf span { display:block; }
+}
+/* Handy quer (wenig Höhe): Vorschau links, höchstens so hoch wie der Bildschirm; Einstellungen rechts, Designs darunter */
+@media (orientation: landscape) and (max-height: 520px) {
+  .qa-leib { grid-template-columns:minmax(0,1fr) minmax(280px,1fr); grid-template-areas:"mitte rechts" "links links"; }
+  .qa-rechts { border-top:0; border-left:1px solid var(--qa-linie); }
+  .qa-vorschau, .qa-handy { max-width:min(500px, 74vh); }
 }
 `;
 

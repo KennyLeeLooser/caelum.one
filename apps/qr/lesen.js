@@ -1,5 +1,5 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch einen Menschen ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 // Caelum QR · Web – Lesetest im Browser. Wie Reader.Check der App: der gezeichnete Code wird in drei Größen
 // (900, 360, 220 px) zurückgelesen. Dazu Handy-Proben: so, wie eine Handy-Kamera den Code sieht (klein, schräg und
 // unscharf, dunkel). Leser: jsQR 1.4.0 (Apache-2.0, vendor/jsqr.mjs) statt ZXing – der Gleichheitstest prüft, dass beide

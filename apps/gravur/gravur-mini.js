@@ -13,6 +13,12 @@ const LOCHTEXT = { Keine: "keine", Links: "links", Rechts: "rechts", Beide: "lin
 const css = `
 .gv-buehne { display:flex; align-items:center; justify-content:center; min-height:180px; padding:20px; }
 @media (max-width: 560px) { .gv-buehne { min-height: 0; padding: 12px; } }
+/* Zwei Spalten: Schild läuft beim Scrollen der Einstellungen mit (sonst bleibt links viel Leerraum, v. a. quer) */
+@media (min-width: 761px) {
+  .gv-links { align-self: stretch; }
+  .gv-halter { position: sticky; top: 72px; z-index: 1; background: var(--surface); padding-bottom: 4px; }
+}
+@media (min-width: 761px) and (orientation: landscape) and (max-height: 520px) { .gv-halter { top: 8px; } .gv-buehne svg { max-height: 46vh; } }
 .gv-buehne svg { width:100%; height:auto; max-height:360px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.35)); }
 .gv-felder { border-radius:10px; padding:8px; display:grid; gap:6px; margin-top:8px; }
 .gv-felder textarea { resize:none; text-align:center; font-weight:600; border-radius:8px; padding:6px 8px; overflow:hidden;
@@ -161,8 +167,8 @@ export async function mount(root, ctx) {
   const hilfsHaken = h("input", { type: "checkbox", checked: true, onchange: e => { hilfslinien = e.target.checked; zeichnen(); } });
 
   root.append(h("div", { class: "cw cw-grid" },
-    h("div", {},
-      kopf, buehne,
+    h("div", { class: "gv-links" },
+      h("div", { class: "gv-halter" }, kopf, buehne),
       h("label", { class: "cw-c" }, hilfsHaken, "Hilfslinien (Textfelder)"),
       h("p", { class: "cw-hint" }, "Text je Feld wie auf dem Schild. Enter = neue Zeile im Feld."),
       felderBox, hinweise,

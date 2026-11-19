@@ -56,9 +56,11 @@ export async function mount(root, ctx) {
 
   const clips = [];               // { clip, von, bis, el }
   const liste = h("div", {});
-  const datei = h("input", { type: "file", hidden: true, multiple: true, accept: "video/mp4,video/quicktime,.mp4,.mov,.m4v" });
+  // Handy: video/* öffnet die Galerie (iOS/Android); Ziehen gibt es dort nicht.
+  const touch = matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+  const datei = h("input", { type: "file", hidden: true, multiple: true, accept: touch ? "video/*" : "video/mp4,video/quicktime,.mp4,.mov,.m4v" });
   const drop = h("div", { class: "ct-drop" },
-    h("b", {}, "Videos hierher ziehen"),
+    h("b", {}, touch ? "Videos aus der Galerie wählen" : "Videos hierher ziehen"),
     h("span", {}, "MP4 oder MOV vom Handy – sie bleiben auf deinem Gerät. "),
     h("button", { type: "button", onclick: () => datei.click() }, "Videos wählen"));
   const fehlerBox = h("ul", { class: "cw-note", "aria-live": "polite" });

@@ -2,7 +2,7 @@
 // KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch einen Menschen ausstehend (GB-8).
 // Caelum 3D-Viewer · Web-Modul „3D-Datei ansehen“ (CAELUM-STANDARD.md C2). Renderer = Widget der App (kern.js, erzeugt),
 // Lader = laden.js (nach Loaders.cs), GIF = gif.js (nach GifEncoder.cs). Bedienung wie im Widget: ziehen dreht,
-// Rad/zwei Finger zoomen, Doppelklick passt ein. Nimmt Schilder aus Caelum Gravur an („schild-glb“). Nichts wird hochgeladen.
+// Rad/zwei Finger zoomen, Doppelklick/Doppeltippen passt ein; am Handy ohne Endungs-Filter in der Dateiauswahl. Nimmt Schilder aus Caelum Gravur an („schild-glb“). Nichts wird hochgeladen.
 import { VIEWS, VIEW_ANGLES, BG, viewerErzeugen } from "./kern.js";
 import { laden, netz, dreiecke, drehungX, FormatFehler } from "./laden.js";
 import { gifSchreiben, ausRgba } from "./gif.js";
@@ -12,8 +12,10 @@ const css = `
   cursor:grab; touch-action:none; user-select:none; }
 .vw-stage.drag { cursor:grabbing; }
 .vw-stage.over { outline:2px dashed var(--accent); outline-offset:-6px; }
+@media (max-width: 600px) { .vw-stage { aspect-ratio: 1 / 1; } }
+@media (orientation: landscape) and (max-height: 520px) { .vw-stage { aspect-ratio: auto; height: 62vh; } }
 .vw-stage canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
-.vw-leer { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:16px; color:var(--muted); cursor:default; }
+.vw-leer { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:safe center; overflow:auto; gap:10px; text-align:center; padding:16px; color:var(--muted); cursor:default; }
 .vw-leer b { color:var(--text); font-size:16px; font-weight:600; }
 .vw-winkel { position:absolute; left:8px; bottom:8px; font-size:11px; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:1px 8px; }
 .vw-busy { position:absolute; right:8px; top:8px; font-size:12px; color:var(--text); background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:2px 8px; display:none; }
@@ -44,10 +46,13 @@ export async function mount(root, ctx) {
   const canvas = h("canvas", { "aria-label": "3D-Ansicht" });
   const winkel = h("span", { class: "vw-winkel", "aria-live": "off" });
   const busy = h("span", { class: "vw-busy" }, "lädt …");
-  const datei = h("input", { type: "file", hidden: true, multiple: true, accept: ".glb,.gltf,.obj,.mtl,.stl,.3mf,.bin,.png,.jpg,.jpeg" });
+  // Handy (Android/iOS): ohne Endungs-Filter – die Auswahl graut .glb/.stl/.3mf sonst aus, weil das System ihren MIME-Typ nicht kennt.
+  // Das Format prüft laden.js selbst (FormatFehler mit klarer Meldung).
+  const touch = matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+  const datei = h("input", { type: "file", hidden: true, multiple: true, accept: touch ? null : ".glb,.gltf,.obj,.mtl,.stl,.3mf,.bin,.png,.jpg,.jpeg" });
   const beispiele = [["Prüfwürfel mit Textur (GLB)", "beispiele/knoten_textur.glb"], ["Bauteil mit Farben (3MF)", "beispiele/bauteil.3mf"]];
   const leer = h("div", { class: "vw-leer" },
-    h("b", {}, "3D-Datei hierher ziehen"),
+    h("b", {}, touch ? "3D-Datei öffnen" : "3D-Datei hierher ziehen"),
     h("span", {}, "GLB, glTF, OBJ (+MTL), STL, 3MF – die Datei bleibt auf deinem Gerät."),
     h("div", { class: "cw-row", style: "justify-content:center" },
       h("button", { class: "cw-primary", type: "button", onclick: () => datei.click() }, "Datei wählen"),
@@ -147,7 +152,13 @@ export async function mount(root, ctx) {
     if (ptrs.size === 2 && pinch) { const [a, b] = [...ptrs.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); viewer.zoom = Math.max(0.05, Math.min(20, viewer.zoom * pinch / Math.max(1, d))); pinch = d; viewer.draw(); return; }
     if (drag) setView(drag.yaw - (e.clientX - drag.x) * 0.4, drag.pitch + (e.clientY - drag.y) * 0.4);
   });
-  const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size) { drag = null; stage.classList.remove("drag"); } };
+  let letzterTipp = 0;
+  const up = e => {
+    if (e.type === "pointerup" && e.pointerType === "touch" && modell && ptrs.size === 1 && drag && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 10) {
+      const t = performance.now(); if (t - letzterTipp < 320) { viewer.fit(); viewer.draw(); letzterTipp = 0; } else letzterTipp = t;   // Doppeltippen = einpassen
+    }
+    ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size) { drag = null; stage.classList.remove("drag"); }
+  };
   stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
   stage.addEventListener("wheel", e => { if (!modell) return; e.preventDefault(); viewer.zoom = Math.max(0.05, Math.min(20, viewer.zoom * Math.exp(e.deltaY * 0.0015))); viewer.draw(); }, { passive: false });
   stage.addEventListener("dblclick", e => { if (modell && !e.target.closest(".vw-leer")) { viewer.fit(); viewer.draw(); } });

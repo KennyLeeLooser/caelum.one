@@ -1,5 +1,5 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – Freigabe durch einen Menschen ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
 // Caelum QR · Web – QR-Erzeuger nach ISO/IEC 18004: Byte-Modus (UTF-8), L/M/Q/H, Version 1–40, beste Maske.
 // JavaScript-Fassung von src/CaelumQr/QrEncoder.cs (Master). Der Gleichheitstest (web/test/gleich.mjs) prüft jede Zeile
 // der Matrix gegen die App. Weicht etwas ab, hat die App recht.
