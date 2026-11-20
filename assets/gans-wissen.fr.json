@@ -92,7 +92,22 @@
       "ziel": "code:html", "knopf": "Page en code" },
     { "worte": ["en texte", "page en texte", "retour au texte", "pas de code"],
       "antwort": "Retour au texte – la page redevient normale.",
-      "ziel": "code:", "knopf": "Page en texte" }
+      "ziel": "code:", "knopf": "Page en texte" },
+    { "worte": ["communaute", "chat", "forum", "chat developpeurs", "echanger", "discuter"],
+      "antwort": "La communauté a un chat pour développeurs – avec des salons Unity, Blender, IA et web. Tout le monde peut lire ; pour écrire, connecte-toi avec Google ou GitHub.",
+      "ziel": "/community/", "knopf": "Vers le chat" },
+    { "worte": ["webdesign", "conception web", "creer un site", "site web", "domaine", "domaines", "oneunitedflower", "hostpoint"],
+      "antwort": "En webdesign, Caelum est le vaisseau mère : chaque domaine y atterrit et utilise les mêmes briques. Le prochain à atterrir est oneunitedflower.ch – une Terre où l’on plante des fleurs.",
+      "ziel": "/webdesign/", "knopf": "Vers le webdesign" },
+    { "worte": ["studio", "modeles", "3d dans le navigateur", "modelisation"],
+      "antwort": "Nos modèles 3D naissent au studio avec Blender et Unity. Tu peux y voir des fichiers 3D dans le navigateur et créer des plaques.",
+      "ziel": "/studio/", "knopf": "Vers le studio" },
+    { "worte": ["labo", "laboratoire", "essai", "essais", "experience", "experiences"],
+      "antwort": "Au labo, nous testons de nouvelles choses : Caelum Analyse lit les codes, Rorschach porte des commandes – et moi, l’oie, je suis aussi un essai qui a grandi. Honk.",
+      "ziel": "/labor/", "knopf": "Vers le labo" },
+    { "worte": ["partenaire", "partenaires", "collaboration", "travailler ensemble", "atelier du logo", "atelier", "propre logo"],
+      "antwort": "Les clients et partenaires ont leur propre espace : ton signe dans l’atelier du logo, tes chantiers dans le portail client et un lien direct avec nous.",
+      "ziel": "/partner/", "knopf": "Vers les partenaires" }
   ],
   "unbekannt": [
     "Ça, je ne le sais pas (encore). Pose-moi des questions sur Pandora, nos programmes, les téléchargements ou l’accès client – ou écris-nous.",

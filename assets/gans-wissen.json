@@ -406,6 +406,70 @@
       "antwort": "Zurück zum Text – die Seite sieht wieder normal aus.",
       "ziel": "code:",
       "knopf": "Seite als Text"
+    },
+    {
+      "worte": [
+        "community",
+        "chat",
+        "forum",
+        "entwickler chat",
+        "austausch",
+        "mitreden"
+      ],
+      "antwort": "In der Community gibt es einen Chat für Entwickler – mit Räumen für Unity, Blender, KI und Web. Lesen kann jeder, schreiben nach Anmeldung mit Google oder GitHub.",
+      "ziel": "/community/",
+      "knopf": "Zum Chat"
+    },
+    {
+      "worte": [
+        "webdesign",
+        "webseite bauen",
+        "homepage",
+        "domain",
+        "domains",
+        "oneunitedflower",
+        "hostpoint",
+        "webdesigner"
+      ],
+      "antwort": "Beim Webdesign ist Caelum das Mutterschiff: Jede Domain landet darauf und nutzt dieselben Bausteine. Als Nächstes landet oneunitedflower.ch – eine Erde, auf der man Blumen pflanzt.",
+      "ziel": "/webdesign/",
+      "knopf": "Zu Webdesign"
+    },
+    {
+      "worte": [
+        "studio",
+        "modelle",
+        "3d im browser",
+        "modellieren"
+      ],
+      "antwort": "Im Studio entstehen unsere 3D-Modelle mit Blender und Unity. Dort kannst du 3D-Dateien im Browser ansehen und Schilder gestalten.",
+      "ziel": "/studio/",
+      "knopf": "Ins Studio"
+    },
+    {
+      "worte": [
+        "labor",
+        "versuch",
+        "versuche",
+        "experiment",
+        "experimente"
+      ],
+      "antwort": "Im Labor probieren wir Neues aus: Caelum Analyse liest Codes, Rorschach trägt Befehle – und ich, die Gans, bin auch ein Versuch, der gewachsen ist. Honk.",
+      "ziel": "/labor/",
+      "knopf": "Ins Labor"
+    },
+    {
+      "worte": [
+        "partner",
+        "zusammenarbeit",
+        "zusammenarbeiten",
+        "logo-werkstatt",
+        "werkstatt",
+        "eigenes logo"
+      ],
+      "antwort": "Für Kunden und Partner gibt es einen eigenen Bereich: dein Zeichen in der Logo-Werkstatt, deine Baustellen im Kundenportal und der direkte Draht zu uns.",
+      "ziel": "/partner/",
+      "knopf": "Zu Partner"
     }
   ],
   "unbekannt": [

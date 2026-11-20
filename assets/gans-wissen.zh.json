@@ -92,7 +92,22 @@
       "ziel": "code:html", "knopf": "页面显示为代码" },
     { "worte": ["文字形式", "页面文字", "回到文字", "不要代码", "恢复正常"],
       "antwort": "回到文字——页面恢复正常了。",
-      "ziel": "code:", "knopf": "页面显示为文字" }
+      "ziel": "code:", "knopf": "页面显示为文字" },
+    { "worte": ["社区", "聊天", "论坛", "开发者聊天", "交流", "community", "chat"],
+      "antwort": "社区里有一个开发者聊天室——设有 Unity、Blender、AI 和 Web 房间。任何人都可以阅读，使用 Google 或 GitHub 登录后即可发言。",
+      "ziel": "/community/", "knopf": "前往聊天" },
+    { "worte": ["网页设计", "建网站", "域名", "oneunitedflower", "hostpoint", "webdesign"],
+      "antwort": "在网页设计中，Caelum 是母舰：每个域名都降落在它上面，使用相同的组件。下一个降落的是 oneunitedflower.ch——一个可以种花的地球。",
+      "ziel": "/webdesign/", "knopf": "前往网页设计" },
+    { "worte": ["工作室", "模型", "浏览器 3d", "建模", "studio"],
+      "antwort": "我们的 3D 模型在工作室里用 Blender 和 Unity 制作。在那里你可以在浏览器中查看 3D 文件并设计铭牌。",
+      "ziel": "/studio/", "knopf": "前往工作室" },
+    { "worte": ["实验室", "实验", "试验", "lab"],
+      "antwort": "在实验室里我们尝试新东西：Caelum Analyse 读取代码，Rorschach 携带指令——而我这只鹅，也是一个长大了的实验。嘎。",
+      "ziel": "/labor/", "knopf": "前往实验室" },
+    { "worte": ["合作伙伴", "合作", "标志工坊", "工坊", "自己的标志", "partner"],
+      "antwort": "客户和合作伙伴有自己的区域：在标志工坊设计你的标志，在客户门户查看你的项目，并可直接联系我们。",
+      "ziel": "/partner/", "knopf": "前往合作伙伴" }
   ],
   "unbekannt": [
     "这个我（还）不知道。可以问我 Pandora、我们的程序、下载或客户入口——或者给我们写信。",

@@ -92,7 +92,22 @@
       "ziel": "code:html", "knopf": "Pagina come codice" },
     { "worte": ["come testo", "pagina come testo", "torna al testo", "niente codice"],
       "antwort": "Di nuovo testo – la pagina torna normale.",
-      "ziel": "code:", "knopf": "Pagina come testo" }
+      "ziel": "code:", "knopf": "Pagina come testo" },
+    { "worte": ["community", "chat", "forum", "chat sviluppatori", "confronto", "discutere"],
+      "antwort": "Nella community c’è una chat per sviluppatori – con stanze per Unity, Blender, IA e web. Leggere può chiunque, per scrivere accedi con Google o GitHub.",
+      "ziel": "/community/", "knopf": "Alla chat" },
+    { "worte": ["web design", "webdesign", "creare un sito", "sito web", "dominio", "domini", "oneunitedflower", "hostpoint"],
+      "antwort": "Nel web design Caelum è la nave madre: ogni dominio vi atterra e usa gli stessi mattoncini. Il prossimo ad atterrare è oneunitedflower.ch – una Terra su cui piantare fiori.",
+      "ziel": "/webdesign/", "knopf": "Al web design" },
+    { "worte": ["studio", "modelli", "3d nel browser", "modellazione"],
+      "antwort": "Nello studio nascono i nostri modelli 3D con Blender e Unity. Lì puoi vedere file 3D nel browser e creare targhe.",
+      "ziel": "/studio/", "knopf": "Allo studio" },
+    { "worte": ["laboratorio", "esperimento", "esperimenti"],
+      "antwort": "In laboratorio proviamo cose nuove: Caelum Analyse legge i codici, Rorschach porta comandi – e io, l’oca, sono un esperimento cresciuto. Honk.",
+      "ziel": "/labor/", "knopf": "Al laboratorio" },
+    { "worte": ["partner", "collaborazione", "collaborare", "laboratorio del logo", "proprio logo"],
+      "antwort": "Clienti e partner hanno un’area tutta loro: il tuo segno nel laboratorio del logo, i tuoi cantieri nel portale clienti e un filo diretto con noi.",
+      "ziel": "/partner/", "knopf": "All’area partner" }
   ],
   "unbekannt": [
     "Questo non lo so (ancora). Chiedimi di Pandora, dei nostri programmi, dei download o dell’accesso clienti – oppure scrivici.",

@@ -92,7 +92,22 @@
       "ziel": "code:html", "knopf": "Page as code" },
     { "worte": ["as text", "page as text", "back to text", "no code"],
       "antwort": "Back to text – the page looks normal again.",
-      "ziel": "code:", "knopf": "Page as text" }
+      "ziel": "code:", "knopf": "Page as text" },
+    { "worte": ["community", "chat", "forum", "developer chat", "discussion", "talk to others"],
+      "antwort": "The community has a chat for developers – with rooms for Unity, Blender, AI and web. Anyone can read; to write, sign in with Google or GitHub.",
+      "ziel": "/community/", "knopf": "To the chat" },
+    { "worte": ["web design", "webdesign", "build a website", "homepage", "domain", "domains", "oneunitedflower", "hostpoint", "web designer"],
+      "antwort": "In web design, Caelum is the mothership: every domain lands on it and uses the same building blocks. Next to land is oneunitedflower.ch – an Earth where you plant flowers.",
+      "ziel": "/webdesign/", "knopf": "To web design" },
+    { "worte": ["studio", "models", "3d in the browser", "modelling", "modeling"],
+      "antwort": "Our 3D models are made in the studio with Blender and Unity. There you can view 3D files in the browser and design signs.",
+      "ziel": "/studio/", "knopf": "To the studio" },
+    { "worte": ["lab", "laboratory", "experiment", "experiments", "trial"],
+      "antwort": "In the lab we try out new things: Caelum Analyse reads codes, Rorschach carries commands – and I, the goose, am an experiment that grew up too. Honk.",
+      "ziel": "/labor/", "knopf": "To the lab" },
+    { "worte": ["partner", "partners", "collaboration", "work together", "logo workshop", "workshop", "own logo"],
+      "antwort": "Customers and partners have their own area: your sign in the logo workshop, your projects in the customer portal and a direct line to us.",
+      "ziel": "/partner/", "knopf": "To partners" }
   ],
   "unbekannt": [
     "I don’t know that (yet). Ask me about Pandora, our programs, downloads or customer access – or write to us.",

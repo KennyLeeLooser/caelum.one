@@ -92,7 +92,22 @@
       "ziel": "code:html", "knopf": "Página como código" },
     { "worte": ["como texto", "pagina como texto", "volver al texto", "sin codigo"],
       "antwort": "De vuelta al texto: la página vuelve a verse normal.",
-      "ziel": "code:", "knopf": "Página como texto" }
+      "ziel": "code:", "knopf": "Página como texto" },
+    { "worte": ["comunidad", "chat", "foro", "chat de desarrolladores", "intercambio", "conversar"],
+      "antwort": "La comunidad tiene un chat para desarrolladores, con salas de Unity, Blender, IA y web. Cualquiera puede leer; para escribir, inicia sesión con Google o GitHub.",
+      "ziel": "/community/", "knopf": "Ir al chat" },
+    { "worte": ["diseno web", "webdesign", "crear una web", "pagina web", "dominio", "dominios", "oneunitedflower", "hostpoint"],
+      "antwort": "En diseño web, Caelum es la nave nodriza: cada dominio aterriza en ella y usa los mismos bloques. El próximo en aterrizar es oneunitedflower.ch, una Tierra donde se plantan flores.",
+      "ziel": "/webdesign/", "knopf": "Ir a diseño web" },
+    { "worte": ["estudio", "modelos", "3d en el navegador", "modelado"],
+      "antwort": "En el estudio creamos nuestros modelos 3D con Blender y Unity. Allí puedes ver archivos 3D en el navegador y diseñar placas.",
+      "ziel": "/studio/", "knopf": "Ir al estudio" },
+    { "worte": ["laboratorio", "experimento", "experimentos"],
+      "antwort": "En el laboratorio probamos cosas nuevas: Caelum Analyse lee códigos, Rorschach lleva órdenes, y yo, la oca, también soy un experimento que creció. Honk.",
+      "ziel": "/labor/", "knopf": "Ir al laboratorio" },
+    { "worte": ["socio", "socios", "colaboracion", "trabajar juntos", "taller del logo", "taller", "logo propio"],
+      "antwort": "Los clientes y socios tienen su propia área: tu signo en el taller del logo, tus obras en el portal de clientes y una línea directa con nosotros.",
+      "ziel": "/partner/", "knopf": "Ir a socios" }
   ],
   "unbekannt": [
     "Eso (todavía) no lo sé. Pregúntame por Pandora, nuestros programas, las descargas o el acceso de clientes, o escríbenos.",

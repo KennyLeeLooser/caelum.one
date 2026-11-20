@@ -92,7 +92,22 @@
       "ziel": "code:html", "knopf": "Página como código" },
     { "worte": ["como texto", "pagina como texto", "voltar ao texto", "sem codigo"],
       "antwort": "De volta ao texto – a página volta ao normal.",
-      "ziel": "code:", "knopf": "Página como texto" }
+      "ziel": "code:", "knopf": "Página como texto" },
+    { "worte": ["comunidade", "chat", "forum", "chat de programadores", "troca de ideias", "conversar"],
+      "antwort": "A comunidade tem um chat para programadores – com salas de Unity, Blender, IA e web. Qualquer pessoa pode ler; para escrever, inicia sessão com o Google ou o GitHub.",
+      "ziel": "/community/", "knopf": "Para o chat" },
+    { "worte": ["web design", "webdesign", "criar um site", "dominio", "dominios", "oneunitedflower", "hostpoint"],
+      "antwort": "No web design, a Caelum é a nave-mãe: cada domínio aterra nela e usa os mesmos blocos. O próximo a aterrar é oneunitedflower.ch – uma Terra onde se plantam flores.",
+      "ziel": "/webdesign/", "knopf": "Para o web design" },
+    { "worte": ["estudio", "modelos", "3d no navegador", "modelacao"],
+      "antwort": "No estúdio nascem os nossos modelos 3D com Blender e Unity. Lá podes ver ficheiros 3D no navegador e criar placas.",
+      "ziel": "/studio/", "knopf": "Para o estúdio" },
+    { "worte": ["laboratorio", "experiencia", "experiencias"],
+      "antwort": "No laboratório experimentamos coisas novas: o Caelum Analyse lê códigos, o Rorschach transporta comandos – e eu, o ganso, também sou uma experiência que cresceu. Honk.",
+      "ziel": "/labor/", "knopf": "Para o laboratório" },
+    { "worte": ["parceiro", "parceiros", "colaboracao", "trabalhar juntos", "oficina do logotipo", "oficina", "logotipo proprio"],
+      "antwort": "Clientes e parceiros têm a sua própria área: o teu sinal na oficina do logótipo, as tuas obras no portal de clientes e uma linha direta connosco.",
+      "ziel": "/partner/", "knopf": "Para parceiros" }
   ],
   "unbekannt": [
     "Isso ainda não sei. Pergunta-me sobre o Pandora, os nossos programas, as transferências ou o acesso de cliente – ou escreve-nos.",

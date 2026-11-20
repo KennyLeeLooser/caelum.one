@@ -7,6 +7,8 @@
   'use strict';
   var SITZUNG = 'caelum-chat-sitzung', RAUM = 'caelum-chat-raum', MAX = 1000, TAKT = 6000;
 
+  // Hinweisfenster (alert) liegen ausserhalb der Seite → CaelumSprache.t; Seitentexte übersetzt sprache.js selbst (MutationObserver)
+  function T(s) { return window.CaelumSprache && window.CaelumSprache.t ? window.CaelumSprache.t(s) : s; }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function lies(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   function schreib(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -35,7 +37,7 @@
     platz.textContent = ''; platz.appendChild(box);
 
     raeume.forEach(function (r) {
-      var b = el('button', null, '# ' + r[1]); b.type = 'button'; b.dataset.raum = r[0];
+      var b = el('button', null, '# '); b.appendChild(document.createTextNode(r[1])); b.type = 'button'; b.dataset.raum = r[0];
       b.setAttribute('aria-pressed', String(r[0] === raum));
       b.onclick = function () { if (raum === r[0]) return; raum = r[0]; schreib(RAUM, raum); markieren(); neuLaden(); };
       leiste.appendChild(b);
@@ -88,10 +90,10 @@
       if (!url) { eingabe.appendChild(el('p', 'hinweis', 'Der Chat wird gerade eingerichtet. Bald kannst du hier mit Google oder GitHub mitschreiben.')); return; }
       if (sitzung) {
         var ich = el('div', 'ich');
-        ich.appendChild(el('span', null, 'Angemeldet als ' + sitzung.name + ' (' + (sitzung.quelle === 'github' ? 'GitHub' : 'Google') + ')'));
+        var wer = el('span', null, 'Angemeldet als'); wer.appendChild(el('b', null, ' ' + sitzung.name + ' ')); wer.appendChild(document.createTextNode('(' + (sitzung.quelle === 'github' ? 'GitHub' : 'Google') + ')')); ich.appendChild(wer);
         var ab = el('a', null, 'Abmelden'); ab.href = '#'; ab.onclick = function (e) { e.preventDefault(); sitzung = null; schreib(SITZUNG, null); eingabeBauen(); };
         ich.appendChild(ab); eingabe.appendChild(ich);
-        var t = el('textarea'); t.maxLength = MAX; t.rows = 2; t.placeholder = 'Nachricht an #' + raum; t.title = 'Enter sendet, Shift+Enter neue Zeile';
+        var t = el('textarea'); t.maxLength = MAX; t.rows = 2; t.placeholder = 'Nachricht schreiben …'; t.title = 'Enter sendet, Shift+Enter neue Zeile';
         t.setAttribute('aria-label', 'Nachricht');
         var s = el('button', 'k', 'Senden'); s.type = 'button';
         function senden() {
@@ -102,8 +104,8 @@
             s.disabled = false;
             if (r.ok) { t.value = ''; if (r.nachricht) zeigen(r.nachricht); liste.scrollTop = liste.scrollHeight; t.focus(); }
             else if (r.abgelaufen) { sitzung = null; schreib(SITZUNG, null); eingabeBauen(); }
-            else alert(r.fehler || 'Senden ging nicht.');
-          }).catch(function () { s.disabled = false; alert('Senden ging nicht – bitte später nochmals.'); });
+            else alert(T(r.fehler || 'Senden ging nicht.'));
+          }).catch(function () { s.disabled = false; alert(T('Senden ging nicht – bitte später nochmals.')); });
         }
         s.onclick = senden;
         t.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); senden(); } });
@@ -130,7 +132,7 @@
     }
 
     function angemeldet(r) {
-      if (!r.ok) { alert(r.fehler || 'Anmeldung ging nicht.'); return; }
+      if (!r.ok) { alert(T(r.fehler || 'Anmeldung ging nicht.')); return; }
       sitzung = { token: r.token, name: r.name, quelle: r.quelle, bis: r.bis };
       schreib(SITZUNG, sitzung); eingabeBauen();
     }
@@ -138,9 +140,9 @@
     function googleKnopf(ziel) {
       function los() {
         google.accounts.id.initialize({ client_id: cfg.googleClientId, ux_mode: 'popup', callback: function (c) {
-          rufen({ aktion: 'google', idToken: c.credential }).then(angemeldet).catch(function () { alert('Anmeldung ging nicht.'); });
+          rufen({ aktion: 'google', idToken: c.credential }).then(angemeldet).catch(function () { alert(T('Anmeldung ging nicht.')); });
         } });
-        google.accounts.id.renderButton(ziel, { theme: 'filled_black', size: 'medium', text: 'signin_with', shape: 'pill' });
+        google.accounts.id.renderButton(ziel, { theme: 'filled_black', size: 'medium', text: 'signin_with', shape: 'pill', locale: document.documentElement.lang || 'de' });
       }
       if (window.google && google.accounts && google.accounts.id) return los();
       var s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.onload = los;
@@ -154,8 +156,8 @@
       var soll = ''; try { soll = sessionStorage.getItem('caelum-chat-state') || ''; sessionStorage.removeItem('caelum-chat-state'); } catch (e) {}
       var code = q.get('code'), st = q.get('state');
       history.replaceState(null, '', location.pathname + '#chat');
-      if (soll && st === soll) rufen({ aktion: 'github', code: code }).then(angemeldet).catch(function () { alert('GitHub-Anmeldung ging nicht.'); });
-      else alert('GitHub-Anmeldung abgebrochen (Prüfwert passt nicht).');
+      if (soll && st === soll) rufen({ aktion: 'github', code: code }).then(angemeldet).catch(function () { alert(T('GitHub-Anmeldung ging nicht.')); });
+      else alert(T('GitHub-Anmeldung abgebrochen (Prüfwert passt nicht).'));
     }
 
     eingabeBauen();
