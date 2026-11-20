@@ -35,8 +35,8 @@
 <main>
   <div class="wrap">
     <h1>Datenschutzerklärung</h1>
-    <p class="stand">Stand: 19. November 2026</p>
-    <p class="lead">Kurz gesagt: Diese Website setzt keine Cookies, nutzt keine Analyse- oder Werbedienste und lädt keine Schriften oder Skripte von fremden Servern, ausser du klickst selbst auf „Mit Google anmelden“. Daten fallen nur an, wenn du uns schreibst, dich beim Kundenzugang anmeldest oder etwas herunterlädst.</p>
+    <p class="stand">Stand: 20. November 2026</p>
+    <p class="lead">Kurz gesagt: Diese Website setzt keine Cookies, nutzt keine Analyse- oder Werbedienste und lädt keine Schriften oder Skripte von fremden Servern, ausser du klickst selbst auf „Mit Google anmelden“ oder „Mit GitHub anmelden“. Daten fallen nur an, wenn du uns schreibst, dich beim Kundenzugang oder im Community-Chat anmeldest oder etwas herunterlädst.</p>
 
     <nav class="toc" aria-label="Inhalt">
       <ol>
@@ -46,6 +46,7 @@
         <li><a href="#cookies">Cookies, Tracking, Schriften</a></li>
         <li><a href="#kontakt">Kontaktformular und E-Mail</a></li>
         <li><a href="#kundenzugang">Kundenzugang mit Google</a></li>
+        <li><a href="#community">Community-Chat</a></li>
         <li><a href="#module">Web-Module im Browser</a></li>
         <li><a href="#downloads">Downloads und GitHub</a></li>
         <li><a href="#connector">3D-Viewer als Connector</a></li>
@@ -98,31 +99,44 @@
     <p>Was Google bei der Anmeldung selbst verarbeitet, regelt die <a href="https://policies.google.com/privacy?hl=de">Datenschutzerklärung von Google</a>.</p>
     <p><strong>Kundenportal Gravurschilder (/gravur/).</strong> Mit dem Baustellen-Code öffnest du die Daten deiner Baustelle; sie liegen verschlüsselt auf dieser Seite und werden in deinem Browser mit dem Code entschlüsselt. Deinen Entwurf (Schilder, Montageorte, Pläne) speichert nur dein Browser (lokaler Speicher), damit du später weiterarbeiten kannst – er wird nicht an uns übertragen. Erst wenn du den Auftrag abschliesst, erzeugt dein Browser eine ZIP-Datei mit dem Auftrag und deinen Kontaktangaben. Diese schickst du uns selbst per E-Mail oder „Teilen“; wir verwenden sie nur für Offerte und Ausführung des Auftrags. Den Entwurf löschst du, indem du die Website-Daten von www.caelum.one in deinem Browser entfernst.</p>
 
-    <h2 id="module">7. Web-Module im Browser</h2>
+    <h2 id="community">7. Community-Chat (/community/)</h2>
+    <p><strong>Lesen</strong> kann jeder, ohne Anmeldung. Dein Browser fragt dazu alle paar Sekunden die neuesten Nachrichten bei unserem Skript in <strong>Google Workspace</strong> ab (Anbieter wie in Abschnitt 5); dabei verarbeitet Google deine IP-Adresse und die technischen Angaben aus Abschnitt 3.</p>
+    <p><strong>Schreiben</strong> kannst du nach einer Anmeldung mit Google oder GitHub. Erst wenn du auf den jeweiligen Knopf klickst, lädt die Seite das Skript von Google (accounts.google.com) bzw. leitet dich zu GitHub (GitHub Inc., USA) weiter. Bei GitHub fragen wir keine Zusatzrechte an, sondern lesen nur dein öffentliches Profil. Unser Skript prüft die Anmeldung und speichert danach:</p>
+    <ul>
+      <li>eine <strong>Kontokennung</strong> (die Nummer deines Google- bzw. GitHub-Kontos, z. B. „github:12345“), damit wir Missbrauch begrenzen und Konten sperren können,</li>
+      <li>deinen <strong>Anzeigenamen</strong> (Vorname bei Google, Benutzername bei GitHub),</li>
+      <li>jede <strong>Nachricht</strong> mit Raum und Zeitpunkt.</li>
+    </ul>
+    <p>Das alles liegt in einer Tabelle in unserem Google-Workspace-Konto. Für andere sichtbar sind nur <strong>Anzeigename, Herkunft (Google oder GitHub), Zeitpunkt und Text</strong>. Deine E-Mail-Adresse geht nie an den Browser, und wir speichern sie nicht. Den Zugangsschlüssel, den GitHub bei der Anmeldung ausstellt, verwenden wir nur einmal zum Lesen des Profils und speichern ihn nicht.</p>
+    <p>Nach der Anmeldung erhältst du einen eigenen Sitzungsschlüssel, der 7 Tage gilt. Er liegt nur im lokalen Speicher deines Browsers (kein Cookie), ebenso der zuletzt gewählte Raum. Mit „Abmelden“ löschst du ihn sofort.</p>
+    <p><strong>Moderation:</strong> Wir können Nachrichten ausblenden und Konten sperren, etwa bei Werbung, Beleidigungen oder rechtswidrigen Inhalten. Schreib bitte keine vertraulichen oder persönlichen Daten in den Chat – alles, was du schreibst, ist öffentlich lesbar.</p>
+
+    <h2 id="module">8. Web-Module im Browser</h2>
     <p>Die Web-Module (zum Beispiel 3D-Viewer, Gravur und Cut) laufen vollständig in deinem Browser. Dateien, die du dort öffnest, werden <strong>nicht hochgeladen</strong> und verlassen dein Gerät nicht. Ergebnisse speicherst du selbst über den Download deines Browsers.</p>
 
-    <h2 id="downloads">8. Downloads und GitHub</h2>
+    <h2 id="downloads">9. Downloads und GitHub</h2>
     <p>Unsere Programme stellen wir über <strong>GitHub</strong> (Releases) zum Download bereit. Wenn du eine Datei herunterlädst oder einen Link zu GitHub öffnest, verarbeitet GitHub deine IP-Adresse und die technischen Angaben aus Abschnitt 3. Die Liste der Downloads auf dieser Seite lädt der Browser aus unserem eigenen Webspace.</p>
     <p>Für die Programme selbst gelten die Hinweise in den Programmen und unsere <a href="agb.html">AGB</a>.</p>
 
-    <h2 id="connector">9. Caelum 3D-Viewer als Connector</h2>
+    <h2 id="connector">10. Caelum 3D-Viewer als Connector</h2>
     <p>Wenn du den Server <code>api.caelum.one/viewer/mcp</code> in einem KI-Dienst (zum Beispiel ChatGPT oder claude.ai) als Connector einträgst, sendet dieser Dienst die 3D-Dateien, die du ansehen willst, an unseren Server. Wir verarbeiten sie nur, um Vorschaubilder, Datenblätter oder Animationen zu erstellen, und <strong>löschen Modelle und Ergebnisse nach einer Stunde</strong>. Eine Anmeldung ist nicht nötig. Die Verbindung läuft verschlüsselt über Cloudflare (Cloudflare Inc., USA). Was der KI-Dienst selbst mit deinen Daten tut, regelt dessen Anbieter.</p>
 
-    <h2 id="ausland">10. Bekanntgabe ins Ausland</h2>
+    <h2 id="ausland">11. Bekanntgabe ins Ausland</h2>
     <p>Die genannten Dienstleister (GitHub, Cloudflare, Google, Microsoft) können Daten auch in den USA oder in weiteren Ländern bearbeiten. Die USA gelten für Firmen, die nach dem <strong>Swiss-U.S. Data Privacy Framework</strong> bzw. dem EU-U.S. Data Privacy Framework zertifiziert sind, als Land mit angemessenem Datenschutz. Wo das nicht zutrifft, stützen sich die Anbieter auf die Standardvertragsklauseln der EU-Kommission, die der Eidgenössische Datenschutz- und Öffentlichkeitsbeauftragte (EDÖB) anerkennt.</p>
 
-    <h2 id="dauer">11. Aufbewahrung</h2>
+    <h2 id="dauer">12. Aufbewahrung</h2>
     <ul>
       <li>Anfragen über Formular oder E-Mail bewahren wir auf, solange es für die Bearbeitung nötig ist, und löschen sie danach, spätestens nach zwei Jahren ohne weiteren Kontakt.</li>
       <li>Geschäftskorrespondenz und Belege, die zu einem Vertrag gehören, bewahren wir nach Art. 958f OR zehn Jahre auf.</li>
       <li>Einträge in der Zugangsliste des Kundenzugangs löschen wir, sobald die Zusammenarbeit endet oder du es verlangst.</li>
       <li>Dateien des 3D-Viewer-Connectors löschen wir nach einer Stunde.</li>
+      <li>Nachrichten im Community-Chat bleiben sichtbar, bis wir sie ausblenden oder du ihre Löschung verlangst. Auf Wunsch löschen wir alle Nachrichten und die Kontokennung deines Kontos.</li>
     </ul>
 
-    <h2 id="sicherheit">12. Sicherheit</h2>
+    <h2 id="sicherheit">13. Sicherheit</h2>
     <p>Die Website ist nur verschlüsselt (HTTPS) erreichbar. Unsere Konten bei den genannten Diensten sind auf wenige Personen beschränkt und mit starker Anmeldung geschützt. Eine vollständig sichere Übertragung über das Internet kann niemand garantieren; schicke uns besonders schützenswerte Daten deshalb nicht über das Formular.</p>
 
-    <h2 id="rechte">13. Deine Rechte</h2>
+    <h2 id="rechte">14. Deine Rechte</h2>
     <p>Du kannst jederzeit und kostenlos verlangen:</p>
     <ul>
       <li><strong>Auskunft</strong>, ob und welche Daten wir über dich bearbeiten (Art. 25 DSG, Art. 15 DSGVO),</li>
@@ -134,7 +148,7 @@
     <p>Schreib dafür an <a href="mailto:info@caelum.one">info@caelum.one</a>. Wir können einen Nachweis deiner Identität verlangen, damit niemand anderes Auskunft über dich erhält. Wir antworten in der Regel innert 30 Tagen.</p>
     <p>Du kannst dich ausserdem bei einer Aufsichtsbehörde beschweren, in der Schweiz beim <a href="https://www.edoeb.admin.ch/">Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB)</a>, in der EU bei der Behörde deines Wohnsitzlandes.</p>
 
-    <h2 id="aenderungen">14. Änderungen</h2>
+    <h2 id="aenderungen">15. Änderungen</h2>
     <p>Wir passen diese Erklärung an, wenn sich die Website oder die eingesetzten Dienste ändern. Es gilt die jeweils hier veröffentlichte Fassung. Das Datum oben zeigt den letzten Stand.</p>
   </div>
 </main>

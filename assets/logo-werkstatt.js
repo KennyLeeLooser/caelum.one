@@ -70,7 +70,7 @@
   document.head.appendChild(css);
 
   var stand = merk() || { felder: null, linie: '#262624', grund: '#262624', anim: 'einzeichnen' };
-  var pinsel = null, malt = false, svg = null, huelle = null;
+  var pinsel = null, malt = false, svg = null, huelle = null, linienReihe = null;
 
   function bauen() {
     huelle = document.createElement('div'); huelle.className = 'werkstatt'; huelle.hidden = true;
@@ -96,7 +96,8 @@
     var rad = tupf('none', 'Radierer (Feld leer)', function () { pinsel = 'none'; markiere(pr, rad); }); rad.classList.add('leer'); pr.appendChild(rad);
 
     var p2 = gruppe(seite, 'Linien');
-    LINIEN.forEach(function (e) { var b = tupf(e[0], e[1], function () { stand.linie = e[0]; markiere(p2.reihe, b); zeichnen(); }); if (stand.linie === e[0]) b.setAttribute('aria-pressed', 'true'); p2.reihe.appendChild(b); });
+    linienReihe = p2.reihe;
+    LINIEN.forEach(function (e) { var b = tupf(e[0], e[1], function () { stand.linie = e[0]; markiere(p2.reihe, b); zeichnen(); }); b.dataset.farbe = e[0]; if (stand.linie === e[0]) b.setAttribute('aria-pressed', 'true'); p2.reihe.appendChild(b); });
     var p3 = gruppe(seite, 'Grund');
     GRUND.forEach(function (e) { var b = tupf(e[0], e[1], function () { stand.grund = e[0]; markiere(p3.reihe, b); zeichnen(); }); if (e[0] === 'none') b.classList.add('leer'); if (stand.grund === e[0]) b.setAttribute('aria-pressed', 'true'); p3.reihe.appendChild(b); });
 
@@ -170,8 +171,12 @@
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   }
+  // Linienfarbe aus „Caelum Optionen“ übernehmen (Kenny 20.11.2026): beim Öffnen gilt die Farbe des Startsignets.
+  function optionenLinie() { try { return localStorage.getItem('caelum-logo-linie') || '#262624'; } catch (e) { return '#262624'; } }
   function auf() {
     if (!huelle) bauen();
+    stand.linie = optionenLinie();
+    if (linienReihe) markiere(linienReihe, linienReihe.querySelector('[data-farbe="' + stand.linie + '"]'));
     zeichnen(); huelle.hidden = false; document.documentElement.style.overflow = 'hidden';
     huelle.querySelector('.x').focus({ preventScroll: true });
   }

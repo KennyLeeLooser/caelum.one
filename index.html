@@ -815,10 +815,7 @@ document.addEventListener("click", function (e) {
   if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches && a.getAttribute("href") !== "#") return;
   e.preventDefault(); a.classList.add("an");
-  if (a.dataset.zeichen === "partner" && window.CaelumWerkstatt) {   // Partner = Logo-Werkstatt (Kenny 20.11.2026)
-    setTimeout(function () { a.classList.remove("an"); window.CaelumWerkstatt.oeffnen(); }, 260);
-    return;
-  }
+  // Seit 20.11.2026 hat jeder Bereich eine eigene Seite (/bereiche/bereiche.json); Partner zeigt die Werkstatt dort als Karte (/#werkstatt).
   if (a.getAttribute("href") === "#") {   // Bereich ohne eigene Seite (noch): kurz umlegen, Gans sagt Bescheid
     setTimeout(function () { a.classList.remove("an"); }, 900);
     var satz = "Der Bereich {name} ist offen – Inhalte folgen bald.", name = { name: a.querySelector("b").textContent };   // Übersetzung: unterseiten.mjs
@@ -826,6 +823,13 @@ document.addEventListener("click", function (e) {
     return;
   }
   setTimeout(function () { location.href = a.href; }, 260);
+});
+// /#werkstatt (Karte im Bereich Partner) öffnet die Logo-Werkstatt direkt
+window.addEventListener("load", function () {
+  if (location.hash === "#werkstatt" && window.CaelumWerkstatt) window.CaelumWerkstatt.oeffnen();
+});
+window.addEventListener("hashchange", function () {
+  if (location.hash === "#werkstatt" && window.CaelumWerkstatt) window.CaelumWerkstatt.oeffnen();
 });
 </script>
 <script>
@@ -883,11 +887,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // Nur eine versteckte Tür, kein Schutz: was geheim bleiben muss, gehört hinter den Kundenzugang (Server).
   var ZEICHEN = [
     { name: 'developer', titel: 'Developer', info: 'Demos aus unseren Spielen', href: '/developer/', felder: ['f00', 'f04'] },                                   // kleiner Tropfen
-    { name: 'webdesign', titel: 'Webdesign', info: 'Webseiten und Web-Module', felder: ['f03'] },                                                              // 1 Mond
-    { name: 'studio', titel: 'Studio', info: '3D, Unity und Blender', felder: ['f00', 'f03', 'f04', 'f05', 'f06', 'f07', 'f10', 'f11', 'f16', 'f17'] }, // 2 Dreieck
-    { name: 'labor', titel: 'Labor', info: 'KI und Versuche', felder: ['f00', 'f03', 'f04', 'f16', 'f17'] },                                                     // 3 grosser Tropfen
-    { name: 'partner', titel: 'Partner', info: 'Für Kunden und Partner', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f06', 'f07', 'f08', 'f09', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17'] }, // 4 Viereck
-    { name: 'community', titel: 'Community', info: 'Austausch mit anderen', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f10', 'f11', 'f14', 'f15', 'f16', 'f17'] } // 5 Kreis
+    { name: 'webdesign', titel: 'Webdesign', info: 'Webseiten und Web-Module', href: '/webdesign/', felder: ['f03'] },                                                              // 1 Mond
+    { name: 'studio', titel: 'Studio', info: '3D, Unity und Blender', href: '/studio/', felder: ['f00', 'f03', 'f04', 'f05', 'f06', 'f07', 'f10', 'f11', 'f16', 'f17'] }, // 2 Dreieck
+    { name: 'labor', titel: 'Labor', info: 'KI und Versuche', href: '/labor/', felder: ['f00', 'f03', 'f04', 'f16', 'f17'] },                                                     // 3 grosser Tropfen
+    { name: 'partner', titel: 'Partner', info: 'Für Kunden und Partner', href: '/partner/', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f06', 'f07', 'f08', 'f09', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17'] }, // 4 Viereck
+    { name: 'community', titel: 'Community', info: 'Austausch mit anderen', href: '/community/', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f10', 'f11', 'f14', 'f15', 'f16', 'f17'] } // 5 Kreis
   ];
   var WINZIG = { f18: 1, f19: 1 };   // im 76-px-Logo ~1 px gross, mit dem Finger nicht zu treffen → zählen nie mit
   function gemalt() {
@@ -1114,7 +1118,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 <script src="assets/sprache.js?v=7" defer></script>
-<script src="assets/logo-werkstatt.js?v=1" defer></script>
+<script src="assets/logo-werkstatt.js?v=2" defer></script>
 <script src="assets/gans.js?v=7" defer></script>
 <script type="module" src="apps/basis/caelum.js?v=3"></script>
 </body>

@@ -1,0 +1,123 @@
+{
+  "_kopf": "Caelum-Bereiche (Zeichen im Fusslogo → Regler → eigene Seite). © 2026 Caelum GmbH. Neuer Bereich = Eintrag hier → Hüllen /<id>/index.html neu schreiben (node WEBSEITE-BEREICHE-HUELLEN.mjs Webseite, liegt privat im Wurzelordner) → href im ZEICHEN-Eintrag in index.html. Stand 20.11.2026.",
+  "bereiche": [
+    {
+      "id": "developer",
+      "titel": "Developer",
+      "info": "Demos aus unseren Spielen",
+      "farbe": "#A58BF5",
+      "eigeneSeite": true
+    },
+    {
+      "id": "webdesign",
+      "titel": "Webdesign",
+      "info": "Webseiten und Web-Module",
+      "farbe": "#4FB3C4",
+      "ueber": "/webdesign",
+      "h1": "Ein Mutterschiff, viele Landeplätze",
+      "text": "Caelum ist der Setzkasten: Jede unserer Domains landet hier wie ein Ufo und nutzt dieselben Bausteine – Sprachen, Logo, Gans, Web-Module. So bauen wir Webseiten schnell und ohne fremde Plattformen.",
+      "kartenTitel": "Landeplätze",
+      "karten": [
+        { "titel": "caelum.one", "untertitel": "Mutterschiff", "text": "Die Firmenseite: Produkte, Kundenportale, Web-Module und die versteckten Bereiche hinter den Zeichen im Fusslogo.", "status": "Live", "tags": ["GitHub Pages", "9 Sprachen"], "link": "/", "knopf": "Zur Startseite" },
+        { "titel": "oneunitedflower.ch", "untertitel": "Erde und Blumen", "text": "Eine drehbare Erde, auf der man Blumen pflanzt – als Unity-Seite im Browser. Sie landet als erste Domain auf der Plattform Caelum.", "status": "In Planung", "tags": ["Unity WebGL", "Hostpoint"] },
+        { "titel": "Caelum Webdesigner", "untertitel": "App", "text": "Unser Werkzeug, das neue Seiten aus den Caelum-Bausteinen zusammensetzt: erst Standard und Muster, dann die App, zuletzt das Web-Modul.", "status": "In Planung", "tags": ["Windows", "Web-Modul"] }
+      ],
+      "wieTitel": "Wie eine Domain landet",
+      "wie": [
+        ["Andocken", "Die Domain zeigt auf die Plattform Caelum (DNS beim Anbieter, z. B. Hostpoint)."],
+        ["Bausteine", "Logo, Sprachen, Gans und Web-Module kommen aus caelum.one – eine Quelle für alle Seiten."],
+        ["Eigenes Gesicht", "Jede Domain bekommt ihren Inhalt, etwa eine Unity-Welt im Browser."]
+      ]
+    },
+    {
+      "id": "studio",
+      "titel": "Studio",
+      "info": "3D, Unity und Blender",
+      "farbe": "#E5955F",
+      "ueber": "/studio",
+      "h1": "3D direkt im Browser",
+      "text": "Im Studio entstehen unsere Modelle mit Blender und Unity. Hier kannst du 3D-Dateien ansehen, Schilder gestalten und Codes in 3D drehen – ohne Installation.",
+      "kartenTitel": "Werkzeuge",
+      "karten": [
+        { "titel": "3D-Viewer", "untertitel": "GLB, OBJ, STL", "text": "Eigene 3D-Datei hineinziehen und von allen Seiten ansehen. Die Datei bleibt auf deinem Gerät.", "status": "Vorschau", "tags": ["Web-Modul", "Viewer 1.3"], "link": "/#p-viewer", "knopf": "Viewer öffnen" },
+        { "titel": "Schild gestalten", "untertitel": "Caelum Gravur", "text": "Gravurschild entwerfen und als 3D-Modell ansehen – dieselbe Technik wie in der App.", "status": "Vorschau", "tags": ["Web-Modul", "GLB"], "link": "/#p-gravur", "knopf": "Gestalten" },
+        { "titel": "Rorschach in 3D", "untertitel": "QR mit Tiefe", "text": "Ein Caelum-Code als Tintenbild, das sich in 3D aufrichtet.", "status": "Vorschau", "tags": ["Browser", "Handy"], "link": "/r/", "knopf": "Ansehen" }
+      ],
+      "wieTitel": "Vom Modell in den Browser",
+      "wie": [
+        ["Modellieren", "Blender und Unity, gesteuert über CAELUM Pandora."],
+        ["Prüfen", "Der Caelum 3D-Viewer zeigt jede Datei gleich – am PC und im Browser."],
+        ["Zeigen", "Fertige Modelle kommen als GLB auf diese Seite."]
+      ]
+    },
+    {
+      "id": "labor",
+      "titel": "Labor",
+      "info": "KI und Versuche",
+      "farbe": "#7BC47F",
+      "ueber": "/labor",
+      "h1": "Versuche, die noch wachsen",
+      "text": "Im Labor probieren wir aus, was später in die Produkte kommt: KI, die mitdenkt, Codes, die Befehle tragen, und Werkzeuge, die sie lesen.",
+      "kartenTitel": "Versuche",
+      "karten": [
+        { "titel": "Caelum Analyse", "untertitel": "Codes lesen", "text": "QR- und Caelum-Codes lesen, prüfen und entschlüsseln – direkt mit der Kamera.", "status": "Vorschau", "tags": ["Browser", "Kamera"], "link": "/analyse/", "knopf": "Analyse öffnen" },
+        { "titel": "Caelum Rorschach", "untertitel": "Codes mit Befehlen", "text": "Ein QR-Code, der mehr kann als eine Adresse: Er trägt Befehle für unsere Apps.", "status": "Vorschau", "tags": ["Browser", "Handy"], "link": "/r/", "knopf": "Ausprobieren" },
+        { "titel": "Good Goose", "untertitel": "Gans mit Wissen", "text": "Unsere Gans antwortet in 9 Sprachen auf Fragen zu Caelum – sie läuft ganz im Browser, ohne Server.", "status": "Live", "tags": ["9 Sprachen", "lokal"], "link": "/#p-goose", "knopf": "Zur Gans" }
+      ],
+      "wieTitel": "Wie ein Versuch zum Produkt wird",
+      "wie": [
+        ["Ausprobieren", "Ein kleiner Versuch im Browser, schnell gebaut."],
+        ["Lernen", "Was trägt, bekommt einen Standard und eine App."],
+        ["Ausliefern", "Die App ist Master, das Web zieht nach."]
+      ]
+    },
+    {
+      "id": "partner",
+      "titel": "Partner",
+      "info": "Für Kunden und Partner",
+      "farbe": "#E2557A",
+      "ueber": "/partner",
+      "h1": "Gemeinsam gestalten",
+      "text": "Für Kunden und Partner: das eigene Zeichen im Caelum-Raster entwerfen, Projekte im Kundenportal verfolgen und mit uns Kontakt halten.",
+      "kartenTitel": "Für dich",
+      "karten": [
+        { "titel": "Logo-Werkstatt", "untertitel": "Dein Zeichen", "text": "Das Caelum-Logo Feld für Feld einfärben, Linien wählen, animieren und als SVG speichern.", "status": "Live", "tags": ["SVG", "animiert"], "link": "/#werkstatt", "knopf": "Werkstatt öffnen" },
+        { "titel": "Kundenportal", "untertitel": "Deine Baustellen", "text": "Mit Baustellen-Code oder Google-Konto die eigenen Projekte ansehen.", "status": "Live", "tags": ["Google", "Code"], "link": "/#portale", "knopf": "Zum Kundenportal" },
+        { "titel": "Kontakt", "untertitel": "Direkt zu uns", "text": "Fragen, Wünsche, neue Projekte – wir melden uns.", "status": "Live", "tags": ["E-Mail"], "link": "/#kontakt", "knopf": "Schreiben" }
+      ],
+      "wieTitel": "So arbeiten wir zusammen",
+      "wie": [
+        ["Entwerfen", "Zeichen und Farben in der Werkstatt."],
+        ["Bauen", "Wir setzen um, du siehst den Stand im Kundenportal."],
+        ["Ausliefern", "Fertige Dateien und Apps kommen über Caelum."]
+      ]
+    },
+    {
+      "id": "community",
+      "titel": "Community",
+      "info": "Austausch mit anderen",
+      "farbe": "#8FB8F0",
+      "ueber": "/community",
+      "h1": "Chat für Entwickler",
+      "text": "Hier tauschen sich Entwicklerinnen und Entwickler aus, die mit Unity, Blender, KI und dem Web arbeiten. Lesen kann jeder, schreiben nach Anmeldung mit Google oder GitHub.",
+      "chat": {
+        "url": "https://script.google.com/macros/s/AKfycbyMwCkuUkSOQTvKOPlBKHZ9ghYGS93jkuimltrvlIWo1wvI3W3oKZ5lWSP5V3R-v-F_Gg/exec",
+        "googleClientId": "787870908248-adg8d7ulv5ihiie4ahgefe5l63of6ecq.apps.googleusercontent.com",
+        "githubClientId": "Ov23li6mfRTvMUwUtAxb",
+        "raeume": [
+          ["allgemein", "Allgemein"],
+          ["unity", "Unity"],
+          ["blender", "Blender"],
+          ["ki", "KI"],
+          ["web", "Web"]
+        ]
+      },
+      "wieTitel": "Regeln im Chat",
+      "wie": [
+        ["Freundlich", "Wir helfen einander – keine Werbung, keine Beleidigungen."],
+        ["Nichts Privates", "Keine Passwörter, Schlüssel oder Kundendaten in den Chat."],
+        ["Moderiert", "Caelum blendet Beiträge aus, die gegen die Regeln verstossen."]
+      ]
+    }
+  ]
+}
