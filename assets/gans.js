@@ -121,30 +121,70 @@
   addEventListener('resize', function () { x = Math.min(x, rand()); ziel = Math.min(ziel, rand()); setze(); });
 
   // --- Wissen (nur lokal) ---
-  var wissen = null;
+  // 9 Sprachen: gans-wissen.json (Deutsch) + gans-wissen.<code>.json, Einträge in gleicher Reihenfolge (Eintrag i = gleiche Frage).
+  // Eingabesprache = Ausgabesprache (Kenny 20.11.2026): gesucht wird mit den Stichworten ALLER Sprachen,
+  // geantwortet in der Sprache der Frage. Ist die nicht sicher erkennbar, in der Sprache der Seite (sonst Englisch).
+  var SPRACHEN_W = ['de', 'en', 'fr', 'it', 'es', 'pt-PT', 'ru', 'zh', 'ja'];
+  // kleine Kennwörter je lateinischer Sprache (ohne Akzente, klein) – nur zum Erkennen der Sprache
+  var KENN = {
+    de: 'ist was wie wer wo der die das und ich du nicht kann gibt ihr euch mit fuer bitte macht kostet habt seid',
+    en: 'what is the how do does i you can where who and are your about please much it this',
+    fr: 'est que quoi comment le les je tu et qui ou combien vous des une pour c qu ce fait sont',
+    it: 'che cos come il lo gli sono chi dove quanto cosa posso fa voi una per si costa questo',
+    es: 'que como el los es y quien donde cuanto puedo hay sois una para se hace cuesta esto',
+    'pt-PT': 'o que como os quem onde quanto posso voces tu uma para faz da do nao sao custa isto'
+  };
+  var wissen = null;   // { de: {...}, en: {...}, … } – nur geladene Sprachen
+  function seitenSprache() { var c = (window.CaelumSprache && window.CaelumSprache.aktuell && window.CaelumSprache.aktuell()) || 'de'; return SPRACHEN_W.indexOf(c) >= 0 ? c : 'en'; }
+  function holen(code) { return fetch(BASIS.replace('gans/', '') + 'gans-wissen' + (code === 'de' ? '' : '.' + code) + '.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw r.status; return r.json(); }); }
   function wissenLaden() {
     if (wissen) return Promise.resolve(wissen);
-    return fetch(BASIS.replace('gans/', '') + 'gans-wissen.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
-      .then(function (j) { wissen = j; return j; }).catch(function () { wissen = { eintraege: [], unbekannt: ['Mein Wissen ist gerade nicht erreichbar.'] }; return wissen; });
+    return Promise.all(SPRACHEN_W.map(function (c) { return holen(c).catch(function () { return null; }); })).then(function (l) {
+      var w = {}; l.forEach(function (j, i) { if (j && j.eintraege) w[SPRACHEN_W[i]] = j; });
+      if (!w.de) throw 'kein Wissen';
+      wissen = w; return w;
+    }).catch(function () { wissen = { de: { eintraege: [], unbekannt: ['Mein Wissen ist gerade nicht erreichbar.'] } }; return wissen; });
   }
   function norm(t) {
     return ' ' + String(t).toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
-      .replace(/[^a-z0-9\- ]+/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
+      .normalize('NFD').replace(/\p{M}/gu, '')   // é → e, ç → c, ã → a, ё → е (Akzente zählen nicht)
+      .replace(/[^\p{L}\p{N}\- ]+/gu, ' ').replace(/\s+/g, ' ').trim() + ' ';
   }
-  // ganzes Wort; ab 4 Zeichen auch als Wortanfang („geheim“ trifft „geheimes“, „privat“ trifft „privates“)
-  function trifft(text, wort) { var w = norm(wort).trim(); return text.indexOf(' ' + w + (w.length >= 4 ? '' : ' ')) >= 0; }
+  var CJK = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u;
+  // ganzes Wort; ab 4 Zeichen auch als Wortanfang („geheim“ trifft „geheimes“, „privat“ trifft „privates“).
+  // Chinesisch/Japanisch kennen keine Leerzeichen zwischen Wörtern → dort genügt, dass das Wort im Text steht.
+  function trifft(text, wort) { var w = norm(wort).trim(); if (CJK.test(w)) return text.indexOf(w) >= 0; return text.indexOf(' ' + w + (w.length >= 4 ? '' : ' ')) >= 0; }
+  function punkte(t, worte) { var p = 0; worte.forEach(function (x) { if (trifft(t, x)) p += norm(x).length; }); return p; }
   function zufall(l) { return l[Math.floor(Math.random() * l.length)]; }
-  function antworte(frage) {
-    var t = norm(frage), w = wissen;
-    if (w.persoenlich && w.persoenlich.worte.some(function (x) { return trifft(t, x); }))
-      return { text: zufall(w.persoenlich.antworten), ziel: w.persoenlich.ziel, knopf: w.persoenlich.knopf };
-    var best = null, punkte = 0;
-    w.eintraege.forEach(function (e) {
-      var p = 0; e.worte.forEach(function (x) { if (trifft(t, x)) p += norm(x).length; });
-      if (p > punkte) { punkte = p; best = e; }
+  // Sprache der Frage: Schrift (Kyrillisch, Kana, Han) entscheidet sofort, sonst Kennwörter + eigene Stichworte je Sprache
+  function frageSprache(t, w) {
+    var da = function (c) { return !!w[c]; };
+    if (/\p{Script=Cyrillic}/u.test(t) && da('ru')) return 'ru';
+    if (/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(t) && da('ja')) return 'ja';
+    if (/\p{Script=Han}/u.test(t) && da('zh')) return 'zh';
+    var wort = t.trim().split(' '), seite = seitenSprache(), best = null, max = 0;
+    Object.keys(KENN).forEach(function (c) {
+      if (!da(c)) return;
+      var k = KENN[c].split(' '), p = 0;
+      wort.forEach(function (x) { if (k.indexOf(x) >= 0) p += 2; });
+      p += punkte(t, w[c].eintraege.reduce(function (a, e) { return a.concat(e.worte); }, []).concat(w[c].persoenlich ? w[c].persoenlich.worte : [])) / 4;
+      if (p > max || (p === max && p > 0 && c === seite)) { max = p; best = c; }
     });
-    if (best) return { text: best.antwort, ziel: best.ziel, knopf: best.knopf };
-    return { text: zufall(w.unbekannt), ziel: '#kontakt', knopf: 'Zum Kontakt' };
+    return best || (da(seite) ? seite : 'de');
+  }
+  function antworte(frage) {
+    // „Caelum Vision“ → „Vision“: sonst gewinnt „was macht caelum“ (Firma) gegen den Produktnamen
+    var t = norm(frage).replace(/ caelum (?=(vision|cut|qr|gravur|3d|3d-viewer|viewer|re-play|replay|pandora|analyse|rorschach) )/g, ' ');
+    var w = wissen, sp = frageSprache(t, w), a = w[sp], sprachen = Object.keys(w);
+    var privat = sprachen.some(function (c) { var p = w[c].persoenlich; return p && p.worte.some(function (x) { return trifft(t, x); }); });
+    if (privat && a.persoenlich) return { text: zufall(a.persoenlich.antworten), ziel: a.persoenlich.ziel, knopf: a.persoenlich.knopf, sprache: sp };
+    var best = -1, max = 0;
+    a.eintraege.forEach(function (e, i) {
+      var p = 0; sprachen.forEach(function (c) { var x = w[c].eintraege[i]; if (x) p = Math.max(p, punkte(t, x.worte)); });
+      if (p > max) { max = p; best = i; }
+    });
+    if (best >= 0) { var e = a.eintraege[best]; return { text: e.antwort, ziel: e.ziel, knopf: e.knopf, sprache: sp }; }
+    return { text: zufall(a.unbekannt), ziel: '#kontakt', knopf: a.persoenlich ? a.persoenlich.knopf : 'Zum Kontakt', sprache: sp };
   }
 
   // --- Sprechblase ---
@@ -185,12 +225,12 @@
     rahmen();
     var p = document.createElement('p'); p.textContent = 'Frag mich etwas über Caelum und diese Seite.'; blase.appendChild(p);
     var log = document.createElement('div'); log.className = 'gans-chat'; blase.appendChild(log);
-    function zeile(wer, text, ziel, k) {
-      var d = document.createElement('div'); d.className = wer; d.textContent = text;
+    function zeile(wer, text, ziel, k, sprache) {
+      var d = document.createElement('div'); d.className = wer; d.textContent = text; if (sprache) d.lang = sprache === 'de' ? 'de-CH' : sprache;   // Antwort in der Sprache der Frage
       if (ziel) { d.appendChild(document.createElement('br')); d.appendChild(knopf(k || 'Hin', geh(ziel))); }
       log.appendChild(d); blase.scrollTop = blase.scrollHeight;
     }
-    verlauf.forEach(function (v) { zeile(v[0], v[1], v[2], v[3]); });
+    verlauf.forEach(function (v) { zeile(v[0], v[1], v[2], v[3], v[4]); });
     var f = document.createElement('form'); f.className = 'gans-frage';
     var ein = document.createElement('input'); ein.type = 'text'; ein.maxLength = 140; ein.placeholder = 'z. B. Was ist Pandora?'; ein.setAttribute('aria-label', 'Frage an die Gans'); ein.autocomplete = 'off';
     f.appendChild(ein); f.appendChild(knopf('Fragen', null)); f.lastChild.type = 'submit';
@@ -200,7 +240,7 @@
       wissenLaden().then(function () {
         var a = antworte(q);
         spiele('honk', function () { spiele('idle'); });
-        setTimeout(function () { zeile('sie', a.text, a.ziel, a.knopf); verlauf.push(['sie', a.text, a.ziel, a.knopf]); if (verlauf.length > 12) verlauf.splice(0, 2); }, 350);
+        setTimeout(function () { zeile('sie', a.text, a.ziel, a.knopf, a.sprache); verlauf.push(['sie', a.text, a.ziel, a.knopf, a.sprache]); if (verlauf.length > 12) verlauf.splice(0, 2); }, 350);
       });
     };
     blase.appendChild(f);

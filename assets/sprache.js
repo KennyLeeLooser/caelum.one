@@ -227,5 +227,10 @@
   if (!start) { try { if (localStorage.getItem('caelum-sprache-auto') === '1') { var b = (navigator.languages || [navigator.language || 'de'])[0]; start = (eintrag(b) || eintrag(b.slice(0, 2)) || ['de'])[0]; } } catch (e) {} }
   knopfText();
   if (start && start !== 'de') waehle(start);
-  window.CaelumSprache = { waehle: waehle, aktuell: function () { return aktuell; }, liste: SPRACHEN, auf: auf, zu: zu, kugel: function () { return kugelJetzt; }, code: waehleCode };
+  // Sätze mit Platzhalter für Skripte: CaelumSprache.t('Der Bereich {name} ist offen …', { name: 'Studio' }) – Schlüssel = deutscher Satz im Wörterbuch
+  function t(de, werte) {
+    var s = (aktuell !== 'de' && woerter && typeof woerter[de] === 'string') ? woerter[de] : de;
+    return s.replace(/\{(\w+)\}/g, function (m, k) { return werte && k in werte ? werte[k] : m; });
+  }
+  window.CaelumSprache = { waehle: waehle, aktuell: function () { return aktuell; }, t: t, liste: SPRACHEN, auf: auf, zu: zu, kugel: function () { return kugelJetzt; }, code: waehleCode };
 })();

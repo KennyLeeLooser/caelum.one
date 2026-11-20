@@ -821,7 +821,8 @@ document.addEventListener("click", function (e) {
   }
   if (a.getAttribute("href") === "#") {   // Bereich ohne eigene Seite (noch): kurz umlegen, Gans sagt Bescheid
     setTimeout(function () { a.classList.remove("an"); }, 900);
-    if (window.CaelumGans) window.CaelumGans.sag("Der Bereich " + a.querySelector("b").textContent + " ist offen – Inhalte folgen bald.");
+    var satz = "Der Bereich {name} ist offen – Inhalte folgen bald.", name = { name: a.querySelector("b").textContent };   // Übersetzung: unterseiten.mjs
+    if (window.CaelumGans) window.CaelumGans.sag(window.CaelumSprache && window.CaelumSprache.t ? window.CaelumSprache.t(satz, name) : satz.replace("{name}", name.name));
     return;
   }
   setTimeout(function () { location.href = a.href; }, 260);
