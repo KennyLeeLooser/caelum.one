@@ -1,0 +1,390 @@
+{
+  "_hinweis": "Wissen der Web-Gans (assets/gans.js). Alles läuft im Browser, keine Frage geht an einen Server. Ein Eintrag: worte (Stichworte, klein, ohne Umlaut-Ersatz nötig – die Suche vereinfacht ä/ö/ü/ß selbst), antwort, optional ziel (#Anker oder /Pfad) und knopf. 'persoenlich' = Fragen nach Menschen, Kontakten oder Privatem → freundlich abblocken (Kenny 20.11.2026: „Wer arbeitet bei Caelum? Wir! Du und ich.“). Nur Öffentliches eintragen (GB-9/GB-30).",
+  "persoenlich": {
+    "worte": [
+      "wer arbeitet",
+      "wer ist",
+      "wer steckt",
+      "wer seid",
+      "wer bist",
+      "mitarbeiter",
+      "angestellt",
+      "chef",
+      "inhaber",
+      "gruender",
+      "besitzer",
+      "euer team",
+      "dein team",
+      "im team",
+      "kenny",
+      "name von",
+      "wie heisst",
+      "wie alt",
+      "geburtstag",
+      "wohnt",
+      "wohnort",
+      "privat",
+      "handynummer",
+      "telefonnummer",
+      "telefon",
+      "handy von",
+      "email von",
+      "e-mail von",
+      "adresse von",
+      "gehalt",
+      "verdient",
+      "verheiratet",
+      "familie",
+      "freundin",
+      "passwort",
+      "kennwort",
+      "zugangsdaten",
+      "schluessel",
+      "token"
+    ],
+    "antworten": [
+      "Wer arbeitet bei Caelum? Wir! Du und ich. 🪿 Mehr verrate ich über Menschen nicht – Gänse sind diskret.",
+      "Über Menschen und Privates schnattere ich nicht. Frag mich lieber, was unsere Programme können!",
+      "Das bleibt im Nest. Für alles Geschäftliche gibt es das Kontaktformular."
+    ],
+    "ziel": "#kontakt",
+    "knopf": "Zum Kontakt"
+  },
+  "eintraege": [
+    {
+      "worte": [
+        "hallo",
+        "hi",
+        "hey",
+        "gruezi",
+        "guten tag",
+        "moin",
+        "servus"
+      ],
+      "antwort": "Hallo! Ich bin die Gans von Caelum. Frag mich zu Pandora, unseren Programmen, Downloads oder wie die Seite funktioniert."
+    },
+    {
+      "worte": [
+        "danke",
+        "merci",
+        "super",
+        "toll",
+        "cool"
+      ],
+      "antwort": "Gern geschehen! Honk. 🪿"
+    },
+    {
+      "worte": [
+        "bist du eine ki",
+        "bist du ki",
+        "bist du ein bot",
+        "bist du echt",
+        "liest du mit",
+        "speicherst du"
+      ],
+      "antwort": "Ich bin eine Gans mit einem kleinen Wissensbuch, keine KI, die mitliest. Deine Fragen bleiben in deinem Browser und gehen an keinen Server.",
+      "ziel": "/datenschutz.html",
+      "knopf": "Zum Datenschutz"
+    },
+    {
+      "worte": [
+        "was ist caelum",
+        "was macht caelum",
+        "caelum gmbh",
+        "firma",
+        "unternehmen",
+        "ueber euch",
+        "wer seid ihr",
+        "software",
+        "teams",
+        "werkzeuge"
+      ],
+      "antwort": "Die Caelum GmbH aus Regensdorf baut Werkzeuge für Teams, die mit Unity, Blender und KI arbeiten. Herzstück ist CAELUM Pandora.",
+      "ziel": "#produkte",
+      "knopf": "Zu den Produkten"
+    },
+    {
+      "worte": [
+        "himmel",
+        "terra",
+        "name caelum",
+        "bedeutet caelum",
+        "warum caelum"
+      ],
+      "antwort": "Caelum ist Latein für Himmel, Terra steht für die Erde. Oben die Cloud, unten die PCs – genau so ist das Schaubild aufgebaut.",
+      "ziel": "#pandora",
+      "knopf": "Zum Schaubild"
+    },
+    {
+      "worte": [
+        "pandora",
+        "hauptprogramm",
+        "zusammenfuehren",
+        "fusion",
+        "fusionieren",
+        "master"
+      ],
+      "antwort": "CAELUM Pandora führt Unity- und Blender-Projekte eines Teams von mehreren PCs zu einem Master zusammen – über USB-Stick, LAN oder direkt auf der Festplatte.",
+      "ziel": "#p-pandora",
+      "knopf": "Zu Pandora"
+    },
+    {
+      "worte": [
+        "hydra",
+        "ausfall",
+        "faellt aus",
+        "ausfallsicher"
+      ],
+      "antwort": "Hydra heisst: Jeder PC hat seine eigene Pandora. Fällt einer aus, arbeiten die anderen weiter – und Wichtiges liegt mehrfach an mehreren Orten.",
+      "ziel": "#pandora",
+      "knopf": "Mehr dazu"
+    },
+    {
+      "worte": [
+        "sicherung",
+        "backup",
+        "verschluesselt",
+        "google drive",
+        "cloud",
+        "speicher"
+      ],
+      "antwort": "Pandora sichert verschlüsselt auf USB-Stick und in die Cloud (Google Drive). Den Schlüssel hat nur das Team.",
+      "ziel": "#pandora",
+      "knopf": "Zur Arbeitsweise"
+    },
+    {
+      "worte": [
+        "unity",
+        "blender",
+        "3d",
+        "spiel",
+        "game"
+      ],
+      "antwort": "Wir arbeiten mit Unity und Blender: Pandora hält die Projekte zusammen, der 3D-Viewer zeigt Modelle an, und im Developer-Bereich zeigen wir eigene Spiele.",
+      "ziel": "#produkte",
+      "knopf": "Zu den Produkten"
+    },
+    {
+      "worte": [
+        "ki",
+        "claude",
+        "codex",
+        "chatgpt",
+        "kuenstliche intelligenz",
+        "ai"
+      ],
+      "antwort": "KI ist bei uns Werkzeug: Claude und Codex helfen beim Bauen, Good Goose meldet sich, wenn sie auf dich warten. Unser Wissen bleibt dabei im Haus.",
+      "ziel": "#p-goose",
+      "knopf": "Zu Good Goose"
+    },
+    {
+      "worte": [
+        "viewer",
+        "3d-viewer",
+        "glb",
+        "stl",
+        "obj",
+        "gltf",
+        "modell ansehen"
+      ],
+      "antwort": "Der Caelum 3D-Viewer ist kostenlos: GLB, glTF, OBJ, STL, 3MF und DXF ansehen und als Bild, PDF-Datenblatt oder GIF ausgeben – auch im Browser.",
+      "ziel": "#p-viewer",
+      "knopf": "Zum 3D-Viewer"
+    },
+    {
+      "worte": [
+        "gravur",
+        "schild",
+        "laser",
+        "xtool",
+        "svg"
+      ],
+      "antwort": "Caelum Gravur gestaltet Gravurschilder aus Excel oder direkt im Programm und gibt sie als SVG für den Laser aus – mit Materialfarben, Logo und QR-Code.",
+      "ziel": "#p-gravur",
+      "knopf": "Zu Caelum Gravur"
+    },
+    {
+      "worte": [
+        "good goose",
+        "gans",
+        "goose",
+        "desktop-gans"
+      ],
+      "antwort": "Das bin ich! Auf dem PC laufe ich über die Taskleiste, merke mir Notizen und Aufgaben und melde mich, wenn Claude Code oder Codex auf dich wartet. Hier auf der Seite helfe ich dir nur beim Suchen.",
+      "ziel": "#p-goose",
+      "knopf": "Zu Good Goose"
+    },
+    {
+      "worte": [
+        "vision",
+        "scanner",
+        "scannen",
+        "foto",
+        "kamera"
+      ],
+      "antwort": "Caelum Vision macht das Handy zum Scanner: Fotos kommen per USB oder WLAN direkt auf den PC und werden wie ein Scan aufbereitet.",
+      "ziel": "#p-vision",
+      "knopf": "Zu Caelum Vision"
+    },
+    {
+      "worte": [
+        "cut",
+        "video",
+        "schneiden",
+        "komprimieren",
+        "whatsapp",
+        "messenger"
+      ],
+      "antwort": "Caelum Cut fügt Videos fürs Handy zusammen, schneidet sie und macht sie so klein, dass sie in jeden Messenger passen – ohne Cloud.",
+      "ziel": "#p-cut",
+      "knopf": "Zu Caelum Cut"
+    },
+    {
+      "worte": [
+        "qr",
+        "qr-code",
+        "code gestalten"
+      ],
+      "antwort": "Caelum QR gestaltet QR-Codes mit eigenem Design: Farbverläufe, Logo im Muster und ein animierter Wechsel, bei dem der Code lesbar bleibt.",
+      "ziel": "#p-qr",
+      "knopf": "Zu Caelum QR"
+    },
+    {
+      "worte": [
+        "rorschach",
+        "analyse",
+        "verschluesselung",
+        "befehl",
+        "pruefen"
+      ],
+      "antwort": "Rorschach schreibt QR-Codes mit einem Befehl statt eines Links, Analyse liest Codes und prüft sie, bevor du etwas öffnest. Der Befehl geht nie an einen Server.",
+      "ziel": "#p-qrv",
+      "knopf": "Zur QR-Verschlüsselung"
+    },
+    {
+      "worte": [
+        "replay",
+        "re-play",
+        "apk",
+        "android",
+        "handy installieren"
+      ],
+      "antwort": "Mit Caelum RE-PLAY kommen Spiele ohne Kabel und ohne Store aufs Android-Handy: Pandora gibt die APK frei, das Handy holt sie per QR-Code.",
+      "ziel": "#p-replay",
+      "knopf": "Zu RE-PLAY"
+    },
+    {
+      "worte": [
+        "download",
+        "herunterladen",
+        "installieren",
+        "version",
+        "update",
+        "neu",
+        "herunter",
+        "laden",
+        "lade",
+        "app"
+      ],
+      "antwort": "Die neuesten Versionen für Windows und Android liegen unter Downloads, direkt von GitHub und mit Prüfsumme. Neuigkeiten stehen unter Updates.",
+      "ziel": "#downloads",
+      "knopf": "Zu den Downloads"
+    },
+    {
+      "worte": [
+        "kundenzugang",
+        "kunde",
+        "baustelle",
+        "portal",
+        "anmelden",
+        "code bekommen"
+      ],
+      "antwort": "Kunden öffnen ihr Portal mit dem Code, den sie mit der Baustelle bekommen – oder melden sich mit Google an.",
+      "ziel": "#zugang",
+      "knopf": "Zum Kundenzugang"
+    },
+    {
+      "worte": [
+        "kontakt",
+        "schreiben",
+        "anfrage",
+        "offerte",
+        "angebot",
+        "preis",
+        "kosten",
+        "kostet",
+        "teuer",
+        "gratis",
+        "kostenlos",
+        "kaufen",
+        "lizenz"
+      ],
+      "antwort": "Für Anfragen, Preise und Offerten schreib uns über das Kontaktformular – wir melden uns.",
+      "ziel": "#kontakt",
+      "knopf": "Zum Kontakt"
+    },
+    {
+      "worte": [
+        "datenschutz",
+        "cookies",
+        "tracking",
+        "daten",
+        "analytics"
+      ],
+      "antwort": "Diese Seite setzt keine Cookies und nutzt keine Analyse- oder Werbedienste. Auch ich merke mir nur, ob ich gerade schlafe – in deinem Browser.",
+      "ziel": "/datenschutz.html",
+      "knopf": "Zum Datenschutz"
+    },
+    {
+      "worte": [
+        "impressum",
+        "regensdorf",
+        "standort",
+        "wo seid",
+        "sitz"
+      ],
+      "antwort": "Die Caelum GmbH sitzt in Regensdorf. Alle Angaben stehen im Impressum.",
+      "ziel": "/impressum.html",
+      "knopf": "Zum Impressum"
+    },
+    {
+      "worte": [
+        "github",
+        "quellcode",
+        "open source",
+        "releases"
+      ],
+      "antwort": "Quellcode und Releases unserer freien Programme liegen auf GitHub.",
+      "ziel": "https://github.com/KennyLeeLooser",
+      "knopf": "Zu GitHub"
+    },
+    {
+      "worte": [
+        "logo",
+        "farben",
+        "harmonie",
+        "signet"
+      ],
+      "antwort": "Tipp auf das grosse Logo, dann wechselt die Farbharmonie. Lang drücken (oder Rechtsklick) öffnet die Caelum Optionen.",
+      "ziel": "#oben",
+      "knopf": "Nach oben"
+    },
+    {
+      "worte": [
+        "geheim",
+        "versteckt",
+        "zeichen",
+        "developer",
+        "code im logo",
+        "verborgen"
+      ],
+      "antwort": "Psst … das untere Logo kann man ausmalen. Mehr verrate ich nicht. 🤫",
+      "ziel": "#logo",
+      "knopf": "Zum unteren Logo"
+    }
+  ],
+  "unbekannt": [
+    "Das weiss ich (noch) nicht. Frag mich zu Pandora, unseren Programmen, Downloads oder zum Kundenzugang – oder schreib uns.",
+    "Hmm, da muss ich passen. Vielleicht hilft das Kontaktformular weiter?"
+  ]
+}

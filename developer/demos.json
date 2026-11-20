@@ -5,12 +5,21 @@
       "id": "first",
       "titel": "First",
       "untertitel": "Physik-Labor",
-      "text": "Unser erstes Spiel aus den eigenen Unity-Modulen CaelumPhysics und CaelumMaster: ein Labor, in dem Gegenstände nach echter Physik reagieren. Daran testen wir, was später in Kundenprojekte geht.",
+      "text": "Unser erstes Spiel, gebaut aus unseren eigenen Unity-Modulen CaelumPhysics und CaelumMaster: ein Labor, in dem Kisten, Fässer und Glas so reagieren, wie man es erwartet – sie rollen, stossen aneinander und zerbrechen. Daran testen wir, was später in Kundenprojekte geht.",
       "engine": "Unity 6",
-      "plattformen": ["Windows", "Android"],
+      "plattformen": [
+        "Windows",
+        "Android",
+        "Web"
+      ],
       "status": "In Entwicklung",
       "farbe": "#D97757",
-      "webgl": null
+      "webgl": {
+        "ordner": "first",
+        "name": "web",
+        "endung": ".unityweb",
+        "version": "2026-11-20"
+      }
     }
   ]
 }
