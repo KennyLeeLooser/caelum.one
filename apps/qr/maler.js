@@ -1,6 +1,7 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
-// Caelum QR · Web – zeichnet einen QR-Code nach Design: ruhend, Rorschach-Wirbel und Blende beim Wechsel. Augen und
+// KI-Beitrag (Claude, GB-7), 20.11.2026: Wechsel-Arten wie Wechsel.cs (Tafeln I–V, Blende, keiner) – freigegeben von Kenny Looser am 20.11.2026 (GB-8).
+// Caelum QR · Web – zeichnet einen QR-Code nach Design: ruhend und beim Wechsel nach Wechsel-Art (Rorschach-Tafeln, Blende). Augen und
 // Logo-Feld bleiben beim Wechsel stehen. JavaScript-Fassung von src/CaelumQr/Design.cs (Rgb, Ink, Noise) und Painter.cs
 // (Static, Eyes, Plate, Pairs, Transition, SvgSurface) – die App ist Master. Der Gleichheitstest vergleicht das SVG
 // Zeichen für Zeichen mit Painter.Svg/Painter.Transition. Dazu eine Canvas-Fläche für Vorschau, Animation und PNG.
@@ -219,24 +220,42 @@ function hash01(x, y) {
   return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
 }
 
-/** Painter.Transition: Übergang a → b bei p (0 … 1): rorschach, blende oder keiner. */
-export function wechsel(g, a, b, pairs, d, size, p, t, logo) {
-  if (d.wechsel === "keiner" || a.size !== b.size) { ruhend(g, p < 0.5 ? a : b, d, size, t, logo); return; }
-  const n = a.size, s = modulPx(a, size);
-  g.clear(papier(d), size);
-  const form = d.gravur ? "quadrat" : d.modul;
-  if (d.wechsel === "blende") {
-    for (let y = 0; y < n; y++)
-      for (let x = 0; x < n; x++) {
-        if (a.isEye(x, y)) continue;
-        const on = hash01(x, y) < p ? b.dark(x, y) : a.dark(x, y);
-        if (on) g.cell((x + QUIET) * s, (y + QUIET) * s, s, form, modulFarbe(d, x, y, t, n), 0);
-      }
-  } else {
-    const c = (n - 1) / 2, e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-    const sw = Math.sin(Math.PI * p), fold = sw * sw, amp = n * 0.32 * sw;
-    const used = new Set();
-    for (const P2 of pairs) {
+// ───────────────────────────── Wechsel-Arten (Wechsel.cs: IWechsel, Wechsel.Alle)
+// Jede Art: id, name, text, nurGleich (nur gleich große Codes), feldAlpha(p), zeichnen(l). Gleiche Reihenfolge wie die App.
+const glaetten = p => p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+const klemme = v => Math.min(1, Math.max(0, v));
+/** Wechsel.Hash (Sinus-Trick wie buehne.js). */
+const hashSin = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
+const feldStandard = p => Math.pow(Math.abs(1 - 2 * p), 2);
+/** Wechsel.Farbe: wanderndes Modul bei (u, v), am Anfang/Ende sicher, in der Mitte leuchtend. */
+function wFarbe(l, u, v, sw) {
+  const raw = tinte(l.d, Math.abs(u - .5) * l.n * 3, v * l.n * 3, l.t * 2, 0.1 + 0.85 * sw, l.n);
+  return sw < 0.3 || l.d.gravur ? sicher(raw) : raw;
+}
+const wModul = (l, q, u, v) => modulFarbe(l.d, Math.floor(u * q.size), Math.floor(v * q.size), l.t, q.size);
+function wDunkel(q, u, v) {
+  const x = Math.floor(u * q.size), y = Math.floor(v * q.size);
+  return x >= 0 && y >= 0 && x < q.size && y < q.size && q.dark(x, y) && !q.isEye(x, y);
+}
+function wZellen(q) {
+  const r = [];
+  for (let y = 0; y < q.size; y++) for (let x = 0; x < q.size; x++) if (q.dark(x, y) && !q.isEye(x, y)) r.push([(x + .5) / q.size, (y + .5) / q.size]);
+  return r;
+}
+const wZelle = (l, gx, gy, c) => l.g.cell((gx + QUIET) * l.s, (gy + QUIET) * l.s, l.s, l.form, c, 0);
+function wSetze(l, u, v, c, besetzt) {
+  const gx = Math.floor(u * l.n), gy = Math.floor(v * l.n);
+  if (gx < 0 || gy < 0 || gx >= l.n || gy >= l.n) return;
+  if (besetzt) { const k = gx * 512 + gy; if (besetzt.has(k)) return; besetzt.add(k); }
+  wZelle(l, gx, gy, c);
+}
+
+function rorschachZeichnen(l) {
+  const { g, d, p, t, n, s, form } = l;
+  const c = (n - 1) / 2, e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  const sw = Math.sin(Math.PI * p), fold = sw * sw, amp = n * 0.32 * sw;
+  const used = new Set();
+  for (const P2 of l.pairs ?? paare(l.a, l.b)) {
       const x = P2.px + (P2.qx - P2.px) * e, y = P2.py + (P2.qy - P2.py) * e;
       const dx = x - c, side = dx < 0 ? -1 : 1, ax = Math.abs(dx);
       const ang = amp * 0.09 * (1 + fbm(ax * 0.12, y * 0.12, t * 0.5 + P2.seed * 0.001));
@@ -254,10 +273,117 @@ export function wechsel(g, a, b, pairs, d, size, p, t, logo) {
       };
       put(X, Y);
       if (fold > 0.35) put(X2, Y);
-    }
   }
-  augen(g, p < 0.5 ? a : b, d, s, t);
-  if (d.logo?.mitte !== false) feld(g, p < .5 ? a : b, d, s, t, logo, d.wechsel === "blende" ? 1 : Math.pow(Math.abs(1 - 2 * p), 2));
+}
+
+function klecksZeichnen(l) {
+  const q = l.p < .5 ? l.a : l.b, sw = l.sw, level = Math.pow(sw, 0.8) * 0.86, SEED = 17;
+  for (let gy = 0; gy < l.n; gy++)
+    for (let gx = 0; gx < l.n; gx++) {
+      const u = (gx + .5) / l.n, v = (gy + .5) / l.n, mx = Math.abs(u - .5);
+      const f = fbm(mx * 7 + SEED, v * 6, l.t * 0.25) * 0.75 + (1 - Math.sqrt(mx * 1.5 * mx * 1.5 + (v - .5) * 1.15 * (v - .5) * 1.15) * 2.1) * 0.55;
+      if (f > 1.02 - level) wZelle(l, gx, gy, wFarbe(l, u, v, sw * (f > 1.1 - level ? 1 : 0.6)));
+      else if (wDunkel(q, u, v)) wZelle(l, gx, gy, wModul(l, q, u, v));
+    }
+}
+
+function faltungZeichnen(l) {
+  const q = l.p < .5 ? l.a : l.b, p = l.p, sw = l.sw, n = l.n;
+  const th = p < .5 ? 2 * p * Math.PI : (1 - p) * 2 * Math.PI, c = Math.cos(th);
+  for (let gy = 0; gy < n; gy++)
+    for (let gx = 0; gx < n; gx++) {
+      const u = (gx + .5) / n, v = (gy + .5) / n;
+      if (u < .5 && wDunkel(q, u, v)) wZelle(l, gx, gy, wModul(l, q, u, v));
+    }
+  const falz = mische(papier(l.d), [20, 19, 18], 0.10), X = (QUIET + n / 2) * l.s;
+  l.g.roundRect(X - l.s * 0.08, QUIET * l.s, l.s * 0.16, n * l.s, 0, falz);
+  const besetzt = new Set();
+  for (let gy = 0; gy < n; gy++)
+    for (let gx = Math.floor(n / 2); gx < n; gx++) {
+      const u = (gx + .5) / n, v = (gy + .5) / n;
+      if (!wDunkel(q, u, v)) continue;
+      const u2 = .5 + (u - .5) * c, k = 0.15 + 0.85 * Math.abs(c);
+      let col;
+      if (c < 0) col = wFarbe(l, u2, v, sw);
+      else { const m = wModul(l, q, u, v), f = 238 * (1 - k) * 0.2; col = [m[0] * k + f, m[1] * k + f, m[2] * k + f]; }
+      wSetze(l, u2, v, col, besetzt);
+    }
+  if (sw > 0.93) {
+    const lv = (sw - 0.93) / 0.07;
+    for (let gy = 0; gy < n; gy++)
+      for (let gx = 0; gx < n; gx++) {
+        const u = (gx + .5) / n, v = (gy + .5) / n, mx = Math.abs(u - .5);
+        if (fbm(mx * 9, v * 7, l.t * 0.3) * 0.6 + (0.5 - mx * 4.5) > 1 - lv * 0.45) wZelle(l, gx, gy, wFarbe(l, u, v, 1));
+      }
+  }
+}
+
+function rieselnZeichnen(l) {
+  const dauer = 0.5, besetzt = new Set(), sw = l.sw;
+  const lauf = (q, phase, fallen) => {
+    for (const [u, v] of wZellen(q)) {
+      const gm = Math.abs(Math.floor(u * q.size) - (q.size - 1) / 2);
+      const d = gm / q.size * 0.7 + hashSin(gm, Math.floor(v * q.size)) * 0.2 + (fallen ? (1 - v) * 0.15 : v * 0.15);
+      const k = klemme((phase - d) / dauer);
+      const y = fallen ? v + (1.25 - v) * k * k : 1.25 + (v - 1.25) * (1 - (1 - k) * (1 - k));
+      if (y >= 1) continue;
+      const bewegt = fallen ? k > 0 : k < 1;
+      const col = bewegt ? wFarbe(l, u, y, Math.max(0.35, sw)) : wModul(l, q, u, v);
+      wSetze(l, u, y, col, besetzt);
+      if (bewegt) wSetze(l, 1 - u, y, col, besetzt);
+    }
+  };
+  if (l.p < .5) lauf(l.a, l.p * 2, true); else lauf(l.b, (l.p - .5) * 2, false);
+}
+
+function wellenZeichnen(l) {
+  const sw = l.sw, R = glaetten(l.p) * 0.82, band = 0.05 + 0.05 * sw;
+  for (let gy = 0; gy < l.n; gy++)
+    for (let gx = 0; gx < l.n; gx++) {
+      const u = (gx + .5) / l.n, v = (gy + .5) / l.n, mx = Math.abs(u - .5);
+      const r = Math.sqrt(mx * mx + (v - .5) * (v - .5)) + (fbm(mx * 5, v * 5, l.t * 0.4) - .5) * 0.14;
+      if (Math.abs(r - R) < band) {
+        if (hashSin(gx > l.n / 2 ? l.n - 1 - gx : gx, gy) < 0.55 + 0.4 * sw) wZelle(l, gx, gy, wFarbe(l, u, v, sw));
+        continue;
+      }
+      const q = r < R ? l.b : l.a;
+      if (wDunkel(q, u, v)) wZelle(l, gx, gy, wModul(l, q, u, v));
+    }
+}
+
+function blendeZeichnen(l) {
+  for (let y = 0; y < l.n; y++)
+    for (let x = 0; x < l.n; x++) {
+      if (l.a.isEye(x, y)) continue;
+      const on = hash01(x, y) < l.p ? l.b.dark(x, y) : l.a.dark(x, y);
+      if (on) wZelle(l, x, y, modulFarbe(l.d, x, y, l.t, l.n));
+    }
+}
+
+/** Wechsel.Alle – gleiche Ids, Namen und Texte wie die App. */
+export const WECHSEL = [
+  { id: "rorschach", name: "I Falter (Rorschach)", text: "Die Module verwirbeln spiegelgleich zu einem Falter und setzen sich neu.", nurGleich: true, feldAlpha: feldStandard, zeichnen: rorschachZeichnen },
+  { id: "klecks", name: "II Klecks", text: "Ein Tintenklecks quillt aus der Mitte, deckt den Code zu und gibt den neuen frei.", nurGleich: false, feldAlpha: feldStandard, zeichnen: klecksZeichnen },
+  { id: "faltung", name: "III Faltung", text: "Die Karte faltet sich wie bei Rorschach: Die rechte Hälfte drückt sich auf die linke ab.", nurGleich: false, feldAlpha: feldStandard, zeichnen: faltungZeichnen },
+  { id: "rieseln", name: "IV Rieseln", text: "Die Module rieseln nach unten weg, der neue Code steigt spiegelgleich auf.", nurGleich: false, feldAlpha: feldStandard, zeichnen: rieselnZeichnen },
+  { id: "wellen", name: "V Wellen", text: "Eine Welle läuft von der Mitte nach außen und schreibt den neuen Code.", nurGleich: false, feldAlpha: feldStandard, zeichnen: wellenZeichnen },
+  { id: "blende", name: "Blende", text: "Jedes Modul springt zu seiner eigenen Zeit vom alten zum neuen Code.", nurGleich: true, feldAlpha: () => 1, zeichnen: blendeZeichnen },
+  { id: "keiner", name: "Keiner", text: "Der neue Code erscheint ohne Übergang.", nurGleich: false, feldAlpha: feldStandard, zeichnen: () => {} },
+];
+/** Wechsel.Finde: Unbekanntes wird zu „rorschach“. */
+export const wechselArt = id => WECHSEL.find(w => w.id === id) ?? WECHSEL[0];
+
+/** Painter.Transition: Übergang a → b bei p (0 … 1) nach der Wechsel-Art des Designs; Rahmen = Papier, Augen, Logo-Feld. */
+export function wechsel(g, a, b, pairs, d, size, p, t, logo) {
+  const w = wechselArt(d.wechsel);
+  if (w.id === "keiner" || (w.nurGleich && a.size !== b.size)) { ruhend(g, p < 0.5 ? a : b, d, size, t, logo); return; }
+  if (!w.nurGleich && (p <= 0 || p >= 1)) { ruhend(g, p <= 0 ? a : b, d, size, t, logo); return; }
+  const vis = p < 0.5 ? a : b, s = modulPx(vis, size);
+  g.clear(papier(d), size);
+  const form = d.gravur ? "quadrat" : d.modul;
+  w.zeichnen({ g, a, b, pairs, d, p, t, n: vis.size, s, form, sw: Math.sin(Math.PI * p) });
+  augen(g, vis, d, s, t);
+  if (d.logo?.mitte !== false) feld(g, vis, d, s, t, logo, w.feldAlpha(p));
 }
 
 /** Corners.Radii: rund nur an Ecken ohne Nachbarn (oben links, oben rechts, unten rechts, unten links). */

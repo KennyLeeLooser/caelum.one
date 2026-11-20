@@ -1,18 +1,19 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
+// KI-Beitrag (Claude, GB-7), 20.11.2026: Auswahl aller Wechsel-Arten (Tafeln I–V) – freigegeben von Kenny Looser am 20.11.2026 (GB-8).
 // Caelum QR · Web-Modul „QR-Code gestalten“ (CAELUM-STANDARD.md Teil B). Bildet das Fenster der App nach (QrWindow.cs,
 // Entscheid Kenny 19.11.2026: „emulieren“ = grafisch erstellen wie in der App): links die Designs, Mitte die lebende
 // Vorschau mit Wechsel und Lesetest, rechts Inhalt, Anpassen und Speichern. Die App ist Master: Designs aus
 // daten/designs.json, Zeichnen wie Painter.cs (maler.js), Lesetest wie Reader.Check (lesen.js, jsQR).
 // Läuft nur im Browser, nichts wird hochgeladen.
 import { encode } from "./qr.js";
-import { ruhend, wechsel, paare, svg, CanvasFlaeche, logoVektor, logoBild, stufeVon, schwaechsterKontrast, hex, zuHex } from "./maler.js";
+import { ruhend, wechsel, paare, svg, WECHSEL, CanvasFlaeche, logoVektor, logoBild, stufeVon, schwaechsterKontrast, hex, zuHex } from "./maler.js";
 
 const SPEICHER = "caelum.qr.web.v2";
 const FLOW = 3.6, PERIODE = 7.0;                                   // wie QrWindow: alle 7 s ein Wechsel von 3,6 s
 const START = "https://www.caelum.one/#qr-482913";
 const GRUPPEN = ["Caelum", "Klassisch", "Kunde", "Gravur"];
-const NAMEN = { quadrat: "Quadrat", rund: "Rund", punkt: "Punkt", fluss: "Fluss", spektrum: "Spektrum", verlauf: "Verlauf", einfarbig: "Einfarbig", rorschach: "Rorschach", blende: "Blende", keiner: "Keiner" };
+const NAMEN = { quadrat: "Quadrat", rund: "Rund", punkt: "Punkt", fluss: "Fluss", spektrum: "Spektrum", verlauf: "Verlauf", einfarbig: "Einfarbig", rorschach: "I Falter", klecks: "II Klecks", faltung: "III Faltung", rieseln: "IV Rieseln", wellen: "V Wellen", blende: "Blende", keiner: "Keiner" };
 
 const css = `
 .qa { --qa-bg:#262624; --qa-tief:#1F1E1D; --qa-flaeche:#30302E; --qa-linie:#3D3D3A; --qa-violett:#A585D6;
@@ -164,7 +165,7 @@ export async function mount(root, ctx) {
   const cbInk = auswahl(["fluss", "spektrum", "verlauf", "einfarbig"]);
   const cbModul = auswahl(["quadrat", "rund", "punkt"]);
   const cbAugen = auswahl(["rund", "quadrat", "punkt"]);
-  const cbWechsel = auswahl(["rorschach", "blende", "keiner"]);
+  const cbWechsel = auswahl(WECHSEL.map(w => w.id));
   const chkMuster = h("input", { type: "checkbox" }), chkMitte = h("input", { type: "checkbox" });
   const felder = h("span", { style: "display:flex;gap:6px;flex-wrap:wrap" });
   const papierFeld = h("input", { type: "color", "aria-label": "Papierfarbe" });
@@ -361,7 +362,7 @@ export async function mount(root, ctx) {
   // Video des Wechsels (MediaRecorder): 1 s ruhend, Wechsel 3,6 s, 1 s ruhend
   async function videoSpeichern() {
     const a = ruhig(); if (!a) return;
-    if (design.wechsel === "keiner") { statusSetzen("mittel", "! Wechsel ist „Keiner“ – bitte Rorschach oder Blende wählen"); return; }
+    if (design.wechsel === "keiner") { statusSetzen("mittel", "! Wechsel ist „Keiner“ – bitte eine Wechsel-Art wählen"); return; }
     const c = document.createElement("canvas"); c.width = c.height = 720;
     const typ = typeof MediaRecorder !== "undefined" && c.captureStream ? ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"].find(t => MediaRecorder.isTypeSupported(t)) : null;
     if (!typ) { statusSetzen("mittel", "! Dieser Browser kann keine Videos aufnehmen"); return; }
