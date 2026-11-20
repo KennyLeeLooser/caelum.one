@@ -83,12 +83,20 @@
       else uebersetzeKnoten(n);
     } while ((n = w.nextNode()));
   }
+  var HINWEIS = 'Diese Seite gibt es nur auf Deutsch. Rechtlich gilt die deutsche Fassung.';
   var titelDe = document.title, beschr = document.querySelector('meta[name="description"]'), beschrDe = beschr ? beschr.content : '';
   function anwenden() {
     root.lang = aktuell === 'de' ? 'de-CH' : aktuell;
     root.dir = /^(ar|he|fa)$/.test(aktuell) ? 'rtl' : 'ltr';
     document.title = (aktuell !== 'de' && woerter && woerter[titelDe]) || titelDe;
     if (beschr) beschr.content = (aktuell !== 'de' && woerter && woerter[beschrDe]) || beschrDe;
+    // Rechtsseiten (<html data-nur-deutsch>): Text bleibt Deutsch, nur Kopf und Fuss werden übersetzt – oben ein Hinweis
+    if (root.hasAttribute('data-nur-deutsch')) {
+      var h = document.querySelector('.sprache-hinweis'), ziel = document.querySelector('main .wrap, main');
+      var m = document.querySelector('main'); if (m) m.lang = 'de';   // Vorlesen: der Text bleibt Deutsch
+      if (aktuell === 'de') { if (h) h.remove(); }
+      else if (!h && ziel) { h = document.createElement('p'); h.className = 'sprache-hinweis'; h.setAttribute('role', 'note'); h.textContent = HINWEIS; ziel.insertBefore(h, ziel.firstChild); }
+    }
     durch(document.body);
     knopfText();
     document.dispatchEvent(new CustomEvent('caelum-sprache', { detail: { code: aktuell } }));
@@ -109,43 +117,11 @@
   }
 
   // --- Auswahl im Kopf ---
-  var css = document.createElement('style');
-  css.textContent = [
-    '.sprache-knopf{all:unset;cursor:pointer;color:var(--text-soft);font-size:inherit;display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px}',
-    '.sprache-knopf:hover,.sprache-knopf:focus-visible{color:var(--text);border-color:var(--accent)}',
-    '.sprache-knopf svg{width:15px;height:15px}',
-    '@media (max-width:640px){.sprache-knopf{padding:4px;border:0;font-size:12px;gap:3px}}',
-    '.sprache-wahl{position:fixed;z-index:45;top:64px;right:max(12px,calc((100vw - 1120px)/2));width:min(340px,calc(100vw - 24px));background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);font-size:14px}',
-    '.sprache-wahl[hidden]{display:none}',
-    '.sprache-wahl{max-height:calc(100vh - 80px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:transparent transparent}',
-    // Scrollleiste nur beim Scrollen oder mit der Maus darüber sichtbar (Kenny 20.11.2026: „nicht ersichtlich, etwas dynamischer“)
-    '.sprache-wahl:hover,.sprache-wahl.rollt{scrollbar-color:color-mix(in srgb,var(--accent) 45%,transparent) transparent}',
-    '.sprache-wahl .kugel.mond .kugel-bild{cursor:grab}',
-    '.sprache-wahl.mit-kugel{width:min(400px,calc(100vw - 24px))}',
-    '.sprache-wahl .kugel{margin:0 0 12px}',
-    '.sprache-wahl .kugel-bild{display:block;width:100%;touch-action:none;cursor:grab;border-radius:10px;outline:none}',
-    '.sprache-wahl .kugel-bild:active{cursor:grabbing}.sprache-wahl .kugel-bild:focus-visible{box-shadow:0 0 0 2px var(--accent)}',
-    '.sprache-wahl .kugel-regionen{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;justify-content:center}',
-    '.sprache-wahl .kugel-regionen button{all:unset;cursor:pointer;font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--text-soft)}',
-    '.sprache-wahl .kugel-regionen button:hover,.sprache-wahl .kugel-regionen button:focus-visible{color:var(--text);border-color:var(--accent)}',
-    '.sprache-wahl .kugel-hinweis{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}',
-    '.sprache-wahl .kugel-land{font-weight:500;margin-top:10px}.sprache-wahl .kugel-leer{color:var(--muted);margin-top:4px}',
-    '.sprache-wahl .kopf{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}',
-    '.sprache-wahl .zwei{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}',
-    '.sprache-wahl button.spr{all:unset;cursor:pointer;padding:9px 12px;border-radius:10px;background:var(--bg-deep);color:var(--text-soft);display:flex;justify-content:space-between;gap:8px}',
-    '.sprache-wahl button.spr:hover,.sprache-wahl button.spr:focus-visible{color:var(--text);box-shadow:inset 0 0 0 1px var(--accent)}',
-    '.sprache-wahl button.spr[aria-pressed="true"]{color:var(--text);box-shadow:inset 0 0 0 2px var(--accent)}',
-    '.sprache-wahl button.spr[disabled]{cursor:default;opacity:.55;box-shadow:none}',
-    '.sprache-wahl .spr small{color:var(--muted)}',
-    '.sprache-wahl input[type=search]{width:100%;box-sizing:border-box;font:inherit;color:var(--text);background:var(--bg-deep);border:1px solid var(--line);border-radius:10px;padding:9px 12px}',
-    '.sprache-wahl input[type=search]:focus{outline:none;border-color:var(--accent)}',
-    '.sprache-wahl .treffer{display:flex;flex-direction:column;gap:6px;margin-top:8px}',
-    '.sprache-wahl .optionen{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:7px;color:var(--text-soft)}',
-    '.sprache-wahl label{display:flex;gap:9px;align-items:flex-start;cursor:pointer}.sprache-wahl label.bald{cursor:default;opacity:.55}',
-    '.sprache-wahl label{text-align:left;margin:0;font-size:14px}.sprache-wahl label>span{flex:1;min-width:0}',
-    '.sprache-wahl input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;flex:none;margin:2px 0 0;padding:0}'
-  ].join('');
-  document.head.appendChild(css);
+  // Stile in assets/sprache.css (eigene Datei wegen der strengen CSP der Unterseiten: style-src 'self', S46)
+  if (!document.querySelector('link[data-caelum="assets/sprache.css"]')) {
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/sprache.css?v=1'; css.setAttribute('data-caelum', 'assets/sprache.css');
+    document.head.appendChild(css);
+  }
 
   var knopf = document.createElement('button'); knopf.type = 'button'; knopf.className = 'sprache-knopf';
   knopf.setAttribute('aria-haspopup', 'dialog'); knopf.setAttribute('aria-expanded', 'false');
@@ -209,7 +185,7 @@
   var codeSkript = null;
   function codeLaden() {
     if (!codeSkript) codeSkript = new Promise(function (ok, nein) {
-      var s = document.createElement('script'); s.src = '/assets/als-code.js?v=1'; s.onload = ok;
+      var s = document.createElement('script'); s.src = '/assets/als-code.js?v=2'; s.onload = ok;
       s.onerror = function () { codeSkript = null; nein(); }; document.head.appendChild(s);
     });
     return codeSkript;

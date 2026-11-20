@@ -8,32 +8,11 @@
   'use strict';
   var SPRACHEN = [['html', 'HTML', 'html'], ['css', 'CSS', 'css'], ['js', 'JavaScript', 'js'], ['json', 'JSON', 'json'], ['cs', 'C#', 'cs'], ['py', 'Python', 'py'], ['md', 'Markdown', 'md']];
   var root = document.documentElement, aktuell = null, leiste = null;
-  var css = document.createElement('style');
-  css.textContent = [
-    '.code-versteckt{display:none!important}',
-    '.code-fassung{max-width:1120px;margin:28px auto;padding:0 20px;box-sizing:border-box}',
-    '.code-fassung .kopf{display:flex;align-items:center;gap:10px;font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);',
-    'background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;padding:8px 12px}',
-    '.code-fassung .kopf b{color:var(--text);font-weight:600}.code-fassung .kopf span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-    '.code-fassung .kopf button{all:unset;cursor:pointer;padding:2px 9px;border:1px solid var(--line);border-radius:999px;color:var(--text-soft)}',
-    '.code-fassung .kopf button:hover,.code-fassung .kopf button:focus-visible{color:var(--text);border-color:var(--accent)}',
-    '.code-fassung pre{margin:0;max-height:70vh;overflow:auto;background:var(--bg-deep);border:1px solid var(--line);border-radius:0 0 12px 12px;padding:14px 16px;',
-    'font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text-soft);tab-size:2;scrollbar-width:thin;scrollbar-color:transparent transparent}',
-    '.code-fassung pre:hover,.code-fassung pre:focus-within{scrollbar-color:color-mix(in srgb,var(--muted) 50%,transparent) transparent}',
-    '.code-fassung code{font:inherit;white-space:pre}',
-    '@media (max-width:640px){.code-fassung{padding:0 12px;margin:18px auto}.code-fassung pre{font-size:12px;padding:12px}}',
-    '.t-k{color:var(--code-k,#D97757)}.t-s{color:var(--code-s,#6BAF73)}.t-n{color:var(--code-n,#F2B05A)}.t-t{color:var(--code-t,#7FA3D6)}',
-    '.t-a{color:var(--code-a,#A585D6)}.t-c{color:var(--faint);font-style:italic}.t-p{color:var(--muted)}',
-    '.code-leiste{position:fixed;z-index:44;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;',
-    'max-width:calc(100vw - 24px);box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px;box-shadow:0 10px 30px rgba(0,0,0,.45);',
-    'font:12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}',
-    '.code-leiste button{all:unset;cursor:pointer;padding:6px 10px;border-radius:999px;color:var(--text-soft)}',
-    '.code-leiste button:hover,.code-leiste button:focus-visible{color:var(--text);box-shadow:inset 0 0 0 1px var(--accent)}',
-    '.code-leiste button[aria-pressed="true"]{background:var(--accent);color:var(--bg-deep)}',
-    '.code-leiste .text{font-family:inherit;border-left:1px solid var(--line);border-radius:0 999px 999px 0;margin-left:2px}',
-    '@media print{.code-leiste{display:none}}'
-  ].join('');
-  document.head.appendChild(css);
+  // Stile in assets/als-code.css (eigene Datei wegen der strengen CSP der Unterseiten: style-src 'self', S46)
+  if (!document.querySelector('link[data-caelum="assets/als-code.css"]')) {
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/als-code.css?v=1'; css.setAttribute('data-caelum', 'assets/als-code.css');
+    document.head.appendChild(css);
+  }
 
   // --- Farben aus dem Logo (Harmonie), sonst Programmfarben der Seite ---
   function farben() {
@@ -45,8 +24,8 @@
   document.addEventListener('caelum-spektrum', function () { if (aktuell) farben(); });
 
   // --- Abschnitte der Seite ---
-  function bloecke() { return Array.prototype.slice.call(document.querySelectorAll('main > .hero, main > section, body > footer')); }
-  function kennung(el, i) { return el.id || (el.matches('.hero') ? 'start' : el.tagName === 'FOOTER' ? 'fusszeile' : 'abschnitt' + i); }
+  function bloecke() { return Array.prototype.slice.call(document.querySelectorAll('main > .hero, main > section, main > .wrap, body > footer')); }
+  function kennung(el, i) { return el.id || (el.matches('.hero') ? 'start' : el.matches('main > .wrap') ? (document.querySelector('h1') ? document.querySelector('h1').textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : 'seite') : el.tagName === 'FOOTER' ? 'fusszeile' : 'abschnitt' + i); }
   function rein(t) { return String(t || '').replace(/\s+/g, ' ').trim(); }
   function sichtbar(el) { return !el.closest('[hidden],[aria-hidden="true"],.code-fassung,script,style,svg'); }
   // Inhalt eines Abschnitts als Daten: Titel, Texte, Punkte, Karten, Links
