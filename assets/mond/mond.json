@@ -1,0 +1,20 @@
+{
+  "q": "Mond der Sprachwahl (technisch): sechs Segmente = die sechs Bereiche der Zeichen (index.html → ZEICHEN), Krater = Sprachen, in denen sich die Seite zeigt. Plan: WEBSEITE-WELTKUGEL-MOND-PLAN.md Kapitel 2.",
+  "bereiche": [
+    {"id":"webdesign","titel":"Webdesign","info":{"de":"Webseiten und Web-Module","en":"Websites and web modules","fr":"Sites web et modules web","pt-PT":"Sites e módulos web"},"von":-180,"bis":-120,"krater":[{"code":"html","lon":-152,"lat":14,"r":11}]},
+    {"id":"developer","titel":"Developer","info":{"de":"Demos aus unseren Spielen","en":"Demos from our games","fr":"Démos de nos jeux","pt-PT":"Demonstrações dos nossos jogos"},"von":-120,"bis":-60,"krater":[{"code":"js","lon":-96,"lat":18,"r":9},{"code":"json","lon":-82,"lat":-22,"r":8}]},
+    {"id":"studio","titel":"Studio","info":{"de":"3D, Unity und Blender","en":"3D, Unity and Blender","fr":"3D, Unity et Blender","pt-PT":"3D, Unity e Blender"},"von":-60,"bis":0,"krater":[{"code":"cs","lon":-30,"lat":6,"r":11}]},
+    {"id":"labor","titel":"Labor","info":{"de":"KI und Versuche","en":"AI and experiments","fr":"IA et expériences","pt-PT":"IA e experiências"},"von":0,"bis":60,"krater":[{"code":"py","lon":30,"lat":-10,"r":10}]},
+    {"id":"partner","titel":"Partner","info":{"de":"Für Kunden und Partner","en":"For customers and partners","fr":"Pour clients et partenaires","pt-PT":"Para clientes e parceiros"},"von":60,"bis":120,"krater":[{"code":"css","lon":92,"lat":12,"r":10}]},
+    {"id":"community","titel":"Community","info":{"de":"Austausch mit anderen","en":"Exchange with others","fr":"Échanges avec les autres","pt-PT":"Troca com outros"},"von":120,"bis":180,"krater":[{"code":"md","lon":150,"lat":-4,"r":10}]}
+  ],
+  "sprachen": {
+    "html": {"name":"HTML","info":{"de":"Quelltext der Abschnitte","en":"Source of the sections","fr":"Code source des sections","pt-PT":"Código-fonte das secções"}},
+    "css": {"name":"CSS","info":{"de":"Farben und Regeln je Abschnitt","en":"Colours and rules per section","fr":"Couleurs et règles par section","pt-PT":"Cores e regras por secção"}},
+    "js": {"name":"JavaScript","info":{"de":"Abschnitte als Objekte","en":"Sections as objects","fr":"Sections comme objets","pt-PT":"Secções como objetos"}},
+    "json": {"name":"JSON","info":{"de":"Die Daten dahinter","en":"The data behind it","fr":"Les données derrière","pt-PT":"Os dados por trás"}},
+    "cs": {"name":"C#","info":{"de":"Abschnitte als C#-Records (wie in Pandora)","en":"Sections as C# records (as in Pandora)","fr":"Sections en records C# (comme dans Pandora)","pt-PT":"Secções como records C# (como no Pandora)"}},
+    "py": {"name":"Python","info":{"de":"Abschnitte als Python (wie in Blender)","en":"Sections as Python (as in Blender)","fr":"Sections en Python (comme dans Blender)","pt-PT":"Secções em Python (como no Blender)"}},
+    "md": {"name":"Markdown","info":{"de":"Die Seite als Notiz","en":"The page as a note","fr":"La page comme note","pt-PT":"A página como nota"}}
+  }
+}

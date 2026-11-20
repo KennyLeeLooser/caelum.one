@@ -76,10 +76,10 @@
   }
   function durch(wurzel) {
     if (wurzel.nodeType === 3) { uebersetzeKnoten(wurzel); return; }
-    if (wurzel.nodeType !== 1 || wurzel.closest('script,style,.sprache-wahl')) return;
+    if (wurzel.nodeType !== 1 || wurzel.closest('script,style,.sprache-wahl,.code-fassung,.code-leiste')) return;
     var w = document.createTreeWalker(wurzel, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null), n = wurzel;
     do {
-      if (n.nodeType === 1) { if (n.matches('script,style,.sprache-wahl')) continue; uebersetzeAttr(n); }
+      if (n.nodeType === 1) { if (n.matches('script,style,.sprache-wahl,.code-fassung,.code-leiste')) continue; uebersetzeAttr(n); }
       else uebersetzeKnoten(n);
     } while ((n = w.nextNode()));
   }
@@ -117,6 +117,19 @@
     '@media (max-width:640px){.sprache-knopf{padding:4px;border:0;font-size:12px;gap:3px}}',
     '.sprache-wahl{position:fixed;z-index:45;top:64px;right:max(12px,calc((100vw - 1120px)/2));width:min(340px,calc(100vw - 24px));background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);font-size:14px}',
     '.sprache-wahl[hidden]{display:none}',
+    '.sprache-wahl{max-height:calc(100vh - 80px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:transparent transparent}',
+    // Scrollleiste nur beim Scrollen oder mit der Maus darüber sichtbar (Kenny 20.11.2026: „nicht ersichtlich, etwas dynamischer“)
+    '.sprache-wahl:hover,.sprache-wahl.rollt{scrollbar-color:color-mix(in srgb,var(--accent) 45%,transparent) transparent}',
+    '.sprache-wahl .kugel.mond .kugel-bild{cursor:grab}',
+    '.sprache-wahl.mit-kugel{width:min(400px,calc(100vw - 24px))}',
+    '.sprache-wahl .kugel{margin:0 0 12px}',
+    '.sprache-wahl .kugel-bild{display:block;width:100%;touch-action:none;cursor:grab;border-radius:10px;outline:none}',
+    '.sprache-wahl .kugel-bild:active{cursor:grabbing}.sprache-wahl .kugel-bild:focus-visible{box-shadow:0 0 0 2px var(--accent)}',
+    '.sprache-wahl .kugel-regionen{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;justify-content:center}',
+    '.sprache-wahl .kugel-regionen button{all:unset;cursor:pointer;font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--text-soft)}',
+    '.sprache-wahl .kugel-regionen button:hover,.sprache-wahl .kugel-regionen button:focus-visible{color:var(--text);border-color:var(--accent)}',
+    '.sprache-wahl .kugel-hinweis{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}',
+    '.sprache-wahl .kugel-land{font-weight:500;margin-top:10px}.sprache-wahl .kugel-leer{color:var(--muted);margin-top:4px}',
     '.sprache-wahl .kopf{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}',
     '.sprache-wahl .zwei{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}',
     '.sprache-wahl button.spr{all:unset;cursor:pointer;padding:9px 12px;border-radius:10px;background:var(--bg-deep);color:var(--text-soft);display:flex;justify-content:space-between;gap:8px}',
@@ -143,6 +156,8 @@
   var wahl = document.createElement('div'); wahl.className = 'sprache-wahl'; wahl.hidden = true;
   wahl.setAttribute('role', 'dialog'); wahl.setAttribute('aria-label', 'Sprache / Language');
   document.body.appendChild(wahl);
+  var rollZeit = 0;
+  wahl.addEventListener('scroll', function () { wahl.classList.add('rollt'); clearTimeout(rollZeit); rollZeit = setTimeout(function () { wahl.classList.remove('rollt'); }, 900); }, { passive: true });
   function sprKnopf(e) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'spr'; b.lang = e[0];
     b.innerHTML = '<span></span><small></small>';
@@ -157,6 +172,7 @@
     var k = document.createElement('div'); k.className = 'kopf'; k.textContent = 'Sprache · Language'; wahl.appendChild(k);
     var zwei = document.createElement('div'); zwei.className = 'zwei';
     zwei.appendChild(sprKnopf(eintrag('de'))); zwei.appendChild(sprKnopf(eintrag('en'))); wahl.appendChild(zwei);
+    var kugelOrt = document.createElement('div'); wahl.appendChild(kugelOrt);
     var such = document.createElement('input'); such.type = 'search'; such.placeholder = 'Andere Sprache oder Land suchen …';
     such.setAttribute('aria-label', 'Sprache oder Land suchen'); wahl.appendChild(such);
     var treffer = document.createElement('div'); treffer.className = 'treffer'; treffer.setAttribute('aria-live', 'polite'); wahl.appendChild(treffer);
@@ -169,27 +185,62 @@
     };
     var opt = document.createElement('div'); opt.className = 'optionen';
     opt.appendChild(haken('Sprache des Browsers verwenden', 'Beim ersten Besuch automatisch wählen, wenn vorhanden', 'caelum-sprache-auto', false));
-    opt.appendChild(haken('Weltkugel zum Auswählen', 'Region auf dem Globus antippen und hineinzoomen', null, true));
-    opt.appendChild(haken('Technisch: der Mond', 'Die Seite als Code zeigen statt als Text', null, true));
+    opt.appendChild(haken('Weltkugel zum Auswählen', 'Region auf dem Globus antippen und hineinzoomen', 'caelum-sprache-kugel', false, function () { kugel(kugelOrt, kugelAn()); }));
+    opt.appendChild(haken('Technisch: der Mond', 'Bereiche als Segmente, Krater zeigen die Seite als Code', 'caelum-sprache-mond', false, function () { kugel(kugelOrt, kugelAn()); }));
     wahl.appendChild(opt);
+    kugel(kugelOrt, kugelAn());
     return such;
   }
-  function haken(titel, info, schluessel, bald) {
+  function haken(titel, info, schluessel, bald, geaendert) {
     var l = document.createElement('label'); if (bald) l.className = 'bald';
     var c = document.createElement('input'); c.type = 'checkbox'; c.disabled = !!bald;
     try { if (schluessel) c.checked = localStorage.getItem(schluessel) === '1'; } catch (e) {}
-    c.onchange = function () { try { localStorage.setItem(schluessel, c.checked ? '1' : '0'); } catch (e) {} };
+    c.onchange = function () { try { localStorage.setItem(schluessel, c.checked ? '1' : '0'); } catch (e) {} if (geaendert) geaendert(c.checked); };
     var t = document.createElement('span'); t.innerHTML = '<b></b><br><small></small>';
     t.querySelector('b').textContent = titel + (bald ? ' · bald' : ''); t.querySelector('b').style.fontWeight = '500';
     t.querySelector('small').textContent = info; t.querySelector('small').style.color = 'var(--muted)';
     l.appendChild(c); l.appendChild(t); return l;
+  }
+  // --- Weltkugel (assets/weltkugel.js, erst beim Einschalten geladen) ---
+  var kugelJetzt = null, kugelSkript = null;
+  function gesetzt(k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } }
+  function kugelAn() { return gesetzt('caelum-sprache-kugel') || gesetzt('caelum-sprache-mond'); }
+  // --- Seite als Code (assets/als-code.js, erst bei der ersten Wahl geladen) ---
+  var codeSkript = null;
+  function codeLaden() {
+    if (!codeSkript) codeSkript = new Promise(function (ok, nein) {
+      var s = document.createElement('script'); s.src = '/assets/als-code.js?v=1'; s.onload = ok;
+      s.onerror = function () { codeSkript = null; nein(); }; document.head.appendChild(s);
+    });
+    return codeSkript;
+  }
+  function waehleCode(c) {
+    if (!c) { if (window.CaelumCode) window.CaelumCode.aus(); zu(); return; }
+    codeLaden().then(function () { window.CaelumCode.zeige(c); zu(); });
+  }
+  function kugelWeg() { if (kugelJetzt) { kugelJetzt.zerstoere(); kugelJetzt = null; } wahl.classList.remove('mit-kugel'); }
+  function kugel(ort, an) {
+    kugelWeg(); if (!an) return;
+    wahl.classList.add('mit-kugel');
+    if (!kugelSkript) kugelSkript = new Promise(function (ok, nein) {
+      var s = document.createElement('script'); s.src = '/assets/weltkugel.js?v=3'; s.onload = ok;
+      s.onerror = function () { kugelSkript = null; nein(); }; document.head.appendChild(s);
+    });
+    kugelSkript.then(function () {
+      if (wahl.hidden || !ort.isConnected || kugelJetzt) return;
+      kugelJetzt = window.CaelumWeltkugel.erstelle(ort, {
+        art: gesetzt('caelum-sprache-mond') ? 'mond' : 'welt', liste: SPRACHEN, aktuell: function () { return aktuell; }, knopf: sprKnopf,
+        waehleCode: waehleCode, code: function () { return window.CaelumCode ? window.CaelumCode.aktuell() : null; },
+        offen: function () { return window.CaelumZeichen ? window.CaelumZeichen.offen() : null; }
+      });
+    }).catch(function (e) { if (e) console.error('Weltkugel:', e); wahl.classList.remove('mit-kugel'); });
   }
   function auf() {
     var such = bauen(); wahl.hidden = false; knopf.setAttribute('aria-expanded', 'true');
     var r = knopf.getBoundingClientRect(); wahl.style.top = Math.round(r.bottom + 10) + 'px';
     (wahl.querySelector('[aria-pressed="true"]') || such).focus({ preventScroll: true });
   }
-  function zu() { if (wahl.hidden) return; wahl.hidden = true; knopf.setAttribute('aria-expanded', 'false'); }
+  function zu() { if (wahl.hidden) return; kugelWeg(); wahl.hidden = true; knopf.setAttribute('aria-expanded', 'false'); }
   knopf.addEventListener('click', function () { if (wahl.hidden) auf(); else zu(); });
   document.addEventListener('pointerdown', function (e) { if (!wahl.hidden && !wahl.contains(e.target) && !knopf.contains(e.target)) zu(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !wahl.hidden) { zu(); knopf.focus(); } });
@@ -200,5 +251,5 @@
   if (!start) { try { if (localStorage.getItem('caelum-sprache-auto') === '1') { var b = (navigator.languages || [navigator.language || 'de'])[0]; start = (eintrag(b) || eintrag(b.slice(0, 2)) || ['de'])[0]; } } catch (e) {} }
   knopfText();
   if (start && start !== 'de') waehle(start);
-  window.CaelumSprache = { waehle: waehle, aktuell: function () { return aktuell; }, liste: SPRACHEN };
+  window.CaelumSprache = { waehle: waehle, aktuell: function () { return aktuell; }, liste: SPRACHEN, auf: auf, zu: zu, kugel: function () { return kugelJetzt; }, code: waehleCode };
 })();

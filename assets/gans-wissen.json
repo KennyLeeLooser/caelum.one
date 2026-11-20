@@ -381,6 +381,31 @@
       "antwort": "Psst … das untere Logo kann man ausmalen. Mehr verrate ich nicht. 🤫",
       "ziel": "#logo",
       "knopf": "Zum unteren Logo"
+    },
+    {
+      "worte": [
+        "als code",
+        "seite als code",
+        "quelltext",
+        "source code",
+        "quellcode",
+        "mond",
+        "programmiersprache"
+      ],
+      "antwort": "Gern! Ich zeige dir die Seite als Code. Unten wählst du HTML, CSS, JS, JSON, C#, Python oder Markdown – oder im Sprachfeld 🌐 auf dem Mond: jedes Segment ist einer unserer Bereiche.",
+      "ziel": "code:html",
+      "knopf": "Seite als Code"
+    },
+    {
+      "worte": [
+        "als text",
+        "seite als text",
+        "zurueck zum text",
+        "kein code"
+      ],
+      "antwort": "Zurück zum Text – die Seite sieht wieder normal aus.",
+      "ziel": "code:",
+      "knopf": "Seite als Text"
     }
   ],
   "unbekannt": [

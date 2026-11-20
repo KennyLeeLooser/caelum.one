@@ -152,6 +152,7 @@
   function geh(h) {
     return function () {
       zu();
+      if (h.indexOf('code:') === 0) { if (window.CaelumSprache && window.CaelumSprache.code) window.CaelumSprache.code(h.slice(5) || null); return; } // Seite als Code (Mond)
       if (h === '#oben') { scrollTo({ top: 0, behavior: ruhig ? 'auto' : 'smooth' }); return; }
       if (/^https?:/.test(h)) { open(h, '_blank', 'noopener'); return; }
       if (h.charAt(0) !== '#') { location.href = h; return; }
