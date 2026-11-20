@@ -3,7 +3,7 @@
 <html lang="de-CH">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="robots" content="noindex">
 <link rel="icon" href="/assets/logo-32.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -152,11 +152,12 @@
       <div class="err" id="orderErr"></div>
       <div class="actions">
         <button id="dirBtn">Montageverzeichnis ansehen</button>
-        <button class="primary" id="zipBtn">Auftrag herunterladen (.zip)</button>
+        <button class="primary" id="sendBtn">Auftrag an Caelum senden</button>
+        <button id="zipBtn">Auftrag herunterladen (.zip)</button>
         <button id="mailBtn">E-Mail an Caelum öffnen</button>
         <button id="shareBtn" class="hidden">Teilen …</button>
       </div>
-      <p class="hint" style="margin-top:10px">So kommt Ihr Auftrag an: Datei herunterladen, dann E-Mail öffnen und die Datei anhängen (auf dem Handy direkt über „Teilen“). Caelum prüft den Auftrag und schickt eine Offerte. Der Preis ist ein unverbindlicher Richtpreis exkl. MWST.</p>
+      <p class="hint" style="margin-top:10px">„Auftrag an Caelum senden“ übermittelt den Auftrag direkt (ohne E-Mail). Geht das nicht, Datei herunterladen und per E-Mail anhängen (auf dem Handy über „Teilen“). Caelum prüft den Auftrag und schickt eine Offerte. Der Preis ist ein unverbindlicher Richtpreis exkl. MWST.</p>
     </div>
   </section>
 </main>
@@ -173,6 +174,6 @@
 <script src="katalog.js?v=71cbee4626"></script>
 <script src="preise.js?v=12b7851caf"></script>
 <script src="baustellen.js?v=dd9811a36b"></script>
-<script src="portal.js?v=1b3c177399"></script>
+<script src="portal.js?v=d072ea26e8"></script>
 </body>
 </html>

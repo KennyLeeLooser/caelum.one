@@ -43,6 +43,8 @@ function defaultSettings() {
 // ───────── Zustand ─────────
 let site = null;           // entschlüsselte Baustellen-Daten
 let siteCode = "";
+// Auftragseingang (20.11.2026): Apps Script „Caelum Kunden“ legt die ZIP in Drive, Caelum Gravur holt sie unter Admin → Eingang
+const EINGANG_URL = "https://script.google.com/macros/s/AKfycby2-eYtWh-42XLM6Rq3k6PWXg_6TnZzL2eX3rnk4gHhyHwD8FhXPKMJ4MhaciZsDlSoeQ/exec";
 let state = { positions: [], contact: {} };
 let cur = 0, curSign = 0;
 
@@ -698,6 +700,30 @@ $("zipBtn").onclick = () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(lastZip.blob); a.download = lastZip.name;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   $("orderErr").innerHTML = `<span class="ok">Gespeichert: ${esc(lastZip.name)} – jetzt per E-Mail senden und die Datei anhängen.</span>`;
+};
+// Direkt senden: ZIP als Base64 an das Apps Script (text/plain = ohne CORS-Vorabfrage)
+$("sendBtn").onclick = async () => {
+  if (!guarded()) return;
+  const btn = $("sendBtn");
+  btn.disabled = true;
+  $("orderErr").innerHTML = `<span class="ok">Wird gesendet …</span>`;
+  try {
+    lastZip = buildOrder();
+    const buf = new Uint8Array(await lastZip.blob.arrayBuffer());
+    let bin = ""; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+    const codeId = hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("caelum-gravur:" + siteCode)));
+    const o = lastZip.o, c = o.kontakt || {};
+    const meta = { baustelle: o.baustelle.name, kunde: o.baustelle.kunde, projekt: o.baustelle.projekt, name: c.name || "", firma: c.firma || "", email: c.email || "",
+      stueck: o.positionen.reduce((a, p) => a + p.stueck, 0), positionen: o.positionen.length,
+      richtpreis: `${chf(o.richtpreis.netto)}${o.richtpreis.platzhalter ? " (Platzhalter)" : ""}` };
+    const r = await fetch(EINGANG_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ auftrag: { codeId, name: lastZip.name, zip: btoa(bin), meta } }) });
+    const a = await r.json();
+    if (!a.ok) throw new Error(a.fehler || "Senden fehlgeschlagen");
+    $("orderErr").innerHTML = `<span class="ok">Danke – Auftrag ist bei Caelum angekommen (Eingang ${esc(a.eingang)}). Caelum prüft ihn und meldet sich mit einer Offerte.</span>`;
+  } catch (e) {
+    $("orderErr").innerHTML = esc(String(e.message || e)) + "<br>Bitte „Auftrag herunterladen“ und per E-Mail senden.";
+  } finally { btn.disabled = false; }
 };
 $("mailBtn").onclick = () => {
   if (!guarded()) return;
