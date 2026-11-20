@@ -1,0 +1,16 @@
+{
+  "_hinweis": "Demos auf www.caelum.one/developer/. Neuer Eintrag = neue Karte. Feld webgl leer = Karte zeigt 'Web-Demo folgt'. Ist ein Unity-WebGL-Build da: Ordner developer/<id>/ (Build/ von Unity hinein, Dateien unkomprimiert oder mit 'Decompression Fallback', weil GitHub Pages keine Content-Encoding-Köpfe setzt; jede Datei < 100 MB) und webgl = { \"ordner\": \"<id>\", \"name\": \"<Dateiname ohne Endung in Build/>\" } setzen.",
+  "demos": [
+    {
+      "id": "first",
+      "titel": "First",
+      "untertitel": "Physik-Labor",
+      "text": "Unser erstes Spiel aus den eigenen Unity-Modulen CaelumPhysics und CaelumMaster: ein Labor, in dem Gegenstände nach echter Physik reagieren. Daran testen wir, was später in Kundenprojekte geht.",
+      "engine": "Unity 6",
+      "plattformen": ["Windows", "Android"],
+      "status": "In Entwicklung",
+      "farbe": "#D97757",
+      "webgl": null
+    }
+  ]
+}

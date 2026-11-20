@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<!-- Unity WebGL braucht WebAssembly ('wasm-unsafe-eval') und Blob-Worker; sonst so streng wie die übrigen Unterseiten. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demo spielen · Developer · Caelum GmbH</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-linie.svg">
+<link rel="stylesheet" href="/assets/recht.css">
+<link rel="stylesheet" href="/assets/developer.css">
+</head>
+<body class="dev spiel">
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). -->
+<header>
+  <div class="wrap">
+    <a class="brand" href="/developer/"><img src="/assets/logo-linie-hell.svg" alt=""><span id="titel">Demo</span></a>
+    <nav>
+      <a href="/developer/">Alle Demos</a>
+      <button type="button" id="vollbild" hidden>Vollbild</button>
+    </nav>
+  </div>
+</header>
+<main class="buehne">
+  <canvas id="unity-canvas" tabindex="-1" aria-label="Spiel"></canvas>
+  <div class="laden" id="laden"><div class="balken"><i id="balken"></i></div><p id="meldung">Demo wird geladen …</p></div>
+</main>
+<script src="/assets/spielen.js" defer></script>
+</body>
+</html>
