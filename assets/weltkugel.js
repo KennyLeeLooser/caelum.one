@@ -88,16 +88,25 @@
     }).catch(function (e) { mondDaten = null; throw e; });
     return mondDaten;
   }
+  // B 4 (21.11.2026): Segment antippen zeigt den Inhalt des Bereichs – dieselbe Quelle wie die Bereichsseiten (/bereiche/bereiche.json),
+  // übersetzt über CaelumSprache.t (Schlüssel = deutscher Satz, Wörterbücher aus unterseiten.mjs).
+  var bereichDaten = null;
+  function bereicheLaden() {
+    if (!bereichDaten) bereichDaten = fetch(BASIS_ASSETS + '../bereiche/bereiche.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { var m = {}; (j.bereiche || []).forEach(function (b) { m[b.id] = b; }); return m; })
+      .catch(function (e) { bereichDaten = null; throw e; });
+    return bereichDaten;
+  }
   var MOND_WORTE = {
-    de: ['Ziehen dreht · Krater zeigt die Seite als Code', 'Seite als Text', 'Bereich öffnen', 'Mond der Bereiche'],
-    en: ['Drag to turn · a crater shows the page as code', 'Page as text', 'Open area', 'Moon of areas'],
-    fr: ['Glisser pour tourner · un cratère montre la page en code', 'Page en texte', 'Ouvrir le domaine', 'Lune des domaines'],
-    it: ['Trascina per ruotare · un cratere mostra la pagina come codice', 'Pagina come testo', 'Apri l’area', 'Luna delle aree'],
-    es: ['Arrastra para girar · un cráter muestra la página como código', 'Página como texto', 'Abrir área', 'Luna de las áreas'],
-    'pt-PT': ['Arrastar para rodar · uma cratera mostra a página como código', 'Página como texto', 'Abrir área', 'Lua das áreas'],
-    ru: ['Тяните, чтобы вращать · кратер покажет страницу как код', 'Страница как текст', 'Открыть раздел', 'Луна разделов'],
-    zh: ['拖动旋转 · 陨石坑以代码显示页面', '以文本显示页面', '打开区域', '区域之月'],
-    ja: ['ドラッグで回転 · クレーターでページをコード表示', 'テキストで表示', 'エリアを開く', 'エリアの月']
+    de: ['Ziehen dreht · Krater zeigt die Seite als Code', 'Seite als Text', 'Bereich öffnen', 'Mond der Bereiche', 'Male das Zeichen im Fusslogo, dann öffnet sich der Bereich.'],
+    en: ['Drag to turn · a crater shows the page as code', 'Page as text', 'Open area', 'Moon of areas', 'Paint the sign in the footer logo to open this area.'],
+    fr: ['Glisser pour tourner · un cratère montre la page en code', 'Page en texte', 'Ouvrir le domaine', 'Lune des domaines', 'Peins le signe dans le logo du pied de page pour ouvrir ce domaine.'],
+    it: ['Trascina per ruotare · un cratere mostra la pagina come codice', 'Pagina come testo', 'Apri l’area', 'Luna delle aree', 'Dipingi il segno nel logo a piè di pagina per aprire quest’area.'],
+    es: ['Arrastra para girar · un cráter muestra la página como código', 'Página como texto', 'Abrir área', 'Luna de las áreas', 'Pinta el signo en el logo del pie de página para abrir esta área.'],
+    'pt-PT': ['Arrastar para rodar · uma cratera mostra a página como código', 'Página como texto', 'Abrir área', 'Lua das áreas', 'Pinta o sinal no logótipo do rodapé para abrir esta área.'],
+    ru: ['Тяните, чтобы вращать · кратер покажет страницу как код', 'Страница как текст', 'Открыть раздел', 'Луна разделов', 'Раскрасьте знак в логотипе внизу страницы, чтобы открыть раздел.'],
+    zh: ['拖动旋转 · 陨石坑以代码显示页面', '以文本显示页面', '打开区域', '区域之月', '在页脚标志中涂出符号即可打开此区域。'],
+    ja: ['ドラッグで回転 · クレーターでページをコード表示', 'テキストで表示', 'エリアを開く', 'エリアの月', 'フッターのロゴに印を塗ると、このエリアが開きます。']
   };
 
   function erstelle(ort, o) {
@@ -271,6 +280,8 @@
       var info = function (x) { return x[spr] || (spr === 'de' ? x.de : x.en); };
       var k = document.createElement('div'); k.className = 'kugel-land'; k.textContent = b.titel; karte.appendChild(k);
       var p = document.createElement('div'); p.className = 'kugel-leer'; p.textContent = info(b.info); karte.appendChild(p);
+      var inhalt = document.createElement('div'); inhalt.className = 'kugel-inhalt'; karte.appendChild(inhalt);
+      bereicheLaden().then(function (m) { if (gewaehlt === b && inhalt.isConnected) zeigeInhalt(inhalt, m[b.id]); }).catch(function () {});
       var knoepfe = document.createElement('div'); knoepfe.className = 'treffer'; var jetzt = o.code ? o.code() : null;
       b.krater.forEach(function (kr) {
         var s = mondJ.sprachen[kr.code], bt = document.createElement('button'); bt.type = 'button'; bt.className = 'spr';
@@ -286,6 +297,25 @@
       var z = window.CaelumZeichen, zg = z && z.offen() === b.id && z.liste.filter(function (x) { return x.name === b.id && x.href; })[0];
       if (zg) { var a = document.createElement('a'); a.className = 'spr'; a.href = zg.href; a.innerHTML = '<span></span><small>→</small>'; a.firstChild.textContent = mw[2]; knoepfe.appendChild(a); }
       karte.appendChild(knoepfe);
+      if (!zg && z && z.liste.some(function (x) { return x.name === b.id && x.href; })) {
+        var zu = document.createElement('div'); zu.className = 'kugel-zu'; zu.textContent = mw[4]; karte.appendChild(zu);
+      }
+    }
+    function zeigeInhalt(ort, d) { // Überschrift, Text und Karten des Bereichs (ohne Links – die Seite öffnet erst das Zeichen)
+      if (!d || !d.h1) return;
+      var t = window.CaelumSprache && window.CaelumSprache.t ? window.CaelumSprache.t : function (x) { return x; };
+      var h = document.createElement('div'); h.className = 'kugel-titel'; h.textContent = t(d.h1); ort.appendChild(h);
+      if (d.text) { var x = document.createElement('div'); x.className = 'kugel-text'; x.textContent = t(d.text); ort.appendChild(x); }
+      var liste = (d.karten || []).map(function (k) { return [k.titel, k.status]; });
+      if (!liste.length && d.chat && d.chat.raeume) liste = d.chat.raeume.map(function (r) { return [r[1], null]; });
+      if (!liste.length) return;
+      var ul = document.createElement('ul'); ul.className = 'kugel-karten';
+      liste.forEach(function (k) {
+        var li = document.createElement('li'), n = document.createElement('span'); n.textContent = t(k[0]); li.appendChild(n);
+        if (k[1]) { var st = document.createElement('small'); st.textContent = t(k[1]); li.appendChild(st); }
+        ul.appendChild(li);
+      });
+      ort.appendChild(ul);
     }
     function landBei(px, py) { var p = unter(px, py); if (!p) return null; for (var i = 0; i < laender.length; i++) if (imLand(laender[i], p[0], p[1])) return laender[i]; return null; }
 

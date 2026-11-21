@@ -121,7 +121,7 @@
   // --- Auswahl im Kopf ---
   // Stile in assets/sprache.css (eigene Datei wegen der strengen CSP der Unterseiten: style-src 'self', S46)
   if (!document.querySelector('link[data-caelum="assets/sprache.css"]')) {
-    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = BASIS_ASSETS + 'sprache.css?v=1'; css.setAttribute('data-caelum', 'assets/sprache.css');
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = BASIS_ASSETS + 'sprache.css?v=2'; css.setAttribute('data-caelum', 'assets/sprache.css');
     document.head.appendChild(css);
   }
 
@@ -201,7 +201,7 @@
     kugelWeg(); if (!an) return;
     wahl.classList.add('mit-kugel');
     if (!kugelSkript) kugelSkript = new Promise(function (ok, nein) {
-      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'weltkugel.js?v=4'; s.onload = ok;
+      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'weltkugel.js?v=5'; s.onload = ok;
       s.onerror = function () { kugelSkript = null; nein(); }; document.head.appendChild(s);
     });
     kugelSkript.then(function () {

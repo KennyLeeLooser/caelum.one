@@ -20,6 +20,12 @@
 .sprache-wahl .kugel-hinweis{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
 .sprache-wahl .kugel-land{font-weight:500;margin-top:10px}
 .sprache-wahl .kugel-leer{color:var(--muted);margin-top:4px}
+.sprache-wahl .kugel-titel{color:var(--text);margin-top:10px;font-size:15px}
+.sprache-wahl .kugel-text{color:var(--text-soft);margin-top:4px;font-size:13px;line-height:1.45}
+.sprache-wahl .kugel-karten{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.sprache-wahl .kugel-karten li{font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--text-soft);display:flex;gap:6px}
+.sprache-wahl .kugel-karten small{color:var(--muted)}
+.sprache-wahl .kugel-zu{color:var(--muted);font-size:12px;margin-top:8px}
 .sprache-wahl .kopf{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .sprache-wahl .zwei{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .sprache-wahl button.spr{all:unset;cursor:pointer;padding:9px 12px;border-radius:10px;background:var(--bg-deep);color:var(--text-soft);display:flex;justify-content:space-between;gap:8px}
