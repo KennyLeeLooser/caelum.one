@@ -22,6 +22,7 @@ const css = `
 .ced select, .ced input, .ced textarea { padding:4px 6px; min-width:0; }
 .ced-kopf { display:flex; gap:6px; align-items:center; padding:8px 10px; background:var(--bg-deep,#1F1E1D); flex-wrap:wrap; }
 .ced-kopf b { font-size:15px; margin-right:8px; }
+.ced .ced-kopf select { width:auto; }          /* das Grundmodul der Webseite setzt .cw select auf volle Breite */
 .ced-kopf .luecke { flex:1; }
 .ced-mitte { display:grid; grid-template-columns:230px minmax(0,1fr) 300px; min-height:0; }
 .ced-medien, .ced-eig { background:#2B2A28; padding:10px; overflow:auto; min-height:0; }
@@ -371,7 +372,8 @@ export async function oeffnen(ctx, daten, dateien = []) {
     const skala = h("div", { class: "skala", style: `width:${breite}px` });
     const schritte = [0.25, 0.5, 1, 2, 5, 10, 15, 30, 60, 120, 300];
     const st = schritte.find(s => s * pps >= 64) ?? 300;
-    for (let s = 0; s * pps < breite; s += st) skala.append(h("i", { style: `left:${s * pps}px` }, zeit(s).replace(/\.\d$/, "")));
+    // Zehntel nur zeigen, wenn die Teilung feiner als 1 s ist (sonst stünde jede Sekunde doppelt da)
+    for (let s = 0; s * pps < breite; s += st) skala.append(h("i", { style: `left:${s * pps}px` }, st < 1 ? zeit(s) : zeit(s).replace(/\.\d$/, "")));
     zlEcke = h("div", { class: "ecke" }, zeit(kopf));
     const zeilen = p.Tracks.map(t => {
       const kopfEl = h("div", { class: `spurkopf ${t.Kind === "Audio" ? "ton" : t.Kind === "Text" ? "text" : ""} ${t === selSpur ? "gewaehlt" : ""}`, onclick: () => { selSpur = t; sel = null; neu(false); } },
