@@ -91,7 +91,10 @@ export async function mount(root, ctx) {
     h("label", { class: "cw-c" }, fuellen, "Bildschirm füllen (Ränder abschneiden statt Balken)"),
     planText,
     h("div", { class: "cw-row" }, knStart, knStop), balken, status, ergebnis,
-    h("p", { class: "cw-hint", style: "margin-top:16px" }, "Nur in der App: Editor mit Spuren, Übergängen, Musik und Titeln, HDR → SDR, ganze Ordner, Bildschirmfotos, Datei auf die Gans ziehen. Sehr grosse Dateien (über 1–2 GB) besser mit der App."));
+    h("h4", { style: "margin-top:20px" }, "Mehr gestalten?"),
+    h("div", { class: "cw-row" }, h("button", { type: "button", onclick: editorOeffnen }, "Editor öffnen")),
+    h("p", { class: "cw-hint" }, "Editor mit Spuren für Video, Ton und Text: Übergänge (sanft, hart, Formen), Musik, Titel, Zuschnitt, Lautstärke, Bild im Bild – im Browser."),
+    h("p", { class: "cw-hint", style: "margin-top:12px" }, "Nur in der App: HDR → SDR, ganze Ordner, Bildschirmfotos, Datei auf die Gans ziehen, H.265 auf jedem PC. Sehr grosse Dateien (über 1–2 GB) besser mit der App."));
   root.append(h("div", { class: "cw cw-grid" }, h("div", {}, drop, liste, fehlerBox), einstellungen), datei);
   if (!kannKodieren()) fehlerBox.replaceChildren(h("li", { style: "color:#E5484D" }, "Dieser Browser kann keine Videos kodieren (WebCodecs fehlt). Bitte Chrome, Edge oder ein aktuelles Safari nehmen – oder die App."));
 
@@ -189,6 +192,14 @@ export async function mount(root, ctx) {
   ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(t => drop.addEventListener(t, () => drop.classList.remove("over")));
   drop.addEventListener("drop", e => { e.preventDefault(); if (e.dataTransfer?.files?.length) hinzufuegen([...e.dataTransfer.files]); });
+
+  // ── Editor (Vollbild, lädt erst beim Klick) ──
+  async function editorOeffnen() {
+    try {
+      const [ed, ueb] = await Promise.all([import("./editor/editor.js" + V), fetch(new URL("daten/uebergaenge.json" + V, import.meta.url)).then(r => r.json())]);
+      await ed.oeffnen(ctx, { ...daten, uebergaenge: ueb }, clips.map(c => c.clip.datei));
+    } catch (e) { fehlerBox.replaceChildren(h("li", { style: "color:#E5484D" }, "Editor ließ sich nicht laden: " + (e?.message || e))); }
+  }
 
   // ── Start ──
   let abbruch = null, letzteUrl = null;

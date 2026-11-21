@@ -6,10 +6,10 @@
       "produkt": "Caelum Cut",
       "titel": "Video fürs Handy",
       "karte": "p-cut",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "status": "vorschau",
       "einstieg": "cut-mini.js",
-      "hash": "853ec6fba135",
+      "hash": "1feb5d6e7fc6",
       "vollversion": "#p-cut",
       "liefert": [],
       "nimmt": []

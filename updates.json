@@ -2,6 +2,19 @@
   "_hinweis": "Neueste zuerst. Neuer Eintrag = neues Objekt oben einfügen. status: release | vorschau | intern (intern wird nicht angezeigt).",
   "updates": [
     {
+      "date": "2026-11-21",
+      "product": "Caelum Cut · Web",
+      "version": "0.2.0",
+      "status": "vorschau",
+      "title": "Editor im Browser",
+      "points": [
+        "Spuren für Video, Ton und Text, Ziehen und Kürzen mit Maus und Finger",
+        "34 Übergänge: sanft, hart und Formen; Zuschnitt, Effekte, Lautstärke, Titel",
+        "Projekt als .caelumcut – öffnet auch die App; Export bleibt auf deinem Gerät"
+      ],
+      "link": "#p-cut"
+    },
+    {
       "date": "2026-11-19",
       "product": "Kundenportal Gravurschilder",
       "version": "1.0",

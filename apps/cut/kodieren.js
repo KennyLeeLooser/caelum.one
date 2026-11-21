@@ -72,7 +72,7 @@ function erstesBild(pr) {
 
 // ───────────────────────── Encoder wählen ─────────────────────────
 
-async function videoKonfig(plan, notizen) {
+export async function videoKonfig(plan, notizen) {
   const gross = plan.w * plan.h > 1920 * 1088;
   const basis = { width: plan.w, height: plan.h, bitrate: plan.videoKbps * 1000, bitrateMode: "variable", framerate: plan.fps, latencyMode: "quality" };
   const kandidaten = [];
@@ -101,7 +101,7 @@ async function videoKonfig(plan, notizen) {
   throw new KodierFehler(`Dieser Browser kann kein ${plan.w}×${plan.h}-Video kodieren. Bitte Chrome oder Edge nehmen – oder die App.`);
 }
 
-async function tonKonfig(plan, notizen) {
+export async function tonKonfig(plan, notizen) {
   if (typeof AudioEncoder === "undefined") { notizen.push("Dieser Browser kodiert keinen Ton – das Video bleibt stumm."); return null; }
   for (const [codec, art] of [["mp4a.40.2", "aac"], ["opus", "opus"]]) {
     const cfg = { codec, sampleRate: 48000, numberOfChannels: 2, bitrate: plan.tonKbps * 1000 };
