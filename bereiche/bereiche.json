@@ -1,5 +1,5 @@
 {
-  "_kopf": "Caelum-Bereiche (Zeichen im Fusslogo → Regler → eigene Seite). © 2026 Caelum GmbH. Neuer Bereich = Eintrag hier → Hüllen /<id>/index.html neu schreiben (node WEBSEITE-BEREICHE-HUELLEN.mjs Webseite, liegt privat im Wurzelordner) → href im ZEICHEN-Eintrag in index.html. Stand 20.11.2026.",
+  "_kopf": "Caelum-Bereiche (Zeichen im Fusslogo → Regler → eigene Seite). © 2026 Caelum GmbH. Neuer Bereich = Eintrag hier → Hüllen /<id>/index.html neu schreiben (node WEBSEITE-BEREICHE-HUELLEN.mjs Webseite, liegt privat im Wurzelordner) → href im ZEICHEN-Eintrag in index.html. Stand 21.11.2026 (Sound Design dazu).",
   "bereiche": [
     {
       "id": "developer",
@@ -117,6 +117,26 @@
         ["Freundlich", "Wir helfen einander – keine Werbung, keine Beleidigungen."],
         ["Nichts Privates", "Keine Passwörter, Schlüssel oder Kundendaten in den Chat."],
         ["Moderiert", "Caelum blendet Beiträge aus, die gegen die Regeln verstossen."]
+      ]
+    },
+    {
+      "id": "sounddesign",
+      "titel": "Sound Design",
+      "info": "Klang, Musik und Bewegung",
+      "farbe": "#E8C547",
+      "ueber": "/sounddesign",
+      "h1": "Klang, den man bewegt",
+      "text": "Im Sound Design verbinden wir Musik mit Bewegung: Handy oder Joy-Con steuern Klänge in Ableton, und unsere Spiele und Videos bekommen ihren eigenen Ton.",
+      "kartenTitel": "Werkzeuge",
+      "karten": [
+        { "titel": "Caelum Motion", "untertitel": "Bewegung wird Klang", "text": "Ein Plugin für Ableton: Neigen und Schwenken von Handy oder Joy-Con steuern Regler und Effekte – live.", "status": "In Planung", "tags": ["VST3", "Ableton"] },
+        { "titel": "Caelum Cut", "untertitel": "Ton im Schnitt", "text": "Lautstärke und weiche oder harte Übergänge – der Ton läuft im Videoschnitt mit.", "status": "In Planung", "tags": ["Windows", "Video"] }
+      ],
+      "wieTitel": "Wie ein Klang entsteht",
+      "wie": [
+        ["Bewegen", "Handy oder Joy-Con liefern die Bewegung."],
+        ["Übersetzen", "Caelum Motion macht daraus Steuerdaten für Ableton."],
+        ["Hören", "Der Klang ändert sich sofort – im Studio und auf der Bühne."]
       ]
     }
   ]

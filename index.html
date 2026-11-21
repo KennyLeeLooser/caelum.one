@@ -844,6 +844,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!signet || !quelle.length) return;
   var L = function () { return window.CaelumLogo || null; };
   function farben() { var l = L(); return (l && l.spektrum().farben.length) ? l.spektrum().farben : ['#D97757', '#F2B05A', '#A58BF5']; }
+  // Fusslogo-Mal-Farben (B 6, Kenny 21.11.2026): immer gleich stehen lassen. Die Harmonien liefern 5 oder 6 Töne in
+  // eigener Reihenfolge; im Fusslogo stehen sie deshalb fest von hell nach dunkel, Platz 1 ist immer der hellste Ton.
+  // Hat eine Harmonie weniger Töne, nimmt ein Feld weiter hinten den dunkelsten (kein Umlauf an den Anfang).
+  function hell(hex) {
+    var n = parseInt(hex.slice(1), 16), k = [n >> 16 & 255, n >> 8 & 255, n & 255].map(function (v) { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * k[0] + 0.7152 * k[1] + 0.0722 * k[2];
+  }
+  function malFarben() { return farben().slice().sort(function (a, b) { return (hell(b) - hell(a)) || (a < b ? -1 : a > b ? 1 : 0); }); }
 
   // --- Akzentfarbe der Seite folgt dem Logo ---
   function akzent() { var l = L(); if (l && l.spektrum().akzent) root.style.setProperty('--accent', l.spektrum().akzent); }
@@ -852,9 +860,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // --- Fusszeile: leer, Felder per Klick ausmalen ---
   function zeigen(p) {
-    var i = +p.dataset.i, f = farben();
+    var i = +p.dataset.i, f = malFarben();
     if (i < 0) { p.removeAttribute('style'); p.classList.remove('voll'); return; }
-    var c = f[i % f.length]; p.style.fill = c; p.style.stroke = c; p.classList.add('voll');
+    var c = f[Math.min(i, f.length - 1)]; p.style.fill = c; p.style.stroke = c; p.classList.add('voll');
   }
   var fussFelder = [];
   if (ziel) {
@@ -862,7 +870,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var p = document.createElementNS(NS, 'path');
       p.setAttribute('class', 'cell'); p.setAttribute('d', q.getAttribute('d')); p.dataset.i = '-1';
       p.dataset.n = q.getAttribute('data-n') || '';
-      p.addEventListener('click', function () { var n = +p.dataset.i + 1; p.dataset.i = n >= farben().length ? -1 : n; zeigen(p); });
+      p.addEventListener('click', function () { var n = +p.dataset.i + 1; p.dataset.i = n >= malFarben().length ? -1 : n; zeigen(p); });
       ziel.appendChild(p); fussFelder.push(p);
     });
   }
