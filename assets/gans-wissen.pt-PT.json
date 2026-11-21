@@ -88,7 +88,7 @@
       "antwort": "Psst … o logótipo de baixo pode ser pintado. Não digo mais nada. 🤫",
       "ziel": "#logo", "knopf": "Para o logótipo de baixo" },
     { "worte": ["como codigo", "pagina como codigo", "site como codigo", "codigo da pagina", "lua", "linguagem de programacao"],
-      "antwort": "Com todo o gosto! Mostro-te a página como código. Em baixo escolhes HTML, CSS, JS, JSON, C#, Python ou Markdown – ou no painel de línguas 🌐 na lua: cada segmento é uma das nossas áreas.",
+      "antwort": "Com todo o gosto! Mostro-te a página como código. Em baixo escolhes HTML, CSS, JS, JSON, C#, C++, Python, MIDI ou Markdown – ou no painel de línguas 🌐 na lua: cada segmento é uma das nossas áreas.",
       "ziel": "code:html", "knopf": "Página como código" },
     { "worte": ["como texto", "pagina como texto", "voltar ao texto", "sem codigo"],
       "antwort": "De volta ao texto – a página volta ao normal.",

@@ -68,7 +68,7 @@
     return punkte(liste);
   }
   function mondLaden() {
-    if (!mondDaten) mondDaten = fetch(BASIS_ASSETS + 'mond/mond.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
+    if (!mondDaten) mondDaten = fetch(BASIS_ASSETS + 'mond/mond.json?v=2').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
       j.bereiche.forEach(function (b) {
         var liste = [], lat;
         for (lat = -88; lat <= 88; lat += 4) liste.push(einheit(b.von, lat));
@@ -187,7 +187,7 @@
           mondJ.bereiche.forEach(function (b, i) { // Segmente = Bereiche
             ctx.beginPath(); if (!ring(b.ring)) return;
             var an = b === gewaehlt;
-            ctx.fillStyle = an || b.id === offen ? akzent : hell; ctx.globalAlpha = an ? 0.42 : b.id === offen ? 0.24 : i % 2 ? 0.3 : 0.12;
+            ctx.fillStyle = an || b.id === offen ? akzent : hell; ctx.globalAlpha = an ? 0.42 : b.id === offen ? 0.24 : i % 2 ? 0.3 : (i === mondJ.bereiche.length - 1 && i % 2 === 0 && i) ? 0.2 : 0.12;
             ctx.fill(); ctx.globalAlpha = 0.75; ctx.strokeStyle = tief; ctx.lineWidth = 1.2; ctx.stroke(); ctx.globalAlpha = 1;
           });
           ctx.beginPath(); mondJ.deko.forEach(function (r) { ring(r); });

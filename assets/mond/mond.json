@@ -1,12 +1,13 @@
 {
-  "q": "Mond der Sprachwahl (technisch): sechs Segmente = die sechs Bereiche der Zeichen (index.html → ZEICHEN), Krater = Sprachen, in denen sich die Seite zeigt. Plan: WEBSEITE-WELTKUGEL-MOND-PLAN.md Kapitel 2.",
+  "q": "Mond der Sprachwahl (technisch): sieben Segmente = die sieben Bereiche der Zeichen (index.html → ZEICHEN), Krater = Sprachen, in denen sich die Seite zeigt. Plan: WEBSEITE-WELTKUGEL-MOND-PLAN.md Kapitel 2.",
   "bereiche": [
-    {"id":"webdesign","titel":"Webdesign","info":{"de":"Webseiten und Web-Module","en":"Websites and web modules","fr":"Sites web et modules web","pt-PT":"Sites e módulos web"},"von":-180,"bis":-120,"krater":[{"code":"html","lon":-152,"lat":14,"r":11}]},
-    {"id":"developer","titel":"Developer","info":{"de":"Demos aus unseren Spielen","en":"Demos from our games","fr":"Démos de nos jeux","pt-PT":"Demonstrações dos nossos jogos"},"von":-120,"bis":-60,"krater":[{"code":"js","lon":-96,"lat":18,"r":9},{"code":"json","lon":-82,"lat":-22,"r":8}]},
-    {"id":"studio","titel":"Studio","info":{"de":"3D, Unity und Blender","en":"3D, Unity and Blender","fr":"3D, Unity et Blender","pt-PT":"3D, Unity e Blender"},"von":-60,"bis":0,"krater":[{"code":"cs","lon":-30,"lat":6,"r":11}]},
-    {"id":"labor","titel":"Labor","info":{"de":"KI und Versuche","en":"AI and experiments","fr":"IA et expériences","pt-PT":"IA e experiências"},"von":0,"bis":60,"krater":[{"code":"py","lon":30,"lat":-10,"r":10}]},
-    {"id":"partner","titel":"Partner","info":{"de":"Für Kunden und Partner","en":"For customers and partners","fr":"Pour clients et partenaires","pt-PT":"Para clientes e parceiros"},"von":60,"bis":120,"krater":[{"code":"css","lon":92,"lat":12,"r":10}]},
-    {"id":"community","titel":"Community","info":{"de":"Austausch mit anderen","en":"Exchange with others","fr":"Échanges avec les autres","pt-PT":"Troca com outros"},"von":120,"bis":180,"krater":[{"code":"md","lon":150,"lat":-4,"r":10}]}
+    {"id":"webdesign","titel":"Webdesign","info":{"de":"Webseiten und Web-Module","en":"Websites and web modules","fr":"Sites web et modules web","pt-PT":"Sites e módulos web"},"von":-180,"bis":-128.57,"krater":[{"code":"html","lon":-154,"lat":14,"r":11}]},
+    {"id":"developer","titel":"Developer","info":{"de":"Demos aus unseren Spielen","en":"Demos from our games","fr":"Démos de nos jeux","pt-PT":"Demonstrações dos nossos jogos"},"von":-128.57,"bis":-77.14,"krater":[{"code":"js","lon":-111,"lat":18,"r":9},{"code":"json","lon":-95,"lat":-22,"r":8}]},
+    {"id":"studio","titel":"Studio","info":{"de":"3D, Unity und Blender","en":"3D, Unity and Blender","fr":"3D, Unity et Blender","pt-PT":"3D, Unity e Blender"},"von":-77.14,"bis":-25.71,"krater":[{"code":"cs","lon":-51,"lat":6,"r":11}]},
+    {"id":"labor","titel":"Labor","info":{"de":"KI und Versuche","en":"AI and experiments","fr":"IA et expériences","pt-PT":"IA e experiências"},"von":-25.71,"bis":25.71,"krater":[{"code":"py","lon":0,"lat":-10,"r":10}]},
+    {"id":"partner","titel":"Partner","info":{"de":"Für Kunden und Partner","en":"For customers and partners","fr":"Pour clients et partenaires","pt-PT":"Para clientes e parceiros"},"von":25.71,"bis":77.14,"krater":[{"code":"css","lon":51,"lat":12,"r":10}]},
+    {"id":"community","titel":"Community","info":{"de":"Austausch mit anderen","en":"Exchange with others","fr":"Échanges avec les autres","pt-PT":"Troca com outros"},"von":77.14,"bis":128.57,"krater":[{"code":"md","lon":103,"lat":-4,"r":10}]},
+    {"id":"sounddesign","titel":"Sound Design","info":{"de":"MIDI, DAW und VST","en":"MIDI, DAW and VST","fr":"MIDI, DAW et VST","pt-PT":"MIDI, DAW e VST"},"krater":[{"code":"midi","lat":16,"r":9,"lon":146},{"code":"cpp","lat":-20,"r":8,"lon":162}],"von":128.57,"bis":180}
   ],
   "sprachen": {
     "html": {"name":"HTML","info":{"de":"Quelltext der Abschnitte","en":"Source of the sections","fr":"Code source des sections","pt-PT":"Código-fonte das secções"}},
@@ -15,6 +16,8 @@
     "json": {"name":"JSON","info":{"de":"Die Daten dahinter","en":"The data behind it","fr":"Les données derrière","pt-PT":"Os dados por trás"}},
     "cs": {"name":"C#","info":{"de":"Abschnitte als C#-Records (wie in Pandora)","en":"Sections as C# records (as in Pandora)","fr":"Sections en records C# (comme dans Pandora)","pt-PT":"Secções como records C# (como no Pandora)"}},
     "py": {"name":"Python","info":{"de":"Abschnitte als Python (wie in Blender)","en":"Sections as Python (as in Blender)","fr":"Sections en Python (comme dans Blender)","pt-PT":"Secções em Python (como no Blender)"}},
-    "md": {"name":"Markdown","info":{"de":"Die Seite als Notiz","en":"The page as a note","fr":"La page comme note","pt-PT":"A página como nota"}}
+    "md": {"name":"Markdown","info":{"de":"Die Seite als Notiz","en":"The page as a note","fr":"La page comme note","pt-PT":"A página como nota"}},
+    "midi": {"name":"MIDI","info":{"de":"Die Seite als MIDI-Spur (midicsv)","en":"The page as a MIDI track (midicsv)","fr":"La page comme piste MIDI (midicsv)","pt-PT":"A página como faixa MIDI (midicsv)"}},
+    "cpp": {"name":"C++","info":{"de":"Abschnitte wie in einem VST3-Plugin","en":"Sections as in a VST3 plug-in","fr":"Sections comme dans un plug-in VST3","pt-PT":"Secções como num plug-in VST3"}}
   }
 }

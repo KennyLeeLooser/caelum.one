@@ -88,7 +88,7 @@
       "antwort": "Psst … le logo du bas peut être colorié. Je n’en dirai pas plus. 🤫",
       "ziel": "#logo", "knopf": "Vers le logo du bas" },
     { "worte": ["en code", "page en code", "site en code", "code source de la page", "lune", "langage de programmation"],
-      "antwort": "Volontiers ! Je te montre la page en code. En bas, tu choisis HTML, CSS, JS, JSON, C#, Python ou Markdown – ou dans le panneau des langues 🌐 sur la lune : chaque segment est l’un de nos domaines.",
+      "antwort": "Volontiers ! Je te montre la page en code. En bas, tu choisis HTML, CSS, JS, JSON, C#, C++, Python, MIDI ou Markdown – ou dans le panneau des langues 🌐 sur la lune : chaque segment est l’un de nos domaines.",
       "ziel": "code:html", "knopf": "Page en code" },
     { "worte": ["en texte", "page en texte", "retour au texte", "pas de code"],
       "antwort": "Retour au texte – la page redevient normale.",

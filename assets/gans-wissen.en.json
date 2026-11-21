@@ -88,7 +88,7 @@
       "antwort": "Psst … the lower logo can be coloured in. That’s all I’ll say. 🤫",
       "ziel": "#logo", "knopf": "To the lower logo" },
     { "worte": ["as code", "page as code", "site as code", "source", "moon", "programming language"],
-      "antwort": "Sure! I’ll show you the page as code. At the bottom you choose HTML, CSS, JS, JSON, C#, Python or Markdown – or in the language panel 🌐 on the moon: each segment is one of our areas.",
+      "antwort": "Sure! I’ll show you the page as code. At the bottom you choose HTML, CSS, JS, JSON, C#, C++, Python, MIDI or Markdown – or in the language panel 🌐 on the moon: each segment is one of our areas.",
       "ziel": "code:html", "knopf": "Page as code" },
     { "worte": ["as text", "page as text", "back to text", "no code"],
       "antwort": "Back to text – the page looks normal again.",

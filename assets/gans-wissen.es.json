@@ -88,7 +88,7 @@
       "antwort": "Psst… el logotipo de abajo se puede colorear. No digo más. 🤫",
       "ziel": "#logo", "knopf": "Al logotipo de abajo" },
     { "worte": ["como codigo", "pagina como codigo", "web como codigo", "codigo de la pagina", "luna", "lenguaje de programacion"],
-      "antwort": "¡Con gusto! Te muestro la página como código. Abajo eliges HTML, CSS, JS, JSON, C#, Python o Markdown, o en el panel de idiomas 🌐 en la luna: cada segmento es una de nuestras áreas.",
+      "antwort": "¡Con gusto! Te muestro la página como código. Abajo eliges HTML, CSS, JS, JSON, C#, C++, Python, MIDI o Markdown, o en el panel de idiomas 🌐 en la luna: cada segmento es una de nuestras áreas.",
       "ziel": "code:html", "knopf": "Página como código" },
     { "worte": ["como texto", "pagina como texto", "volver al texto", "sin codigo"],
       "antwort": "De vuelta al texto: la página vuelve a verse normal.",

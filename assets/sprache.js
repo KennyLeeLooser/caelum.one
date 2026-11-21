@@ -187,7 +187,7 @@
   var codeSkript = null;
   function codeLaden() {
     if (!codeSkript) codeSkript = new Promise(function (ok, nein) {
-      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'als-code.js?v=3'; s.onload = ok;
+      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'als-code.js?v=4'; s.onload = ok;
       s.onerror = function () { codeSkript = null; nein(); }; document.head.appendChild(s);
     });
     return codeSkript;
@@ -201,7 +201,7 @@
     kugelWeg(); if (!an) return;
     wahl.classList.add('mit-kugel');
     if (!kugelSkript) kugelSkript = new Promise(function (ok, nein) {
-      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'weltkugel.js?v=5'; s.onload = ok;
+      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'weltkugel.js?v=6'; s.onload = ok;
       s.onerror = function () { kugelSkript = null; nein(); }; document.head.appendChild(s);
     });
     kugelSkript.then(function () {

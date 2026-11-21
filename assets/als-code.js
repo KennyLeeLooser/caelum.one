@@ -1,6 +1,6 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // „Die Seite als Code“ (Plan WEBSEITE-WELTKUGEL-MOND-PLAN.md, Kapitel 2): jeder Abschnitt der Startseite erscheint statt als Text
-// in einer Sprache – HTML, CSS, JavaScript, JSON, C#, Python oder Markdown. Alles wird im Browser aus der Seite selbst erzeugt
+// in einer Sprache – HTML, CSS, JavaScript, JSON, C#, Python, Markdown, C++ (VST3) oder MIDI (midicsv, Bereich Sound Design 21.11.2026). Alles wird im Browser aus der Seite selbst erzeugt
 // (gerade sichtbare Sprache), nie aus privaten Repos. Syntaxfarben folgen dem Logo (CaelumLogo), Schrift ui-monospace.
 // API window.CaelumCode: zeige(code) · aus() · aktuell() · sprachen. Ereignis „caelum-code“ { code }.
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser offen (GB-8).
@@ -8,7 +8,7 @@
   'use strict';
   // Basis aus der eigenen Skript-Adresse (Basis-Umbau 21.11.2026, GB-35): auf caelum.one /assets/, auf einem Landeplatz https://www.caelum.one/assets/
   var BASIS_ASSETS = (function () { try { return new URL(".", document.currentScript.src).href; } catch (e) { return "/assets/"; } })();
-  var SPRACHEN = [['html', 'HTML', 'html'], ['css', 'CSS', 'css'], ['js', 'JavaScript', 'js'], ['json', 'JSON', 'json'], ['cs', 'C#', 'cs'], ['py', 'Python', 'py'], ['md', 'Markdown', 'md']];
+  var SPRACHEN = [['html', 'HTML', 'html'], ['css', 'CSS', 'css'], ['js', 'JavaScript', 'js'], ['json', 'JSON', 'json'], ['cs', 'C#', 'cs'], ['py', 'Python', 'py'], ['md', 'Markdown', 'md'], ['cpp', 'C++', 'cpp'], ['midi', 'MIDI', 'mid.csv']];
   var root = document.documentElement, aktuell = null, leiste = null;
   // Stile in assets/als-code.css (eigene Datei wegen der strengen CSP der Unterseiten: style-src 'self', S46)
   if (!document.querySelector('link[data-caelum="assets/als-code.css"]')) {
@@ -151,6 +151,55 @@
       return z.join('\n');
       function liste(l, f) { return l.length ? '\n        ' + l.map(f).join(',\n        ') + ',\n    ' : ''; }
     },
+    cpp: function (el, i) {
+      var d = daten(el, i), z = [], ns = d.id.replace(/-/g, '_');
+      z.push('// Abschnitt „' + (d.titel || d.id) + '“ – so würde ein VST3-Plugin (Caelum Motion) ihn halten');
+      z.push('#include <array>');
+      z.push('#include <string_view>');
+      z.push('');
+      z.push('struct Karte { std::string_view titel, text; };');
+      z.push('struct Link  { std::string_view text, href; };');
+      z.push('');
+      z.push('namespace caelum::' + ns + ' {');
+      z.push('    constexpr std::string_view id    = ' + q(d.id) + ';');
+      z.push('    constexpr std::string_view titel = ' + q(d.titel) + ';');
+      feld('std::string_view', 'texte', d.texte, q);
+      feld('std::string_view', 'punkte', d.punkte, q);
+      feld('Karte', 'karten', d.karten, function (k) { return '{ ' + q(k.titel) + ', ' + q(k.text) + ' }'; });
+      feld('Link', 'links', d.links, function (l) { return '{ ' + q(l.text) + ', ' + q(l.href) + ' }'; });
+      z.push('    // je Karte ein Parameter, 0.0 … 1.0 wie in der DAW');
+      z.push('    constexpr int parameterAnzahl = ' + d.karten.length + ';');
+      z.push('}');
+      return z.join('\n');
+      function feld(typ, name, l, f) {
+        if (!l.length) return;
+        z.push('    constexpr std::array<' + typ + ', ' + l.length + '> ' + name + ' {{');
+        l.forEach(function (x, k) { z.push('        ' + f(x) + (k < l.length - 1 ? ',' : '')); });
+        z.push('    }};');
+      }
+    },
+    midi: function (el, i) {
+      // midicsv-Format (Text-Fassung einer .mid-Datei): Titel = Spurname, Texte = Text-Ereignisse, jede Karte = Marker + Note.
+      var d = daten(el, i), z = [], t = 0, schritt = 480;
+      function s(x) { return '"' + String(x).replace(/"/g, '""') + '"'; }
+      function ton(x) { var h = 0; for (var k = 0; k < x.length; k++) h = (h * 31 + x.charCodeAt(k)) % 997; return [60, 62, 64, 67, 69, 72, 74, 76][h % 8]; } // C-Dur pentatonisch
+      z.push('0, 0, Header, 1, 1, ' + schritt);
+      z.push('1, 0, Start_track');
+      z.push('1, 0, Title_t, ' + s(d.titel || d.id));
+      z.push('1, 0, Tempo, 500000');
+      z.push('1, 0, Time_signature, 4, 2, 24, 8');
+      d.texte.forEach(function (x) { z.push('1, ' + t + ', Text_t, ' + s(x)); });
+      var noten = d.karten.length ? d.karten.map(function (k) { return k.titel; }) : d.punkte.length ? d.punkte : d.links.map(function (l) { return l.text; });
+      noten.forEach(function (n) {
+        var p = ton(n), lang = n.length > 24 ? schritt * 2 : schritt;
+        z.push('1, ' + t + ', Marker_t, ' + s(n));
+        z.push('1, ' + t + ', Note_on_c, 0, ' + p + ', ' + (70 + n.length % 40));
+        t += lang; z.push('1, ' + t + ', Note_off_c, 0, ' + p + ', 0');
+      });
+      z.push('1, ' + t + ', End_track');
+      z.push('0, 0, End_of_file');
+      return z.join('\n');
+    },
     md: function (el, i) {
       var d = daten(el, i), z = [];
       z.push((el.matches('.hero') ? '# ' : '## ') + (d.titel || d.id)); z.push('');
@@ -166,16 +215,18 @@
   var KW = {
     js: 'export|const|let|var|function|return|new|document|true|false|null',
     cs: 'public|record|string|var|new|class|true|false|null',
-    py: 'from|import|class|def|return|True|False|None|field|dataclass|str|list'
+    py: 'from|import|class|def|return|True|False|None|field|dataclass|str|list',
+    cpp: 'include|struct|namespace|constexpr|int|std|array|string_view|return'
   };
   var MUSTER = {
     html: [[/<!--[\s\S]*?-->/, 'c'], [/<\/?[a-zA-Z][\w-]*|\/?>/, 't'], [/[\w-:]+(?==")/, 'a'], [/"[^"]*"/, 's']],
     css: [[/\/\*[\s\S]*?\*\//, 'c'], [/@[\w-]+/, 'k'], [/^\s*[^{};\n]+(?=\s*\{)/m, 't'], [/[\w-]+(?=\s*:)/, 'a'], [/#[0-9a-fA-F]{3,8}\b|-?\d*\.?\d+(px|em|rem|%|s|ms|vh|vw|deg|fr)?\b/, 'n'], [/"[^"]*"|'[^']*'/, 's'], [/[{}();]/, 'p']],
     json: [[/"(?:[^"\\]|\\.)*"(?=\s*:)/, 'a'], [/"(?:[^"\\]|\\.)*"/, 's'], [/-?\d+(\.\d+)?/, 'n'], [/\b(true|false|null)\b/, 'k'], [/[{}\[\],:]/, 'p']],
-    md: [[/^#{1,6} .*$/m, 't'], [/^- /m, 'k'], [/\[[^\]]*\]/, 's'], [/\([^)]*\)/, 'a']]
+    md: [[/^#{1,6} .*$/m, 't'], [/^- /m, 'k'], [/\[[^\]]*\]/, 's'], [/\([^)]*\)/, 'a']],
+    midi: [[/"(?:[^"]|"")*"/, 's'], [/\b(Header|Start_track|End_track|End_of_file)\b/, 'k'], [/\b[A-Z][a-z]+(?:_[a-z]+)*_[a-z]\b|\bTempo\b|\bTime_signature\b/, 't'], [/\b\d+\b/, 'n'], [/,/, 'p']]
   };
-  ['js', 'cs', 'py'].forEach(function (s) {
-    MUSTER[s] = [[s === 'py' ? /#.*$/m : /\/\/.*$/m, 'c'], [/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/, 's'], [new RegExp('\\b(' + KW[s] + ')\\b'), 'k'],
+  ['js', 'cs', 'py', 'cpp'].forEach(function (s) {
+    MUSTER[s] = [[s === 'py' ? /#.*$/m : /\/\/.*$/m, 'c'], [/^#include\b.*$/m, 'k'], [/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/, 's'], [new RegExp('\\b(' + KW[s] + ')\\b'), 'k'],
       [/@\w+/, 'k'], [/\b[A-Z][A-Za-z]+\b/, 't'], [/\b\w+(?=\s*[:=](?!=))/, 'a'], [/\b\d+(\.\d+)?\b/, 'n'], [/[{}\[\]();,]/, 'p']];
   });
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -221,7 +272,7 @@
     leiste = document.createElement('div'); leiste.className = 'code-leiste'; leiste.setAttribute('role', 'toolbar'); leiste.setAttribute('aria-label', 'Seite als Code');
     leiste.setAttribute('translate', 'no');
     SPRACHEN.forEach(function (s) {
-      var b = document.createElement('button'); b.type = 'button'; b.textContent = s[0] === 'js' ? 'JS' : s[1] === 'Markdown' ? 'MD' : s[1] === 'Python' ? 'PY' : s[1];
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = s[0] === 'js' ? 'JS' : s[1] === 'Markdown' ? 'MD' : s[1] === 'Python' ? 'PY' : s[1];   // C++ und MIDI bleiben ausgeschrieben
       b.title = s[1]; b.setAttribute('aria-pressed', String(s[0] === aktuell)); b.onclick = function () { zeige(s[0]); }; leiste.appendChild(b);
     });
     var t = document.createElement('button'); t.type = 'button'; t.className = 'text'; t.textContent = 'Aa Text'; t.title = 'Seite als Text'; t.onclick = aus;

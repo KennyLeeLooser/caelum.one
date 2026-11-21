@@ -392,7 +392,7 @@
         "mond",
         "programmiersprache"
       ],
-      "antwort": "Gern! Ich zeige dir die Seite als Code. Unten wählst du HTML, CSS, JS, JSON, C#, Python oder Markdown – oder im Sprachfeld 🌐 auf dem Mond: jedes Segment ist einer unserer Bereiche.",
+      "antwort": "Gern! Ich zeige dir die Seite als Code. Unten wählst du HTML, CSS, JS, JSON, C#, C++, Python, MIDI oder Markdown – oder im Sprachfeld 🌐 auf dem Mond: jedes Segment ist einer unserer Bereiche.",
       "ziel": "code:html",
       "knopf": "Seite als Code"
     },
