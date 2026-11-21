@@ -49,7 +49,8 @@
     '.werkstatt .x{all:unset;cursor:pointer;color:var(--muted,#8A8780);font-size:22px;padding:0 6px}',
     '.werkstatt .bild{aspect-ratio:1;width:100%;border-radius:12px;background:repeating-conic-gradient(#2c2c2a 0 25%,#323230 0 50%) 0 0/24px 24px;touch-action:none}',
     '.werkstatt .bild svg{width:100%;height:100%;display:block}',
-    '.werkstatt .bild path.feld{cursor:crosshair;transition:fill .2s}',
+    '.werkstatt .bild path.feld{cursor:crosshair;transition:fill .2s;pointer-events:all}',   // auch leere Felder (fill none) treffbar
+    '.werkstatt .bild path.linie{pointer-events:none}',
     '.werkstatt .bild path.feld:hover{filter:brightness(1.15)}',
     '.werkstatt .seite{display:flex;flex-direction:column;gap:14px}',
     '.werkstatt .titel{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#8A8780);margin-bottom:6px}',
@@ -60,6 +61,7 @@
     '.werkstatt input[type=color]{width:34px;height:28px;border:0;padding:0;background:none;cursor:pointer}',
     '.werkstatt button.k{all:unset;cursor:pointer;padding:8px 12px;border-radius:10px;background:var(--bg-deep,#1F1E1D);color:var(--text-soft,#C9C6BF)}',
     '.werkstatt button.k:hover,.werkstatt button.k:focus-visible{color:var(--text,#fff);box-shadow:inset 0 0 0 1px var(--accent,#D97757)}',
+    '.werkstatt button.k[aria-pressed="true"]{color:var(--text,#fff);box-shadow:inset 0 0 0 2px var(--accent,#D97757)}',
     '.werkstatt button.k.haupt{background:var(--accent,#D97757);color:#1F1E1D;font-weight:600}',
     '.werkstatt select{font:inherit;color:var(--text,#E8E6E1);background:var(--bg-deep,#1F1E1D);border:1px solid var(--line,#3A3A37);border-radius:10px;padding:7px 10px}',
     // Animationen (gleiche Regeln landen in der animierten SVG)
@@ -84,7 +86,13 @@
     var seite = document.createElement('div'); seite.className = 'seite'; r.appendChild(seite);
 
     // Pinsel: Farben des Startbilds (Harmonie), Grundtöne, eigene Farbe, Radierer
-    var p1 = gruppe(seite, 'Pinsel – Feld antippen oder darüberziehen');
+    // Zeichnen: Pinsel (darüberziehen) oder Tippen (genau ein Feld) – Kenny 21.11.2026
+    var p0 = gruppe(seite, 'Zeichnen');
+    var artPinsel = knopf('Pinsel – darüberziehen', function () { zeichenArt('pinsel'); }), artTippen = knopf('Tippen – ein Feld', function () { zeichenArt('tippen'); });
+    function zeichenArt(a) { stand.modus = a; artPinsel.setAttribute('aria-pressed', String(a === 'pinsel')); artTippen.setAttribute('aria-pressed', String(a === 'tippen')); merk(stand); }
+    p0.reihe.appendChild(artPinsel); p0.reihe.appendChild(artTippen); zeichenArt(stand.modus === 'tippen' ? 'tippen' : 'pinsel');
+
+    var p1 = gruppe(seite, 'Farbe');
     var pr = p1.reihe;
     function pinselTupf(c, name) {
       var b = tupf(c, name, function () { pinsel = c; markiere(pr, b); }); pr.appendChild(b); return b;
@@ -101,11 +109,22 @@
     var p3 = gruppe(seite, 'Grund');
     GRUND.forEach(function (e) { var b = tupf(e[0], e[1], function () { stand.grund = e[0]; markiere(p3.reihe, b); zeichnen(); }); if (e[0] === 'none') b.classList.add('leer'); if (stand.grund === e[0]) b.setAttribute('aria-pressed', 'true'); p3.reihe.appendChild(b); });
 
-    var p4 = gruppe(seite, 'Füllen');
-    p4.reihe.appendChild(knopf('Wie das Startbild', function () { stand.felder = startFarben(); zeichnen(); }));
-    p4.reihe.appendChild(knopf('Zufällig aus der Harmonie', function () { var f = harmonie(); stand.felder = stand.felder.map(function () { return f[Math.floor(Math.random() * f.length)]; }); zeichnen(); }));
-    p4.reihe.appendChild(knopf('Alles mit dem Pinsel', function () { stand.felder = stand.felder.map(function () { return pinsel; }); zeichnen(); }));
-    p4.reihe.appendChild(knopf('Leeren', function () { stand.felder = stand.felder.map(function () { return 'none'; }); zeichnen(); }));
+    // Füllen: Harmonie wählen = zufällig daraus füllen (Startbild kommt beim Öffnen von selbst) – Kenny 21.11.2026
+    var p4 = gruppe(seite, 'Füllen – Harmonie wählen');
+    var L = window.CaelumLogo, harmName = document.createElement('div'); harmName.className = 'titel';
+    function fuellen(f) { stand.felder = stand.felder.map(function () { return f[Math.floor(Math.random() * f.length)]; }); zeichnen(); }
+    if (L && L.harmonien && L.vorschau) {
+      L.harmonien.forEach(function (h) {
+        var f = L.vorschau(h.art), n = f.length;
+        var b = tupf('conic-gradient(' + f.map(function (c, i) { return c + ' ' + (i * 360 / n) + 'deg ' + ((i + 1) * 360 / n) + 'deg'; }).join(', ') + ')', h.name, function () { markiere(p4.reihe, b); harmName.textContent = h.name; fuellen(L.vorschau(h.art)); });
+        p4.reihe.appendChild(b);
+      });
+    } else p4.reihe.appendChild(knopf('Zufällig aus der Harmonie', function () { fuellen(harmonie()); }));
+    p4.reihe.appendChild(knopf('Alles in Pinselfarbe', function () { stand.felder = stand.felder.map(function () { return pinsel; }); zeichnen(); }));
+    p4.reihe.parentNode.appendChild(harmName); harmName.style.margin = '6px 0 0';
+
+    var p4b = gruppe(seite, 'Leeren');
+    p4b.reihe.appendChild(knopf('Alle Felder leeren', function () { stand.felder = stand.felder.map(function () { return 'none'; }); zeichnen(); markiere(p4.reihe, null); harmName.textContent = ''; }));
 
     var p5 = gruppe(seite, 'Bewegung');
     var sel = document.createElement('select'); sel.setAttribute('aria-label', 'Animation');
@@ -121,7 +140,7 @@
 
     // Malen: antippen oder mit gedrückter Maus/Finger darüberziehen
     svg.addEventListener('pointerdown', function (e) { malt = true; try { svg.setPointerCapture(e.pointerId); } catch (f) {} male(e); });
-    svg.addEventListener('pointermove', function (e) { if (malt) male(e); });
+    svg.addEventListener('pointermove', function (e) { if (malt && stand.modus !== 'tippen') male(e); });
     svg.addEventListener('pointerup', function () { malt = false; merk(stand); });
     svg.addEventListener('pointercancel', function () { malt = false; });
     huelle.addEventListener('pointerdown', function (e) { if (e.target === huelle) zu(); });
@@ -176,6 +195,7 @@
   function auf() {
     if (!huelle) bauen();
     stand.linie = optionenLinie();
+    stand.felder = startFarben();   // beim Öffnen immer wie das Startbild (Kenny 21.11.2026)
     if (linienReihe) markiere(linienReihe, linienReihe.querySelector('[data-farbe="' + stand.linie + '"]'));
     zeichnen(); huelle.hidden = false; document.documentElement.style.overflow = 'hidden';
     huelle.querySelector('.x').focus({ preventScroll: true });

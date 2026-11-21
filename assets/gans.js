@@ -249,14 +249,14 @@
   function oeffnen(neu) {
     laden();
     if (!aktiv) {
-      aktiv = true; gans.hidden = false; gans.classList.add('weg'); merk('caelum-gans', 'an');
+      aktiv = true; gans.hidden = false; gans.classList.add('weg'); try { sessionStorage.setItem('caelum-gans', 'an'); } catch (e) {}
       x = Math.min(x, rand()); setze(); spiele(schlaf ? 'sleep' : 'idle');
       requestAnimationFrame(function () { gans.classList.remove('weg'); requestAnimationFrame(takt); });
     }
     if (neu && !schlaf) setTimeout(function () { spiele('wave', function () { spiele('idle'); }); sag('Hallo! Ich bin die Gans von Caelum. Frag mich etwas – oder tipp mich an.', [['Frag die Gans', chat], ['Später', zu]]); }, 500);
   }
   function schliessen() {
-    zu(); merk('caelum-gans', null); gans.classList.add('weg');
+    zu(); try { sessionStorage.removeItem('caelum-gans'); } catch (e) {} gans.classList.add('weg');
     setTimeout(function () { aktiv = false; gans.hidden = true; document.dispatchEvent(new CustomEvent('caelum-gans', { detail: { offen: false } })); }, 400);
   }
   document.addEventListener('click', function (e) {
@@ -264,7 +264,10 @@
     e.preventDefault(); if (aktiv && a.getAttribute('data-gans') === 'umschalten') schliessen(); else oeffnen(true);
   });
   groesse(+merk('caelum-gans-groesse') || PX, false);
-  if (merk('caelum-gans') === 'an') oeffnen(false);
+  // Kenny 21.11.2026: die Gans kommt nur, wenn man sie ruft – nicht von selbst beim nächsten Besuch.
+  // Während des Besuchs (dieser Tab) bleibt sie beim Seitenwechsel offen.
+  merk('caelum-gans', null);
+  try { if (sessionStorage.getItem('caelum-gans') === 'an') oeffnen(false); } catch (e) {}
 
   window.CaelumGans = { sag: function (t) { if (!aktiv) oeffnen(false); sag(t, null); }, chat: function () { oeffnen(false); chat(); },
     oeffnen: oeffnen, schliessen: schliessen, offen: function () { return aktiv; }, frage: function (q) { return wissenLaden().then(function () { return antworte(q); }); } };
