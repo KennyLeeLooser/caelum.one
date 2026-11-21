@@ -10,7 +10,9 @@ const $ = id => document.getElementById(id);
 const sp = new URLSearchParams(location.search);
 const stand = { befehl: null, fehler: null, webgl: false, objekt: null, glb: false, wuerfel: 0, version: 0 };
 window.rorschachScan = { stand: () => JSON.stringify(stand) };
-if (window.chrome?.webview) $("zurueck").hidden = false;
+// Zurück (Wunsch Kenny 20.11.2026): in der App zur Auswahl und zum Erzeuger, am Handy weiter zum nächsten Scan mit Caelum Analyse
+if (window.chrome?.webview) { $("zurueck").hidden = false; $("erzeuger").hidden = false; }
+else if (location.protocol === "https:") $("weiter").hidden = false;
 const fertig = () => document.documentElement.dataset.bereit = "1";
 function fehler(titel, text) { $("fehlerTitel").textContent = titel; $("fehlerText").textContent = text; $("fehler").classList.add("an"); stand.fehler = text; fertig(); }
 

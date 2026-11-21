@@ -16,7 +16,12 @@ html,body{margin:0;height:100%;background:var(--deep);color:var(--text);font:15p
 .oben{position:fixed;top:0;left:0;right:0;padding:max(14px,env(safe-area-inset-top)) 16px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;pointer-events:none}
 .marke{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
 .marke svg{width:22px;height:22px}.marke b{color:var(--prog);font-weight:600}
-#zurueck{pointer-events:auto;color:var(--muted);font-size:13px;text-decoration:none}
+.wege{display:flex;gap:8px;pointer-events:auto}
+.wege a{color:var(--text);font-size:13px;text-decoration:none;background:color-mix(in srgb,var(--deep) 70%,transparent);border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+.wege a[hidden]{display:none}
+.knoepfe2{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#weiter{pointer-events:auto;font:600 14px var(--ui);color:var(--text);background:var(--surface,#30302E);border:1px solid var(--line);border-radius:10px;padding:10px 18px;text-decoration:none;opacity:0;transition:opacity .6s .6s}
+.zeigen #weiter{opacity:1}
 .unten{position:fixed;left:0;right:0;bottom:0;padding:0 16px max(18px,env(safe-area-inset-bottom));display:grid;justify-items:center;gap:10px;text-align:center;pointer-events:none}
 #botschaft{font-size:clamp(22px,6.4vw,34px);font-weight:600;line-height:1.2;max-width:22ch;opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s;text-wrap:balance}
 #objektname{color:var(--muted);font-size:13px;opacity:0;transition:opacity .8s .2s}
@@ -30,11 +35,11 @@ html,body{margin:0;height:100%;background:var(--deep);color:var(--text);font:15p
 <body>
 <canvas id="bild" aria-label="Überraschung in 3D"></canvas>
 <div class="oben"><div class="marke"><svg id="markeLogo" viewBox="44 44 936 936" aria-hidden="true"><path fill="#E8E6E1" fill-rule="evenodd"></path></svg>Caelum <b>Rorschach</b></div>
-  <a id="zurueck" href="index.html" hidden>← Erzeuger</a></div>
+  <div class="wege"><a id="zurueck" href="willkommen.html" hidden>← Auswahl</a><a id="erzeuger" href="index.html" hidden>Erzeuger</a></div></div>
 <div class="unten">
   <div id="botschaft" aria-live="polite"></div>
   <div id="objektname"></div>
-  <button id="nochmal" type="button">Nochmal</button>
+  <div class="knoepfe2"><button id="nochmal" type="button">Nochmal</button><a id="weiter" href="../analyse/" hidden>Weiteren Code scannen</a></div>
   <div class="leise">Der Befehl bleibt auf diesem Gerät.</div>
 </div>
 <div id="fehler"><div><h1 id="fehlerTitel">Kein Rorschach-Code</h1><p id="fehlerText"></p></div></div>
