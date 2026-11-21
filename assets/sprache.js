@@ -6,6 +6,8 @@
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser offen (GB-8).
 (function () {
   'use strict';
+  // Basis aus der eigenen Skript-Adresse (Basis-Umbau 21.11.2026, GB-35): auf caelum.one /assets/, auf einem Landeplatz https://www.caelum.one/assets/
+  var BASIS_ASSETS = (function () { try { return new URL(".", document.currentScript.src).href; } catch (e) { return "/assets/"; } })();
   // code, Name in der Sprache selbst, deutscher Name, Länder/Suchwörter, da = Übersetzung vorhanden
   var SPRACHEN = [
     ['de', 'Deutsch', 'Deutsch', 'Schweiz Deutschland Österreich Liechtenstein German', true],
@@ -111,7 +113,7 @@
     var e = eintrag(code); if (!e || !e[4]) return;
     aktuell = code; merk(code);
     if (code === 'de') { woerter = null; anwenden(); return; }
-    fetch('/assets/sprachen/' + code + '.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
+    fetch(BASIS_ASSETS + 'sprachen/' + code + '.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
       .then(function (j) { woerter = j; anwenden(); })
       .catch(function () { aktuell = 'de'; woerter = null; anwenden(); });
   }
@@ -119,7 +121,7 @@
   // --- Auswahl im Kopf ---
   // Stile in assets/sprache.css (eigene Datei wegen der strengen CSP der Unterseiten: style-src 'self', S46)
   if (!document.querySelector('link[data-caelum="assets/sprache.css"]')) {
-    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/sprache.css?v=1'; css.setAttribute('data-caelum', 'assets/sprache.css');
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = BASIS_ASSETS + 'sprache.css?v=1'; css.setAttribute('data-caelum', 'assets/sprache.css');
     document.head.appendChild(css);
   }
 
@@ -185,7 +187,7 @@
   var codeSkript = null;
   function codeLaden() {
     if (!codeSkript) codeSkript = new Promise(function (ok, nein) {
-      var s = document.createElement('script'); s.src = '/assets/als-code.js?v=2'; s.onload = ok;
+      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'als-code.js?v=3'; s.onload = ok;
       s.onerror = function () { codeSkript = null; nein(); }; document.head.appendChild(s);
     });
     return codeSkript;
@@ -199,7 +201,7 @@
     kugelWeg(); if (!an) return;
     wahl.classList.add('mit-kugel');
     if (!kugelSkript) kugelSkript = new Promise(function (ok, nein) {
-      var s = document.createElement('script'); s.src = '/assets/weltkugel.js?v=3'; s.onload = ok;
+      var s = document.createElement('script'); s.src = BASIS_ASSETS + 'weltkugel.js?v=4'; s.onload = ok;
       s.onerror = function () { kugelSkript = null; nein(); }; document.head.appendChild(s);
     });
     kugelSkript.then(function () {

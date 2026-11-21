@@ -6,11 +6,13 @@
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser offen (GB-8).
 (function () {
   'use strict';
+  // Basis aus der eigenen Skript-Adresse (Basis-Umbau 21.11.2026, GB-35): auf caelum.one /assets/, auf einem Landeplatz https://www.caelum.one/assets/
+  var BASIS_ASSETS = (function () { try { return new URL(".", document.currentScript.src).href; } catch (e) { return "/assets/"; } })();
   var SPRACHEN = [['html', 'HTML', 'html'], ['css', 'CSS', 'css'], ['js', 'JavaScript', 'js'], ['json', 'JSON', 'json'], ['cs', 'C#', 'cs'], ['py', 'Python', 'py'], ['md', 'Markdown', 'md']];
   var root = document.documentElement, aktuell = null, leiste = null;
   // Stile in assets/als-code.css (eigene Datei wegen der strengen CSP der Unterseiten: style-src 'self', S46)
   if (!document.querySelector('link[data-caelum="assets/als-code.css"]')) {
-    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/assets/als-code.css?v=1'; css.setAttribute('data-caelum', 'assets/als-code.css');
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = BASIS_ASSETS + 'als-code.css?v=1'; css.setAttribute('data-caelum', 'assets/als-code.css');
     document.head.appendChild(css);
   }
 

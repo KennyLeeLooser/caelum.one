@@ -11,7 +11,7 @@
   'use strict';
   // Programmfarben wie farben.json / :root --c-* auf www.caelum.one
   var PROGRAMME = { pandora: '#D97757', viewer: '#F2B05A', gravur: '#E2557A', goose: '#6BAF73', vision: '#C44FD6',
-    cut: '#4FB3C4', replay: '#7FA3D6', qr: '#A585D6', rorschach: '#6B74F0', analyse: '#9CCB3B' };
+    cut: '#4DBF95', replay: '#7FA3D6', qr: '#A585D6', rorschach: '#6B74F0', analyse: '#9CCB3B' };
   var HIMMEL = '#A58BF5';
 
   function palette(el) {

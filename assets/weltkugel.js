@@ -7,9 +7,11 @@
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser offen (GB-8).
 (function () {
   'use strict';
+  // Basis aus der eigenen Skript-Adresse (Basis-Umbau 21.11.2026, GB-35): auf caelum.one /assets/, auf einem Landeplatz https://www.caelum.one/assets/
+  var BASIS_ASSETS = (function () { try { return new URL(".", document.currentScript.src).href; } catch (e) { return "/assets/"; } })();
   var GRAD = Math.PI / 180, daten = null;
   function laden() {
-    if (!daten) daten = fetch('/assets/welt/laender.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    if (!daten) daten = fetch(BASIS_ASSETS + 'welt/laender.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) { return j.l.map(vorbereiten); }).catch(function (e) { daten = null; throw e; });
     return daten;
   }
@@ -66,7 +68,7 @@
     return punkte(liste);
   }
   function mondLaden() {
-    if (!mondDaten) mondDaten = fetch('/assets/mond/mond.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
+    if (!mondDaten) mondDaten = fetch(BASIS_ASSETS + 'mond/mond.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
       j.bereiche.forEach(function (b) {
         var liste = [], lat;
         for (lat = -88; lat <= 88; lat += 4) liste.push(einheit(b.von, lat));

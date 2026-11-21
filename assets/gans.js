@@ -7,41 +7,20 @@
 (function () {
   'use strict';
   if (window.CaelumGans) return;
-  var BASIS = '/assets/gans/', PX = 64, MAX = 192, FUSS = 0.034;   // PX = kleinste Grösse; FUSS: Leerraum unter den Füssen (Anteil) → Gans steht auf dem Rand
+  // Basis aus der eigenen Skript-Adresse (Basis-Umbau 21.11.2026, GB-35): auf caelum.one /assets/, auf einem Landeplatz https://www.caelum.one/assets/
+  var BASIS_ASSETS = (function () { try { return new URL(".", document.currentScript.src).href; } catch (e) { return "/assets/"; } })();
+  var HEIMAT = new URL(BASIS_ASSETS, location.href).origin;   // caelum.one, auch wenn die Gans auf einem Landeplatz läuft
+  var BASIS = BASIS_ASSETS + 'gans/', PX = 64, MAX = 192, FUSS = 0.034;   // PX = kleinste Grösse; FUSS: Leerraum unter den Füssen (Anteil) → Gans steht auf dem Rand
   var FOLGEN = { waddle: 8, idle: 6, honk: 8, wave: 6, sleep: 4 };
   var TEMPO = { waddle: 90, idle: 160, honk: 110, wave: 120, sleep: 420 };
   var ruhig = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function merk(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} return null; }
 
-  var css = document.createElement('style');
-  css.textContent = [
-    '.gans{position:fixed;left:0;bottom:0;width:' + PX + 'px;height:' + PX + 'px;z-index:30;cursor:pointer;border:0;padding:0;background:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:opacity .4s}',
-    '.gans[hidden]{display:none}.gans.weg{opacity:0}',
-    '.gans .bild{position:absolute;inset:0;background-repeat:no-repeat;background-size:auto 100%;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}',
-    '.gans.rechts .bild{transform:scaleX(-1)}',
-    '.gans.skalieren{cursor:ns-resize;touch-action:none}',
-    // Umriss: gleiche Bildfolge dahinter, eingefärbt und nach allen Seiten verschoben, durch eine Maske gestrichelt
-    '.gans .umriss{position:absolute;inset:0;background-repeat:no-repeat;background-size:auto 100%;opacity:0;transition:opacity .15s;filter:brightness(0) drop-shadow(2px 0 0 var(--accent,#D97757)) drop-shadow(-2px 0 0 var(--accent,#D97757)) drop-shadow(0 2px 0 var(--accent,#D97757)) drop-shadow(0 -2px 0 var(--accent,#D97757));-webkit-mask-image:repeating-conic-gradient(from 0deg at 50% 55%,#000 0 5deg,transparent 5deg 10deg);mask-image:repeating-conic-gradient(from 0deg at 50% 55%,#000 0 5deg,transparent 5deg 10deg)}',
-    '.gans.skalieren .umriss{opacity:1}.gans.rechts .umriss{transform:scaleX(-1)}',
-    '.gans:focus-visible{outline:2px solid var(--accent,#D97757);outline-offset:2px;border-radius:8px}',
-    '.gans-blase{position:fixed;z-index:31;bottom:72px;width:min(320px,calc(100vw - 24px));max-height:calc(100vh - ' + (PX + 24) + 'px);overflow:auto;background:var(--surface,#30302E);color:var(--text,#E8E6E1);border:1px solid var(--line,#3A3A37);border-radius:14px;padding:12px 14px;font:14px/1.45 Inter,"Segoe UI",system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.4);opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s}',
-    '.gans-blase.offen{opacity:1;transform:none}',
-    '.gans-blase p{margin:0 0 8px}.gans-blase p:last-child{margin:0}',
-    '.gans-blase .wahl{display:flex;flex-direction:column;gap:6px;margin-top:4px}',
-    '.gans-blase button{all:unset;cursor:pointer;padding:8px 10px;border-radius:9px;background:var(--bg-deep,#1F1E1D);color:var(--text-soft,#C9C6BF)}',
-    '.gans-blase button:hover,.gans-blase button:focus-visible{color:var(--text,#fff);box-shadow:inset 0 0 0 1px var(--accent,#D97757)}',
-    '.gans-blase .zu{position:absolute;top:4px;right:6px;padding:2px 7px;background:none;color:var(--muted,#8A8780)}',
-    '.gans-chat{display:flex;flex-direction:column;gap:6px;margin:4px 0 8px}',
-    '.gans-chat .ich,.gans-chat .sie{padding:7px 10px;border-radius:11px;max-width:88%}',
-    '.gans-chat .ich{align-self:flex-end;background:color-mix(in srgb,var(--accent,#D97757) 28%,var(--bg-deep,#1F1E1D))}',
-    '.gans-chat .sie{align-self:flex-start;background:var(--bg-deep,#1F1E1D)}',
-    '.gans-chat .sie button{display:inline-block;margin-top:6px;padding:4px 9px;font-size:13px;background:var(--surface,#30302E)}',
-    '.gans-frage{display:flex;gap:6px}',
-    '.gans-frage input{flex:1;min-width:0;font:inherit;color:var(--text,#E8E6E1);background:var(--bg-deep,#1F1E1D);border:1px solid var(--line,#3A3A37);border-radius:9px;padding:8px 10px}',
-    '.gans-frage input:focus{outline:none;border-color:var(--accent,#D97757)}',
-    '.gans-frage button{padding:8px 12px;background:var(--accent,#D97757);color:#1F1E1D;font-weight:600}'
-  ].join('');
-  document.head.appendChild(css);
+  // Stile in assets/gans.css (strenge CSP: style-src 'self', S46; auch auf Landeplätzen)
+  if (!document.querySelector('link[data-caelum="assets/gans.css"]')) {
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = BASIS_ASSETS + 'gans.css?v=1'; css.setAttribute('data-caelum', 'assets/gans.css');
+    document.head.appendChild(css);
+  }
 
   var gans = document.createElement('button');
   gans.type = 'button'; gans.className = 'gans'; gans.hidden = true; gans.setAttribute('aria-label', 'Good Goose – Hilfe zur Seite');
@@ -195,6 +174,7 @@
       if (h.indexOf('code:') === 0) { if (window.CaelumSprache && window.CaelumSprache.code) window.CaelumSprache.code(h.slice(5) || null); return; } // Seite als Code (Mond)
       if (h === '#oben') { scrollTo({ top: 0, behavior: ruhig ? 'auto' : 'smooth' }); return; }
       if (/^https?:/.test(h)) { open(h, '_blank', 'noopener'); return; }
+      if (HEIMAT !== location.origin) { location.href = HEIMAT + (h.charAt(0) === '#' ? '/' : '') + h; return; } // Landeplatz: Ziele liegen auf caelum.one
       if (h.charAt(0) !== '#') { location.href = h; return; }
       var a = document.createElement('a'); a.href = h; a.hidden = true; document.body.appendChild(a); a.click(); a.remove();
     };
