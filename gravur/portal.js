@@ -646,6 +646,167 @@ ${state.positions.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name || "")}</
   return h;
 }
 
+// ───────── Auftragsbestätigung als PDF (Wunsch Kenny 21.11.2026) ─────────
+// Kleiner PDF-Schreiber ohne Fremdbibliothek: A4, Helvetica (WinAnsi), Text, Linien, Flächen. Der Kunde speichert damit
+// nach dem Senden, was er bestellt hat (Eingangsnummer, Positionen, Schilderliste mit Montageort, Richtpreis).
+const HELV = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,
+  667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,
+  556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+const W1252 = { "€": 128, "‚": 130, "„": 132, "…": 133, "‘": 145, "’": 146, "“": 147, "”": 148, "•": 149, "–": 150, "—": 151, "™": 153 };
+function pdfText(s) { // in WinAnsi-Zeichen (je Zeichen ein Byte), Unbekanntes ersetzen
+  return [...String(s ?? "").replace(/→/g, "->").replace(/[   ]/g, " ")].map(c => {
+    const n = c.charCodeAt(0);
+    if (W1252[c]) return String.fromCharCode(W1252[c]);
+    return n < 256 && n >= 32 ? c : n === 10 ? " " : "?";
+  }).join("");
+}
+function pdfWidth(s, size, bold) {
+  let w = 0;
+  for (const c of pdfText(s)) {
+    let n = c.charCodeAt(0);
+    if (n > 126) n = (c.normalize("NFD").charCodeAt(0) < 127 ? c.normalize("NFD").charCodeAt(0) : 110);
+    w += HELV[n - 32] ?? 556;
+  }
+  return w / 1000 * size * (bold ? 1.06 : 1);
+}
+function pdfFit(s, size, bold, max) { // auf Breite kürzen
+  s = String(s ?? "");
+  if (pdfWidth(s, size, bold) <= max) return s;
+  while (s.length > 1 && pdfWidth(s + "…", size, bold) > max) s = s.slice(0, -1);
+  return s + "…";
+}
+function pdfWrap(s, size, bold, max) {
+  const out = []; let line = "";
+  for (const w of String(s ?? "").split(/\s+/).filter(Boolean)) {
+    const t = line ? line + " " + w : w;
+    if (pdfWidth(t, size, bold) <= max || !line) line = t; else { out.push(line); line = w; }
+  }
+  if (line) out.push(line);
+  return out.map(l => pdfFit(l, size, bold, max));
+}
+function makePdf() {
+  const pages = []; let cur = null;
+  const rgb = hex => { const m = /^#?([0-9a-f]{6})$/i.exec(hex || ""); const v = m ? parseInt(m[1], 16) : 0; return [(v >> 16 & 255) / 255, (v >> 8 & 255) / 255, (v & 255) / 255].map(x => x.toFixed(3)).join(" "); };
+  const esc = s => pdfText(s).replace(/[\\()]/g, "\\$&");
+  const Y = y => (842 - y).toFixed(2);
+  const doc = {
+    W: 595, H: 842,
+    page() { cur = []; pages.push(cur); return doc; },
+    text(x, y, s, size = 10, { bold = false, color = "#222222", align = "left" } = {}) {
+      const w = pdfWidth(s, size, bold), dx = align === "right" ? -w : align === "center" ? -w / 2 : 0;
+      cur.push(`BT /${bold ? "F2" : "F1"} ${size} Tf ${rgb(color)} rg ${(x + dx).toFixed(2)} ${Y(y)} Td (${esc(s)}) Tj ET`);
+    },
+    rect(x, y, w, h, { fill = null, stroke = null, lw = 0.6 } = {}) {
+      const r = `${x.toFixed(2)} ${Y(y + h)} ${w.toFixed(2)} ${h.toFixed(2)} re`;
+      cur.push(`${lw} w ${fill ? rgb(fill) + " rg " : ""}${stroke ? rgb(stroke) + " RG " : ""}${r} ${fill && stroke ? "B" : fill ? "f" : "S"}`);
+    },
+    line(x1, y1, x2, y2, color = "#cccccc", lw = 0.6) { cur.push(`${lw} w ${rgb(color)} RG ${x1} ${Y(y1)} m ${x2} ${Y(y2)} l S`); },
+    blob() {
+      const objs = ["<< /Type /Catalog /Pages 2 0 R >>", null,
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"];
+      const kids = [];
+      for (const p of pages) {
+        const c = p.join("\n");
+        objs.push(`<< /Length ${c.length} >>\nstream\n${c}\nendstream`);
+        const ci = objs.length;
+        objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${ci} 0 R >>`);
+        kids.push(`${objs.length} 0 R`);
+      }
+      objs[1] = `<< /Type /Pages /Kids [${kids.join(" ")}] /Count ${kids.length} >>`;
+      let out = "%PDF-1.4\n%\xe2\xe3\xcf\xd3\n"; const offs = [];
+      objs.forEach((o, i) => { offs.push(out.length); out += `${i + 1} 0 obj\n${o}\nendobj\n`; });
+      const x = out.length;
+      out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offs.map(o => String(o).padStart(10, "0") + " 00000 n \n").join("")
+        + `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF\n`;
+      return new Blob([Uint8Array.from(out, c => c.charCodeAt(0))], { type: "application/pdf" });
+    },
+  };
+  return doc;
+}
+
+// Bestätigung: o = orderJson, nr = Eingangsnummer (leer = noch nicht gesendet)
+function confirmationPdf(o, nr) {
+  const d = makePdf(), L = 42, R = 553, ACC = "#C8553D", MUT = "#6B6B6B";
+  let y = 0, pageNo = 0;
+  const foot = () => {
+    d.line(L, 806, R, 806, "#dddddd");
+    d.text(L, 818, "Caelum GmbH · www.caelum.one · info@caelum.one · Freeware der Datenpunkt engineering AG, erstellt von Caelum GmbH", 7.5, { color: MUT });
+    d.text(R, 818, `Seite ${pageNo}`, 7.5, { color: MUT, align: "right" });
+  };
+  const newPage = () => {
+    if (pageNo) foot();
+    d.page(); pageNo++;
+    d.rect(L, 36, 6, 22, { fill: ACC });
+    d.text(L + 14, 52, "Caelum Gravurschilder", 16, { bold: true });
+    d.text(R, 52, nr ? `Eingang ${nr}` : "Entwurf (noch nicht gesendet)", 10, { bold: true, color: nr ? ACC : MUT, align: "right" });
+    y = 84;
+  };
+  const need = h => { if (y + h > 790) newPage(); };
+  const kv = (k, v) => { if (!v) return; need(14); d.text(L, y, k, 9, { color: MUT }); pdfWrap(v, 10, false, R - L - 110).forEach((l, i) => { if (i) { y += 13; need(13); } d.text(L + 110, y, l, 10); }); y += 15; };
+  newPage();
+  d.text(L, y, nr ? "Auftragsbestätigung" : "Auftrag (Entwurf)", 20, { bold: true }); y += 18;
+  d.text(L, y, `${new Date(o.erstellt).toLocaleString("de-CH")} · Kundenportal www.caelum.one/gravur`, 9, { color: MUT }); y += 24;
+  const k = o.kontakt || {};
+  kv("Baustelle", o.baustelle.name); kv("Kunde", o.baustelle.kunde); kv("Projekt", o.baustelle.projekt);
+  kv("Besteller", [k.name, k.firma].filter(Boolean).join(", ")); kv("E-Mail / Telefon", [k.email, k.telefon].filter(Boolean).join(" · "));
+  kv("Lieferung an", k.lieferung); kv("Wunschtermin", k.termin ? new Date(k.termin).toLocaleDateString("de-CH") : ""); kv("Bemerkung", k.bemerkung);
+  y += 8;
+  // Positionen
+  const cols = [L, L + 28, L + 200, L + 300, L + 420, R];
+  const head = () => { need(40); d.text(L, y, "Positionen", 12, { bold: true }); y += 14; d.rect(L, y - 10, R - L, 16, { fill: "#F1EFEA" });
+    ["Pos.", "Bezeichnung", "Mass (mm)", "Material", "Stück", "Richtpreis"].forEach((t, i) => d.text(i >= 4 ? (i === 4 ? cols[5] - 70 : R - 4) : cols[i] + 4, y + 1, t, 8.5, { bold: true, align: i >= 4 ? "right" : "left" })); y += 18; };
+  head();
+  o.positionen.forEach(p => {
+    need(18);
+    const m = mat(p.material);
+    d.text(cols[0] + 4, y, String(p.nr), 9.5);
+    d.text(cols[1] + 4, y, pdfFit(p.name || `Schildtyp ${p.nr}`, 9.5, false, cols[2] - cols[1] - 8), 9.5);
+    d.text(cols[2] + 4, y, p.mass.replace(" mm", ""), 9.5);
+    d.rect(cols[3] + 4, y - 8, 10, 10, { fill: m.surface, stroke: "#999999", lw: 0.4 });
+    d.text(cols[3] + 18, y, pdfFit(`${p.material} ${m.name || ""}`, 9.5, false, cols[4] - cols[3] - 22), 9.5);
+    d.text(cols[5] - 70, y, String(p.stueck), 9.5, { align: "right" });
+    d.text(R - 4, y, p.richtpreis == null ? "auf Anfrage" : chf(p.richtpreis), 9.5, { align: "right" });
+    d.line(L, y + 5, R, y + 5, "#e4e2dc"); y += 17;
+  });
+  const rp = o.richtpreis;
+  need(40);
+  d.text(R - 4, y + 4, `Richtpreis total ${chf(rp.netto)}`, 11, { bold: true, align: "right" }); y += 16;
+  d.text(R - 4, y, `inkl. Einrichtung ${chf(rp.einrichtung)} · ${rp.hinweis}${rp.platzhalter ? " · Preise noch nicht freigegeben" : ""}`, 8.5, { color: MUT, align: "right" }); y += 26;
+  // Schilderliste
+  need(40); d.text(L, y, "Schilder", 12, { bold: true }); y += 6;
+  d.text(R, y - 6, `${o.positionen.reduce((a, p) => a + p.stueck, 0)} Stück`, 9, { color: MUT, align: "right" }); y += 10;
+  state.positions.forEach((p, i) => p.signs.forEach((x, n) => {
+    if (!(x.count > 0)) return;
+    const m = mat(p.s.MaterialCode), lines = (x.fields || []).filter(Boolean);
+    const h = Math.max(30, 12 + lines.length * 11);
+    need(h + 4);
+    // Mini-Schild in echten Farben
+    const sw = 70, sh = Math.min(40, Math.max(16, sw * p.s.Height / Math.max(1, p.s.Width)));
+    d.rect(L, y, sw, sh, { fill: m.surface, stroke: "#9a9a9a", lw: 0.4 });
+    lines.slice(0, 3).forEach((t, j) => d.text(L + sw / 2, y + (sh / (Math.min(3, lines.length) + 1)) * (j + 1) + 2.5, pdfFit(t, 6, true, sw - 6), 6, { bold: true, color: m.core, align: "center" }));
+    d.text(L + sw + 12, y + 9, `${i + 1}.${pad2(n + 1)}`, 10, { bold: true });
+    d.text(L + sw + 52, y + 9, pdfFit(x.ort ? "Montageort: " + x.ort : "ohne Montageort", 9, false, R - L - sw - 110), 9, { color: MUT });
+    d.text(R, y + 9, `${x.count} Stk.`, 9.5, { align: "right" });
+    lines.forEach((t, j) => d.text(L + sw + 52, y + 21 + j * 11, pdfFit(t, 9.5, false, R - L - sw - 60), 9.5));
+    y += h + 6; d.line(L + sw + 12, y - 3, R, y - 3, "#eeeeee");
+  }));
+  y += 10; need(50);
+  pdfWrap("Diese Bestätigung zeigt, was Sie über das Kundenportal gesendet haben. Der Richtpreis ist unverbindlich und versteht sich exkl. MWST. "
+    + "Caelum prüft den Auftrag und schickt Ihnen eine Offerte bzw. einen Gut zum Druck per E-Mail. Fragen: info@caelum.one"
+    + (nr ? ` (bitte Eingang ${nr} angeben).` : "."), 9, false, R - L).forEach(l => { d.text(L, y, l, 9, { color: MUT }); y += 12; });
+  foot();
+  return d.blob();
+}
+let lastEingang = "";
+function savePdf(nr) {
+  const o = lastZip?.o || orderJson(new Date());
+  const blob = confirmationPdf(o, nr);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `${nr ? "Auftragsbestaetigung" : "Auftrag_Entwurf"}_${safe(o.baustelle.projekt || o.baustelle.name) || "Baustelle"}${nr ? "_" + nr.replace(/[^\w]/g, "") : ""}.pdf`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
 // ZIP (ohne Kompression, UTF-8-Namen) – reicht für Text und wird von Windows und CaelumGravur gelesen
 const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
 function crc32(b) { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
@@ -720,11 +881,16 @@ $("sendBtn").onclick = async () => {
       body: JSON.stringify({ auftrag: { codeId, name: lastZip.name, zip: btoa(bin), meta } }) });
     const a = await r.json();
     if (!a.ok) throw new Error(a.fehler || "Senden fehlgeschlagen");
-    $("orderErr").innerHTML = `<span class="ok">Danke – Auftrag ist bei Caelum angekommen (Eingang ${esc(a.eingang)}). Caelum prüft ihn und meldet sich mit einer Offerte.</span>`;
+    lastEingang = String(a.eingang || "");
+    $("orderErr").innerHTML = `<span class="ok"><span class="thanks">Danke für Ihre Bestellung!</span>Der Auftrag ist bei Caelum angekommen (Eingang ${esc(a.eingang)}). Caelum prüft ihn und meldet sich mit einer Offerte per E-Mail.</span>`
+      + `<br><button class="primary" id="pdfDoneBtn" style="margin-top:8px">Bestätigung als PDF speichern</button>`;
+    $("pdfDoneBtn").onclick = () => savePdf(lastEingang);
+    $("pdfBtn").textContent = "Bestätigung als PDF";
   } catch (e) {
     $("orderErr").innerHTML = esc(String(e.message || e)) + "<br>Bitte „Auftrag herunterladen“ und per E-Mail senden.";
   } finally { btn.disabled = false; }
 };
+$("pdfBtn").onclick = () => { if (lastEingang || guarded()) savePdf(lastEingang); };
 $("mailBtn").onclick = () => {
   if (!guarded()) return;
   const o = lastZip?.o || orderJson(new Date());
@@ -756,5 +922,7 @@ $("codeIn").addEventListener("keydown", e => { if (e.key === "Enter") enter(); }
   let c = q; try { c = c || sessionStorage.getItem("caelum-gravur-code"); } catch {}
   if (c) { $("codeIn").value = c; enter(); }
 })();
+// Zurück: Code vergessen, sonst springt /gravur/ beim nächsten Besuch gleich wieder in die Baustelle
+$("backBtn").addEventListener("click", () => { try { sessionStorage.removeItem("caelum-gravur-code"); } catch {} });
 // Prüfhilfe für Tests: window.caelumPortal
 window.caelumPortal = { get state() { return state; }, buildOrder, layout, check, directoryHtml, orderJson };

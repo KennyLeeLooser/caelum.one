@@ -95,4 +95,11 @@ table.signs input.ort { min-width: 130px; }
 dialog { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--text); max-width: min(720px, calc(100vw - 32px)); width: 100%; }
 dialog::backdrop { background: rgba(0,0,0,.45); }
 footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px 16px 32px; }
+/* Links in sanften Farben statt Browser-Dunkelblau (Wunsch Kenny 21.11.2026) */
+a { color: var(--accent); text-underline-offset: 2px; }
+footer a { color: var(--soft); text-decoration-color: var(--line); }
+footer a:hover, a:hover { color: var(--accent); text-decoration-color: currentColor; }
+header.top .back { color: var(--soft); text-decoration: none; font-size: 14px; border: 1px solid var(--line); border-radius: 7px; padding: 4px 10px; }
+header.top .back:hover { color: var(--text); border-color: var(--muted); }
+.thanks { display: block; font-size: 16px; font-weight: 600; margin-bottom: 2px; }
 .hidden { display: none !important; }
