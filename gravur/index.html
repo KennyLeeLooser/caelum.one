@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Caelum Gravurschilder</title>
 <meta name="description" content="Gravurschilder aus Gravierkunststoff selbst gestalten und bestellen – Caelum GmbH">
-<link rel="stylesheet" href="portal.css?v=08c5af4b2e">
+<link rel="stylesheet" href="portal.css?v=4f35eb41aa">
 </head>
 <body>
 <header class="top">
@@ -119,7 +119,7 @@
     <!-- Pläne -->
     <div class="card section" id="planCard">
       <h2>Pläne und Stockwerke <span class="hint">freiwillig</span></h2>
-      <p class="hint">Grundriss oder Schema als Bild laden (Foto, Screenshot oder PNG/JPG aus dem PDF), dann Schild in der Liste wählen und auf das Gerät bzw. die Anlage im Plan tippen. Die Nummer erscheint im Plan und im Montageverzeichnis, so weiss der Monteur, welches Schild wohin gehört.</p>
+      <p class="hint">Grundriss oder Schema als Bild laden (Foto, Screenshot oder PNG/JPG aus dem PDF), dann die nummerierten Punkte unter dem Plan auf das Gerät bzw. die Anlage ziehen (oder Schild wählen und in den Plan tippen). Gesetzte Punkte bleiben in der Leiste als leerer Ring – so sehen Sie, ob noch eines fehlt. Die Nummer erscheint im Plan und im Montageverzeichnis, so weiss der Monteur, welches Schild wohin gehört.</p>
       <div class="positions" id="planTabs"></div>
       <div id="planBody" class="hidden">
         <div class="row2" style="grid-template-columns:minmax(0,1fr) auto;align-items:center">
@@ -128,6 +128,7 @@
         </div>
         <p class="hint" id="planHint"></p>
         <div class="preview" style="padding:0;overflow:auto"><div id="planView" style="position:relative;cursor:crosshair"></div></div>
+        <div class="pinbar"><div class="hint" id="pinCount"></div><div class="pins" id="pinPalette"></div></div>
         <div class="actions"><button id="pinDel">Punkt für dieses Schild entfernen</button></div>
       </div>
       <input type="file" id="planFile" accept="image/*" class="hidden">
@@ -136,7 +137,7 @@
     <!-- Auftrag -->
     <div class="card section" id="orderCard">
       <h2>Auftrag</h2>
-      <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+      <div class="grid order2">
         <div>
           <label class="f">Name * <input id="cName" autocomplete="name"></label>
           <label class="f">Firma <input id="cFirm" autocomplete="organization"></label>
@@ -152,12 +153,17 @@
       <div class="totals" id="orderTotals"></div>
       <div class="err" id="orderErr"></div>
       <div class="actions">
-        <button id="dirBtn">Montageverzeichnis ansehen</button>
         <button class="primary" id="sendBtn">Auftrag an Caelum senden</button>
-        <button id="zipBtn">Auftrag herunterladen (.zip)</button>
         <button id="mailBtn">E-Mail an Caelum öffnen</button>
-        <button id="shareBtn" class="hidden">Teilen …</button>
+      </div>
+      <div class="actions">
+        <button id="zipBtn">Auftrag herunterladen (.zip)</button>
         <button id="pdfBtn" title="Übersicht des Auftrags als PDF speichern – nach dem Senden mit Eingangsnummer">Als PDF speichern</button>
+        <button id="shareBtn" class="hidden">Teilen …</button>
+      </div>
+      <div class="actions">
+        <button id="dirBtn">Montageverzeichnis ansehen</button>
+        <button id="dirDlBtn">Montageverzeichnis herunterladen</button>
       </div>
       <p class="hint" style="margin-top:10px">„Auftrag an Caelum senden“ übermittelt den Auftrag direkt (ohne E-Mail). Geht das nicht, Datei herunterladen und per E-Mail anhängen (auf dem Handy über „Teilen“). Caelum prüft den Auftrag und schickt eine Offerte. Der Preis ist ein unverbindlicher Richtpreis exkl. MWST.</p>
     </div>
@@ -176,6 +182,6 @@
 <script src="katalog.js?v=71cbee4626"></script>
 <script src="preise.js?v=12b7851caf"></script>
 <script src="baustellen.js?v=dd9811a36b"></script>
-<script src="portal.js?v=5bb22744cb"></script>
+<script src="portal.js?v=9f4eb7f49c"></script>
 </body>
 </html>

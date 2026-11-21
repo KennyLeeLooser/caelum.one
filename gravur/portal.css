@@ -33,6 +33,20 @@ p.hint, .hint { color: var(--muted); font-size: 13px; margin: 2px 0 8px; }
 .sticky { position: sticky; top: 64px; }
 @media (max-width: 900px) { .sticky { position: static; } }
 label.f { display: grid; grid-template-columns: 118px minmax(0, 1fr); align-items: center; gap: 8px; margin: 6px 0; font-size: 14px; color: var(--soft); }
+/* Pläne: Punkte-Leiste (Kenny 21.11.2026) – ziehen auf den Plan, gesetzte bleiben als leerer Ring */
+.pinbar { margin-top: 10px; }
+.pins { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.pin { min-width: 44px; height: 30px; padding: 0 8px; border-radius: 15px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;
+  border: 2px solid var(--pc, #1F4E8C); background: var(--pf, #fff); color: var(--pt, #1F4E8C); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.pin.set { background: transparent; color: var(--muted); border-style: dashed; border-color: var(--line); }
+.pin.other { background: transparent; color: var(--muted); border-style: dotted; }
+.pin.on { box-shadow: 0 0 0 3px var(--accent); }
+.pinGhost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -50%); min-width: 36px; height: 36px; border-radius: 18px; padding: 0 8px;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; background: #C7603F; color: #fff; border: 2px solid #fff; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
+.grid.order2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+/* Handy (Kenny 21.11.2026: „kein Platz in der Zeile zum Schreiben“): Beschriftung über dem Feld, eine Spalte */
+@media (max-width: 700px) { .grid.order2 { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+@media (max-width: 560px) { label.f, label.f[style] { grid-template-columns: minmax(0, 1fr) !important; gap: 3px; margin: 8px 0; } }
 input, select, textarea { font: inherit; color: var(--text); background: var(--field); border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; width: 100%; min-width: 0; }
 input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
 input[type=checkbox] { width: auto; }

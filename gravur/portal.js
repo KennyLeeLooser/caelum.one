@@ -279,7 +279,9 @@ const posCount = pos => pos.signs.reduce((a, x) => a + (x.count > 0 ? x.count : 
 function orderPrice() {
   const items = state.positions.map(posPrice);
   const sum = items.reduce((a, x) => a + (x.total || 0), 0), open = items.some(x => x.unit == null);
-  return { items, open, net: sum + (sum > 0 ? PREISE.grundProAuftrag : 0) };
+  // Einrichtung immer, sobald ein Schild bestellt ist (Kenny 21.11.2026) – auch bei Firmenpreis 0; gleich wie OrderDraft.cs
+  const pieces = items.reduce((a, x) => a + (x.n || 0), 0);
+  return { items, open, net: sum + (pieces > 0 ? PREISE.grundProAuftrag : 0) };
 }
 
 // ───────── Oberfläche ─────────
@@ -421,7 +423,7 @@ function planSvg(pl, pins, activeNr, linkCards) {
     const inner = `<circle cx="${x}" cy="${y}" r="${R}" fill="${on ? "#C7603F" : "#1F4E8C"}" stroke="#fff" stroke-width="${R / 5}"/>`
       + `<rect x="${x + R * 1.1}" y="${y - fs * 0.75}" width="${fs * 0.5 * p.nr.length + fs * 0.6}" height="${fs * 1.5}" rx="${fs * 0.3}" fill="${col.surface}" stroke="${col.core}" stroke-width="${R / 8}"/>`
       + `<text x="${x + R * 1.1 + fs * 0.3}" y="${y + fs * 0.4}" font-size="${fs}" font-family="Arial" font-weight="bold" fill="${col.core}">${p.nr}</text>`;
-    g += linkCards ? `<a href="#s${p.nr}">${inner}</a>` : `<g data-pin="${p.pi}:${p.si}" style="cursor:pointer">${inner}</g>`;
+    g += linkCards ? `<a href="#s${p.nr}">${inner}</a>` : `<g data-pin="${p.pi}:${p.si}" style="cursor:grab;touch-action:none">${inner}</g>`;
   }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${pl.w} ${pl.h}" style="width:100%;height:auto;display:block">${g}</svg>`;
 }
@@ -439,8 +441,59 @@ function renderPlans() {
   $("planHint").innerHTML = `Tippen setzt <b>Schild ${nr}</b>${x?.fields?.filter(Boolean).length ? " (" + esc(x.fields.filter(Boolean).join(" · ")) + ")" : ""}${x?.pin ? ` · liegt auf „${esc(ps.find(q => q.id === x.pin.plan)?.name || "Plan")}“` : " · noch ohne Punkt"}. Punkt antippen wählt das Schild.`;
   $("planView").innerHTML = planSvg(pl, allPins(pl.id), nr, false);
   $("pinDel").disabled = !x?.pin;
+  renderPalette(pl);
 }
+function renderPalette(pl) {
+  const all = [];
+  state.positions.forEach((p, pi) => p.signs.forEach((x, si) => { if (x.count > 0) all.push({ p, pi, si, x }); }));
+  const here = all.filter(a => a.x.pin?.plan === pl.id).length, any = all.filter(a => a.x.pin).length;
+  $("pinCount").innerHTML = `<b>${any} von ${all.length}</b> Schildern gesetzt (${here} auf diesem Plan). Punkt auf den Plan ziehen, Punkt antippen wählt das Schild.`;
+  $("pinPalette").innerHTML = all.map(a => {
+    const m = mat(a.p.s.MaterialCode), nr = signNr(a.pi, a.si), cls = a.x.pin ? (a.x.pin.plan === pl.id ? "set" : "other") : "";
+    const other = cls === "other" ? plans().find(q => q.id === a.x.pin.plan) : null;
+    const tip = (a.x.fields || []).filter(Boolean).join(" · ") + (a.x.ort ? " · " + a.x.ort : "") + (other ? " · liegt auf „" + (other.name || "Plan") + "“" : "");
+    return `<span class="pin ${cls} ${a.pi === cur && a.si === curSign ? "on" : ""}" data-k="${a.pi}:${a.si}" title="${esc(tip)}" style="--pf:${m.surface};--pt:${m.core};--pc:${m.core}">${nr}</span>`;
+  }).join("");
+}
+// Ziehen mit Maus, Stift oder Finger (Pointer Events): aus der Leiste oder einen gesetzten Punkt im Plan verschieben
+let drag = null, eatClick = false;
+function startDrag(e, pi, si, fromPin) {
+  e.preventDefault();
+  const g = document.createElement("div"); g.className = "pinGhost"; g.textContent = signNr(pi, si); g.style.display = "none";
+  document.body.appendChild(g);
+  drag = { pi, si, g, x0: e.clientX, y0: e.clientY, moved: false, fromPin };
+  if (fromPin) eatClick = true;
+}
+$("pinPalette").addEventListener("pointerdown", e => {
+  const c = e.target.closest("[data-k]"); if (!c || e.button > 0) return;
+  const [pi, si] = c.dataset.k.split(":").map(Number); startDrag(e, pi, si, false);
+});
+$("planView").addEventListener("pointerdown", e => {
+  const c = e.target.closest("[data-pin]"); if (!c) { eatClick = false; return; } if (e.button > 0) return;
+  const [pi, si] = c.dataset.pin.split(":").map(Number); startDrag(e, pi, si, true);
+});
+window.addEventListener("pointermove", e => {
+  if (!drag) return;
+  if (Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) > 6) drag.moved = true;
+  drag.g.style.display = drag.moved ? "flex" : "none";
+  drag.g.style.left = e.clientX + "px"; drag.g.style.top = e.clientY + "px";
+});
+window.addEventListener("pointerup", e => {
+  if (!drag) return;
+  const d = drag; drag = null; d.g.remove();
+  cur = d.pi; curSign = d.si;
+  const svg = $("planView").querySelector("svg"), b = svg?.getBoundingClientRect();
+  if (d.moved && b && e.clientX >= b.left && e.clientX <= b.right && e.clientY >= b.top && e.clientY <= b.bottom) {
+    const pl = plans()[curPlan], x = state.positions[d.pi].signs[d.si];
+    x.pin = { plan: pl.id, x: (e.clientX - b.left) / b.width, y: (e.clientY - b.top) / b.height };
+    if (!x.ort) x.ort = pl.name || "";
+    save();
+  }
+  renderAll();
+});
+window.addEventListener("pointercancel", () => { if (drag) { drag.g.remove(); drag = null; } });
 $("planView").addEventListener("click", e => {
+  if (eatClick) { eatClick = false; return; }
   const pin = e.target.closest("[data-pin]");
   if (pin) { const [pi, si] = pin.dataset.pin.split(":").map(Number); cur = pi; curSign = si; renderAll(); return; }
   const svg = $("planView").querySelector("svg"); if (!svg) return;
@@ -615,11 +668,12 @@ h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:22px 0 8px;padding-bot
 .c .d{font-size:12.5px;color:#555}.c .t{font-size:13px}
 table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}td,th{border-bottom:1px solid #ddd;padding:4px 6px;text-align:left}
 .hint{color:#666;font-size:12.5px}@media print{.noprint{display:none}.wrap{padding:0}}
-</style></head><body><div class="wrap">
+.c.done{background:#F1F7F1;border-color:#9CC6A2}.count{font-weight:600}
+</style></head><body data-montage="${esc(montageKey(o))}"><div class="wrap">
 <h1>Montageverzeichnis</h1>
 <div class="meta"><b>${esc(o.baustelle.name)}</b>${o.baustelle.projekt ? " · Projekt " + esc(o.baustelle.projekt) : ""}<br>
-Besteller: ${esc(o.kontakt.name || "")}${o.kontakt.firma ? ", " + esc(o.kontakt.firma) : ""} · erstellt ${new Date(o.erstellt).toLocaleDateString("de-CH")} · ${total} Schilder in ${keys.length} Montageort(en)</div>
-<p class="hint">Jedes Schild trägt im Verzeichnis eine Nummer (Schildtyp.Zeile). Die Schilder werden je Montageort gebündelt geliefert. Nach dem Montieren abhaken. Abbildungen in echten Farben, Masse in mm; drucken = PDF.</p>
+Besteller: ${esc(o.kontakt.name || "")}${o.kontakt.firma ? ", " + esc(o.kontakt.firma) : ""} · erstellt ${new Date(o.erstellt).toLocaleDateString("de-CH")} · ${total} Schilder in ${keys.length} Montageort(en) · <span class="count" id="mCount"></span></div>
+<p class="hint">Jedes Schild trägt im Verzeichnis eine Nummer (Schildtyp.Zeile). Die Schilder werden je Montageort gebündelt geliefert. Nach dem Montieren abhaken – die Haken bleiben in diesem Browser gespeichert. Abbildungen in echten Farben, Masse in mm; drucken = PDF.</p>
 <p class="noprint"><b>Drucken / PDF:</b> Strg + P (Mac: ⌘ + P), auf dem Handy über „Teilen → Drucken“.</p>
 <table><tr><th>Typ</th><th>Bezeichnung</th><th>Mass</th><th>Material</th><th>Löcher</th><th>Stück</th></tr>
 ${state.positions.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name || "")}</td><td>${fmt(p.s.Width)} × ${fmt(p.s.Height)} × ${fmt(p.s.Thickness)}</td><td>${p.s.MaterialCode} ${esc(mat(p.s.MaterialCode).name)}</td><td>${p.s.Holes === "Keine" ? "keine" : holesFor(p.s).length + " × Ø " + fmt(p.s.HoleDiameter)}</td><td>${posCount(p)}</td></tr>`).join("")}
@@ -635,14 +689,15 @@ ${state.positions.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name || "")}</
     for (const it of its) {
       const s = it.p.s;
       const pl = it.x.pin && plans().find(q => q.id === it.x.pin.plan);
-      h += `<div class="c" id="s${it.nr}"><div class="n"><span>${it.nr}${pl ? ` <span class="hint">📍 ${esc(pl.name || "Plan")}</span>` : ""}</span><label><input type="checkbox"> montiert</label></div>
+      h += `<div class="c" id="s${it.nr}"><div class="n"><span>${it.nr}${pl ? ` <span class="hint">📍 ${esc(pl.name || "Plan")}</span>` : ""}</span><label><input type="checkbox" data-m="${it.nr}"> montiert</label></div>
 <div class="pv">${signSvg(s, it.x.fields, false)}</div>
 <div class="t">${esc(it.x.fields.filter(Boolean).join(" · "))}</div>
 <div class="d">${it.x.count} Stk. · ${fmt(s.Width)} × ${fmt(s.Height)} mm · ${s.MaterialCode}${s.Holes === "Keine" ? " · kleben" : " · " + holesFor(s).length + " × Ø " + fmt(s.HoleDiameter) + " mm"}</div></div>`;
     }
     h += `</div>`;
   }
-  h += `<p class="hint" style="margin-top:24px">© 2026 Caelum GmbH · www.caelum.one · erstellt mit dem Caelum Kundenportal ${PORTAL_VERSION}</p></div></body></html>`;
+  h += `<p class="hint" style="margin-top:24px">© 2026 Caelum GmbH · www.caelum.one · erstellt mit dem Caelum Kundenportal ${PORTAL_VERSION}</p></div>
+${montageScripts()}</body></html>`;
   return h;
 }
 
@@ -701,7 +756,9 @@ function makePdf() {
       cur.push(`${lw} w ${fill ? rgb(fill) + " rg " : ""}${stroke ? rgb(stroke) + " RG " : ""}${r} ${fill && stroke ? "B" : fill ? "f" : "S"}`);
     },
     line(x1, y1, x2, y2, color = "#cccccc", lw = 0.6) { cur.push(`${lw} w ${rgb(color)} RG ${x1} ${Y(y1)} m ${x2} ${Y(y2)} l S`); },
-    blob() {
+    bytes() { const b = doc.blobText(); return Uint8Array.from(b, c => c.charCodeAt(0)); },
+    blob() { return new Blob([doc.bytes()], { type: "application/pdf" }); },
+    blobText() {
       const objs = ["<< /Type /Catalog /Pages 2 0 R >>", null,
         "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
         "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"];
@@ -719,14 +776,14 @@ function makePdf() {
       const x = out.length;
       out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offs.map(o => String(o).padStart(10, "0") + " 00000 n \n").join("")
         + `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF\n`;
-      return new Blob([Uint8Array.from(out, c => c.charCodeAt(0))], { type: "application/pdf" });
+      return out;
     },
   };
   return doc;
 }
 
 // Bestätigung: o = orderJson, nr = Eingangsnummer (leer = noch nicht gesendet)
-function confirmationPdf(o, nr) {
+function confirmationPdf(o, nr, inZip) { // nr = Eingangsnummer; inZip = Auftrag in der ZIP an Caelum
   const d = makePdf(), L = 42, R = 553, ACC = "#C8553D", MUT = "#6B6B6B";
   let y = 0, pageNo = 0;
   const foot = () => {
@@ -739,13 +796,13 @@ function confirmationPdf(o, nr) {
     d.page(); pageNo++;
     d.rect(L, 36, 6, 22, { fill: ACC });
     d.text(L + 14, 52, "Caelum Gravurschilder", 16, { bold: true });
-    d.text(R, 52, nr ? `Eingang ${nr}` : "Entwurf (noch nicht gesendet)", 10, { bold: true, color: nr ? ACC : MUT, align: "right" });
+    d.text(R, 52, nr ? `Eingang ${nr}` : inZip ? `Auftrag vom ${new Date(o.erstellt).toLocaleDateString("de-CH")}` : "Entwurf (noch nicht gesendet)", 10, { bold: true, color: nr ? ACC : MUT, align: "right" });
     y = 84;
   };
   const need = h => { if (y + h > 790) newPage(); };
   const kv = (k, v) => { if (!v) return; need(14); d.text(L, y, k, 9, { color: MUT }); pdfWrap(v, 10, false, R - L - 110).forEach((l, i) => { if (i) { y += 13; need(13); } d.text(L + 110, y, l, 10); }); y += 15; };
   newPage();
-  d.text(L, y, nr ? "Auftragsbestätigung" : "Auftrag (Entwurf)", 20, { bold: true }); y += 18;
+  d.text(L, y, nr ? "Auftragsbestätigung" : inZip ? "Auftrag" : "Auftrag (Entwurf)", 20, { bold: true }); y += 18;
   d.text(L, y, `${new Date(o.erstellt).toLocaleString("de-CH")} · Kundenportal www.caelum.one/gravur`, 9, { color: MUT }); y += 24;
   const k = o.kontakt || {};
   kv("Baustelle", o.baustelle.name); kv("Kunde", o.baustelle.kunde); kv("Projekt", o.baustelle.projekt);
@@ -796,12 +853,21 @@ function confirmationPdf(o, nr) {
     + "Caelum prüft den Auftrag und schickt Ihnen eine Offerte bzw. einen Gut zum Druck per E-Mail. Fragen: info@caelum.one"
     + (nr ? ` (bitte Eingang ${nr} angeben).` : "."), 9, false, R - L).forEach(l => { d.text(L, y, l, 9, { color: MUT }); y += 12; });
   foot();
-  return d.blob();
+  return d; // .blob() zum Speichern, .bytes() für die ZIP
 }
 let lastEingang = "";
+// Montageverzeichnis: Haken speichern über montage.js (Vorschau = Datei von caelum.one wegen CSP, Download = eingebettet)
+const MONTAGE_URL = new URL("montage.js", location.href).href;
+let MONTAGE_JS = "";
+fetch("montage.js").then(r => r.ok ? r.text() : "").then(t => { MONTAGE_JS = t; }).catch(() => {});
+// Skript-Tags ohne wörtliches Schluss-Tag im Quelltext (das Portal selbst steht in einem Skript-Block der Seite)
+const SC = "<" + "/script>";
+const SO = "<" + "script";
+const montageScripts = () => `${SO} src="${MONTAGE_URL}">${SC}` + (MONTAGE_JS ? SO + ">" + MONTAGE_JS.split("<" + "/").join("<\\/") + SC : "");
+const montageKey = o => [siteCode, o.baustelle.projekt || o.baustelle.name].filter(Boolean).join("|");
 function savePdf(nr) {
   const o = lastZip?.o || orderJson(new Date());
-  const blob = confirmationPdf(o, nr);
+  const blob = confirmationPdf(o, nr).blob();
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
   a.download = `${nr ? "Auftragsbestaetigung" : "Auftrag_Entwurf"}_${safe(o.baustelle.projekt || o.baustelle.name) || "Baustelle"}${nr ? "_" + nr.replace(/[^\w]/g, "") : ""}.pdf`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
@@ -841,6 +907,7 @@ function buildOrder() {
     { name: "auftrag.json", data: JSON.stringify(o, null, 2) },
     { name: "Auftrag.txt", data: orderText(o) },
     { name: "Montageverzeichnis.html", data: directoryHtml(o) },
+    { name: "Auftrag.pdf", data: confirmationPdf(o, "", true).bytes() },
   ];
   o.plaene.forEach((pp, i) => files.push({ name: pp.datei, data: unb64(plans()[i].img.split(",")[1]) }));
   state.positions.forEach((p, i) => {
@@ -898,14 +965,33 @@ $("mailBtn").onclick = () => {
     + `\n\nAuftragsdatei im Anhang: ${lastZip?.name || "(bitte zuerst „Auftrag herunterladen“ und die ZIP-Datei anhängen)"}\n`;
   location.href = `mailto:info@caelum.one?subject=${encodeURIComponent("Gravurschilder · " + site.baustelle)}&body=${encodeURIComponent(body)}`;
 };
-if (navigator.canShare && navigator.canShare({ files: [new File(["x"], "x.zip", { type: "application/zip" })] })) {
+// Teilen (Handy): ZIP, wenn das Gerät sie teilen darf (Android/iOS erlauben oft nur PDF/Bilder), sonst die PDF, sonst Text.
+// Fehler werden angezeigt (früher still verschluckt – Kenny 21.11.2026: „Teilen … keine Funktion“).
+if (navigator.share) {
   $("shareBtn").classList.remove("hidden");
   $("shareBtn").onclick = async () => {
     if (!guarded()) return;
     lastZip = buildOrder();
-    try { await navigator.share({ title: "Gravurschilder · " + site.baustelle, text: "Auftrag für Caelum GmbH (info@caelum.one)", files: [new File([lastZip.blob], lastZip.name, { type: "application/zip" })] }); } catch {}
+    const o = lastZip.o, pdfName = lastZip.name.replace(/\.zip$/i, ".pdf");
+    const zip = new File([lastZip.blob], lastZip.name, { type: "application/zip" });
+    const pdf = new File([confirmationPdf(o, lastEingang, !lastEingang).blob()], pdfName, { type: "application/pdf" });
+    const can = f => { try { return !!navigator.canShare?.({ files: f }); } catch { return false; } };
+    const files = can([zip, pdf]) ? [zip, pdf] : can([zip]) ? [zip] : can([pdf]) ? [pdf] : null;
+    const text = `Auftrag Gravurschilder · ${site.baustelle}\nFür Caelum GmbH (info@caelum.one)` + (files?.includes(zip) ? "" : "\nDie ZIP-Datei bitte zusätzlich herunterladen und anhängen.");
+    try {
+      await navigator.share(files ? { title: "Gravurschilder · " + site.baustelle, text, files } : { title: "Gravurschilder · " + site.baustelle, text });
+      $("orderErr").innerHTML = `<span class="ok">Geteilt${files ? ": " + files.map(f => esc(f.name)).join(", ") : " (nur Text)"}.</span>`;
+    } catch (e) {
+      if (e?.name !== "AbortError") $("orderErr").innerHTML = "Teilen ging auf diesem Gerät nicht (" + esc(e?.message || e) + "). Bitte „Auftrag herunterladen“ oder „Auftrag an Caelum senden“.";
+    }
   };
 }
+$("dirDlBtn").onclick = () => {
+  const o = orderJson(new Date());
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([directoryHtml(o)], { type: "text/html" }));
+  a.download = `Montageverzeichnis_${safe(o.baustelle.projekt || o.baustelle.name) || "Baustelle"}.html`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+};
 $("dirBtn").onclick = () => {
   const o = orderJson(new Date());
   const url = URL.createObjectURL(new Blob([directoryHtml(o)], { type: "text/html" }));
