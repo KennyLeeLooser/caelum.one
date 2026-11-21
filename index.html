@@ -899,7 +899,8 @@ document.addEventListener('DOMContentLoaded', function () {
     { name: 'studio', titel: 'Studio', info: '3D, Unity und Blender', href: '/studio/', felder: ['f00', 'f03', 'f04', 'f05', 'f06', 'f07', 'f10', 'f11', 'f16', 'f17'] }, // 2 Dreieck
     { name: 'labor', titel: 'Labor', info: 'KI und Versuche', href: '/labor/', felder: ['f00', 'f03', 'f04', 'f16', 'f17'] },                                                     // 3 grosser Tropfen
     { name: 'partner', titel: 'Partner', info: 'Für Kunden und Partner', href: '/partner/', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f06', 'f07', 'f08', 'f09', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17'] }, // 4 Viereck
-    { name: 'community', titel: 'Community', info: 'Austausch mit anderen', href: '/community/', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f10', 'f11', 'f14', 'f15', 'f16', 'f17'] } // 5 Kreis
+    { name: 'community', titel: 'Community', info: 'Austausch mit anderen', href: '/community/', felder: ['f00', 'f01', 'f02', 'f03', 'f04', 'f05', 'f10', 'f11', 'f14', 'f15', 'f16', 'f17'] }, // 5 Kreis
+    { name: 'sounddesign', titel: 'Sound Design', info: 'Klang, Musik und Bewegung', href: '/sounddesign/', felder: ['f01', 'f02'] }                                       // 6 Ohren (Kenny 21.11.2026)
   ];
   var WINZIG = { f18: 1, f19: 1 };   // im 76-px-Logo ~1 px gross, mit dem Finger nicht zu treffen → zählen nie mit
   function gemalt() {
@@ -910,7 +911,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function passend() {
     var voll = gemalt(), ids = Object.keys(voll);
     return ZEICHEN.filter(function (z) {
-      return ids.length === z.felder.length && z.felder.every(function (id) { return voll[id] === voll[z.felder[0]]; });
+      // genau diese Felder: jedes muss gemalt sein (vorher zählte nur die Anzahl – zwei beliebige Felder öffneten Developer, 21.11.2026)
+      return ids.length === z.felder.length && z.felder.every(function (id) { return voll[id] !== undefined && voll[id] === voll[z.felder[0]]; });
     })[0] || null;
   }
   function pruefen() { var z = passend(); if (z) oeffnen(z); else schliessen(); }
