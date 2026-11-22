@@ -3,8 +3,11 @@
 // (Startseite mit Beispiel) und Caelum Analyse (Scanner-App, lädt dieses Modul von …/r/ueberraschung.js – verlinkt, nicht kopiert).
 // Ablauf (Sekunden): 0–0,9 Karte · 0,9–2,6 Aufsteigen + spiegelgleiche Faltung · 2,6–4,0 Ei · 4,0–5,4 Aufbrechen, Objekt + Botschaft
 // · ab 7,4 Aktion des Objekts (Rakete: zündet, startet, kommt zurück). Danach schwebt das Objekt.
+// Form „modell“ (Standard, sobald das GLB geladen ist – Idee Kenny 20.11.2026): statt Ei fliegen die Würfel 2,6–4,4 in die
+// Form des Modells (Voxel seiner Oberfläche, Farbe aus Material, Vertexfarben und Textur), ab 4,5 schrumpfen sie von unten nach
+// oben und lassen das farbige Modell stehen. Ohne GLB oder mit opt.form = "ei" (scan.html?form=ei) bleibt das Ei.
 // Sammlung und Logo werden relativ zu diesem Modul geladen, damit es von jeder Seite aus funktioniert.
-// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
+// KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8). Voxel-Form: KI-Beitrag (Claude, GB-7), 21.11.2026.
 import * as QR from "./qr.js";
 import * as BEF from "./befehl.js";
 import { ink, safe, PAPER, DEEP, fbm } from "./tinte.js";
@@ -17,6 +20,59 @@ const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const hash = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
 export const DAUER = 14;                       // danach beginnt eine Schleife von vorn
 export const ZEIGEN_AB = 5.2;                  // ab hier Botschaft einblenden
+
+// ------------------------------------------------ Voxel aus dem Modell
+function pixel(bild) {
+  if (!bild) return null;
+  try { const w = Math.min(256, bild.width), h = Math.min(256, bild.height);
+    const cv = typeof OffscreenCanvas !== "undefined" ? new OffscreenCanvas(w, h) : Object.assign(document.createElement("canvas"), { width: w, height: h });
+    const g = cv.getContext("2d"); g.drawImage(bild, 0, 0, w, h); return { w, h, d: g.getImageData(0, 0, w, h).data }; } catch { return null; }
+}
+/** Teile aus glb.js → { vox:[{x,y,z,c,yn}], zelle } mit höchstens `ziel` Voxeln auf der Oberfläche (Modellmaße, Höhe ≈ 1). */
+export function voxeln(teile, ziel, hoehe = 1) {
+  const N = 36000, pts = [], flaechen = [];
+  let A = 0;
+  for (const t of teile) { const p = t.pos, ix = t.idx, a = new Float64Array(Math.floor(ix.length / 3));
+    for (let f = 0; f < a.length; f++) { const i = ix[f * 3] * 3, j = ix[f * 3 + 1] * 3, k = ix[f * 3 + 2] * 3;
+      const ux = p[j] - p[i], uy = p[j + 1] - p[i + 1], uz = p[j + 2] - p[i + 2], vx = p[k] - p[i], vy = p[k + 1] - p[i + 1], vz = p[k + 2] - p[i + 2];
+      a[f] = 0.5 * Math.hypot(uy * vz - uz * vy, uz * vx - ux * vz, ux * vy - uy * vx); A += a[f]; }
+    flaechen.push(a); }
+  if (!(A > 0)) return null;
+  let acc = 0, done = 0, z = 0;
+  for (let ti = 0; ti < teile.length; ti++) {
+    const t = teile[ti], a = flaechen[ti], p = t.pos, px = t.uv ? pixel(t.bild) : null, fb = t.farbe || [1, 1, 1, 1];
+    for (let f = 0; f < a.length; f++) {
+      acc += a[f] / A * N; const n = Math.floor(acc) - done; done += n;
+      const I = [t.idx[f * 3], t.idx[f * 3 + 1], t.idx[f * 3 + 2]];
+      for (let m = 0; m < n; m++, z++) {
+        const sq = Math.sqrt(hash(z, 1.3)), r2 = hash(z, 7.9), w = [1 - sq, sq * (1 - r2), sq * r2];
+        let x = 0, y = 0, zz = 0, r = fb[0], g = fb[1], b = fb[2];
+        for (let q = 0; q < 3; q++) { x += p[I[q] * 3] * w[q]; y += p[I[q] * 3 + 1] * w[q]; zz += p[I[q] * 3 + 2] * w[q]; }
+        if (t.col) { let cr = 0, cg = 0, cb = 0; for (let q = 0; q < 3; q++) { cr += t.col[I[q] * 3] * w[q]; cg += t.col[I[q] * 3 + 1] * w[q]; cb += t.col[I[q] * 3 + 2] * w[q]; } r *= cr; g *= cg; b *= cb; }
+        if (px) { let u = 0, v = 0; for (let q = 0; q < 3; q++) { u += t.uv[I[q] * 2] * w[q]; v += t.uv[I[q] * 2 + 1] * w[q]; }
+          const X = Math.min(px.w - 1, Math.floor((u - Math.floor(u)) * px.w)), Y = Math.min(px.h - 1, Math.floor((v - Math.floor(v)) * px.h)), o = (Y * px.w + X) * 4;
+          r *= px.d[o] / 255; g *= px.d[o + 1] / 255; b *= px.d[o + 2] / 255; }
+        pts.push(x, y, zz, r, g, b);
+      }
+    }
+  }
+  const zellen = c => { const mp = new Map();
+    for (let i = 0; i < pts.length; i += 6) { const X = Math.floor(pts[i] / c), Y = Math.floor(pts[i + 1] / c), Z = Math.floor(pts[i + 2] / c), key = (X + 512) * 1048576 + (Y + 512) * 1024 + (Z + 512);
+      let e = mp.get(key); if (!e) mp.set(key, e = [X, Y, Z, 0, 0, 0, 0]);
+      e[3] += pts[i + 3]; e[4] += pts[i + 4]; e[5] += pts[i + 5]; e[6]++; }
+    return mp; };
+  // kleinste Zelle mit ≤ ziel Voxeln (nicht dichter, als die Stichprobe trägt – sonst entstehen Löcher)
+  const max = Math.min(ziel, Math.floor(pts.length / 6 / 6));
+  let lo = 0.004, hi = 0.5, best = null;
+  for (let it = 0; it < 18; it++) { const c = Math.sqrt(lo * hi), mp = zellen(c);
+    if (mp.size <= max) { best = { c, mp }; hi = c; } else lo = c; }
+  if (!best) return null;
+  const c = best.c, vox = [];
+  for (const e of best.mp.values()) vox.push({ x: (e[0] + .5) * c, y: (e[1] + .5) * c, z: (e[2] + .5) * c,
+    c: [e[3] / e[6], e[4] / e[6], e[5] / e[6]].map(v => Math.min(1, v)), yn: clamp((e[1] + .5) * c / (hoehe || 1)) });
+  vox.sort((a, b) => b.y - a.y || a.x - b.x || a.z - b.z);
+  return { vox, zelle: c };
+}
 
 let katalogCache = null;
 export async function katalog() {
@@ -38,7 +94,7 @@ export async function spielen(canvas, opt) {
   if (!r.ok) throw Object.assign(new Error(r.fehler), { art: "befehl" });
   const u = r.u, pal = BEF.FARBEN[u.farbe] || "caelum";
   const obj = (await katalog()).find(o => o.id === u.objekt) || null;
-  const stand = { befehl: u, objekt: obj?.name ?? null, webgl: false, glb: false, wuerfel: 0, version: 0 };
+  const stand = { befehl: u, objekt: obj?.name ?? null, webgl: false, glb: false, wuerfel: 0, version: 0, form: "ei", voxel: 0 };
   const q = QR.encode(opt.adresse) || QR.encode("#" + BEF.hash(u));
   stand.version = q.v;
   let drei;
@@ -63,8 +119,13 @@ export async function spielen(canvas, opt) {
   for (const c of alle) c.d = dunkel(c);
 
   // ------------------------------------------------ Objekt aus der Sammlung
-  let netzObjekt = -1;
-  if (obj?.datei) { try { const g = await lesenGlb(await (await fetch(new URL("sammlung/" + obj.datei, import.meta.url))).arrayBuffer()); netzObjekt = drei.netz(g.teile); stand.glb = true; } catch (e) { stand.glbFehler = String(e); } }
+  let netzObjekt = -1, form = null;
+  const S = 1.35;                                                   // Maßstab des Objekts in der Szene
+  if (obj?.datei) { try { const g = await lesenGlb(await (await fetch(new URL("sammlung/" + obj.datei, import.meta.url))).arrayBuffer()); netzObjekt = drei.netz(g.teile); stand.glb = true;
+    if (opt.form !== "ei") { try { form = voxeln(g.teile, M, g.hoehe); } catch (e) { stand.voxelFehler = String(e); } } } catch (e) { stand.glbFehler = String(e); } }
+  if (form) { stand.form = "modell"; stand.voxel = form.vox.length;
+    ord.forEach((ci, k) => { alle[ci].vox = form.vox[Math.floor(k * form.vox.length / M)]; }); }
+  const voxGroesse = form ? form.zelle * S * 1.04 : 0;
   const netzPapier = drei.netz(kasten(K + 8 * s, K + 8 * s, 0.04, [PAPER[0] / 255, PAPER[1] / 255, PAPER[2] / 255, 1]));
   const raketenStart = obj?.aktion === "starten";
 
@@ -77,13 +138,36 @@ export async function spielen(canvas, opt) {
 
   function bild(T) {
     let k = 0;
+    const so = form ? (T > 4.45 ? 1 : 0) : out3(clamp((T - 4.2) / 1.1)), schwebe = form ? 1 : so;
+    let oy = -0.98 + 0.12 * schwebe, flammen = 0;
+    if (raketenStart && T > 7.4) {
+      const a = T - 7.8;
+      if (a > 0 && T < 10.6) oy += a * a * 0.9;
+      else if (T >= 10.6 && T < 12.8) oy += 7.06 * Math.pow(1 - ease((T - 10.6) / 2.2), 2);
+      flammen = T < 10.6 ? 1 : T < 12.8 ? 0.5 : 0;
+    }
+    if (T > 12.8 || !raketenStart) oy += Math.sin(T * 1.6) * 0.03 * schwebe;
+    const th = T * 0.6 + dreh, ct = Math.cos(th), st = Math.sin(th);
     const spin = (Math.min(T, 4.0) - 2.6) > 0 ? (Math.min(T, 4.0) - 2.6) * 0.9 : 0;
     for (const c of alle) {
       const b = clamp((T - 0.9 - c.seed * 0.35) / 1.2), bb = clamp((T - 1.0) / 1.5);
       const th = Math.sin(Math.PI * bb) * 1.15 * (1 - 0.25 * c.seed), lift = 0.55 * ease(b);
       let x = c.x * Math.cos(th), y = c.y + Math.sin(bb * Math.PI * 2) * 0.08 * Math.abs(c.x), z = lift + Math.abs(c.x) * Math.sin(th) * 0.9;
       let size = s * 0.92 * (c.zw > 0 ? 1 : out3(clamp((T - 1.0 - c.seed * 0.3) / 0.7)));
-      const col = c.d, glanz = clamp((T - 1.0) / 1.0);
+      const col = c.d, glanz = clamp((T - 1.0) / 1.0), hc = hell(c, T);
+      let farbe = [0, 1, 2].map(i => col[i] + (hc[i] - col[i]) * glanz);
+      if (form) {
+        // Würfel fliegen in die Form des Modells, dann schrumpfen sie von unten nach oben und das Modell bleibt
+        const v = c.vox, e = ease(clamp((T - 2.6 - c.seed * 0.5) / 1.3));
+        let rot = 0;
+        if (e > 0) { const tx = (ct * v.x + st * v.z) * S, tz = (-st * v.x + ct * v.z) * S, ty = oy + v.y * S;
+          x += (tx - x) * e; y += (ty - y) * e + Math.sin(Math.PI * e) * 0.3 * (0.5 + c.seed * 0.5); z += (tz - z) * e;
+          size += (voxGroesse - size) * e; rot = th * e; farbe = farbe.map((f, i) => f + (v.c[i] - f) * e); }
+        const r = ease(clamp((T - 4.5 - v.yn * 0.7) / 0.6));
+        if (r > 0) { const l = Math.hypot(x, z) || 1; x += x / l * r * 0.12; z += z / l * r * 0.12; size *= 1 - r; }
+        daten.set([x, y, z, Math.max(0, size), farbe[0], farbe[1], farbe[2], rot], k * 8); k++;
+        continue;
+      }
       const e = ease(clamp((T - 2.6 - c.seed * 0.3) / 1.1));
       if (e > 0) { const ca = Math.cos(spin), sa = Math.sin(spin), ex = c.ei.x * ca - c.ei.z * sa, ez = c.ei.x * sa + c.ei.z * ca;
         x += (ex - x) * e; y += (c.ei.y - y) * e; z += (ez - z) * e; size += (eiGroesse - size) * e; }
@@ -95,18 +179,8 @@ export async function spielen(canvas, opt) {
           x = X + side * d * 0.55; y = Y + d * 0.25; z = z - d * 0.25; size *= 1 - clamp((T - 5.6) / 1.4); }
         else { const f = ease(clamp((T - 5.4) / 1.8)), w = 1 + f * (0.9 + 0.6 * fbm(Math.abs(x) * 3, z * 3, 2)); x *= w; z *= w; y += (-1.06 - y) * f; }
       }
-      const hc = hell(c, T);
-      daten.set([x, y, z, size, col[0] + (hc[0] - col[0]) * glanz, col[1] + (hc[1] - col[1]) * glanz, col[2] + (hc[2] - col[2]) * glanz, spin * e], k * 8); k++;
+      daten.set([x, y, z, size, farbe[0], farbe[1], farbe[2], spin * e], k * 8); k++;
     }
-    const so = out3(clamp((T - 4.2) / 1.1));
-    let oy = -0.98 + 0.12 * so, flammen = 0;
-    if (raketenStart && T > 7.4) {
-      const a = T - 7.8;
-      if (a > 0 && T < 10.6) oy += a * a * 0.9;
-      else if (T >= 10.6 && T < 12.8) oy += 7.06 * Math.pow(1 - ease((T - 10.6) / 2.2), 2);
-      flammen = T < 10.6 ? 1 : T < 12.8 ? 0.5 : 0;
-    }
-    if (T > 12.8 || !raketenStart) oy += Math.sin(T * 1.6) * 0.03 * so;
     for (let f = 0; f < FLAMME; f++) {
       const age = ((T * 2.6 + f / FLAMME) % 1), r1 = hash(f, 3) - .5, r2 = hash(f, 9) - .5, on = flammen && T > 7.4 ? 1 : 0;
       daten.set([r1 * age * 0.5, oy - age * 0.9, r2 * age * 0.5, on * (1 - age) * 0.085, 1, 0.62 - age * 0.35, 0.3 + age * 0.4, age * 5], k * 8); k++;
@@ -114,7 +188,7 @@ export async function spielen(canvas, opt) {
     drei.wuerfelSetzen(daten, k);
     const papier = 1 - ease(clamp((T - 0.9) / 1.3)), auftritte = [];
     if (papier > 0.01) auftritte.push({ netz: netzPapier, M: modell(0, 0, -0.08, 0, papier, 0) });
-    if (netzObjekt >= 0 && so > 0.001) auftritte.push({ netz: netzObjekt, M: modell(0, oy, 0, T * 0.6 + dreh, 1.35 * so) });
+    if (netzObjekt >= 0 && so > 0.001) auftritte.push({ netz: netzObjekt, M: modell(0, oy, 0, th, form ? S * (0.97 + 0.03 * ease(clamp((T - 4.45) / 1.2))) : S * so) });
     // Kamera: Abstand so, dass Karte und Flügel (Breite ≈ 3,4) auch im Hochformat ganz zu sehen sind
     const asp = (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight), fov = asp < 1 ? 0.95 : 0.7;
     const R0 = Math.max(4.6, 1.75 / (Math.tan(fov / 2) * Math.min(asp, 1.4)));

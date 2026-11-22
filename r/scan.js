@@ -24,6 +24,7 @@ function fehler(titel, text) { $("fehlerTitel").textContent = titel; $("fehlerTe
     const sp1 = await spielen($("bild"), {
       adresse: location.origin + location.pathname + location.hash,
       still: sp.has("t") ? +sp.get("t") : null,
+      form: sp.get("form"),                                          // „ei“ = alte Form zum Vergleich
       zeigen: an => document.body.classList.toggle("zeigen", an),
     });
     Object.assign(stand, sp1.stand);
