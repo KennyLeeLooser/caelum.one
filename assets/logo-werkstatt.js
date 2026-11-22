@@ -9,6 +9,10 @@
 // baut sich ein kleiner Stupa auf und schiebt sich zum Logo (antippen wechselt, ◇ öffnet die Werkstatt).
 // v5 (22.11.2026, Befund Kenny): Stupa ist ein eigenes Logo – keine Caelum-Aussenlinien mehr darüber, Knöpfe „Elementfarben“ und
 // „Original-Linien“ entfernt; die Teile zeichnen ihre eigenen Umrisse. Neu: Ansicht „3D – drehen“ (assets/stupa-3d.js) und GLB speichern.
+// v6 (22.11.2026, Kenny): Knöpfe kurz „Logo · Stupa · 3D · Aufbau“, Mond als Sichel.
+// v7 (22.11.2026, Kenny): „Aufbau“ = Aufräum-Spiel statt Film – die Teile liegen verstreut, man zieht sie selbst auf den Stupa
+//   (fallen, rollen, kippen, rasten auf dem Teil darunter ein); in 2D (aufbau-2d.js) oder 3D (stupa-3d.js), eine Logik
+//   (aufbau-kern.js). Der Stupa dreht sich dabei nicht; auch „3D“ steht still (ziehen dreht).
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser offen (GB-8).
 (function () {
   'use strict';
@@ -187,6 +191,7 @@
     '.werkstatt .bild[hidden],.werkstatt [data-werk][hidden]{display:none}',
     '.werkstatt .bau path.cs-form{cursor:crosshair}',
     '.werkstatt .hinweis{color:var(--muted,#8A8780);font-size:13px;margin:0}',
+    '.werkstatt .bild.spiel,.werkstatt .bild.drei{background:#262624}',
     STUPA_CSS,
     '.stupa-fuss{display:flex;justify-content:center;align-items:flex-end;gap:6px;padding:18px 0 6px}',
     '.stupa-fuss svg{width:150px;height:150px;cursor:pointer;display:block;-webkit-tap-highlight-color:transparent}',
@@ -203,7 +208,7 @@
   if (!stand.bau || !stand.bau.farben || stand.bau.farben.length !== 5) stand.bau = { ansicht: 'logo', farben: BAU.map(function (b) { return b.farbe; }), an: [1, 1, 1, 1, 1] };
   delete stand.bau.original;   // v5: keine Original-Linien mehr
   var pinsel = null, malt = false, svg = null, huelle = null, linienReihe = null, buehne = null;
-  var werk = function () {}, bauFarben = function () {}, zeige3d = function () {}, starte3d = function () {}, dreiModul = null;
+  var werk = function () {}, bauFarben = function () {}, zeige3d = function () {}, starte3d = function () {}, starteSpiel = function () {}, pausieren = function () {}, dreiModul = null;
 
   function bauen() {
     huelle = document.createElement('div'); huelle.className = 'werkstatt'; huelle.hidden = true;
@@ -220,14 +225,18 @@
     var bild2 = document.createElement('div'); bild2.className = 'bild bau'; links.appendChild(bild2);
     var svg2 = document.createElementNS(NS, 'svg'); svg2.setAttribute('role', 'img'); svg2.setAttribute('aria-label', 'Bauteile des Stupa-Logos'); bild2.appendChild(svg2);
     var bild3 = document.createElement('div'); bild3.className = 'bild drei'; bild3.hidden = true; links.appendChild(bild3);
+    var bild4 = document.createElement('div'); bild4.className = 'bild spiel'; bild4.hidden = true; links.appendChild(bild4);
+    var svg4 = document.createElementNS(NS, 'svg'); svg4.setAttribute('role', 'img'); svg4.setAttribute('aria-label', 'Aufbau: die Bauteile aufräumen und den Stupa bauen'); bild4.appendChild(svg4);
     var seite = document.createElement('div'); seite.className = 'seite'; r.appendChild(seite);
     var mFelder = knopf('Felder', function () { werk('felder'); }), mBau = knopf('Bauteile – Stupa', function () { werk('bauteile'); });
     modi.appendChild(mFelder); modi.appendChild(mBau);
     werk = function (m) {
       stand.werk = m;
       mFelder.setAttribute('aria-pressed', String(m === 'felder')); mBau.setAttribute('aria-pressed', String(m === 'bauteile'));
-      bild.hidden = m !== 'felder'; bild2.hidden = m !== 'bauteile' || stand.bau.ansicht === '3d'; bild3.hidden = m !== 'bauteile' || stand.bau.ansicht !== '3d';
-      Array.prototype.forEach.call(seite.querySelectorAll('[data-werk]'), function (g) { g.hidden = g.getAttribute('data-werk') !== m; });
+      var a = stand.bau.ansicht, bt = m === 'bauteile', s3 = stand.bau.spiel === '3d';
+      bild.hidden = m !== 'felder'; bild2.hidden = !bt || a === '3d' || a === 'aufbau';
+      bild3.hidden = !bt || !(a === '3d' || (a === 'aufbau' && s3)); bild4.hidden = !bt || a !== 'aufbau' || s3;
+      Array.prototype.forEach.call(seite.querySelectorAll('[data-werk]'), function (g) { g.hidden = g.getAttribute('data-werk') !== m || (g.hasAttribute('data-auf') && a !== 'aufbau'); });
       Array.prototype.forEach.call(seite.querySelectorAll('[data-glb]'), function (g) { g.hidden = m !== 'bauteile'; });
       if (m === 'bauteile' && buehne) bauFarben();
       merk(stand);
@@ -251,36 +260,75 @@
     eigen.oninput = function () { pinsel = eigen.value; markiere(pr, null); }; pr.appendChild(eigen);
     var rad = tupf('none', 'Radierer (Feld leer)', function () { pinsel = 'none'; markiere(pr, rad); }); rad.classList.add('leer'); pr.appendChild(rad);
 
-    // Bauteile (B 5): Ansicht (Logo · Stupa · 3D), Teile ein/aus, Aufbauen
+    // Bauteile (B 5): Ansicht (Logo · Stupa · 3D · Aufbau), Teile ein/aus
     var b1 = gruppe(seite, 'Ansicht', 'bauteile');
-    var vLogo = knopf('Logo – von oben', function () { bauAnsicht('logo'); }), vStupa = knopf('Stupa – von der Seite', function () { bauAnsicht('stupa'); });
-    var v3d = knopf('3D – drehen', function () { bauAnsicht('3d'); });
-    b1.reihe.appendChild(vLogo); b1.reihe.appendChild(vStupa); b1.reihe.appendChild(v3d);
-    b1.reihe.appendChild(knopf('Aufbauen', function () { bauAnsicht('logo', true); buehne.aufbauen(true); }));
-    function bauAnsichtKnoepfe(a) { vLogo.setAttribute('aria-pressed', String(a === 'logo')); vStupa.setAttribute('aria-pressed', String(a === 'stupa')); v3d.setAttribute('aria-pressed', String(a === '3d')); }
+    var vLogo = knopf('Logo', function () { bauAnsicht('logo'); }), vStupa = knopf('Stupa', function () { bauAnsicht('stupa'); });
+    var v3d = knopf('3D', function () { bauAnsicht('3d'); }), vAuf = knopf('Aufbau', function () { bauAnsicht('aufbau'); });
+    vLogo.title = 'Logo – von oben'; vStupa.title = 'Stupa – von der Seite'; v3d.title = '3D – ziehen dreht'; vAuf.title = 'Aufbau – Teile aufräumen und den Stupa selbst bauen';
+    b1.reihe.appendChild(vLogo); b1.reihe.appendChild(vStupa); b1.reihe.appendChild(v3d); b1.reihe.appendChild(vAuf);
+    function bauAnsichtKnoepfe(a) { [[vLogo, 'logo'], [vStupa, 'stupa'], [v3d, '3d'], [vAuf, 'aufbau']].forEach(function (e) { e[0].setAttribute('aria-pressed', String(a === e[1])); }); }
     function bauAnsicht(a, still) {
       stand.bau.ansicht = a; bauAnsichtKnoepfe(a); werk('bauteile');
-      if (a === '3d') drei3d(); else if (!still) buehne.ansicht(a);
+      if (a !== 'aufbau') spielPause();
+      if (a === '3d') drei3d(); else if (a === 'aufbau') spielStart(false); else if (!still) buehne.ansicht(a);
       merk(stand);
+    }
+    // v7 Aufbau: Aufräum-Spiel, 2D oder 3D – eine Logik (aufbau-kern.js); Module erst laden, wenn jemand spielt
+    var ba = gruppe(seite, 'Aufbau – Teile aufräumen', 'bauteile'); ba.reihe.parentNode.setAttribute('data-auf', '');
+    var sp2 = knopf('2D', function () { spielArt('2d'); }), sp3 = knopf('3D', function () { spielArt('3d'); });
+    sp2.title = 'Aufbau in 2D – von der Seite'; sp3.title = 'Aufbau in 3D – feste Kamera';
+    ba.reihe.appendChild(sp2); ba.reihe.appendChild(sp3);
+    ba.reihe.appendChild(knopf('Neu verstreuen', function () { spielStart(true); }));
+    ba.reihe.appendChild(knopf('Lösung zeigen', function () { var s = spielJetzt(); if (s) s.loesung(); }));
+    var spielText = document.createElement('p'); spielText.className = 'hinweis'; spielText.setAttribute('aria-live', 'polite');
+    ba.reihe.parentNode.appendChild(spielText);
+    var auf2 = null, auf2Mod = null, auf3 = false;
+    function spielArt(a) { stand.bau.spiel = a; merk(stand); werk('bauteile'); spielStart(true); }
+    function spielJetzt() { return stand.bau.spiel === '3d' ? (auf3 ? drei : null) : auf2; }
+    function spielPause() { if (auf2) auf2.stopp(); if (drei && auf3) { drei.spielEnde(); auf3 = false; } }
+    function tippen(i) { if (!pinsel) return; stand.bau.farben[i] = pinsel; bauFarben(); merk(stand); }
+    function spielStart(neu) {
+      var s3 = stand.bau.spiel === '3d', opt = { onStatus: function (t) { spielText.textContent = t; }, onTippen: tippen };
+      sp2.setAttribute('aria-pressed', String(!s3)); sp3.setAttribute('aria-pressed', String(s3));
+      if (!s3) {
+        if (drei && auf3) { drei.spielEnde(); auf3 = false; }
+        (auf2Mod || (auf2Mod = import(new URL('aufbau-2d.js?v=1', SKRIPT).href))).then(function (m) {
+          if (!auf2) { auf2 = m.aufbau2d(svg4, Object.assign({ bau: BAU, stupa: STUPA, farben: stand.bau.farben, an: stand.bau.an }, opt)); neu = true; }
+          else auf2.farben(stand.bau.farben, stand.bau.an);
+          if (neu) auf2.verstreuen(); else auf2.weiter();
+        }).catch(function (e) { spielText.textContent = 'Aufbau liess sich nicht laden: ' + e; });
+        return;
+      }
+      if (auf2) auf2.stopp();
+      dreiModul().then(function (m) {
+        if (!drei) { drei = m.buehne3d(bild3); if (!drei) { bild3.textContent = 'Dieser Browser kann kein WebGL2 – der Aufbau in 3D braucht einen aktuellen Browser.'; return; } }
+        drei.spiel(stand.bau.farben, stand.bau.an, Object.assign({ neu: neu || !auf3 }, opt)); auf3 = true;
+      }).catch(function (e) { spielText.textContent = '3D liess sich nicht laden: ' + e; });
     }
     // 3D: Modul erst laden, wenn jemand es will (Renderer des Caelum 3D-Viewers, keine fremde Bibliothek)
     var dreiMod = null, drei = null;
     function drei3d() {
       dreiModul().then(function (m) {
         if (!drei) { drei = m.buehne3d(bild3); if (!drei) { bild3.textContent = 'Dieser Browser kann kein WebGL2 – die 3D-Ansicht braucht einen aktuellen Browser.'; return; } }
-        drei.zeigen(stand.bau.farben, stand.bau.an); drei.drehen();
+        if (auf3) { drei.spielEnde(); auf3 = false; }
+        drei.zeigen(stand.bau.farben, stand.bau.an);   // v7: steht still, ziehen dreht (kein Aufbau-Film, kein Selbstdrehen)
       }).catch(function (e) { bild3.textContent = '3D liess sich nicht laden: ' + e; });
     }
-    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=2', SKRIPT).href)); };
-    zeige3d = function () { if (drei && stand.bau.ansicht === '3d') drei.zeigen(stand.bau.farben, stand.bau.an); };
-    starte3d = drei3d;
+    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=4', SKRIPT).href)); };
+    zeige3d = function () {
+      if (auf2) auf2.farben(stand.bau.farben, stand.bau.an);
+      if (!drei) return;
+      if (auf3) drei.spielFarben(stand.bau.farben, stand.bau.an);
+      else if (stand.bau.ansicht === '3d') drei.zeigen(stand.bau.farben, stand.bau.an);
+    };
+    pausieren = spielPause; starte3d = drei3d; starteSpiel = function () { bauAnsicht('aufbau'); };
     var b2 = gruppe(seite, 'Bauteile – antippen färbt mit der Pinselfarbe', 'bauteile');
     var teilKnoepfe = BAU.map(function (b, i) {
       var k = knopf(b.form + ' · ' + b.element, function () { stand.bau.an[i] = stand.bau.an[i] ? 0 : 1; bauFarben(); merk(stand); });
       k.style.borderLeft = '4px solid ' + b.farbe; b2.reihe.appendChild(k); return k;
     });
     var hw = document.createElement('p'); hw.className = 'hinweis';
-    hw.textContent = 'Der Stupa ist ein eigenes Logo: dieselben fünf Formen wie Caelum, ohne die Caelum-Linien – von oben, von der Seite oder in 3D zum Drehen.';
+    hw.textContent = 'Der Stupa ist ein eigenes Logo: dieselben fünf Formen wie Caelum, ohne die Caelum-Linien – von oben, von der Seite, in 3D zum Drehen oder als Aufbau: Teile aufräumen und den Stupa selbst bauen.';
     b2.reihe.parentNode.appendChild(hw);
     bauFarben = function () {
       var s = buehne.stand;
@@ -290,7 +338,7 @@
       buehne.farbe();
       zeige3d();
     };
-    buehne = Buehne(svg2, 1000, 1000, { ansicht: stand.bau.ansicht === '3d' ? 'logo' : stand.bau.ansicht });
+    buehne = Buehne(svg2, 1000, 1000, { ansicht: stand.bau.ansicht === 'stupa' ? 'stupa' : 'logo' });
     bauAnsichtKnoepfe(stand.bau.ansicht);
     svg2.addEventListener('click', function (e) {
       var g = e.target.closest && e.target.closest('.cs-teil'); if (!g) return;
@@ -405,10 +453,10 @@
     if (linienReihe) markiere(linienReihe, linienReihe.querySelector('[data-farbe="' + stand.linie + '"]'));
     zeichnen(); huelle.hidden = false; document.documentElement.style.overflow = 'hidden';
     werk(modus === 'bauteile' || modus === 'felder' ? modus : stand.werk === 'bauteile' ? 'bauteile' : 'felder');
-    if (stand.werk === 'bauteile') { if (stand.bau.ansicht === '3d') { bauFarben(); starte3d(); } else buehne.aufbauen(stand.bau.ansicht !== 'stupa'); }
+    if (stand.werk === 'bauteile') { if (stand.bau.ansicht === '3d') { bauFarben(); starte3d(); } else if (stand.bau.ansicht === 'aufbau') starteSpiel(); else buehne.aufbauen(stand.bau.ansicht !== 'stupa'); }
     huelle.querySelector('.x').focus({ preventScroll: true });
   }
-  function zu() { if (!huelle || huelle.hidden) return; huelle.hidden = true; document.documentElement.style.overflow = ''; merk(stand); }
+  function zu() { if (!huelle || huelle.hidden) return; pausieren(); huelle.hidden = true; document.documentElement.style.overflow = ''; merk(stand); }
   window.CaelumWerkstatt = { oeffnen: auf, schliessen: zu };
 
   // --- Logo spielerisch unter der Seite (B 5): der Stupa baut sich auf, sobald man unten ankommt, und schiebt sich zum Logo.
