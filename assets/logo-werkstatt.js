@@ -292,7 +292,7 @@
       sp2.setAttribute('aria-pressed', String(!s3)); sp3.setAttribute('aria-pressed', String(s3));
       if (!s3) {
         if (drei && auf3) { drei.spielEnde(); auf3 = false; }
-        (auf2Mod || (auf2Mod = import(new URL('aufbau-2d.js?v=1', SKRIPT).href))).then(function (m) {
+        (auf2Mod || (auf2Mod = import(new URL('aufbau-2d.js?v=2', SKRIPT).href))).then(function (m) {
           if (!auf2) { auf2 = m.aufbau2d(svg4, Object.assign({ bau: BAU, stupa: STUPA, farben: stand.bau.farben, an: stand.bau.an }, opt)); neu = true; }
           else auf2.farben(stand.bau.farben, stand.bau.an);
           if (neu) auf2.verstreuen(); else auf2.weiter();
@@ -314,7 +314,7 @@
         drei.zeigen(stand.bau.farben, stand.bau.an);   // v7: steht still, ziehen dreht (kein Aufbau-Film, kein Selbstdrehen)
       }).catch(function (e) { bild3.textContent = '3D liess sich nicht laden: ' + e; });
     }
-    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=4', SKRIPT).href)); };
+    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=5', SKRIPT).href)); };
     zeige3d = function () {
       if (auf2) auf2.farben(stand.bau.farben, stand.bau.an);
       if (!drei) return;

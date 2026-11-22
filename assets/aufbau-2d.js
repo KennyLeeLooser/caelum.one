@@ -7,7 +7,7 @@
 //   a.verstreuen(); a.farben(farben, an); a.loesung(); a.stopp();
 // bau   = [{ form, element, r: [x, y, b, h], d }]  (Pfade im 1000er-Feld, y nach unten – wie BAU in logo-werkstatt.js)
 // stupa = [{ k, unten }]                           (Massstab je Teil und Höhe der Unterkante im fertigen Stupa, Fundament = 1)
-import { Aufbau } from "./aufbau-kern.js?v=1";
+import { Aufbau } from "./aufbau-kern.js?v=2";
 
 const NS = "http://www.w3.org/2000/svg";
 const BREITE = 5.4, HOEHE = 5, S = 1000 / BREITE, Y0 = 968;      // Welt → SVG: 1 Einheit = 185 px, Boden bei y = 968

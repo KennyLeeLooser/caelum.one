@@ -13,7 +13,7 @@
 // verstreut am Boden, man zieht sie auf den Stupa (Logik aufbau-kern.js wie in 2D, Körper bewegen sich in der Ebene z = 0).
 import { viewerErzeugen } from "../apps/viewer/kern.js";
 import { netz } from "../apps/viewer/laden.js";
-import { Aufbau } from "./aufbau-kern.js?v=1";
+import { Aufbau } from "./aufbau-kern.js?v=2";
 
 export const TEILE = [["Viereck", "Erde"], ["Kreis", "Wasser"], ["Dreieck", "Feuer"], ["Mond", "Luft"], ["Tropfen", "Raum"]];
 

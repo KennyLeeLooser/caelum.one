@@ -62,6 +62,15 @@ function imVieleck(P, x, y) {
   return drin;
 }
 
+// konvexe Hülle (Greiffläche: bei Sichel und Tropfen zählt auch die Schale bzw. die Mulde)
+function huelle(P) {
+  const p = P.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]), k = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const u = [], l = [];
+  for (const q of p) { while (l.length >= 2 && k(l[l.length - 2], l[l.length - 1], q) <= 0) l.pop(); l.push(q); }
+  for (const q of p.reverse()) { while (u.length >= 2 && k(u[u.length - 2], u[u.length - 1], q) <= 0) u.pop(); u.push(q); }
+  return l.slice(0, -1).concat(u.slice(0, -1));
+}
+
 const federRaus = t => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
 
 export class Aufbau {
@@ -91,7 +100,7 @@ export class Aufbau {
     const R = Math.max(...K.map(([x, y, r]) => Math.hypot(x, y) + r), ...(PL || []).map(([x, y]) => Math.hypot(x, y)));
     const z = t.ziel || { x: 0, y: 0, a: 0 }, za = z.a || 0, zc = Math.cos(za), zs = Math.sin(za);
     return {
-      i, name: t.name || "Teil " + (i + 1), an: t.an !== false, com: [cx, cy], K, W: [], P: PL, R, m, im: 1 / m, ii: 1 / (I * (t.dichte || 1)),
+      i, name: t.name || "Teil " + (i + 1), an: t.an !== false, com: [cx, cy], K, W: [], P: PL, G: PL ? huelle(PL) : null, R, m, im: 1 / m, ii: 1 / (I * (t.dichte || 1)),
       sym: t.symmetrie ?? 1, ziel: { x: z.x + zc * cx - zs * cy, y: z.y + zs * cx + zc * cy, a: za },
       x: 0, y: -10, a: 0, vx: 0, vy: 0, w: 0, statisch: false, eingerastet: false, rastet: null, schlaf: 0, schlaeft: false, nah: false
     };
@@ -147,7 +156,7 @@ export class Aufbau {
     for (let n = this.k.length - 1; n >= 0; n--) {                  // oben gezeichnete zuerst
       const b = this.k[n]; if (!b.an) continue;
       const c = Math.cos(-b.a), s = Math.sin(-b.a), lx = c * (x - b.x) - s * (y - b.y), ly = s * (x - b.x) + c * (y - b.y);
-      if (b.P && imVieleck(b.P, lx, ly)) { wahl = b; best = -1; break; }
+      if (b.G && imVieleck(b.G, lx, ly)) { wahl = b; best = -1; break; }
       for (const [kx, ky, r] of b.K) { const d = Math.hypot(lx - kx, ly - ky) - r; if (d < best) { best = d; wahl = b; } }
     }
     if (!wahl) return -1;
