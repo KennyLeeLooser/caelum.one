@@ -3,10 +3,11 @@
 // Caelum Cut · Web-Editor (Wunsch Kenny 20.11.2026: Editor auch auf caelum.one). Vorbild: EditorWindow der App.
 // Vollbild-Fenster: Medien | Vorschau mit Abspielen | Eigenschaften, darunter die Zeitleiste mit Video-, Ton- und Textspuren
 // (+ / −), Ziehen und Kürzen mit Maus und Finger, Übergänge (sanft/hart/Formen), Zuschnitt, Effekte, Lautstärke, Titel.
+// 0.3.0 (21.11.2026): Deckkraft-Schieber, RGB-Farbrad für Text und Hintergrund, Farbblöcke, Griffe in der Vorschau.
 // Projekt als .caelumcut (gleiches Format wie die App). Export Bild für Bild im Browser (export.js). Nichts wird hochgeladen.
 const V = new URL(import.meta.url).search;
 const P = await import("./projekt.js" + V);
-const { zeichnen, gebraucht, quellZeit } = await import("./bild.js" + V);
+const { zeichnen, gebraucht, quellZeit, griffFlaeche, ecken } = await import("./bild.js" + V);
 const { exportieren } = await import("./export.js" + V);
 const { lesen, kannKodieren, KodierFehler } = await import("../kodieren.js" + V);
 const { zeit } = await import("../plan.js" + V);
@@ -59,6 +60,7 @@ const css = `
   background-size:auto 100%; background-repeat:repeat-x; touch-action:none; user-select:none; }
 .ced-zl .el.video { background-color:rgba(127,163,214,.35); } .ced-zl .el.bild { background-color:rgba(165,133,214,.35); }
 .ced-zl .el.ton { background-color:rgba(107,175,115,.35); } .ced-zl .el.text { background-color:rgba(217,119,87,.35); }
+.ced-zl .el.farbe { background-image:none; }
 .ced-zl .el.gewaehlt { border:2px solid var(--text,#E8E6E1); } .ced-zl .el.fehlt { background-color:rgba(229,72,77,.35); }
 .ced-zl .el span { display:block; font-size:11.5px; padding:1px 5px; background:rgba(31,30,29,.7); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .ced-zl .el .rand { position:absolute; top:0; bottom:0; width:9px; cursor:ew-resize; } .ced-zl .el .rand.l { left:0; } .ced-zl .el .rand.r { right:0; }
@@ -71,6 +73,22 @@ const css = `
 .ced-fuss .balken i { display:block; height:100%; width:0; background:var(--accent,#D97757); }
 .ced-fuss .status { color:var(--muted,#9C9A94); flex:1; min-width:200px; }
 .ced-fuss .status.fehler { color:#E5484D; } .ced-fuss .status.ok { color:var(--ok,#6BAF73); }
+.ced-buehne canvas.griff { cursor:move; touch-action:none; }
+.ced-eig .regler { display:grid; grid-template-columns:minmax(0,1fr) 46px; gap:6px; align-items:center; }
+.ced-eig .regler input[type=range] { width:100%; accent-color:var(--accent,#D97757); padding:0; border:0; background:none; }
+.ced-eig .regler output { text-align:right; font-variant-numeric:tabular-nums; }
+.ced-eig .farbknopf { display:flex; align-items:center; gap:8px; text-align:left; min-width:0; overflow:hidden; }
+.ced-eig .farbknopf span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ced-eig .farbknopf i { width:30px; height:18px; border:1px solid var(--line,#3D3D3A); border-radius:3px; flex:none; }
+.ced-eig .farbrad { background:var(--surface,#30302E); border:1px solid var(--line,#3D3D3A); border-radius:8px; padding:8px; margin:2px 0 8px; display:grid; gap:8px; }
+.ced-eig .farbrad .oben { display:flex; gap:8px; align-items:stretch; }
+.ced-eig .farbrad canvas { touch-action:none; cursor:crosshair; border-radius:50%; }
+.ced-eig .farbrad canvas.leiste { border-radius:4px; }
+.ced-eig .farbrad .reihe { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.ced-eig .farbrad .reihe input { width:88px; }
+.ced-eig .farbrad .reihe small { color:var(--muted,#9C9A94); }
+.ced-eig .farbrad .schnell { display:flex; gap:5px; flex-wrap:wrap; }
+.ced-eig .farbrad .schnell button { width:22px; height:22px; padding:0; border-radius:4px; }
 .ced-drop { outline:2px dashed var(--accent,#D97757); outline-offset:-6px; }
 @media (max-width: 900px) {
   /* untereinander, die Seite rollt: Zeilen dürfen nicht unter ihren Inhalt schrumpfen (sonst überlappt die Vorschau) */
@@ -132,7 +150,8 @@ export async function oeffnen(ctx, daten, dateien = []) {
   const medienFeld = h("div", { class: "ced-medien" },
     h("b", {}, "Medien"), h("div", { class: "hinweis" }, "Hineinziehen oder wählen. Doppelklick oder Ziehen → Zeitleiste."),
     h("div", { class: "knoepfe", style: "display:flex;gap:5px;flex-wrap:wrap" },
-      h("button", { onclick: () => dateiWahl.click() }, "+ Importieren"), h("button", { onclick: titelNeu }, "Titel")),
+      h("button", { onclick: () => dateiWahl.click() }, "+ Importieren"), h("button", { onclick: titelNeu }, "Titel"),
+      h("button", { onclick: farbeNeu, title: "Farbblock am Abspielkopf (Länge frei, mit Übergängen)" }, "Farbe")),
     medienListe,
     h("div", { class: "hinweis" }, "Alles bleibt auf deinem Gerät."));
 
@@ -256,7 +275,7 @@ export async function oeffnen(ctx, daten, dateien = []) {
       const namen = new Map([...medien.values()].map(m => [m.datei.name, m]));
       const fehlen = new Set();
       for (const t of p.Tracks) for (const it of t.Items) {
-        if (P.istText(it)) continue;
+        if (P.istText(it) || P.istFarbe(it)) continue;
         const m = namen.get(String(it.Path).split(/[\\/]/).pop());
         if (m) { it.datei = m.datei; it.info = m.info; } else fehlen.add(String(it.Path).split(/[\\/]/).pop());
       }
@@ -277,6 +296,14 @@ export async function oeffnen(ctx, daten, dateien = []) {
     const t = selSpur?.Kind === "Text" ? selSpur : p.Tracks.find(x => x.Kind === "Text") ?? P.spurDazu(p, "Text");
     const it = P.element({ Text: "Titel", Start: kopf, In: 0, Out: 3 }); t.Items.push(it); sel = it; merken(); neu(false);
     eig.querySelector("textarea")?.select();
+  }
+  let letzteFarbe = "#D97757";
+  /** Wie EditorWindow.AddColorBlock: gewählte Videospur, sonst oberste Videospur mit Platz, sonst V1. */
+  function farbeNeu() {
+    const frei = t => !t.Items.some(i => kopf + 3 > i.Start && kopf < P.ende(i));
+    const t = selSpur?.Kind === "Video" ? selSpur : p.Tracks.filter(x => x.Kind === "Video").find(frei) ?? P.vonUnten(p, "Video")[0];
+    const it = P.farbblock(letzteFarbe, kopf); t.Items.push(it); sel = it; selSpur = t; merken(); neu(false);
+    melde(`Farbblock auf ${t.Name}: Länge am Rand ziehen, Farbe rechts im Farbrad.`);
   }
   function amKopf() {
     if (sel && kopf > sel.Start && kopf < P.ende(sel)) return sel;
@@ -299,7 +326,8 @@ export async function oeffnen(ctx, daten, dateien = []) {
     const [W, H] = P.flaecheVon(p, datenProfile);
     const k = Math.min(1, 720 / Math.max(W, H)), w = Math.round(W * k), hh = Math.round(H * k);
     if (buehne.width !== w || buehne.height !== hh) { buehne.width = w; buehne.height = hh; }
-    zeichnen(gb, p, kopf, w, hh, quelleVorschau, { markiere: sel, rahmen: !spielt });
+    const amSchirm = buehne.getBoundingClientRect().width;                         // Griffe am Schirm immer etwa 11 px groß
+    zeichnen(gb, p, kopf, w, hh, quelleVorschau, { markiere: sel, rahmen: !spielt, griff: amSchirm > 0 ? Math.round(11 * w / amSchirm) : 0 });
     zeitAnz.textContent = `${zeit(kopf)} / ${zeit(P.dauer(p))}`;
     const pr = datenProfile.profile.find(x => x.id === p.ProfileId);
     const warn = pr?.maxSekunden != null && P.dauer(p) > pr.maxSekunden + 0.05 ? ` · ⚠ ${pr.name} erlaubt bis ${zeit(pr.maxSekunden)}` : "";
@@ -328,6 +356,47 @@ export async function oeffnen(ctx, daten, dateien = []) {
     if (!spielt && Math.abs(v.currentTime - soll) > 0.02 && !v.seeking) v.currentTime = soll;
     return { bild: v, w: v.videoWidth, h: v.videoHeight };
   }
+
+  // ── Griffe: gewähltes Bild-Element in der Vorschau verschieben (innen) und skalieren (Ecken), wie PreviewView ──
+  function buehnenPunkt(e) { const r = buehne.getBoundingClientRect(); return [(e.clientX - r.left) * buehne.width / r.width, (e.clientY - r.top) * buehne.height / r.height, buehne.width / r.width]; }
+  function griffAn(x, y, k) {
+    const b = spielt ? null : griffFlaeche(p, sel, kopf, buehne.width, buehne.height); if (!b) return null;
+    const tol = Math.max(10, 14 * k);
+    const e = ecken(b).findIndex(([cx, cy]) => Math.abs(x - cx) <= tol && Math.abs(y - cy) <= tol);
+    if (e >= 0) return { b, ecke: e };
+    return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h ? { b, ecke: -1 } : null;
+  }
+  let griffZug = null;
+  buehne.addEventListener("pointermove", e => {
+    if (griffZug) return;
+    const [x, y, k] = buehnenPunkt(e), g = griffAn(x, y, k);
+    buehne.style.cursor = !g ? "" : g.ecke < 0 ? "move" : g.ecke % 2 === 0 ? "nwse-resize" : "nesw-resize";
+  });
+  buehne.addEventListener("pointerdown", e => {
+    const [x, y, k] = buehnenPunkt(e), g = griffAn(x, y, k); if (!g) return;
+    e.preventDefault(); buehne.setPointerCapture(e.pointerId); buehne.classList.add("griff");
+    const W = buehne.width, H = buehne.height, it = sel, a = { X: it.X, Y: it.Y, Scale: it.Scale };
+    const fest = g.ecke >= 0 ? ecken(g.b)[(g.ecke + 2) % 4] : null;
+    griffZug = { it, a };
+    const r4 = v => Math.round(v * 1e4) / 1e4;
+    const mv = ev => {
+      const [mx, my] = buehnenPunkt(ev);
+      if (!fest) { it.X = r4(Math.min(1.5, Math.max(-0.5, a.X + (mx - x) / W))); it.Y = r4(Math.min(1.5, Math.max(-0.5, a.Y + (my - y) / H))); }
+      else {
+        // gegenüberliegende Ecke bleibt stehen, Größe gleichmäßig
+        const s = r4(Math.min(3, Math.max(0.05, Math.max(Math.abs(mx - fest[0]) / W, Math.abs(my - fest[1]) / H))));
+        const sx = g.ecke === 1 || g.ecke === 2 ? 1 : -1, sy = g.ecke === 2 || g.ecke === 3 ? 1 : -1;
+        it.Scale = s; it.X = r4(fest[0] / W + sx * s / 2); it.Y = r4(fest[1] / H + sy * s / 2);
+      }
+      vorschau();
+    };
+    const up = () => {
+      buehne.removeEventListener("pointermove", mv); buehne.removeEventListener("pointerup", up); buehne.removeEventListener("pointercancel", up);
+      buehne.classList.remove("griff"); griffZug = null;
+      if (it.X !== a.X || it.Y !== a.Y || it.Scale !== a.Scale) { merken(); eigenschaften(); }
+    };
+    buehne.addEventListener("pointermove", mv); buehne.addEventListener("pointerup", up); buehne.addEventListener("pointercancel", up);
+  });
 
   // ── Abspielen ──
   let t0 = 0, k0 = 0;
@@ -411,15 +480,17 @@ export async function oeffnen(ctx, daten, dateien = []) {
   }
   function elementDiv(it, t) {
     const d = P.uebergang(it.Transition), text = P.istText(it), bild = P.istBild(it), m = medien.get(it.datei);
-    const art = text ? "text" : !it.datei ? "fehlt" : bild ? "bild" : t.Kind === "Audio" || !it.info?.w ? "ton" : "video";
+    const farbe = P.istFarbe(it);
+    const art = farbe ? "farbe" : text ? "text" : !it.datei ? "fehlt" : bild ? "bild" : t.Kind === "Audio" || !it.info?.w ? "ton" : "video";
     const div = h("div", { class: `el ${art} ${it === sel ? "gewaehlt" : ""}`, style: `left:${it.Start * pps}px;width:${Math.max(4, P.laenge(it) * pps)}px` },
       P.hatUebergang(it) && !text ? h("div", { class: `ueb ${d.sanft ? "sanft" : ""}`, style: `width:${Math.max(8, it.TransitionSec * pps)}px` }) : null,
       !text && it.info?.ton && !bild && Math.abs(it.Volume - 1) > 0.005 ? h("div", { class: "vol", style: `bottom:${Math.min(100, it.Volume * 50)}%` }) : null,
-      h("span", {}, P.name(it) + (!it.datei && !text ? " – fehlt" : "") + (Math.abs(it.Speed - 1) > 0.01 && !P.zeitfrei(it) ? ` ×${it.Speed}` : "") +
+      h("span", {}, P.name(it) + (!it.datei && !text && !farbe ? " – fehlt" : "") + (Math.abs(it.Speed - 1) > 0.01 && !P.zeitfrei(it) ? ` ×${it.Speed}` : "") +
         (!text && it.info?.ton && Math.abs(it.Volume - 1) > 0.005 ? ` ♪ ${Math.round(it.Volume * 100)} %` : "") + (P.beschnitten(it) ? " ⌗" : "") +
         (P.hatUebergang(it) ? ` ◢ ${d.name}` : "")),
       h("div", { class: "rand l" }), h("div", { class: "rand r" }));
     if (m?.poster && art === "video") div.style.backgroundImage = `url(${m.poster})`;
+    if (farbe) div.style.backgroundColor = it.Fill;
     if (art === "bild" && m) { if (!m.poster) { const c = document.createElement("canvas"); c.height = 60; c.width = Math.round(60 * m.bitmap.width / m.bitmap.height); c.getContext("2d").drawImage(m.bitmap, 0, 0, c.width, c.height); m.poster = c.toDataURL("image/jpeg", 0.7); } div.style.backgroundImage = `url(${m.poster})`; }
     div.addEventListener("pointerdown", e => elementZiehen(e, it, div));
     div.addEventListener("contextmenu", e => { e.preventDefault(); sel = it; neu(false); });
@@ -456,8 +527,8 @@ export async function oeffnen(ctx, daten, dateien = []) {
         // auf eine andere Spur derselben Art
         const unter = document.elementsFromPoint(ev.clientX, ev.clientY).find(x => x.classList?.contains("bahn"));
         const ziel = unter?._spur, jetzt = P.spurVon(p, it);
-        const nurTon = !P.istText(it) && !it.info?.bild && !it.info?.w;
-        const passt = ziel && ziel !== jetzt && (ziel.Kind === "Text" ? P.istText(it) : ziel.Kind === "Video" ? !P.istText(it) && !nurTon : !P.istText(it) && it.info?.ton);
+        const nurTon = !P.istText(it) && !P.istFarbe(it) && !it.info?.bild && !it.info?.w;
+        const passt = ziel && ziel !== jetzt && (ziel.Kind === "Text" ? P.istText(it) : ziel.Kind === "Video" ? !P.istText(it) && !nurTon : !P.istText(it) && !P.istFarbe(it) && it.info?.ton);
         if (passt) { jetzt.Items.splice(jetzt.Items.indexOf(it), 1); ziel.Items.push(it); selSpur = ziel; zeitleiste(); return; }
       } else if (rand === "l") {
         let ns = fangen(a.Start + dsek, it), delta = ns - a.Start;
@@ -493,6 +564,29 @@ export async function oeffnen(ctx, daten, dateien = []) {
     s.value = wert; s.addEventListener("change", () => { setze(s.value); merken(); neu(false); });
     return h("label", {}, h("span", {}, label), s);
   }
+  /** Schieber 0–100 % für einen Anteil 0 … 1 (Deckkraft); zieht die Vorschau sofort mit. */
+  function regler(label, wert01, setze) {
+    const r = h("input", { type: "range", min: 0, max: 100, step: 1, value: Math.round(Math.min(1, Math.max(0, wert01)) * 100), "aria-label": label });
+    const o = h("output", {}, r.value + " %");
+    r.addEventListener("input", () => { o.textContent = r.value + " %"; setze(r.value / 100); vorschau(); });
+    r.addEventListener("change", () => { merken(); zeitleiste(); });
+    return h("label", {}, h("span", {}, label), h("div", { class: "regler" }, r, o));
+  }
+  /** Farbfeld; Klick klappt das RGB-Farbrad auf (Farbton rundum, Sättigung nach außen, Helligkeit daneben, Hex, schnelle Farben). */
+  function farbFeld(label, hex, setze) {
+    const knopf = h("button", { class: "farbknopf", type: "button" }, h("i", {}), h("span", {}));
+    const zeigen = x => { knopf.firstChild.style.background = x; knopf.lastChild.textContent = x + " ▾"; knopf.title = "Farbrad öffnen"; };
+    zeigen(hex = normHex(hex));
+    let rad = null;
+    const zeile = h("label", {}, h("span", {}, label), knopf);
+    knopf.addEventListener("click", e => {
+      e.preventDefault();
+      if (rad) { rad.remove(); rad = null; merken(); zeitleiste(); return; }
+      rad = farbRad(hex, x => { hex = x; zeigen(x); setze(x); vorschau(); }, () => { rad?.remove(); rad = null; merken(); zeitleiste(); });
+      zeile.after(rad);
+    });
+    return zeile;
+  }
   const knoepfe = (...l) => h("div", { class: "knoepfe" }, ...l.map(([t, f]) => h("button", { onclick: () => { f(); merken(); neu(false); } }, t)));
   function eigenschaften() {
     const teile = [];
@@ -522,15 +616,19 @@ export async function oeffnen(ctx, daten, dateien = []) {
     if (!P.zeitfrei(it)) teile.push(feld("Quelle ab", it.In, 0, Math.max(0, (it.info?.dauer ?? 1) - 0.2), 0.1, v => { const l = P.quellLaenge(it); it.In = v; it.Out = Math.min(v + l, it.info?.dauer ?? v + l); }, " s"),
       feld("Tempo", it.Speed, 0.25, 4, 0.25, v => it.Speed = v, " ×"));
     if (spur?.Kind === "Video" && !text) {
-      teile.push(h("h5", {}, "Bild"), feld("Größe", it.Scale * 100, 5, 300, 5, v => it.Scale = v / 100, " %"),
+      if (P.istFarbe(it)) teile.push(h("h5", {}, "Farbe"), farbFeld("Farbe", it.Fill, x => { it.Fill = x; letzteFarbe = x; }));
+      teile.push(h("h5", {}, "Bild"), regler("Deckkraft", it.Opacity, v => it.Opacity = v),
+        feld("Größe", it.Scale * 100, 5, 300, 5, v => it.Scale = v / 100, " %"),
         feld("Position X", it.X * 100, -50, 150, 1, v => it.X = v / 100, " %"), feld("Position Y", it.Y * 100, -50, 150, 1, v => it.Y = v / 100, " %"),
-        feld("Deckkraft", it.Opacity * 100, 0, 100, 5, v => it.Opacity = v / 100, " %"),
-        knoepfe(["Bild im Bild", () => Object.assign(it, { Scale: 0.35, X: 0.72, Y: 0.22 })], ["Ganze Fläche", () => Object.assign(it, { Scale: 1, X: 0.5, Y: 0.5, Opacity: 1 })]),
+        h("div", { class: "hinweis" }, "Oder in der Vorschau ziehen: innen verschieben, an den Ecken skalieren."),
+        knoepfe(["Bild im Bild", () => Object.assign(it, { Scale: 0.35, X: 0.72, Y: 0.22 })], ["Ganze Fläche", () => Object.assign(it, { Scale: 1, X: 0.5, Y: 0.5, Opacity: 1 })]));
+      if (!P.istFarbe(it)) teile.push(
         h("h5", {}, "Zuschnitt"), feld("Links", it.CropL * 100, 0, 45, 1, v => it.CropL = v / 100, " %"), feld("Rechts", it.CropR * 100, 0, 45, 1, v => it.CropR = v / 100, " %"),
         feld("Oben", it.CropT * 100, 0, 45, 1, v => it.CropT = v / 100, " %"), feld("Unten", it.CropB * 100, 0, 45, 1, v => it.CropB = v / 100, " %"),
         knoepfe(["Auf Bildschirm zuschneiden", () => aufBildschirm(it)], ["Zurücksetzen", () => Object.assign(it, { CropL: 0, CropR: 0, CropT: 0, CropB: 0 })]),
         h("h5", {}, "Effekte"), feld("Helligkeit", it.Brightness * 100, -100, 100, 5, v => it.Brightness = v / 100), feld("Kontrast", it.Contrast * 100, 0, 200, 5, v => it.Contrast = v / 100, " %"),
-        feld("Sättigung", it.Saturation * 100, 0, 300, 5, v => it.Saturation = v / 100, " %"), haken("Schwarzweiß", it.Gray, v => it.Gray = v), feld("Weichzeichnen", it.Blur, 0, 20, 1, v => it.Blur = v),
+        feld("Sättigung", it.Saturation * 100, 0, 300, 5, v => it.Saturation = v / 100, " %"), haken("Schwarzweiß", it.Gray, v => it.Gray = v), feld("Weichzeichnen", it.Blur, 0, 20, 1, v => it.Blur = v));
+      teile.push(
         h("h5", {}, "Übergang vom vorigen Element"),
         wahl("Art", [["keine", "Keiner (harter Schnitt)"], ...["Sanft", "Hart", "Formen"].map(g => ({ gruppe: g, liste: P.uebergaenge().filter(x => x.gruppe === g && x.id !== "keine").map(x => [x.id, x.name]) }))], P.uebergang(it.Transition).id, v => it.Transition = v),
         feld("Dauer", it.TransitionSec, 0.1, 5, 0.1, v => it.TransitionSec = v, " s"),
@@ -542,14 +640,19 @@ export async function oeffnen(ctx, daten, dateien = []) {
         knoepfe(["Stumm", () => it.Volume = 0], ["100 %", () => it.Volume = 1], ["Leiser −6 dB", () => it.Volume = Math.round(it.Volume / 2 * 100) / 100]),
         feld("Einblenden", it.FadeIn, 0, 30, 0.5, v => it.FadeIn = v, " s"), feld("Ausblenden", it.FadeOut, 0, 30, 0.5, v => it.FadeOut = v, " s"));
     if (text) {
-      const ta = h("textarea", { rows: 3, value: it.Text ?? "" });
+      const ta = h("textarea", { rows: 3 }); ta.value = it.Text ?? "";            // textarea kennt kein value-Attribut
+
       ta.addEventListener("input", () => { it.Text = ta.value; vorschau(); });
       ta.addEventListener("change", () => { merken(); zeitleiste(); });
       teile.push(h("h5", {}, "Text"), h("label", {}, h("span", {}, "Inhalt"), ta),
         feld("Größe", it.TextSize * 100, 1, 30, 0.5, v => it.TextSize = v / 100, " %"),
-        wahl("Farbe", [["#FFFFFF", "Weiß"], ["#FFE066", "Gelb"], ["#D97757", "Orange"], ["#000000", "Schwarz"]], it.TextColor, v => it.TextColor = v),
+        farbFeld("Farbe", it.TextColor, x => it.TextColor = x),
+        regler("Deckkraft", it.Opacity ?? 1, v => it.Opacity = v),
         wahl("Position", [["oben", "Oben"], ["mitte", "Mitte"], ["unten", "Unten"]], it.TextPos, v => it.TextPos = v),
-        haken("Hintergrund", it.TextBox, v => it.TextBox = v));
+        h("h5", {}, "Hintergrund"),
+        haken("Hintergrund", it.TextBox, v => it.TextBox = v),
+        farbFeld("Farbe", it.TextBoxColor ?? "#000000", x => { it.TextBoxColor = x; it.TextBox = true; }),
+        regler("Deckkraft", it.TextBoxOpacity ?? 0.45, v => { it.TextBoxOpacity = v; it.TextBox = true; }));
     }
     teile.push(knoepfe(["Teilen", teilenJetzt], ["Duplizieren", duplizieren], ["Löschen", loeschen]));
     eig.replaceChildren(...teile);
@@ -566,7 +669,7 @@ export async function oeffnen(ctx, daten, dateien = []) {
   async function exportStarten() {
     if (abbruch) return abbruch.abort();
     if (P.dauer(p) < 0.1) return melde("Die Zeitleiste ist leer.", "fehler");
-    const fehlt = p.Tracks.flatMap(t => t.Items).filter(i => !P.istText(i) && !i.datei);
+    const fehlt = p.Tracks.flatMap(t => t.Items).filter(i => !P.istText(i) && !P.istFarbe(i) && !i.datei);
     if (fehlt.length) return melde(`Erst die fehlenden Dateien hineinziehen (${fehlt.length}).`, "fehler");
     spielen(false);
     abbruch = new AbortController(); knExport.textContent = "Abbrechen"; knAbbruch.hidden = false; balken.hidden = false;
@@ -628,4 +731,69 @@ export async function oeffnen(ctx, daten, dateien = []) {
   if (dateien.length) { await hinzufuegen(dateien, { spur: P.vonUnten(p, "Video")[0], sek: 0 }); merken(); }
   requestAnimationFrame(() => requestAnimationFrame(einpassen));                       // erst wenn das Fenster seine Breite kennt
   return { schliessen, get projekt() { return p; }, hinzufuegen, exportStarten, setzeKopf, waehle: it => { sel = it; neu(false); } };
+}
+
+// ── RGB-Farbrad (wie ColorWheel/ColorButton der App) ──
+const SCHNELL = ["#FFFFFF", "#000000", "#D97757", "#F7B14F", "#FFE066", "#4DBF95", "#4F8FD9", "#9B6BD9", "#E05A5A", "#262624"];
+function normHex(x) { const m = /^#?([0-9a-f]{6})$/i.exec(String(x ?? "").trim()); return m ? "#" + m[1].toUpperCase() : "#FFFFFF"; }
+export function vonHsv(hh, s, v) {
+  hh = ((hh % 360) + 360) % 360; const c = v * s, x = c * (1 - Math.abs((hh / 60) % 2 - 1)), m = v - c;
+  const [r, g, b] = hh < 60 ? [c, x, 0] : hh < 120 ? [x, c, 0] : hh < 180 ? [0, c, x] : hh < 240 ? [0, x, c] : hh < 300 ? [x, 0, c] : [c, 0, x];
+  return "#" + [r, g, b].map(k => Math.round((k + m) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+export function zuHsv(hex) {
+  const n = parseInt(normHex(hex).slice(1), 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  const hh = d === 0 ? 0 : max === r ? 60 * (((g - b) / d) % 6) : max === g ? 60 * ((b - r) / d + 2) : 60 * ((r - g) / d + 4);
+  return [(hh + 360) % 360, max === 0 ? 0 : d / max, max];
+}
+function farbRad(hex, gewaehlt, fertig) {
+  let [hu, sa, va] = zuHsv(hex);
+  const D = 168, rad = h("canvas", { width: D, height: D, style: `width:${D}px;height:${D}px` });
+  const leiste = h("canvas", { class: "leiste", width: 22, height: D, style: `width:22px;height:${D}px` });
+  const feldHex = h("input", { value: normHex(hex), maxlength: 7, "aria-label": "Hex-Farbe", spellcheck: false });
+  const rgb = h("small", {});
+  const grund = document.createElement("canvas"); grund.width = grund.height = D;
+  {
+    const g = grund.getContext("2d"), bild = g.createImageData(D, D), r0 = D / 2;
+    for (let y = 0; y < D; y++) for (let x = 0; x < D; x++) {
+      const dx = x + 0.5 - r0, dy = y + 0.5 - r0, dist = Math.hypot(dx, dy); if (dist > r0) continue;
+      const c = parseInt(vonHsv((Math.atan2(-dy, dx) * 180 / Math.PI + 360) % 360, dist / r0, 1).slice(1), 16), i = (y * D + x) * 4;
+      bild.data[i] = c >> 16 & 255; bild.data[i + 1] = c >> 8 & 255; bild.data[i + 2] = c & 255; bild.data[i + 3] = dist > r0 - 1 ? 255 * (r0 - dist) : 255;
+    }
+    g.putImageData(bild, 0, 0);
+  }
+  const rgbText = x => { const n = parseInt(x.slice(1), 16); return `R ${n >> 16 & 255}  G ${n >> 8 & 255}  B ${n & 255}`; };
+  function malen() {
+    const g = rad.getContext("2d"); g.clearRect(0, 0, D, D); g.drawImage(grund, 0, 0);
+    if (va < 0.999) { g.fillStyle = `rgba(0,0,0,${1 - va})`; g.beginPath(); g.arc(D / 2, D / 2, D / 2, 0, Math.PI * 2); g.fill(); }
+    const a = hu * Math.PI / 180, px = D / 2 + Math.cos(a) * sa * D / 2, py = D / 2 - Math.sin(a) * sa * D / 2;
+    g.lineWidth = 2; g.strokeStyle = "#fff"; g.beginPath(); g.arc(px, py, 6, 0, Math.PI * 2); g.stroke();
+    g.lineWidth = 1; g.strokeStyle = "#000"; g.beginPath(); g.arc(px, py, 8, 0, Math.PI * 2); g.stroke();
+    const l = leiste.getContext("2d"), gr = l.createLinearGradient(0, 0, 0, D);
+    gr.addColorStop(0, vonHsv(hu, sa, 1)); gr.addColorStop(1, "#000"); l.fillStyle = gr; l.fillRect(0, 0, 22, D);
+    const by = (1 - va) * D; l.strokeStyle = "#fff"; l.lineWidth = 2; l.strokeRect(1, Math.max(1, by - 3), 20, 6);
+  }
+  function melden(vonFeld = false) {
+    const x = vonHsv(hu, sa, va); if (!vonFeld) feldHex.value = x;
+    rgb.textContent = rgbText(x); malen(); gewaehlt(x);
+  }
+  function ziehen(el, setze) {
+    el.addEventListener("pointerdown", e => {
+      e.preventDefault(); el.setPointerCapture(e.pointerId);
+      const zu = ev => { const r = el.getBoundingClientRect(); setze(ev.clientX - r.left, ev.clientY - r.top); melden(); };
+      zu(e);
+      const up = () => { el.removeEventListener("pointermove", zu); el.removeEventListener("pointerup", up); };
+      el.addEventListener("pointermove", zu); el.addEventListener("pointerup", up);
+    });
+  }
+  ziehen(rad, (x, y) => { const dx = x - D / 2, dy = y - D / 2; hu = (Math.atan2(-dy, dx) * 180 / Math.PI + 360) % 360; sa = Math.min(1, Math.hypot(dx, dy) / (D / 2)); if (va < 0.05) va = 1; });
+  ziehen(leiste, (x, y) => { va = Math.min(1, Math.max(0, 1 - y / D)); });
+  feldHex.addEventListener("input", () => { const m = /^#?([0-9a-f]{6})$/i.exec(feldHex.value.trim()); if (m) { [hu, sa, va] = zuHsv(m[1]); melden(true); } });
+  const schnell = h("div", { class: "schnell" }, ...SCHNELL.map(x => h("button", { type: "button", title: x, style: `background:${x}`, onclick: () => { [hu, sa, va] = zuHsv(x); melden(); } })));
+  const box = h("div", { class: "farbrad" }, h("div", { class: "oben" }, rad, leiste),
+    h("div", { class: "reihe" }, feldHex, rgb), schnell,
+    h("div", { class: "reihe" }, h("button", { type: "button", class: "haupt", onclick: fertig }, "Fertig")));
+  malen(); rgb.textContent = rgbText(normHex(hex));
+  return box;
 }

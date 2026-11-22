@@ -10,7 +10,7 @@ const V = new URL(import.meta.url).search;
 const { Muxer, ArrayBufferTarget } = await import("../vendor/mp4-muxer.mjs");
 const { videoKonfig, tonKonfig, KodierFehler, kannKodieren } = await import("../kodieren.js" + V);
 const { planen } = await import("../plan.js" + V);
-const { dauer, vonUnten, istText, istBild, ext, laenge, flaecheVon } = await import("./projekt.js" + V);
+const { dauer, vonUnten, istText, istBild, istFarbe, ext, laenge, flaecheVon } = await import("./projekt.js" + V);
 const { zeichnen, gebraucht } = await import("./bild.js" + V);
 
 /** Bilder eines Videos ab einer Quellzeit, in Anzeigereihenfolge; bei(sek) = letztes Bild mit Zeit ≤ sek. */
@@ -88,7 +88,7 @@ async function tonMischen(p, gesamt, tonDaten, signal) {
   for (const s of vonUnten(p, "Video")) {
     if (s.Muted) continue;
     const items = s.Items.filter(i => !istText(i) && i.info?.ton && !istBild(i)).sort((a, b) => a.Start - b.Start);
-    const alle = s.Items.filter(i => !istText(i) && i.info).sort((a, b) => a.Start - b.Start);
+    const alle = s.Items.filter(i => istFarbe(i) || !istText(i) && i.info).sort((a, b) => a.Start - b.Start);
     for (const it of items) {
       const k = alle.indexOf(it), e = ext(alle, k), din = k > 0 ? ext(alle, k - 1) : 0;
       await legen(it, s.Volume ?? 1, it.Start, laenge(it) + e, Math.max(it.FadeIn, din), e > 0 ? e : it.FadeOut);
@@ -121,7 +121,7 @@ export async function exportieren(p, daten, { holeClip, holeBild, tonDaten }, me
   const ton = videos.some(i => i.info.ton);
   const [w0, h0] = flaecheVon(p, daten);
   const plan = planen({ profil, quer: p.Landscape, form: "Original", fuellen: p.Fit === "Fuellen" },
-    [{ w: w0, h: h0, fps: Math.max(1, ...videos.map(i => i.info.fps || 30)), dauer: gesamt, ton }], daten);
+    [{ w: w0, h: h0, fps: videos.length ? Math.max(1, ...videos.map(i => i.info.fps || 30)) : 30, dauer: gesamt, ton }], daten);
   // Fläche wie flaecheVon (Profil); bei Zielgrösse kann planen kleiner gehen – dann diese nehmen
   if (plan.zielKbps == null) { plan.w = w0; plan.h = h0; }
   // H.265: Der Browser hält einen festen QP nicht (19.11.2026) – darum Bitrate aus der Kalibrierung der App

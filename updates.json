@@ -2,6 +2,21 @@
   "_hinweis": "Neueste zuerst. Neuer Eintrag = neues Objekt oben einfügen. status: release | vorschau | intern (intern wird nicht angezeigt).",
   "updates": [
     {
+      "date": "2026-11-22",
+      "product": "Caelum Cut · Web",
+      "version": "0.3.0",
+      "status": "vorschau",
+      "title": "Farbblöcke, Farbrad und Griffe im Editor",
+      "points": [
+        "Deckkraft 0–100 % per Schieber für Video, Bild, Text und Farbblock",
+        "RGB-Farbrad für Textfarbe und Text-Hintergrund",
+        "Farbblöcke mit Dauer und Übergängen auf der Zeitleiste",
+        "In der Vorschau verschieben und an den Ecken skalieren",
+        "Gleich wie Caelum Cut 0.3.0"
+      ],
+      "link": "#p-cut"
+    },
+    {
       "date": "2026-11-21",
       "product": "Caelum Cut · Web",
       "version": "0.2.0",

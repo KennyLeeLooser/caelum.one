@@ -7,10 +7,15 @@
 // Mit derselben Versionsangabe laden wie dieses Modul – sonst entstehen zwei Kopien von projekt.js, und der Übergangs-Katalog
 // steckt nur in einer (auf caelum.one hängt das Grundmodul immer ?v=<hash> an; gefunden 20.11.2026).
 const V = new URL(import.meta.url).search;
-const { vonUnten, istText, ende, ext, laenge, uebergang, hatUebergang, kurve } = await import("./projekt.js" + V);
+const { vonUnten, istFarbe, istSichtbar, ende, ext, laenge, uebergang, hatUebergang, kurve, spurVon } = await import("./projekt.js" + V);
 
 const smooth = (e0, e1, x) => { const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
-const bildElemente = (t) => t.Items.filter(i => !istText(i) && i.info && (i.info.bild || i.info.w > 0)).sort((a, b) => a.Start - b.Start);
+const bildElemente = (t) => t.Items.filter(istSichtbar).sort((a, b) => a.Start - b.Start);
+/** #RRGGBB + Deckkraft → rgba() */
+export function rgba(hex, a = 1) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(String(hex ?? "").trim()); const n = m ? parseInt(m[1], 16) : 0xffffff;
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${Math.min(1, Math.max(0, a))})`;
+}
 
 /** Welche Bild-Elemente bei Sekunde t gebraucht werden und bei welcher Quellzeit (für das Holen der Bilder vor dem Zeichnen). */
 export function gebraucht(p, t) {
@@ -18,7 +23,7 @@ export function gebraucht(p, t) {
   for (const s of vonUnten(p, "Video")) {
     if (s.Hidden) continue;
     const items = bildElemente(s);
-    items.forEach((it, i) => { const e = ext(items, i); if (t >= it.Start && t < ende(it) + e) l.push({ it, sek: quellZeit(it, t) }); });
+    items.forEach((it, i) => { const e = ext(items, i); if (!istFarbe(it) && t >= it.Start && t < ende(it) + e) l.push({ it, sek: quellZeit(it, t) }); });
   }
   return l;
 }
@@ -29,6 +34,7 @@ function box(it, R, dx = 0, dy = 0) {
 }
 /** Wo das Bild in seiner Fläche liegt (Zuschnitt, Einpassen/Füllen) – aus den Maßen der Quelle. */
 function inhalt(it, b, fuellen) {
+  if (istFarbe(it)) return b;                                                     // Farbblock füllt seine Fläche
   const w = (it.info?.w || 16) * (1 - it.CropL - it.CropR), h = (it.info?.h || 9) * (1 - it.CropT - it.CropB);
   const k = fuellen ? Math.max(b.w / w, b.h / h) : Math.min(b.w / w, b.h / h);
   return { x: b.x + (b.w - w * k) / 2, y: b.y + (b.h - h * k) / 2, w: w * k, h: h * k };
@@ -73,7 +79,7 @@ function filter(it, ton, weiss, W) {
  * Bild zur Sekunde t auf g (W×H) zeichnen. quelle(it) liefert { bild, w, h } (aufrechtes Bild in Anzeigegröße) oder null.
  * fuellen = Projekt „Füllen“. markiere = Element mit Rahmen (nur Vorschau).
  */
-export function zeichnen(g, p, t, W, H, quelle, { markiere = null, rahmen = false } = {}) {
+export function zeichnen(g, p, t, W, H, quelle, { markiere = null, rahmen = false, griff = 0 } = {}) {
   const R = { x: 0, y: 0, w: W, h: H }, fuellen = p.Fit === "Fuellen";
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.filter = "none";
   g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
@@ -111,8 +117,26 @@ export function zeichnen(g, p, t, W, H, quelle, { markiere = null, rahmen = fals
   }
   texte(g, p, t, R);
   if (mark && rahmen) { g.save(); g.setLineDash([6, 4]); g.strokeStyle = "#D97757"; g.lineWidth = 2; g.strokeRect(mark.x, mark.y, mark.w, mark.h); g.restore(); }
+  const gb = rahmen ? griffFlaeche(p, markiere, t, W, H) : null;
+  if (gb) {
+    // Griffe an den Ecken (0.3.0): innen ziehen = verschieben, Ecke ziehen = skalieren
+    const s = griff || Math.max(7, Math.round(Math.min(W, H) / 60));              // griff = Größe in Bildpunkten der Fläche (Editor: 11 px am Schirm)
+    g.save(); g.fillStyle = "#D97757"; g.strokeStyle = "#1F1E1D"; g.lineWidth = Math.max(1, s / 8);
+    for (const [x, y] of ecken(gb)) { g.fillRect(x - s / 2, y - s / 2, s, s); g.strokeRect(x - s / 2, y - s / 2, s, s); }
+    g.restore();
+  }
   g.restore();
 }
+
+/** Fläche des gewählten Bild-Elements, wenn es bei t zu sehen ist (für die Griffe), sonst null. Wie PreviewView.HandleBox. */
+export function griffFlaeche(p, it, t, W, H) {
+  if (!it || !istSichtbar(it)) return null;
+  const s = spurVon(p, it); if (!s || s.Kind !== "Video" || s.Hidden) return null;
+  if (t < it.Start || t >= ende(it)) return null;
+  return box(it, { x: 0, y: 0, w: W, h: H });
+}
+/** Ecken im Uhrzeigersinn ab oben links (Reihenfolge wie die App). */
+export const ecken = b => [[b.x, b.y], [b.x + b.w, b.y], [b.x + b.w, b.y + b.h], [b.x, b.y + b.h]];
 
 /** Das neue Element B im Übergang, q = 0 … 1. */
 function herein(d, q, R, l) {
@@ -135,6 +159,13 @@ function ein(g, it, q, R, look, fuellen, W) {
   g.save();
   g.beginPath(); g.rect(b.x, b.y, b.w, b.h); g.clip();
   setzeClip(g, R, look.clip);
+  if (istFarbe(it)) {
+    // Farbblock: Farbe mit Deckkraft; Helligkeit und Schwarzblende über denselben Filter wie Bilder, Weißblende darüber
+    g.globalAlpha = look.alpha; g.filter = filter(it, look.ton, look.weiss, W);
+    g.fillStyle = rgba(it.Fill, 1); g.fillRect(b.x, b.y, b.w, b.h);
+    if (look.weiss && look.ton < 1) { g.filter = "none"; g.globalAlpha = look.alpha * (1 - look.ton); g.fillStyle = "#fff"; g.fillRect(b.x, b.y, b.w, b.h); }
+    g.restore(); return b;
+  }
   if (!q) { g.fillStyle = "rgba(61,61,58,.35)"; const c = inhalt(it, b, fuellen); g.fillRect(c.x, c.y, c.w, c.h); g.restore(); return b; }
   const c = inhalt(it, b, fuellen);
   g.globalAlpha = look.alpha;
@@ -155,14 +186,14 @@ function texte(g, p, t, R) {
     for (const it of s.Items) {
       if (!it.Text?.trim() || t < it.Start || t >= ende(it)) continue;
       const size = Math.max(6, Math.min(R.w, R.h) * it.TextSize), fd = Math.min(0.3, laenge(it) / 3), lt = t - it.Start;
-      const a = Math.min(1, Math.max(0, Math.min(fd > 0 ? lt / fd : 1, fd > 0 ? (ende(it) - t) / fd : 1)));
+      const a = Math.min(1, Math.max(0, Math.min(fd > 0 ? lt / fd : 1, fd > 0 ? (ende(it) - t) / fd : 1))) * Math.min(1, Math.max(0, it.Opacity ?? 1));
       g.save();
       g.font = `600 ${size}px "Segoe UI", system-ui, -apple-system, Arial, sans-serif`; g.textAlign = "center"; g.textBaseline = "top";
       const zeilen = it.Text.replace(/\r/g, "").split("\n"), lh = size * 1.2;
       const bw = Math.max(...zeilen.map(z => g.measureText(z).width)), bh = lh * zeilen.length;
       const y = it.TextPos === "oben" ? R.y + R.h * 0.08 : it.TextPos === "mitte" ? R.y + (R.h - bh) / 2 : R.y + R.h - bh - R.h * 0.10;
       const x = R.x + R.w / 2;
-      if (it.TextBox) { const pad = size * 0.35; g.fillStyle = `rgba(0,0,0,${0.45 * a})`; g.fillRect(x - bw / 2 - pad, y - pad, bw + 2 * pad, bh + 2 * pad); }
+      if (it.TextBox) { const pad = size * 0.35; g.fillStyle = rgba(it.TextBoxColor ?? "#000000", (it.TextBoxOpacity ?? 0.45) * a); g.fillRect(x - bw / 2 - pad, y - pad, bw + 2 * pad, bh + 2 * pad); }
       else { g.shadowColor = `rgba(0,0,0,${0.6 * a})`; g.shadowBlur = size * 0.15; }
       g.globalAlpha = a; g.fillStyle = it.TextColor || "#FFFFFF";
       zeilen.forEach((z, k) => g.fillText(z, x, y + k * lh));

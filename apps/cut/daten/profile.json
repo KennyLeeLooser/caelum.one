@@ -1,6 +1,6 @@
 {
   "_kopf": "Erzeugt aus Caelum Cut (Profiles.cs, Jobs.cs) mit web/export – nicht von Hand ändern.",
-  "appVersion": "0.2.0",
+  "appVersion": "0.3.0",
   "profile": [
     {
       "id": "redmi-note-14",
