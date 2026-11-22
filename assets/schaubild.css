@@ -1,0 +1,102 @@
+/* Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
+   Schaubilder der Bereiche im Stil des Hydra-Schaubilds der Startseite (Caelum im Kreis, Knoten mit farbigem Rand, laufende Linien)
+   + Schritt-Spieler mit Terminal (Labor) + Motion im Browser (Sound Design).
+   KI-Beitrag (Claude, GB-7), 22.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). */
+:root {
+  --c-pandora: #D97757; --c-vision: #C44FD6; --c-viewer: #F2B05A; --c-goose: #6BAF73; --info: #7FA3D6;
+  --c-motion: #E8C547; --ok: #7BC47F;
+}
+.modul { margin: 0 0 56px; }
+.modul > h2 { font-size: 22px; margin: 8px 0 6px; }
+.modul > p.lead { color: var(--text-soft); margin: 0 0 18px; max-width: 46em; }
+
+/* ---- Schaubild (wie .hydra auf der Startseite) ---- */
+.sb { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.sb svg { width: 100%; height: auto; display: block; }
+.sb svg.hoch { display: none; }
+@media (max-width: 560px) { .sb svg.breit { display: none; } .sb svg.hoch { display: block; } .sb { padding: 10px; } }
+.sb text { font-family: Inter, "Segoe UI", system-ui, sans-serif; text-anchor: middle; }
+.sb .lbl { fill: var(--muted); font-size: 11px; letter-spacing: .08em; text-anchor: start; }
+.sb .lbl.r { text-anchor: end; }
+.sb .edge { stroke: var(--line); stroke-width: 2; transition: stroke .3s, opacity .3s; }
+.sb .flow { stroke: var(--sky); stroke-width: 2.4; stroke-dasharray: 4 12; opacity: 0; transition: opacity .3s; }
+.sb .flow.an { opacity: .95; animation: sbflow 1.2s linear infinite; }
+.sb .flow.an.rueck { animation-direction: reverse; }
+@keyframes sbflow { to { stroke-dashoffset: -32; } }
+.sb .node rect { fill: var(--bg); stroke: var(--c, var(--line)); stroke-width: 1.5; transition: fill .3s, stroke-width .3s; }
+.sb .node text { fill: var(--text-soft); font-size: 14px; font-weight: 500; }
+.sb .node .sub { fill: var(--muted); font-size: 11px; font-weight: 400; }
+.sb .node.an rect { fill: color-mix(in srgb, var(--c, var(--sky)) 18%, var(--bg)); stroke-width: 3; }
+.sb .node.an text { fill: var(--text); }
+.sb .node.app rect { fill: var(--bg-deep); stroke-width: 2; }
+.sb .node.app text { font-weight: 600; }
+.sb .kreis circle { fill: var(--bg-deep); stroke: var(--sky); stroke-width: 2; }
+.sb .kreis .ring { fill: none; stroke: var(--sky); stroke-width: 1; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.sb .kreis.an .ring { animation: sbring 1.6s ease-out infinite; }
+@keyframes sbring { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(1.35); } }
+.sb .kreis text { fill: var(--text); font-size: 16px; font-weight: 600; }
+.sb .kreis .sub { fill: var(--muted); font-size: 11px; font-weight: 400; }
+
+/* ---- Schritt-Spieler + Terminal ---- */
+.spieler { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-top: 14px; }
+@media (max-width: 820px) { .spieler { grid-template-columns: 1fr; } }
+.schritte { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 1 / -1; align-items: center; }
+.schritte button { all: unset; cursor: pointer; font-size: 13px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-soft); background: var(--bg); }
+.schritte button b { color: var(--muted); font-weight: 600; margin-right: 6px; }
+.schritte button:hover { border-color: var(--sky); }
+.schritte button[aria-current="step"] { background: color-mix(in srgb, var(--sky) 24%, var(--bg)); border-color: var(--sky); color: var(--text); }
+.schritte button[aria-current="step"] b { color: var(--sky); }
+.schritte button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+.schritte .play { margin-left: auto; border-color: var(--sky); color: var(--text); }
+.erklaer { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.erklaer h3 { margin: 0 0 6px; font-size: 17px; }
+.erklaer p { margin: 0; color: var(--text-soft); }
+.term { background: #141413; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; min-height: 168px; display: flex; flex-direction: column; }
+.term .leiste { display: flex; gap: 6px; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.term .leiste i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: inline-block; }
+.term .leiste span { margin-left: 8px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+.term pre { margin: 0; padding: 12px 14px; font: 13px/1.55 ui-monospace, "Cascadia Code", Consolas, monospace; color: #C9C6BF; white-space: pre-wrap; overflow-wrap: anywhere; flex: 1; }
+.term .p { color: var(--sky); }
+.term .k { color: #7E7C76; }
+.term .ok { color: var(--ok); }
+.term .w { color: #E8C547; }
+.term .cursor { display: inline-block; width: .55em; height: 1.1em; vertical-align: -0.15em; background: var(--sky); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* UAC-Karte (stilisiert, Caelum-Farben) */
+.uac { margin: 0 14px 14px; border: 1px solid #E8C547; border-radius: 12px; background: color-mix(in srgb, #E8C547 10%, #141413); padding: 12px 14px; display: none; gap: 12px; align-items: center; font-size: 14px; }
+.uac.an { display: flex; animation: uacein .35s ease-out; }
+@keyframes uacein { from { opacity: 0; transform: translateY(6px); } }
+.uac svg { width: 34px; height: 38px; flex: none; }
+.uac .t b { display: block; color: var(--text); }
+.uac .t small { color: var(--muted); }
+.uac .k { margin-left: auto; display: flex; gap: 6px; }
+.uac .k span { white-space: nowrap; padding: 5px 12px; border-radius: 8px; border: 1px solid var(--line); color: var(--text-soft); font-size: 13px; }
+.uac .k span.ja { background: #E8C547; color: #1F1E1D; border-color: #E8C547; font-weight: 600; }
+.uac.ok .k span.ja::after { content: " ✓"; }
+
+/* ---- Motion im Browser (Sound Design) ---- */
+.motion { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 820px) { .motion { grid-template-columns: 1fr; } }
+.motion .pad { position: relative; aspect-ratio: 1 / 1; max-height: 460px; width: 100%; background: var(--bg-deep); border: 1px solid var(--line); border-radius: 14px; touch-action: none; cursor: crosshair; overflow: hidden; }
+.motion .pad canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.motion .pad .hinweis { position: absolute; inset: auto 0 12px 0; text-align: center; color: var(--muted); font-size: 13px; pointer-events: none; }
+.motion .seite { display: flex; flex-direction: column; gap: 12px; }
+.motion .karte { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.motion .karte h3 { margin: 0 0 8px; font-size: 15px; color: var(--text); }
+.motion .knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
+.motion button { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text-soft); font-size: 14px; }
+.motion button:hover { border-color: var(--c-motion); }
+.motion button[aria-pressed="true"] { background: color-mix(in srgb, var(--c-motion) 22%, var(--bg)); border-color: var(--c-motion); color: var(--text); }
+.motion button.gross { background: var(--c-motion); color: #1F1E1D; font-weight: 600; border-color: var(--c-motion); }
+.motion button:focus-visible { outline: 2px solid var(--c-motion); outline-offset: 2px; }
+.motion .werte { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: center; font-size: 13px; color: var(--text-soft); }
+.motion .werte .balken { height: 6px; border-radius: 3px; background: var(--bg); overflow: hidden; }
+.motion .werte .balken i { display: block; height: 100%; width: 0; background: var(--c-motion); }
+.motion .werte code { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); min-width: 4.5em; text-align: right; }
+.motion .midi { font: 12px/1.5 ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--muted); background: #141413; border-radius: 10px; padding: 8px 10px; min-height: 5.6em; white-space: pre; overflow: hidden; }
+.motion .klein { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sb .flow.an, .sb .kreis.an .ring, .term .cursor { animation: none; }
+}

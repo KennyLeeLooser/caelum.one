@@ -2,6 +2,7 @@
 // Baukasten der Bereiche (Webdesign, Studio, Labor, Partner, Community): eine Hülle je Ordner (<body data-bereich="…">),
 // Inhalt aus /bereiche/bereiche.json. Regler oben wie bei /developer/, in der Farbe des gemalten Zeichens.
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// „module“ (Schaubilder Labor, Motion im Browser) – KI-Beitrag (Claude, GB-7), 22.11.2026 – Freigabe ausstehend (GB-8).
 (function () {
   'use strict';
   var id = document.body.getAttribute('data-bereich');
@@ -66,6 +67,13 @@
       b.karten.forEach(function (k) { g.appendChild(karte(k, f)); });
       s.appendChild(g); main.appendChild(s);
     }
+
+    (b.module || []).forEach(function (m) {   // eigene Module (Schaubilder, Prototypen) aus /assets/*.js, siehe „skripte“
+      var s = el('section', 'modul'); s.setAttribute('data-modul', m); main.appendChild(s);
+      var los = function () { if (s.dataset.an) return; s.dataset.an = '1'; window.CaelumModul[m](s, f); };
+      if (window.CaelumModul && window.CaelumModul[m]) los();
+      else document.addEventListener('caelum-modul', function h(e) { if (e.detail === m) { document.removeEventListener('caelum-modul', h); los(); } });
+    });
 
     if (b.wie && b.wie.length) {
       var w = el('section', 'wie');

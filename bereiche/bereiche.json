@@ -1,5 +1,5 @@
 {
-  "_kopf": "Caelum-Bereiche (Zeichen im Fusslogo → Regler → eigene Seite). © 2026 Caelum GmbH. Neuer Bereich = Eintrag hier → Hüllen /<id>/index.html neu schreiben (node WEBSEITE-BEREICHE-HUELLEN.mjs Webseite, liegt privat im Wurzelordner) → href im ZEICHEN-Eintrag in index.html. Stand 21.11.2026 (Sound Design dazu).",
+  "_kopf": "Caelum-Bereiche (Zeichen im Fusslogo → Regler → eigene Seite). © 2026 Caelum GmbH. Neuer Bereich = Eintrag hier → Hüllen /<id>/index.html neu schreiben (node WEBSEITE-BEREICHE-HUELLEN.mjs Webseite, liegt privat im Wurzelordner) → href im ZEICHEN-Eintrag in index.html. Stand 22.11.2026 (Felder module/stile/skripte: eigene Module je Bereich, Labor + Sound Design).",
   "bereiche": [
     {
       "id": "developer",
@@ -64,6 +64,7 @@
         { "titel": "Caelum Rorschach", "untertitel": "Codes mit Befehlen", "text": "Ein QR-Code, der mehr kann als eine Adresse: Er trägt Befehle für unsere Apps.", "status": "Vorschau", "tags": ["Browser", "Handy"], "link": "/r/", "knopf": "Ausprobieren" },
         { "titel": "Good Goose", "untertitel": "Gans mit Wissen", "text": "Unsere Gans antwortet in 9 Sprachen auf Fragen zu Caelum – sie läuft ganz im Browser, ohne Server.", "status": "Live", "tags": ["9 Sprachen", "lokal"], "link": "/#p-goose", "knopf": "Zur Gans" }
       ],
+      "module": ["verbindungen"], "stile": ["/assets/schaubild.css?v=1"], "skripte": ["/assets/labor-schaubild.js?v=1"],
       "wieTitel": "Wie ein Versuch zum Produkt wird",
       "wie": [
         ["Ausprobieren", "Ein kleiner Versuch im Browser, schnell gebaut."],
@@ -129,9 +130,10 @@
       "text": "Im Sound Design verbinden wir Musik mit Bewegung: Handy oder Joy-Con steuern Klänge in Ableton, und unsere Spiele und Videos bekommen ihren eigenen Ton.",
       "kartenTitel": "Werkzeuge",
       "karten": [
-        { "titel": "Caelum Motion", "untertitel": "Bewegung wird Klang", "text": "Ein Plugin für Ableton: Neigen und Schwenken von Handy oder Joy-Con steuern Regler und Effekte – live.", "status": "In Planung", "tags": ["VST3", "Ableton"] },
+        { "titel": "Caelum Motion", "untertitel": "Bewegung wird Klang", "text": "Neigen und Schwenken von Handy oder Joy-Con steuern Regler und Effekte in Ableton – live. Hier im Browser zum Ausprobieren.", "status": "Prototyp", "tags": ["VST3", "Ableton", "Android"], "link": "#motion", "knopf": "Im Browser ausprobieren" },
         { "titel": "Caelum Cut", "untertitel": "Ton im Schnitt", "text": "Lautstärke und weiche oder harte Übergänge – der Ton läuft im Videoschnitt mit.", "status": "In Planung", "tags": ["Windows", "Video"] }
       ],
+      "module": ["motion-web"], "stile": ["/assets/schaubild.css?v=1"], "skripte": ["/assets/motion-web.js?v=1"],
       "wieTitel": "Wie ein Klang entsteht",
       "wie": [
         ["Bewegen", "Handy oder Joy-Con liefern die Bewegung."],
