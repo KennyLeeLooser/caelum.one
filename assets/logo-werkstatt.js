@@ -7,11 +7,14 @@
 // v4 (B 5, 22.11.2026): Umschalter „Felder | Bauteile – Stupa“. Bauteile = die echten Formen aus LogoKit.cs (Caelum Start-Up),
 // Ansicht Logo (von oben) oder Stupa (von der Seite), Aufbauen wie in Start-Up, SVG-Export beider Ansichten; unter der Seite
 // baut sich ein kleiner Stupa auf und schiebt sich zum Logo (antippen wechselt, ◇ öffnet die Werkstatt).
+// v5 (22.11.2026, Befund Kenny): Stupa ist ein eigenes Logo – keine Caelum-Aussenlinien mehr darüber, Knöpfe „Elementfarben“ und
+// „Original-Linien“ entfernt; die Teile zeichnen ihre eigenen Umrisse. Neu: Ansicht „3D – drehen“ (assets/stupa-3d.js) und GLB speichern.
 // KI-Beitrag (Claude, GB-7), 20.11.2026 – Freigabe durch Kenny Looser offen (GB-8).
 (function () {
   'use strict';
   if (window.CaelumWerkstatt) return;
   var NS = 'http://www.w3.org/2000/svg';
+  var SKRIPT = (document.currentScript && document.currentScript.src) || location.href;   // v5: stupa-3d.js liegt daneben
   var GRUND = [['#262624', 'Dunkel'], ['#FFF8F0', 'Hell'], ['none', 'Durchsichtig']];
   var LINIEN = [['#262624', 'Schwarz'], ['#E53935', 'Rot'], ['#FB8C00', 'Orange'], ['#FDD835', 'Gelb'], ['#43A047', 'Grün'],
     ['#1E88E5', 'Blau'], ['#3949AB', 'Indigo'], ['#8E24AA', 'Violett'], ['#E8E6E1', 'Weiss']];
@@ -47,23 +50,20 @@
     '.cs-teil{transform-box:view-box;transform-origin:0 0;transition:transform 1.1s cubic-bezier(.6,.05,.3,1),opacity .4s}',
     '.cs-teil.cs-fall{transition:transform .9s cubic-bezier(.3,1.35,.55,1),opacity .25s}',
     '.cs-teil path{transition:fill .4s,stroke .4s,stroke-opacity .6s}',
-    '.cs-orig,.cs-grund{transition:opacity .8s}',
-    '.cs-sofort .cs-teil,.cs-sofort .cs-orig,.cs-sofort .cs-grund{transition:none!important}',
-    '@media (prefers-reduced-motion:reduce){.cs-teil,.cs-orig,.cs-grund{transition:none!important}}'
+    '.cs-grund{transition:opacity .8s}',
+    '.cs-sofort .cs-teil,.cs-sofort .cs-grund{transition:none!important}',
+    '@media (prefers-reduced-motion:reduce){.cs-teil,.cs-grund{transition:none!important}}'
   ].join('');
   function ruhig() { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
-  function linienPfad() { var p = document.querySelector('.signet svg.lines path'); return p ? p.getAttribute('d') : ''; }
   // Ansicht „logo“ = von oben (alle Teile im selben Quadrat), „stupa“ = von der Seite (Teile übereinander), drop = Höhe über dem Platz
   function pose(i, ansicht, W, H, drop) {
     if (ansicht === 'logo') { var L = Math.min(W, H) * 0.8; return { x: (W - L) / 2, y: (H - L) / 2, k: L / 1000 }; }
     var s = Math.min(W * 0.8, (H - 24) / (STUPA_TOP + 0.08)), K = STUPA[i].k * s, r = BAU[i].r;
     return { x: W / 2 - 500 * K, y: H - 10 - (STUPA[i].unten + (drop || 0)) * s - (r[1] + r[3]) * K, k: K };
   }
-  // Original-Linien (1024er-Quadrat, Rahmenmitte 67…957) auf das 1000er-Quadrat der Bauteile gelegt
-  var ORIG_IN_TEIL = 'translate(-75.3 -75.3) scale(1.1236)';
   function Buehne(svgEl, W, H, o) {
     o = o || {};
-    var st = { ansicht: o.ansicht || 'logo', farben: BAU.map(function (b) { return b.farbe; }), an: [1, 1, 1, 1, 1], linie: o.linie || '#262624', grund: o.grund || 'none', original: o.original !== false, strich: o.strich || 25 };
+    var st = { ansicht: o.ansicht || 'logo', farben: BAU.map(function (b) { return b.farbe; }), an: [1, 1, 1, 1, 1], linie: o.linie || '#262624', grund: o.grund || 'none', strich: o.strich || 25 };
     var uhr = [];
     svgEl.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     svgEl.innerHTML = '';
@@ -76,26 +76,19 @@
       var t = el('title', {}); t.textContent = b.form + ' · ' + b.element; p.appendChild(t);
       g.appendChild(p); svgEl.appendChild(g); return g;
     });
-    var orig = el('g', { 'class': 'cs-orig' });
-    orig.setAttribute('transform', 'translate(' + lp.x + ' ' + lp.y + ') scale(' + lp.k + ')');
-    var op = el('path', { 'fill-rule': 'evenodd', d: linienPfad(), transform: ORIG_IN_TEIL });
-    orig.appendChild(op); svgEl.appendChild(orig);
     function el(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
     function tf(p) { return 'translate(' + p.x.toFixed(2) + 'px,' + p.y.toFixed(2) + 'px) scale(' + p.k.toFixed(5) + ')'; }
     function farbe() {
-      var logo = st.ansicht === 'logo', mitOrig = logo && st.original && op.getAttribute('d');
+      var logo = st.ansicht === 'logo';
       teile.forEach(function (g, i) {
         var p = g.firstChild, f = st.farben[i];
         p.setAttribute('fill', f);
         p.setAttribute('fill-opacity', logo ? '1' : '.85');
-        // Stupa: Linie heller als die Fläche (wie Start-Up); Logo: Linienfarbe, unter den Original-Linien ausgeblendet
+        // Stupa: Linie heller als die Fläche (wie Start-Up); Logo von oben: eigene Umrisse in der Linienfarbe (keine Caelum-Linien)
         p.style.stroke = !logo && f !== 'none' ? 'color-mix(in srgb,' + f + ' 62%, #fff)' : st.linie;
-        p.style.strokeOpacity = mitOrig ? '0' : '1';
         g.style.opacity = st.an[i] ? '' : '0';
         g.style.pointerEvents = st.an[i] ? '' : 'none';
       });
-      op.setAttribute('fill', st.linie);
-      orig.style.opacity = mitOrig ? '1' : '0';
       grund.setAttribute('fill', st.grund === 'none' ? 'transparent' : st.grund);
       grund.style.opacity = logo ? '1' : '0';
     }
@@ -121,29 +114,26 @@
       },
       // Für die Datei: aktuelle Ansicht als SVG-Inhalt (Transform als Attribut statt CSS)
       inhalt: function (animiert) {
-        var logo = st.ansicht === 'logo', mitOrig = logo && st.original && op.getAttribute('d'), out = [];
+        var logo = st.ansicht === 'logo', out = [];
         if (logo && st.grund !== 'none') out.push('<rect x="' + grund.getAttribute('x') + '" y="' + grund.getAttribute('y') + '" width="' + grund.getAttribute('width') + '" height="' + grund.getAttribute('height') + '" rx="6" fill="' + st.grund + '"/>');
         BAU.forEach(function (b, i) {
           if (!st.an[i]) return;
           var p = pose(i, st.ansicht, W, H, 0), f = st.farben[i], strich = teile[i].firstChild.style.stroke;
           out.push('<g transform="translate(' + p.x.toFixed(2) + ' ' + p.y.toFixed(2) + ') scale(' + p.k.toFixed(5) + ')">' +
             (animiert ? '<path class="f" style="animation-delay:' + (i * 0.56).toFixed(2) + 's" d="' + b.d + '" fill="' + f + '" fill-opacity="' + (logo ? 1 : 0.85) + '"/>' : '') +
-            '<path' + (animiert ? ' class="t' + (mitOrig ? ' k' : '') + '" pathLength="1" style="--d:1.1s;animation-delay:' + (i * 0.56).toFixed(2) + 's"' : '') + ' d="' + b.d + '" fill="' + (animiert ? 'none' : f) + '"' + (logo ? '' : ' fill-opacity=".85"') +
-            ' stroke="' + strich + '"' + (mitOrig && !animiert ? ' stroke-opacity="0"' : '') + ' stroke-width="' + st.strich + '" stroke-linejoin="round"><title>' + b.form + ' · ' + b.element + '</title></path></g>');
+            '<path' + (animiert ? ' class="t" pathLength="1" style="--d:1.1s;animation-delay:' + (i * 0.56).toFixed(2) + 's"' : '') + ' d="' + b.d + '" fill="' + (animiert ? 'none' : f) + '"' + (logo ? '' : ' fill-opacity=".85"') +
+            ' stroke="' + strich + '" stroke-width="' + st.strich + '" stroke-linejoin="round"><title>' + b.form + ' · ' + b.element + '</title></path></g>');
         });
-        if (mitOrig) out.push('<g' + (animiert ? ' class="o"' : '') + ' transform="translate(' + lp.x + ' ' + lp.y + ') scale(' + lp.k + ')"><path fill="' + st.linie + '" fill-rule="evenodd" transform="' + ORIG_IN_TEIL + '" d="' + op.getAttribute('d') + '"/></g>');
         return out.join('');
       }
     };
     api.neu();
     return api;
   }
-  // Animation der Datei wie LogoKit.Svg: Teile zeichnen sich ein, Flächen erscheinen, am Ende stehen die Original-Linien
+  // Animation der Datei wie LogoKit.Svg: Teile zeichnen sich ein, Flächen erscheinen (eigene Umrisse bleiben stehen)
   var BAU_DATEI_CSS = '.t{stroke-dasharray:1;stroke-dashoffset:1;animation:zeichnen var(--d) cubic-bezier(.6,.05,.3,1) forwards}' +
-    '.f{opacity:0;animation:fuellen .8s ease-out forwards}.k{animation:zeichnen var(--d) cubic-bezier(.6,.05,.3,1) forwards,aus .9s ease-in-out 3.6s forwards}' +
-    '.o{opacity:0;animation:ein .9s ease-in-out 3.6s forwards}@keyframes zeichnen{to{stroke-dashoffset:0}}@keyframes fuellen{to{opacity:1}}' +
-    '@keyframes aus{to{stroke-opacity:0}}@keyframes ein{to{opacity:1}}' +
-    '@media (prefers-reduced-motion:reduce){.t,.f,.k,.o{animation:none}.t{stroke-dashoffset:0}.k{stroke-opacity:0}.o{opacity:1}}';
+    '.f{opacity:0;animation:fuellen .8s ease-out forwards}@keyframes zeichnen{to{stroke-dashoffset:0}}@keyframes fuellen{to{opacity:1}}' +
+    '@media (prefers-reduced-motion:reduce){.t,.f{animation:none}.t{stroke-dashoffset:0}}';
 
   function merk(v) { try { if (v === undefined) return JSON.parse(localStorage.getItem('caelum-werkstatt') || 'null'); localStorage.setItem('caelum-werkstatt', JSON.stringify(v)); } catch (e) {} return null; }
   function startFarben() { return Array.prototype.map.call(document.querySelectorAll('.signet svg.felder path.cell'), function (p) { return p.getAttribute('fill') || '#30302E'; }); }
@@ -210,9 +200,10 @@
   document.head.appendChild(css);
 
   var stand = merk() || { felder: null, linie: '#262624', grund: '#262624', anim: 'einzeichnen' };
-  if (!stand.bau || !stand.bau.farben || stand.bau.farben.length !== 5) stand.bau = { ansicht: 'logo', farben: BAU.map(function (b) { return b.farbe; }), an: [1, 1, 1, 1, 1], original: true };
+  if (!stand.bau || !stand.bau.farben || stand.bau.farben.length !== 5) stand.bau = { ansicht: 'logo', farben: BAU.map(function (b) { return b.farbe; }), an: [1, 1, 1, 1, 1] };
+  delete stand.bau.original;   // v5: keine Original-Linien mehr
   var pinsel = null, malt = false, svg = null, huelle = null, linienReihe = null, buehne = null;
-  var werk = function () {}, bauFarben = function () {};
+  var werk = function () {}, bauFarben = function () {}, zeige3d = function () {}, starte3d = function () {}, dreiModul = null;
 
   function bauen() {
     huelle = document.createElement('div'); huelle.className = 'werkstatt'; huelle.hidden = true;
@@ -227,15 +218,17 @@
     var bild = document.createElement('div'); bild.className = 'bild'; links.appendChild(bild);
     svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', '0 0 1024 1024'); bild.appendChild(svg);
     var bild2 = document.createElement('div'); bild2.className = 'bild bau'; links.appendChild(bild2);
-    var svg2 = document.createElementNS(NS, 'svg'); svg2.setAttribute('role', 'img'); svg2.setAttribute('aria-label', 'Bauteile des Caelum-Logos'); bild2.appendChild(svg2);
+    var svg2 = document.createElementNS(NS, 'svg'); svg2.setAttribute('role', 'img'); svg2.setAttribute('aria-label', 'Bauteile des Stupa-Logos'); bild2.appendChild(svg2);
+    var bild3 = document.createElement('div'); bild3.className = 'bild drei'; bild3.hidden = true; links.appendChild(bild3);
     var seite = document.createElement('div'); seite.className = 'seite'; r.appendChild(seite);
     var mFelder = knopf('Felder', function () { werk('felder'); }), mBau = knopf('Bauteile – Stupa', function () { werk('bauteile'); });
     modi.appendChild(mFelder); modi.appendChild(mBau);
     werk = function (m) {
       stand.werk = m;
       mFelder.setAttribute('aria-pressed', String(m === 'felder')); mBau.setAttribute('aria-pressed', String(m === 'bauteile'));
-      bild.hidden = m !== 'felder'; bild2.hidden = m !== 'bauteile';
+      bild.hidden = m !== 'felder'; bild2.hidden = m !== 'bauteile' || stand.bau.ansicht === '3d'; bild3.hidden = m !== 'bauteile' || stand.bau.ansicht !== '3d';
       Array.prototype.forEach.call(seite.querySelectorAll('[data-werk]'), function (g) { g.hidden = g.getAttribute('data-werk') !== m; });
+      Array.prototype.forEach.call(seite.querySelectorAll('[data-glb]'), function (g) { g.hidden = m !== 'bauteile'; });
       if (m === 'bauteile' && buehne) bauFarben();
       merk(stand);
     };
@@ -258,31 +251,46 @@
     eigen.oninput = function () { pinsel = eigen.value; markiere(pr, null); }; pr.appendChild(eigen);
     var rad = tupf('none', 'Radierer (Feld leer)', function () { pinsel = 'none'; markiere(pr, rad); }); rad.classList.add('leer'); pr.appendChild(rad);
 
-    // Bauteile (B 5): Ansicht, Teile ein/aus, Elementfarben, Aufbauen
+    // Bauteile (B 5): Ansicht (Logo · Stupa · 3D), Teile ein/aus, Aufbauen
     var b1 = gruppe(seite, 'Ansicht', 'bauteile');
     var vLogo = knopf('Logo – von oben', function () { bauAnsicht('logo'); }), vStupa = knopf('Stupa – von der Seite', function () { bauAnsicht('stupa'); });
-    b1.reihe.appendChild(vLogo); b1.reihe.appendChild(vStupa); b1.reihe.appendChild(knopf('Aufbauen', function () { buehne.aufbauen(true); bauAnsichtKnoepfe('logo'); }));
-    function bauAnsichtKnoepfe(a) { vLogo.setAttribute('aria-pressed', String(a === 'logo')); vStupa.setAttribute('aria-pressed', String(a === 'stupa')); }
-    function bauAnsicht(a) { stand.bau.ansicht = a; bauAnsichtKnoepfe(a); buehne.ansicht(a); merk(stand); }
+    var v3d = knopf('3D – drehen', function () { bauAnsicht('3d'); });
+    b1.reihe.appendChild(vLogo); b1.reihe.appendChild(vStupa); b1.reihe.appendChild(v3d);
+    b1.reihe.appendChild(knopf('Aufbauen', function () { bauAnsicht('logo', true); buehne.aufbauen(true); }));
+    function bauAnsichtKnoepfe(a) { vLogo.setAttribute('aria-pressed', String(a === 'logo')); vStupa.setAttribute('aria-pressed', String(a === 'stupa')); v3d.setAttribute('aria-pressed', String(a === '3d')); }
+    function bauAnsicht(a, still) {
+      stand.bau.ansicht = a; bauAnsichtKnoepfe(a); werk('bauteile');
+      if (a === '3d') drei3d(); else if (!still) buehne.ansicht(a);
+      merk(stand);
+    }
+    // 3D: Modul erst laden, wenn jemand es will (Renderer des Caelum 3D-Viewers, keine fremde Bibliothek)
+    var dreiMod = null, drei = null;
+    function drei3d() {
+      dreiModul().then(function (m) {
+        if (!drei) { drei = m.buehne3d(bild3); if (!drei) { bild3.textContent = 'Dieser Browser kann kein WebGL2 – die 3D-Ansicht braucht einen aktuellen Browser.'; return; } }
+        drei.zeigen(stand.bau.farben, stand.bau.an); drei.drehen();
+      }).catch(function (e) { bild3.textContent = '3D liess sich nicht laden: ' + e; });
+    }
+    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=2', SKRIPT).href)); };
+    zeige3d = function () { if (drei && stand.bau.ansicht === '3d') drei.zeigen(stand.bau.farben, stand.bau.an); };
+    starte3d = drei3d;
     var b2 = gruppe(seite, 'Bauteile – antippen färbt mit der Pinselfarbe', 'bauteile');
     var teilKnoepfe = BAU.map(function (b, i) {
       var k = knopf(b.form + ' · ' + b.element, function () { stand.bau.an[i] = stand.bau.an[i] ? 0 : 1; bauFarben(); merk(stand); });
       k.style.borderLeft = '4px solid ' + b.farbe; b2.reihe.appendChild(k); return k;
     });
-    b2.reihe.appendChild(knopf('Elementfarben', function () { stand.bau.farben = BAU.map(function (b) { return b.farbe; }); bauFarben(); merk(stand); }));
-    var orK = knopf('Original-Linien', function () { stand.bau.original = !stand.bau.original; bauFarben(); merk(stand); }); b2.reihe.appendChild(orK);
     var hw = document.createElement('p'); hw.className = 'hinweis';
-    hw.textContent = 'Das Caelum-Logo ist der Stupa von oben: dieselben fünf Formen übereinander, wie in Caelum Start-Up.';
+    hw.textContent = 'Der Stupa ist ein eigenes Logo: dieselben fünf Formen wie Caelum, ohne die Caelum-Linien – von oben, von der Seite oder in 3D zum Drehen.';
     b2.reihe.parentNode.appendChild(hw);
     bauFarben = function () {
       var s = buehne.stand;
-      s.farben = stand.bau.farben.slice(); s.an = stand.bau.an.slice(); s.original = stand.bau.original;
+      s.farben = stand.bau.farben.slice(); s.an = stand.bau.an.slice();
       s.linie = stand.linie; s.grund = stand.grund === 'none' ? 'none' : stand.grund;
       teilKnoepfe.forEach(function (k, i) { k.setAttribute('aria-pressed', String(!!stand.bau.an[i])); });
-      orK.setAttribute('aria-pressed', String(!!stand.bau.original));
       buehne.farbe();
+      zeige3d();
     };
-    buehne = Buehne(svg2, 1000, 1000, { ansicht: stand.bau.ansicht });
+    buehne = Buehne(svg2, 1000, 1000, { ansicht: stand.bau.ansicht === '3d' ? 'logo' : stand.bau.ansicht });
     bauAnsichtKnoepfe(stand.bau.ansicht);
     svg2.addEventListener('click', function (e) {
       var g = e.target.closest && e.target.closest('.cs-teil'); if (!g) return;
@@ -323,6 +331,8 @@
     var p6 = gruppe(seite, 'Speichern');
     p6.reihe.appendChild(knopf('Als SVG speichern', function () { speichern(false); }, 'haupt'));
     p6.reihe.appendChild(knopf('Animierte SVG', function () { speichern(true); }));
+    var glbK = knopf('3D als GLB', function () { dreiModul().then(function (m) { laden(m.glb(stand.bau.farben, stand.bau.an), 'caelum-stupa.glb', 'model/gltf-binary'); }); });
+    glbK.setAttribute('data-glb', ''); p6.reihe.appendChild(glbK);
 
     // Malen: antippen oder mit gedrückter Maus/Finger darüberziehen
     svg.addEventListener('pointerdown', function (e) { malt = true; try { svg.setPointerCapture(e.pointerId); } catch (f) {} male(e); });
@@ -369,6 +379,7 @@
   function abspielen() { svg.setAttribute('class', ''); void svg.getBoundingClientRect(); svg.setAttribute('class', 'anim-' + stand.anim); merk(stand); }
   function speichern(animiert) {
     if (stand.werk === 'bauteile' && buehne) {
+      if (buehne.stand.ansicht !== 'logo' && buehne.stand.ansicht !== 'stupa') buehne.ansicht('logo');
       var datei2 = '<?xml version="1.0" encoding="UTF-8"?>\n<!-- Copyright © 2026 Caelum GmbH. Caelum-Logo aus der Logo-Werkstatt – Bauteile (LogoKit), Ansicht: ' + buehne.stand.ansicht + ' -->\n' +
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1024" height="1024">' + (animiert ? '<style>' + BAU_DATEI_CSS + '</style>' : '') + buehne.inhalt(animiert) + '</svg>\n';
       return laden(datei2, 'caelum-' + buehne.stand.ansicht + (animiert ? '-animiert' : '') + '.svg');
@@ -378,9 +389,9 @@
     var datei = kopf + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="44 44 936 936" width="1024" height="1024"' + (animiert ? ' class="anim-' + stand.anim + '"' : '') + '>' + stil + inhalt(false) + '</svg>\n';
     laden(datei, 'caelum-logo' + (animiert ? '-' + stand.anim : '') + '.svg');
   }
-  function laden(datei, name) {
+  function laden(datei, name, typ) {
     var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([datei], { type: 'image/svg+xml' }));
+    a.href = URL.createObjectURL(new Blob([datei], { type: typ || 'image/svg+xml' }));
     a.download = name;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
@@ -394,7 +405,7 @@
     if (linienReihe) markiere(linienReihe, linienReihe.querySelector('[data-farbe="' + stand.linie + '"]'));
     zeichnen(); huelle.hidden = false; document.documentElement.style.overflow = 'hidden';
     werk(modus === 'bauteile' || modus === 'felder' ? modus : stand.werk === 'bauteile' ? 'bauteile' : 'felder');
-    if (stand.werk === 'bauteile') buehne.aufbauen(stand.bau.ansicht !== 'stupa');
+    if (stand.werk === 'bauteile') { if (stand.bau.ansicht === '3d') { bauFarben(); starte3d(); } else buehne.aufbauen(stand.bau.ansicht !== 'stupa'); }
     huelle.querySelector('.x').focus({ preventScroll: true });
   }
   function zu() { if (!huelle || huelle.hidden) return; huelle.hidden = true; document.documentElement.style.overflow = ''; merk(stand); }
@@ -404,7 +415,7 @@
   // Antippen wechselt Stupa ↔ Logo, ◇ öffnet die Werkstatt bei den Bauteilen.
   (function fuss() {
     var footer = document.querySelector('footer');
-    if (!footer || !document.querySelector('.signet svg.lines path')) return;
+    if (!footer) return;
     var box = document.createElement('div'); box.className = 'stupa-fuss';
     var s = document.createElementNS(NS, 'svg'); s.setAttribute('role', 'button'); s.setAttribute('tabindex', '0');
     s.setAttribute('aria-label', 'Stupa und Logo: antippen wechselt');
