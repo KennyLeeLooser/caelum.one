@@ -4,6 +4,8 @@
 // Vollbild-Fenster: Medien | Vorschau mit Abspielen | Eigenschaften, darunter die Zeitleiste mit Video-, Ton- und Textspuren
 // (+ / −), Ziehen und Kürzen mit Maus und Finger, Übergänge (sanft/hart/Formen), Zuschnitt, Effekte, Lautstärke, Titel.
 // 0.3.0 (21.11.2026): Deckkraft-Schieber, RGB-Farbrad für Text und Hintergrund, Farbblöcke, Griffe in der Vorschau.
+// 0.3.1 (22.11.2026): Schere ✂ (Tippen schneidet, Weiterziehen verschiebt), Magnet 🧲 (nichts überlappt, Angehängte rücken mit),
+//   Kürzen am Rand mit gestricheltem Original, Menü bei langem Drücken/Rechtsklick (Deckkraft/Lautstärke, Schneiden, Löschen).
 // Projekt als .caelumcut (gleiches Format wie die App). Export Bild für Bild im Browser (export.js). Nichts wird hochgeladen.
 const V = new URL(import.meta.url).search;
 const P = await import("./projekt.js" + V);
@@ -63,7 +65,11 @@ const css = `
 .ced-zl .el.farbe { background-image:none; }
 .ced-zl .el.gewaehlt { border:2px solid var(--text,#E8E6E1); } .ced-zl .el.fehlt { background-color:rgba(229,72,77,.35); }
 .ced-zl .el span { display:block; font-size:11.5px; padding:1px 5px; background:rgba(31,30,29,.7); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.ced-zl .el .rand { position:absolute; top:0; bottom:0; width:9px; cursor:ew-resize; } .ced-zl .el .rand.l { left:0; } .ced-zl .el .rand.r { right:0; }
+.ced-zl .el .rand { position:absolute; top:0; bottom:0; width:12px; cursor:ew-resize; }
+.ced-zl .el .rand::after { content:""; position:absolute; top:28%; bottom:28%; left:50%; width:3px; margin-left:-1.5px; border-radius:2px; background:rgba(255,255,255,.5); }
+@media (pointer: coarse) { .ced-zl .el .rand { width:22px; } }   /* Finger: Rand zum Kürzen gut greifbar (Wunsch Kenny 22.11.2026) */
+.ced-zl.schere .el, .ced-zl.schere .el .rand { cursor:crosshair; }
+.ced-zl .geist { position:absolute; top:3px; bottom:3px; border:1px dashed rgba(255,255,255,.5); border-radius:6px; background:rgba(255,255,255,.05); pointer-events:none; } .ced-zl .el .rand.l { left:0; } .ced-zl .el .rand.r { right:0; }
 .ced-zl .el .ueb { position:absolute; top:0; bottom:0; left:0; background:linear-gradient(90deg, rgba(31,30,29,.75), transparent); pointer-events:none; }
 .ced-zl .el .ueb.sanft { background:linear-gradient(90deg, rgba(165,133,214,.75), transparent); }
 .ced-zl .el .vol { position:absolute; left:0; right:0; border-top:2px solid var(--accent,#D97757); pointer-events:none; }
@@ -75,9 +81,9 @@ const css = `
 .ced-fuss .status.fehler { color:#E5484D; } .ced-fuss .status.ok { color:var(--ok,#6BAF73); }
 .ced-buehne canvas.griff { cursor:move; touch-action:none; }
 .ced-buehne canvas.greifbar { touch-action:none; }   /* Finger zieht das Element, nicht die Seite (Redmi 22.11.2026) */
-.ced-eig .regler { display:grid; grid-template-columns:minmax(0,1fr) 46px; gap:6px; align-items:center; }
-.ced-eig .regler input[type=range] { width:100%; accent-color:var(--accent,#D97757); padding:0; border:0; background:none; }
-.ced-eig .regler output { text-align:right; font-variant-numeric:tabular-nums; }
+.ced .regler { display:grid; grid-template-columns:minmax(0,1fr) 46px; gap:6px; align-items:center; }
+.ced .regler input[type=range] { width:100%; accent-color:var(--accent,#D97757); padding:0; border:0; background:none; }
+.ced .regler output { text-align:right; font-variant-numeric:tabular-nums; }
 .ced-eig .farbknopf { display:flex; align-items:center; gap:8px; text-align:left; min-width:0; overflow:hidden; }
 .ced-eig .farbknopf span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .ced-eig .farbknopf i { width:30px; height:18px; border:1px solid var(--line,#3D3D3A); border-radius:3px; flex:none; }
@@ -90,6 +96,13 @@ const css = `
 .ced-eig .farbrad .reihe small { color:var(--muted,#9C9A94); }
 .ced-eig .farbrad .schnell { display:flex; gap:5px; flex-wrap:wrap; }
 .ced-eig .farbrad .schnell button { width:22px; height:22px; padding:0; border-radius:4px; }
+.ced-lauf button.an { background:var(--accent,#D97757); color:#1F1E1D; border-color:transparent; }
+.ced-menue { position:fixed; z-index:1002; background:var(--surface,#30302E); border:1px solid var(--line,#3D3D3A); border-radius:10px; padding:8px;
+  width:min(260px, calc(100vw - 16px)); box-shadow:0 10px 28px rgba(0,0,0,.5); display:grid; gap:5px; }
+.ced-menue b { font-size:13.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ced-menue label { display:grid; grid-template-columns:86px minmax(0,1fr); gap:6px; align-items:center; font-size:13px; color:#C9C6BF; }
+.ced-menue .hinweis { color:var(--muted,#9C9A94); font-size:12px; }
+.ced-menue button { text-align:left; padding:9px 10px; } .ced-menue button.weg { color:#E5484D; }
 .ced-drop { outline:2px dashed var(--accent,#D97757); outline-offset:-6px; }
 @media (max-width: 900px) {
   /* untereinander, die Seite rollt: Zeilen dürfen nicht unter ihren Inhalt schrumpfen (sonst überlappt die Vorschau) */
@@ -125,6 +138,9 @@ export async function oeffnen(ctx, daten, dateien = []) {
   let p = P.neuesProjekt(), sel = null, selSpur = null, kopf = 0, pps = 60, spielt = false, abbruch = null;
   const medien = new Map();                 // Datei → { datei, info, clip?, url, bitmap?, puffer?, poster? }
   const verlauf = [], wieder = [];
+  // Magnet (Elemente einer Spur überlappen nie, Angehängte rücken mit) und Schere (Tippen schneidet) – Wunsch Kenny 22.11.2026
+  let magnet = true, schere = false, menueEl = null;
+  try { magnet = localStorage.getItem("caelumCutMagnet") !== "0"; } catch { }
 
   // ── Gerüst ──
   const profilWahl = h("select", { "aria-label": "Gerät", title: "Gerät oder Plattform: Bildformat, Auflösung, Codec" },
@@ -159,11 +175,14 @@ export async function oeffnen(ctx, daten, dateien = []) {
   const buehne = h("canvas", { width: 360, height: 640 });
   const gb = buehne.getContext("2d");
   const zeitAnz = h("span", { class: "zeit" }), info = h("span", { class: "info" });
+  const knSchere = h("button", { onclick: () => schereSetzen(!schere), title: "Schere: auf ein Element tippen = dort schneiden (C)", "aria-label": "Schere", "aria-pressed": "false" }, "✂");
+  const knMagnet = h("button", { onclick: () => magnetSetzen(!magnet), title: "Magnetisch: Elemente einer Spur überlappen nie, Angehängte rücken mit (M)", "aria-label": "Magnetisch" }, "🧲");
   const knSpiel = h("button", { onclick: () => spielen(!spielt), title: "Abspielen / anhalten (Leertaste)" }, "▶");
   const lauf = h("div", { class: "ced-lauf" },
     h("button", { onclick: () => setzeKopf(0), title: "Zum Anfang" }, "⏮"), h("button", { onclick: () => setzeKopf(kopf - 1) }, "−1 s"),
     knSpiel, h("button", { onclick: () => setzeKopf(kopf + 1) }, "+1 s"),
     h("button", { onclick: teilenJetzt, title: "Am Abspielkopf teilen (S)" }, "Teilen"), h("button", { onclick: loeschen, title: "Löschen (Entf)" }, "Löschen"),
+    knSchere, knMagnet,
     h("button", { onclick: () => zoom(1.3), title: "Hineinzoomen" }, "+"), h("button", { onclick: () => zoom(1 / 1.3), title: "Herauszoomen" }, "−"),
     h("button", { onclick: einpassen, title: "Ganze Zeitleiste zeigen" }, "⇔"), zeitAnz, info);
   const buehnenFeld = h("div", { class: "ced-buehne" }, h("div", { class: "flaeche" }, buehne), lauf);
@@ -189,7 +208,7 @@ export async function oeffnen(ctx, daten, dateien = []) {
     sel = null; neu(false);
   }
   let letzter = schnappschuss();
-  function merken() { const s = schnappschuss(); if (s.json === letzter.json) return; verlauf.push(letzter); if (verlauf.length > 60) verlauf.shift(); wieder.length = 0; letzter = s; }
+  function merken() { if (magnet) for (const t of p.Tracks) P.ohneUeberlappung(t); const s = schnappschuss(); if (s.json === letzter.json) return; verlauf.push(letzter); if (verlauf.length > 60) verlauf.shift(); wieder.length = 0; letzter = s; }
   function rueck() { if (!verlauf.length) return; wieder.push(letzter); letzter = verlauf.pop(); zurueck(letzter); melde("Rückgängig."); }
   function vor() { if (!wieder.length) return; verlauf.push(letzter); letzter = wieder.pop(); zurueck(letzter); melde("Wiederholt."); }
   function bestaetigen() { return !p.Tracks.some(t => t.Items.length) || confirm("Das aktuelle Projekt verwerfen? (Vorher „Speichern“, wenn du es behalten willst.)"); }
@@ -315,7 +334,54 @@ export async function oeffnen(ctx, daten, dateien = []) {
     const it = amKopf(); if (!it) return melde("Am Abspielkopf liegt auf dieser Spur nichts zum Teilen.", "fehler");
     const r = P.teilen(p, it, kopf); if (r) { r.datei = it.datei; r.info = it.info; sel = r; merken(); neu(false); melde("Geteilt."); }
   }
-  function loeschen() { if (!sel) return; const s = P.spurVon(p, sel); s.Items.splice(s.Items.indexOf(sel), 1); sel = null; merken(); neu(false); }
+  function loeschen() {
+    if (!sel) return; const s = P.spurVon(p, sel);
+    if (magnet) { const l = P.laenge(sel); for (const x of P.kette(s, sel)) x.Start = Math.max(0, x.Start - l); }   // Lücke schließt sich
+    s.Items.splice(s.Items.indexOf(sel), 1); sel = null; merken(); neu(false);
+  }
+  /** Element bei Sekunde sek schneiden (Schere, Menü); gibt das rechte Stück zurück. */
+  function schneidenBei(it, sek) {
+    const r = P.teilen(p, it, sek); if (!r) { melde("Zu nah am Rand zum Schneiden.", "fehler"); return null; }
+    r.datei = it.datei; r.info = it.info; sel = r; selSpur = P.spurVon(p, r); merken(); neu(false);
+    melde(`Geschnitten bei ${zeit(sek)}. Stück ziehen = verschieben, lange drücken = Menü.`);
+    return r;
+  }
+  function schereSetzen(an, still = false) {
+    schere = an; knSchere.classList.toggle("an", an); knSchere.setAttribute("aria-pressed", String(an)); zl.classList.toggle("schere", an);
+    if (!still) melde(an ? "Schere an: auf ein Element tippen = dort schneiden, gleich weiterziehen = rechtes Stück verschieben. ✂ nochmal = aus." : "Schere aus.");
+  }
+  function magnetSetzen(an, still = false) {
+    magnet = an; knMagnet.classList.toggle("an", an); knMagnet.setAttribute("aria-pressed", String(an));
+    if (still) return;
+    try { localStorage.setItem("caelumCutMagnet", an ? "1" : "0"); } catch { }
+    if (an) { merken(); neu(false); }
+    melde(an ? "Magnetisch an: nichts überlappt, angehängte Elemente rücken beim Kürzen und Löschen mit." : "Magnetisch aus: Elemente dürfen sich überlappen.");
+  }
+  // ── Menü bei langem Drücken oder Rechtsklick: Deckkraft bzw. Lautstärke, Schneiden, Duplizieren, Löschen ──
+  function menueZu() { menueEl?.remove(); menueEl = null; }
+  function menue(it, x, y, sek) {
+    menueZu(); if (spielt) spielen(false);
+    sel = it; selSpur = P.spurVon(p, it); neu(false);
+    try { navigator.vibrate?.(12); } catch { }
+    const nurTon = !(selSpur.Kind === "Video" || P.istText(it));
+    const r = h("input", { type: "range", min: 0, max: nurTon ? 200 : 100, step: 1, value: Math.round((nurTon ? it.Volume : it.Opacity ?? 1) * 100), "aria-label": nurTon ? "Lautstärke" : "Deckkraft" });
+    const o = h("output", {}, r.value + " %");
+    r.addEventListener("input", () => { o.textContent = r.value + " %"; if (nurTon) it.Volume = r.value / 100; else it.Opacity = r.value / 100; vorschau(); });
+    r.addEventListener("change", () => { merken(); zeitleiste(); eigenschaften(); });
+    const kannSchneiden = sek > it.Start + 0.05 && sek < P.ende(it) - 0.05;
+    menueEl = h("div", { class: "ced-menue", role: "menu" },
+      h("b", { title: P.name(it) }, P.name(it)),
+      h("label", {}, h("span", {}, nurTon ? "Lautstärke" : "Deckkraft"), h("div", { class: "regler" }, r, o)),
+      h("div", { class: "hinweis" }, nurTon ? "0 % = stumm, 100 % = Original." : "Transparenz: 0 % = unsichtbar, 100 % = voll sichtbar."),
+      kannSchneiden ? h("button", { role: "menuitem", onclick: () => { menueZu(); schneidenBei(it, sek); } }, `✂ Hier schneiden (${zeit(sek)})`) : null,
+      h("button", { role: "menuitem", onclick: () => { menueZu(); duplizieren(); } }, "⧉ Duplizieren"),
+      h("button", { role: "menuitem", class: "weg", onclick: () => { menueZu(); loeschen(); } }, "🗑 Löschen"));
+    wurzel.append(menueEl);
+    const b = menueEl.getBoundingClientRect();                    // über den Finger legen, sonst darunter; immer ganz im Bild
+    let top = y - b.height - 18; if (top < 8) top = y + 18;
+    menueEl.style.left = Math.max(8, Math.min(x - b.width / 2, innerWidth - b.width - 8)) + "px";
+    menueEl.style.top = Math.max(8, Math.min(top, innerHeight - b.height - 8)) + "px";
+  }
   function duplizieren() { if (!sel) return; const c = { ...sel, Id: P.neueId(), Start: P.ende(sel), Transition: "keine" }; P.spurVon(p, sel).Items.push(c); sel = c; merken(); neu(false); }
 
   // ── Zeichnen ──
@@ -495,8 +561,9 @@ export async function oeffnen(ctx, daten, dateien = []) {
     if (m?.poster && art === "video") div.style.backgroundImage = `url(${m.poster})`;
     if (farbe) div.style.backgroundColor = it.Fill;
     if (art === "bild" && m) { if (!m.poster) { const c = document.createElement("canvas"); c.height = 60; c.width = Math.round(60 * m.bitmap.width / m.bitmap.height); c.getContext("2d").drawImage(m.bitmap, 0, 0, c.width, c.height); m.poster = c.toDataURL("image/jpeg", 0.7); } div.style.backgroundImage = `url(${m.poster})`; }
+    div._it = it;
     div.addEventListener("pointerdown", e => elementZiehen(e, it, div));
-    div.addEventListener("contextmenu", e => { e.preventDefault(); sel = it; neu(false); });
+    div.addEventListener("contextmenu", e => { e.preventDefault(); if (!menueEl) menue(it, e.clientX, e.clientY, sekBei(e, it, div)); });
     return div;
   }
   function kopfZiehen(e, ziel) {
@@ -506,23 +573,43 @@ export async function oeffnen(ctx, daten, dateien = []) {
     const mv = ev => setz(ev.clientX), up = () => { ziel.removeEventListener("pointermove", mv); ziel.removeEventListener("pointerup", up); };
     ziel.addEventListener("pointermove", mv); ziel.addEventListener("pointerup", up);
   }
+  const sekBei = (e, it, div) => it.Start + (e.clientX - div.getBoundingClientRect().left) / pps;
+  const divVon = it => [...zl.querySelectorAll(".el")].find(d => d._it === it);
   function fangen(sek, ausser) {
-    let best = sek, d = 8 / pps;
+    let best = sek, d = (magnet ? 14 : 8) / pps;
     for (const s of [0, kopf, ...p.Tracks.flatMap(t => t.Items.filter(i => i !== ausser).flatMap(i => [i.Start, P.ende(i)]))])
       if (Math.abs(s - sek) < d) { d = Math.abs(s - sek); best = s; }
     return best;
   }
-  function elementZiehen(e, it, div) {
-    e.preventDefault(); e.stopPropagation();
+  function elementZiehen(e, it, div, nachSchnitt = false) {
+    if (e.button === 2) return;                                   // Rechtsklick öffnet das Menü (contextmenu)
+    e.preventDefault(); e.stopPropagation(); menueZu();
+    if (schere && !nachSchnitt) {                                  // Schere: hier schneiden, Weiterziehen verschiebt das rechte Stück
+      const r = schneidenBei(it, sekBei(e, it, div)), nd = r && divVon(r);
+      if (nd) elementZiehen(e, r, nd, true);
+      return;
+    }
     if (sel !== it) { sel = it; selSpur = P.spurVon(p, it); eigenschaften(); vorschau(); for (const x of zl.querySelectorAll(".el.gewaehlt")) x.classList.remove("gewaehlt"); div.classList.add("gewaehlt"); }
-    const rand = e.target.classList.contains("rand") ? (e.target.classList.contains("l") ? "l" : "r") : null;
+    const rand = !nachSchnitt && e.target.classList.contains("rand") ? (e.target.classList.contains("l") ? "l" : "r") : null;
     const x0 = e.clientX, a = { Start: it.Start, In: it.In, Out: it.Out }, speed = P.zeitfrei(it) ? 1 : it.Speed;
-    let bewegt = false;
+    const schwelle = e.pointerType === "mouse" ? 3 : 8;            // Finger zittert beim langen Drücken
+    let bewegt = false, imMenue = false;
+    // lange drücken (ohne zu ziehen) = Menü; nicht am Rand, dort heißt Halten + Ziehen kürzen
+    const lang = rand || nachSchnitt ? 0 : setTimeout(() => { if (!bewegt) { imMenue = true; menue(it, e.clientX, e.clientY, sekBei(e, it, div)); } }, 480);
+    // Magnet beim Kürzen rechts: die direkt angehängten Elemente rücken mit
+    const ende0 = P.ende(it), folger = rand === "r" && magnet ? P.kette(P.spurVon(p, it), it).map(x => ({ x, s: x.Start, d: divVon(x) })) : [];
+    // Kürzen: gestrichelt die ganze Länge des Originals zeigen – es bleibt erhalten und lässt sich wieder aufziehen
+    let geist = null;
+    if (rand && !P.zeitfrei(it) && it.info?.dauer && div.parentElement) {
+      geist = h("div", { class: "geist", style: `left:${(a.Start - a.In / speed) * pps}px;width:${it.info.dauer / speed * pps}px` });
+      div.parentElement.prepend(geist);
+    }
     div.setPointerCapture(e.pointerId);
     const mv = ev => {
+      if (imMenue) return;
       const dsek = (ev.clientX - x0) / pps;
-      if (!bewegt && Math.abs(ev.clientX - x0) < 3) return;
-      bewegt = true;
+      if (!bewegt && Math.abs(ev.clientX - x0) < schwelle) return;
+      bewegt = true; clearTimeout(lang);
       if (!rand) {
         let ns = Math.max(0, a.Start + dsek);
         const s1 = fangen(ns, it), s2 = fangen(ns + P.laenge(it), it) - P.laenge(it);
@@ -543,11 +630,19 @@ export async function oeffnen(ctx, daten, dateien = []) {
         let out = a.In + Math.max(0.2, ne - a.Start) * speed;
         if (!P.zeitfrei(it) && it.info) out = Math.min(out, it.info.dauer);
         it.Out = out;
+        const dl = P.ende(it) - ende0;
+        for (const f of folger) { f.x.Start = Math.max(0, f.s + dl); if (f.d) f.d.style.left = `${f.x.Start * pps}px`; }
       }
+      if (rand) melde(`Länge ${zeit(P.laenge(it))}` + (geist ? ` · Original ${zeit(it.info.dauer)} bleibt ganz – am Rand wieder aufziehen.` : "") + (folger.length ? ` · ${folger.length} angehängte rücken mit` : ""));
       div.style.left = `${it.Start * pps}px`; div.style.width = `${Math.max(4, P.laenge(it) * pps)}px`; vorschau();
     };
-    const up = () => { div.removeEventListener("pointermove", mv); div.removeEventListener("pointerup", up); if (bewegt) { merken(); neu(false); } };
-    div.addEventListener("pointermove", mv); div.addEventListener("pointerup", up);
+    const up = () => {
+      clearTimeout(lang);
+      div.removeEventListener("pointermove", mv); div.removeEventListener("pointerup", up); div.removeEventListener("pointercancel", up);
+      geist?.remove();
+      if (bewegt && !imMenue) { merken(); neu(false); }
+    };
+    div.addEventListener("pointermove", mv); div.addEventListener("pointerup", up); div.addEventListener("pointercancel", up);
   }
   function setzeKopf(s) { kopf = Math.max(0, Math.min(s, Math.max(P.dauer(p), 0))); if (spielt) { k0 = kopf; t0 = performance.now(); } vorschau(); zeitleisteKopf(); }
   function zoom(f) { const mitte = (zl.scrollLeft + zl.clientWidth / 2 - KOPF()) / pps; pps = Math.min(600, Math.max(2, pps * f)); zeitleiste(); zl.scrollLeft = Math.max(0, mitte * pps - zl.clientWidth / 2 + KOPF()); }
@@ -607,8 +702,8 @@ export async function oeffnen(ctx, daten, dateien = []) {
         haken("Lautheit angleichen", p.Normalize, v => p.Normalize = v),
         h("div", { class: "hinweis" }, "Angleichen bringt das Video auf etwa −16 LUFS wie Handy-Apps: leise Stellen lauter, nichts übersteuert."),
         h("h5", {}, "So geht's"),
-        h("div", { class: "hinweis" }, "Medien in die Zeitleiste ziehen. Element ziehen = verschieben, am Rand ziehen = kürzen. Obere Videospur liegt über der unteren (Bild im Bild, Logo). ◉ blendet aus, ♪ schaltet stumm, − entfernt die Spur."),
-        h("div", { class: "hinweis" }, "Tasten: Leertaste abspielen · S teilen · Entf löschen · ←/→ ein Bild, mit Umschalt 1 s · Strg+Z/Y · Strg+D duplizieren · Strg+Mausrad zoomen."));
+        h("div", { class: "hinweis" }, "Medien in die Zeitleiste ziehen. Element ziehen = verschieben, am Rand halten und ziehen = kürzen (das Original bleibt ganz, gestrichelt sichtbar). ✂ an = auf ein Element tippen schneidet dort. 🧲 an = nichts überlappt, Angehängte rücken mit. Lange drücken oder Rechtsklick = Menü (Deckkraft, Schneiden, Löschen). Obere Videospur liegt über der unteren (Bild im Bild, Logo). ◉ blendet aus, ♪ schaltet stumm, − entfernt die Spur."),
+        h("div", { class: "hinweis" }, "Tasten: Leertaste abspielen · S teilen · C Schere · M Magnet · Entf löschen · ←/→ ein Bild, mit Umschalt 1 s · Strg+Z/Y · Strg+D duplizieren · Strg+Mausrad zoomen."));
       eig.replaceChildren(...teile); return;
     }
     const spur = P.spurVon(p, it), text = P.istText(it), bild = P.istBild(it);
@@ -714,6 +809,9 @@ export async function oeffnen(ctx, daten, dateien = []) {
     else if (strg && e.key.toLowerCase() === "d") { e.preventDefault(); duplizieren(); }
     else if (e.key === " ") { e.preventDefault(); spielen(!spielt); }
     else if (e.key === "s" || e.key === "S") teilenJetzt();
+    else if (e.key === "c" || e.key === "C") schereSetzen(!schere);
+    else if (e.key === "m" || e.key === "M") magnetSetzen(!magnet);
+    else if (e.key === "Escape" && (menueEl || schere)) { if (menueEl) menueZu(); else schereSetzen(false); }
     else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); loeschen(); }
     else if (e.key === "ArrowLeft") { e.preventDefault(); setzeKopf(kopf - (e.shiftKey ? 1 : 1 / 30)); }
     else if (e.key === "ArrowRight") { e.preventDefault(); setzeKopf(kopf + (e.shiftKey ? 1 : 1 / 30)); }
@@ -729,7 +827,9 @@ export async function oeffnen(ctx, daten, dateien = []) {
   formWahl.addEventListener("change", () => { p.Landscape = formWahl.value === "1"; merken(); neu(false); });
   fitWahl.addEventListener("change", () => { p.Fit = fitWahl.value; merken(); neu(false); });
   new ResizeObserver(() => zeitleiste()).observe(zl);
+  wurzel.addEventListener("pointerdown", e => { if (menueEl && !menueEl.contains(e.target)) menueZu(); }, true);   // daneben tippen schließt das Menü
 
+  magnetSetzen(magnet, true);
   neu(false);
   if (dateien.length) { await hinzufuegen(dateien, { spur: P.vonUnten(p, "Video")[0], sek: 0 }); merken(); }
   requestAnimationFrame(() => requestAnimationFrame(einpassen));                       // erst wenn das Fenster seine Breite kennt

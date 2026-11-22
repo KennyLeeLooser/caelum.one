@@ -93,6 +93,21 @@ export function teilen(p, it, t) {
   return rechts;
 }
 
+// ── Magnet (Wunsch Kenny 22.11.2026): auf einer Spur überlappt nichts ──
+/** Elemente nach Start ordnen; jedes beginnt frühestens am Ende des vorigen (Überlappende rücken nach rechts). */
+export function ohneUeberlappung(spur) {
+  spur.Items.sort((a, b) => a.Start - b.Start);
+  let frei = 0;
+  for (const it of spur.Items) { if (it.Start < frei - 1e-4) it.Start = frei; frei = Math.max(frei, ende(it)); }
+}
+/** Direkt anschließende Nachfolger von it (Kette ohne Lücke, ±0,05 s wie Ext): rücken beim magnetischen Kürzen und Löschen mit. */
+export function kette(spur, it) {
+  const l = spur.Items.filter(x => x !== it && x.Start >= it.Start).sort((a, b) => a.Start - b.Start), aus = [];
+  let e = ende(it);
+  for (const x of l) { if (Math.abs(x.Start - e) <= 0.05) { aus.push(x); e = ende(x); } else if (x.Start > e) break; }
+  return aus;
+}
+
 /** Project.AddTrack: Text oben, Video über der obersten Videospur, Ton unten. */
 export function spurDazu(p, art) {
   const pre = { Video: "V", Audio: "A", Text: "T" }[art];
