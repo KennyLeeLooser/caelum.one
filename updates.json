@@ -4,6 +4,17 @@
     {
       "date": "2026-11-22",
       "product": "Caelum Cut · Web",
+      "version": "0.3.1",
+      "status": "vorschau",
+      "title": "Web-Fassung nachgeführt",
+      "points": [
+        "Gleich wie Caelum Cut 0.3.1"
+      ],
+      "link": "#p-cut"
+    },
+    {
+      "date": "2026-11-22",
+      "product": "Caelum Cut · Web",
       "version": "0.3.0",
       "status": "vorschau",
       "title": "Farbblöcke, Farbrad und Griffe im Editor",
