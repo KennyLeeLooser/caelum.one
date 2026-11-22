@@ -74,6 +74,7 @@ const css = `
 .ced-fuss .status { color:var(--muted,#9C9A94); flex:1; min-width:200px; }
 .ced-fuss .status.fehler { color:#E5484D; } .ced-fuss .status.ok { color:var(--ok,#6BAF73); }
 .ced-buehne canvas.griff { cursor:move; touch-action:none; }
+.ced-buehne canvas.greifbar { touch-action:none; }   /* Finger zieht das Element, nicht die Seite (Redmi 22.11.2026) */
 .ced-eig .regler { display:grid; grid-template-columns:minmax(0,1fr) 46px; gap:6px; align-items:center; }
 .ced-eig .regler input[type=range] { width:100%; accent-color:var(--accent,#D97757); padding:0; border:0; background:none; }
 .ced-eig .regler output { text-align:right; font-variant-numeric:tabular-nums; }
@@ -326,6 +327,8 @@ export async function oeffnen(ctx, daten, dateien = []) {
     const [W, H] = P.flaecheVon(p, datenProfile);
     const k = Math.min(1, 720 / Math.max(W, H)), w = Math.round(W * k), hh = Math.round(H * k);
     if (buehne.width !== w || buehne.height !== hh) { buehne.width = w; buehne.height = hh; }
+    // Wischen auf der Vorschau scrollt sonst die Seite (Handy): gesperrt, solange das gewählte Element Griffe hat
+    buehne.classList.toggle("greifbar", !spielt && !!griffFlaeche(p, sel, kopf, w, hh));
     const amSchirm = buehne.getBoundingClientRect().width;                         // Griffe am Schirm immer etwa 11 px groß
     zeichnen(gb, p, kopf, w, hh, quelleVorschau, { markiere: sel, rahmen: !spielt, griff: amSchirm > 0 ? Math.round(11 * w / amSchirm) : 0 });
     zeitAnz.textContent = `${zeit(kopf)} / ${zeit(P.dauer(p))}`;
