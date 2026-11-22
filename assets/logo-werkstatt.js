@@ -10,6 +10,7 @@
 // v5 (22.11.2026, Befund Kenny): Stupa ist ein eigenes Logo – keine Caelum-Aussenlinien mehr darüber, Knöpfe „Elementfarben“ und
 // „Original-Linien“ entfernt; die Teile zeichnen ihre eigenen Umrisse. Neu: Ansicht „3D – drehen“ (assets/stupa-3d.js) und GLB speichern.
 // v6 (22.11.2026, Kenny): Knöpfe kurz „Logo · Stupa · 3D · Aufbau“, Mond als Sichel.
+// v9 (22.11.2026, Kenny): unter Speichern „Im Caelum 3D-Viewer öffnen“ (reduziert, darunter); Aufbau: Teile stossen immer an.
 // v7 (22.11.2026, Kenny): „Aufbau“ = Aufräum-Spiel statt Film – die Teile liegen verstreut, man zieht sie selbst auf den Stupa
 //   (fallen, rollen, kippen, rasten auf dem Teil darunter ein); in 2D (aufbau-2d.js) oder 3D (stupa-3d.js), eine Logik
 //   (aufbau-kern.js). Der Stupa dreht sich dabei nicht; auch „3D“ steht still (ziehen dreht).
@@ -192,6 +193,8 @@
     '.werkstatt .bau path.cs-form{cursor:crosshair}',
     '.werkstatt .hinweis{color:var(--muted,#8A8780);font-size:13px;margin:0}',
     '.werkstatt .bild.spiel,.werkstatt .bild.drei{background:#262624}',
+    '.werkstatt .viewer-klein{margin-top:10px;width:100%;aspect-ratio:4/3;border-radius:12px;background:#262624;overflow:hidden}',
+    '.werkstatt .viewer-klein[hidden],.werkstatt .hinweis[hidden]{display:none}',
     STUPA_CSS,
     '.stupa-fuss{display:flex;justify-content:center;align-items:flex-end;gap:6px;padding:18px 0 6px}',
     '.stupa-fuss svg{width:150px;height:150px;cursor:pointer;display:block;-webkit-tap-highlight-color:transparent}',
@@ -208,7 +211,7 @@
   if (!stand.bau || !stand.bau.farben || stand.bau.farben.length !== 5) stand.bau = { ansicht: 'logo', farben: BAU.map(function (b) { return b.farbe; }), an: [1, 1, 1, 1, 1] };
   delete stand.bau.original;   // v5: keine Original-Linien mehr
   var pinsel = null, malt = false, svg = null, huelle = null, linienReihe = null, buehne = null;
-  var werk = function () {}, bauFarben = function () {}, zeige3d = function () {}, starte3d = function () {}, starteSpiel = function () {}, pausieren = function () {}, dreiModul = null;
+  var viewerNeu = function () {}, viewerZu = function () {}, werk = function () {}, bauFarben = function () {}, zeige3d = function () {}, starte3d = function () {}, starteSpiel = function () {}, pausieren = function () {}, dreiModul = null;
 
   function bauen() {
     huelle = document.createElement('div'); huelle.className = 'werkstatt'; huelle.hidden = true;
@@ -238,6 +241,7 @@
       bild3.hidden = !bt || !(a === '3d' || (a === 'aufbau' && s3)); bild4.hidden = !bt || a !== 'aufbau' || s3;
       Array.prototype.forEach.call(seite.querySelectorAll('[data-werk]'), function (g) { g.hidden = g.getAttribute('data-werk') !== m || (g.hasAttribute('data-auf') && a !== 'aufbau'); });
       Array.prototype.forEach.call(seite.querySelectorAll('[data-glb]'), function (g) { g.hidden = m !== 'bauteile'; });
+      if (m !== 'bauteile') viewerZu();
       if (m === 'bauteile' && buehne) bauFarben();
       merk(stand);
     };
@@ -292,7 +296,7 @@
       sp2.setAttribute('aria-pressed', String(!s3)); sp3.setAttribute('aria-pressed', String(s3));
       if (!s3) {
         if (drei && auf3) { drei.spielEnde(); auf3 = false; }
-        (auf2Mod || (auf2Mod = import(new URL('aufbau-2d.js?v=2', SKRIPT).href))).then(function (m) {
+        (auf2Mod || (auf2Mod = import(new URL('aufbau-2d.js?v=3', SKRIPT).href))).then(function (m) {
           if (!auf2) { auf2 = m.aufbau2d(svg4, Object.assign({ bau: BAU, stupa: STUPA, farben: stand.bau.farben, an: stand.bau.an }, opt)); neu = true; }
           else auf2.farben(stand.bau.farben, stand.bau.an);
           if (neu) auf2.verstreuen(); else auf2.weiter();
@@ -314,8 +318,9 @@
         drei.zeigen(stand.bau.farben, stand.bau.an);   // v7: steht still, ziehen dreht (kein Aufbau-Film, kein Selbstdrehen)
       }).catch(function (e) { bild3.textContent = '3D liess sich nicht laden: ' + e; });
     }
-    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=5', SKRIPT).href)); };
+    dreiModul = function () { return dreiMod || (dreiMod = import(new URL('stupa-3d.js?v=6', SKRIPT).href)); };
     zeige3d = function () {
+      viewerNeu();
       if (auf2) auf2.farben(stand.bau.farben, stand.bau.an);
       if (!drei) return;
       if (auf3) drei.spielFarben(stand.bau.farben, stand.bau.an);
@@ -381,6 +386,28 @@
     p6.reihe.appendChild(knopf('Animierte SVG', function () { speichern(true); }));
     var glbK = knopf('3D als GLB', function () { dreiModul().then(function (m) { laden(m.glb(stand.bau.farben, stand.bau.an), 'caelum-stupa.glb', 'model/gltf-binary'); }); });
     glbK.setAttribute('data-glb', ''); p6.reihe.appendChild(glbK);
+    // Caelum 3D-Viewer reduziert, direkt darunter (Wunsch Kenny 22.11.2026): zeigt genau die Datei von „3D als GLB“
+    var vwK = knopf('Im Caelum 3D-Viewer öffnen', function () { viewerAufZu(); }); vwK.setAttribute('data-glb', ''); vwK.setAttribute('aria-expanded', 'false');
+    p6.reihe.appendChild(vwK);
+    var vwBox = document.createElement('div'); vwBox.className = 'viewer-klein'; vwBox.hidden = true; p6.reihe.parentNode.appendChild(vwBox);
+    var vwHinweis = document.createElement('p'); vwHinweis.className = 'hinweis'; vwHinweis.hidden = true;
+    vwHinweis.textContent = 'Caelum 3D-Viewer · caelum-stupa.glb – ziehen dreht, Rad oder zwei Finger zoomen, Doppelklick passt ein.';
+    p6.reihe.parentNode.appendChild(vwHinweis);
+    var viewer = null;
+    function viewerAufZu(zu) {
+      var auf = zu === true ? false : vwBox.hidden;
+      vwBox.hidden = !auf; vwHinweis.hidden = !auf; vwK.setAttribute('aria-pressed', String(auf)); vwK.setAttribute('aria-expanded', String(auf));
+      if (!auf) { vwBox.replaceChildren(); viewer = null; return; }
+      viewerNeu();
+    }
+    viewerNeu = function () {
+      if (vwBox.hidden) return;
+      dreiModul().then(function (m) {
+        if (!viewer) viewer = m.viewerKlein(vwBox);
+        if (viewer) return viewer.zeigen(m.glb(stand.bau.farben, stand.bau.an));
+      }).catch(function (e) { vwBox.textContent = 'Der Viewer liess sich nicht laden: ' + e; });
+    };
+    viewerZu = function () { viewerAufZu(true); };
 
     // Malen: antippen oder mit gedrückter Maus/Finger darüberziehen
     svg.addEventListener('pointerdown', function (e) { malt = true; try { svg.setPointerCapture(e.pointerId); } catch (f) {} male(e); });

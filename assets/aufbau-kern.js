@@ -203,12 +203,14 @@ export class Aufbau {
       b.x = r.x + (b.ziel.x - r.x) * e; b.y = r.y + (b.ziel.y - r.y) * e; b.a = r.a + winkelDiff(r.za, r.a) * e;
       if (r.t >= 1) { b.rastet = null; b.eingerastet = true; b.x = b.ziel.x; b.y = b.ziel.y; b.a = r.za; this.on.einrasten(b.i); this.pruefeFertig(); }
     }
-    // Von selbst einrasten (fällt oder rollt nah genug hin), beim Ziehen nur anzeigen
+    // Einrasten, sobald ein Teil nah und gerade genug an seinem Platz ist – auch in der Hand (dann lässt der Griff los).
+    // Teile stossen immer an (auch an eingerasteten): nichts sinkt in den Turm ein (Befund Kenny 22.11.2026, Video).
     for (const b of this.k) {
-      if (!b.an || b.eingerastet || b.rastet) { b.nah = false; continue; }
-      const ok = this.unterBereit(b.i) && this.nahAmZiel(b);
-      if (this.griff && this.griff.b === b) b.nah = ok;
-      else if (ok) this.einrasten(b);
+      b.nah = false;
+      if (!b.an || b.eingerastet || b.rastet) continue;
+      if (!(this.unterBereit(b.i) && this.nahAmZiel(b))) continue;
+      if (this.griff && this.griff.b === b) this.griff = null;
+      this.einrasten(b);
     }
   }
 
@@ -228,8 +230,9 @@ export class Aufbau {
       b.w *= 1 - 3 * h;
       // Magnet: nah am Platz (und das Teil darunter steht) dreht es sich sanft gerade – wie Einrasten in der Hand
       const weit = Math.hypot(b.x - b.ziel.x, b.y - b.ziel.y) / (this.toleranz * 4.5);
-      b.magnet = weit < 1 && this.unterBereit(b.i);
-      if (b.sym !== 0 && b.magnet) { const f = 1 - weit * weit; b.w += (winkelDiff(this.zielWinkel(b), b.a) * 80 * f - b.w * 10 * f) * h; }
+      // das Teil, das dran ist, richtet sich in der Hand schon von weitem sanft auf, nah am Platz kräftig
+      b.magnet = this.unterBereit(b.i);
+      if (b.sym !== 0 && b.magnet) { const f = weit < 1 ? 1 - weit * weit * 0.7 : 0.3; b.w += (winkelDiff(this.zielWinkel(b), b.a) * 80 * f - b.w * 10 * f) * h; }
     }
     for (const b of this.k) {
       if (!b.an) continue;
@@ -269,8 +272,6 @@ export class Aufbau {
     for (let p = 0; p < alle.length; p++) for (let q = p + 1; q < alle.length; q++) {
       const a = alle[p], b = alle[q];
       if (!this.beweglich(a) && !this.beweglich(b)) continue;
-      // in der Magnetzone gleitet das gehaltene Teil ohne Anstossen auf seinen Platz (eingerastete Teile sind dann „durchlässig“)
-      if ((a.magnet && b.statisch) || (b.magnet && a.statisch)) continue;
       if (Math.hypot(a.x - b.x, a.y - b.y) > a.R + b.R) continue;
       let neu = 0;
       for (const [ax, ay, ar] of a.W) {

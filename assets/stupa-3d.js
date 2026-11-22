@@ -12,8 +12,8 @@
 // v4 (Kenny 22.11.2026): kein Aufbau-Film, kein Selbstdrehen. spiel() = Aufräum-Spiel in 3D: feste Kamera, die Körper liegen
 // verstreut am Boden, man zieht sie auf den Stupa (Logik aufbau-kern.js wie in 2D, Körper bewegen sich in der Ebene z = 0).
 import { viewerErzeugen } from "../apps/viewer/kern.js";
-import { netz } from "../apps/viewer/laden.js";
-import { Aufbau } from "./aufbau-kern.js?v=2";
+import { netz, laden as ladeModell } from "../apps/viewer/laden.js";
+import { Aufbau } from "./aufbau-kern.js?v=3";
 
 export const TEILE = [["Viereck", "Erde"], ["Kreis", "Wasser"], ["Dreieck", "Feuer"], ["Mond", "Luft"], ["Tropfen", "Raum"]];
 
@@ -179,6 +179,43 @@ export function glb(farben, an) {
   const b0 = 20 + jl; dv.setUint32(b0, bl, true); dv.setUint32(b0 + 4, 0x004E4942, true);
   let o = b0 + 8; for (const s of stuecke) { out.set(new Uint8Array(s.buffer, s.byteOffset, s.byteLength), o); o += s.byteLength; }
   return out;
+}
+
+/** Caelum 3D-Viewer, reduziert (Wunsch Kenny 22.11.2026): zeigt eine .glb mit Lader und Renderer der Viewer-Web-Fassung –
+ *  ziehen dreht, Rad/zwei Finger zoomen, Doppelklick passt ein; sonst keine Werkzeuge. zeigen(bytes) lädt neu (Farben geändert). */
+export function viewerKlein(wo, name = "caelum-stupa.glb") {
+  wo.replaceChildren();
+  const cv = document.createElement("canvas"); cv.setAttribute("aria-label", "Caelum 3D-Viewer: " + name + " – ziehen dreht");
+  cv.style.cssText = "width:100%;height:100%;display:block;touch-action:none;cursor:grab";
+  const winkel = document.createElement("span"); winkel.hidden = true;
+  wo.append(cv, winkel);
+  const state = { yaw: 30, pitch: 18, bg: "dunkel", ortho: false, animation: "", animation_time: 0 };
+  const v = viewerErzeugen(id => (id === "gl" ? cv : id === "angle" ? winkel : null), state);
+  if (!v.ready) { wo.textContent = "Dieser Browser kann kein WebGL2 – der Viewer braucht einen aktuellen Browser."; return null; }
+  const ptr = new Map(); let zug = null, zange = 0;
+  cv.addEventListener("pointerdown", e => {
+    try { cv.setPointerCapture(e.pointerId); } catch { /* Zeiger schon weg */ } ptr.set(e.pointerId, [e.clientX, e.clientY]); cv.style.cursor = "grabbing";
+    if (ptr.size === 1) zug = { x: e.clientX, y: e.clientY, yaw: state.yaw, pitch: state.pitch };
+    if (ptr.size === 2) { const [a, b] = [...ptr.values()]; zange = Math.hypot(a[0] - b[0], a[1] - b[1]); zug = null; }
+  });
+  cv.addEventListener("pointermove", e => {
+    if (!ptr.has(e.pointerId)) return; ptr.set(e.pointerId, [e.clientX, e.clientY]);
+    if (ptr.size === 2 && zange) { const [a, b] = [...ptr.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); v.zoom = Math.max(0.2, Math.min(8, v.zoom * zange / Math.max(1, d))); zange = d; v.draw(); return; }
+    if (zug) { state.yaw = zug.yaw - (e.clientX - zug.x) * 0.4; state.pitch = Math.max(-89, Math.min(89, zug.pitch + (e.clientY - zug.y) * 0.4)); v.draw(); }
+  });
+  const los = e => { ptr.delete(e.pointerId); if (ptr.size < 2) zange = 0; if (!ptr.size) { zug = null; cv.style.cursor = "grab"; } };
+  cv.addEventListener("pointerup", los); cv.addEventListener("pointercancel", los);
+  cv.addEventListener("wheel", e => { e.preventDefault(); v.zoom = Math.max(0.2, Math.min(8, v.zoom * Math.exp(e.deltaY * 0.0015))); v.draw(); }, { passive: false });
+  cv.addEventListener("dblclick", () => { v.home(); v.draw(); });
+  let erst = true;
+  return {
+    async zeigen(bytes) {
+      const m = await ladeModell([{ name, bytes }]);              // derselbe Lader wie der Caelum 3D-Viewer im Browser
+      v.reorient = false; v.load(netz(m));
+      if (erst) { v.home(); erst = false; }
+      v.draw();
+    }
+  };
 }
 
 /** Bühne: canvas in `wo`; zeigen(farben, an) steht sofort, aufbauen(farben, an) stapelt die Teile. null ohne WebGL2. */
