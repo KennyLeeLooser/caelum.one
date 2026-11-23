@@ -6,7 +6,7 @@
 // mit 4 Bänken × 4 Balken. Pad halten = Kupplung: nur solange gehalten, bewegt die Bewegung diesen Wert; loslassen → Wert bleibt.
 // Quelle: Maus (ziehen = kippen/neigen, Rad = schwenken, Umschalt+Rad = Höhe) oder echte Handy-Sensoren (DeviceOrientation/-Motion).
 // Ohne Eingabe läuft ein Beispiel. Nichts wird gesendet oder gespeichert.
-// KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). v3 (23.11. nachts): ● Loop + Looper-Spuren, EQ 8 Bänder + Balance.
+// KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). v3 (23.11. nachts): ● Loop + Looper-Spuren, EQ 8 Bänder + Balance. v4 (23.11. spätnachts): ◷ Uhr – Loop-Länge, Raster, Vorlauf (quantisiert).
 (function () {
   'use strict';
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -92,11 +92,36 @@
     var loopK = knopf('● Loop', 'mf-loop'); loopK.setAttribute('aria-pressed', 'false');
     var wahlK = knopf('', 'mf-wahl'); wahlK.setAttribute('aria-expanded', 'false'); wahlK.setAttribute('aria-label', 'Spurwahl für ● Loop');
     var wahlZ = el('span'); wahlK.appendChild(document.createTextNode('▸ ')); wahlK.appendChild(wahlZ);
+    // ◷ Uhr: Länge (Frei · 1 · 2 · 4 · 8 Takte), Raster (Aus · Schlag · Takt), Vorlauf (0 · 1 · 2 · 4 Takte) – wie der ◷-Dialog der App
+    var qK = knopf('', 'mf-wahl mf-q'); qK.setAttribute('aria-expanded', 'false'); qK.setAttribute('aria-label', 'Loop-Länge und Quantisieren');
+    var ring = el('i', 'mf-ring'), qN = el('span'), qW = el('span'); qK.appendChild(ring); qK.appendChild(qN); qK.appendChild(qW);
     var eqK = knopf('', 'mf-auf'); eqK.appendChild(el('span', null, 'EQ')); eqK.appendChild(el('i', 'mf-pfeil'));
     eqK.setAttribute('aria-expanded', 'false');
-    lpK.appendChild(loopK); lpK.appendChild(wahlK); lpK.appendChild(el('span', 'mf-trenn')); lpK.appendChild(eqK);
+    lpK.appendChild(loopK); lpK.appendChild(wahlK); lpK.appendChild(qK); lpK.appendChild(el('span', 'mf-trenn')); lpK.appendChild(eqK);
     karte.appendChild(lpK);
     var wahlZeile = el('div', 'mf-seq-zeile mf-chips mf-wahlzeile'); wahlZeile.hidden = true; karte.appendChild(wahlZeile);
+    var qZeile = el('div', 'mf-qzeile'); qZeile.hidden = true; karte.appendChild(qZeile);
+    var laenge = 0, rasterArt = 'takt', vorlauf = 0;   // laenge 0 = Frei
+    function qZeigen() {
+      qZeile.textContent = '';
+      [['Länge', [[0, 'Frei'], [1, '1'], [2, '2'], [4, '4'], [8, '8']], function () { return laenge; }, function (v) { laenge = v; }],
+       ['Raster', [['aus', 'Aus'], ['schlag', 'Schlag'], ['takt', 'Takt']], function () { return rasterArt; }, function (v) { rasterArt = v; }],
+       ['Vorlauf', [[0, '0'], [1, '1'], [2, '2'], [4, '4']], function () { return vorlauf; }, function (v) { vorlauf = v; }]
+      ].forEach(function (g) {
+        var z = el('div', 'mf-seq-zeile mf-chips'); z.appendChild(el('span', 'mf-einheit', g[0]));
+        g[1].forEach(function (o) {
+          var b = knopf(o[1]); b.setAttribute('aria-pressed', o[0] === g[2]() ? 'true' : 'false');
+          if (g[0] === 'Raster' && laenge > 0) b.disabled = true;   // feste Länge endet immer auf dem Takt
+          b.addEventListener('click', function () { g[3](o[0]); qZeigen(); });
+          z.appendChild(b);
+        });
+        if (g[0] !== 'Raster') z.appendChild(el('span', 'mf-einheit', 'Takte'));
+        qZeile.appendChild(z);
+      });
+      qZeile.appendChild(el('p', 'mf-hilfe', 'Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.'));
+      setz(qN, laenge ? laenge + ' ' : ''); setz(qW, laenge ? (laenge === 1 ? 'Takt' : 'Takte') : 'Frei');
+    }
+    qK.addEventListener('click', function () { var auf = qZeile.hidden; qZeile.hidden = !auf; qK.setAttribute('aria-expanded', auf ? 'true' : 'false'); });
 
     // EQ (Eq.java: 8 Glocken 60 Hz – 15 kHz, ±12 dB, Q 1,4, doppelt tippen = 0, Flach, Balance)
     var FREQ = [60, 150, 400, 1000, 2400, 6000, 10000, 15000], EQ_Q = 1.4, db = FREQ.map(function () { return 0; }), balance = 0;
@@ -135,7 +160,7 @@
     var looper = el('div', 'mf-looper'); karte.appendChild(looper);
     var lpFuss = el('div', 'mf-seq-zeile'), dazuK = knopf('+ Spur'), alleWegK = knopf('⌫ Alle Spuren');
     lpFuss.appendChild(dazuK); lpFuss.appendChild(alleWegK); karte.appendChild(lpFuss);
-    karte.appendChild(el('p', 'mf-hilfe', '● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Spur schweigt, solange die Runde läuft; tippst du ● Loop nochmal, bleibt die letzte Runde auf der Spur und spielt ab der nächsten Eins mit. Dann ein anderes Muster wählen und die nächste Spur füllen.'));
+    karte.appendChild(el('p', 'mf-hilfe', '● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.'));
     platz.appendChild(karte);
 
     // ---- Raster ----
@@ -249,6 +274,8 @@
 
     // ---- Looper-Spuren ----
     var spuren = [], wahl = 'auto', liveSpur = -1;
+    // auf = laufende Aufnahme: { phase: 'warte' | 'vor' | 'auf', rest (Vorlauf-Takte), takte (Muster je Takt), n (Schritte), start, stopp }
+    var auf = null;
     function spurNeu() {
       var s = { buf: null, bpm: bpm, stumm: false, pegel: 0.9, g: null, q: null };
       var z = el('div', 'mf-spurzeile'), nm = el('span', 'mf-spurname'); wort(nm, 'Spur'); var nr = el('span'); nm.appendChild(document.createTextNode(' ')); nm.appendChild(nr);
@@ -259,7 +286,8 @@
       m.addEventListener('click', function () { s.stumm = !s.stumm; m.setAttribute('aria-pressed', s.stumm ? 'true' : 'false'); spurPegel(s); });
       pg.addEventListener('input', function () { s.pegel = Number(pg.value); spurPegel(s); });
       weg.addEventListener('click', function () { spurLeeren(spuren.indexOf(s)); });
-      s.z = z; s.nr = nr; s.welle = welle; s.st = st;
+      var stW = el('span'), stZ = el('span'); st.appendChild(stW); st.appendChild(stZ);
+      s.z = z; s.nr = nr; s.welle = welle; s.st = st; s.stW = stW; s.stZ = stZ;
       spuren.push(s); looper.appendChild(z); if (ctx) spurAnschliessen(s);
       return s;
     }
@@ -272,7 +300,7 @@
     function spurHalt(s) { if (s.q) { try { s.q.stop(); } catch (x) { } s.q.disconnect(); s.q = null; } }
     function spurLeeren(i) {
       var s = spuren[i]; if (!s) return;
-      if (i === liveSpur) { liveSpur = -1; loopAnzeige(); }
+      if (i === liveSpur) { liveSpur = -1; auf = null; loopAnzeige(); }
       spurHalt(s); s.buf = null; spurenZeigen(); logZeile('Spur ' + (i + 1) + ' gelöscht', true);
     }
     function welleZeichnen(s) {
@@ -292,7 +320,8 @@
         setz(s.nr, String(i + 1));
         var live = i === liveSpur;
         s.z.classList.toggle('live', live);
-        setz(s.st, live ? '● nimmt auf' : s.buf ? (spielt ? 'spielt' : 'bereit') : 'leer');
+        if (!live) { setz(s.stW, s.buf ? (spielt ? 'spielt' : 'bereit') : 'leer'); setz(s.stZ, ''); }
+        else if (!auf) { setz(s.stW, 'rechnet'); setz(s.stZ, ''); }
         welleZeichnen(s); if (ctx) spurPegel(s);
       });
       dazuK.disabled = spuren.length >= 8;
@@ -310,19 +339,23 @@
     alleWegK.addEventListener('click', function () { for (var i = 0; i < spuren.length; i++) spurLeeren(i); });
     wahlK.addEventListener('click', function () { var auf = wahlZeile.hidden; wahlZeile.hidden = !auf; wahlK.setAttribute('aria-expanded', auf ? 'true' : 'false'); });
 
-    // Eine Runde (16 Schritte) offline rendern – zwei Runden, die zweite bleibt (der Echo-Schwanz der ersten läuft hinein, die Schleife ist nahtlos)
-    function runde() {
+    // Die aufgenommene Runde offline rendern (takte = Muster je Takt, sek = Länge) – zweimal, die zweite bleibt
+    // (der Echo-Schwanz der ersten läuft hinein, die Schleife ist nahtlos)
+    function runde(takte, sek) {
       var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC || !ctx) return Promise.reject(new Error('kein Audio'));
-      var d = 60 / bpm / 4, sr = ctx.sampleRate, n = Math.round(16 * d * sr), oc = new OAC(2, n * 2, sr);
+      var d = 60 / bpm / 4, sr = ctx.sampleRate, n = Math.max(1, Math.round(sek * sr)), oc = new OAC(2, n * 2, sr);
+      var L = Math.ceil(sek / d - 1e-6);
       var e = oc.createGain(), fl = oc.createBiquadFilter(), lg = oc.createGain(), ec = oc.createDelay(1), rg = oc.createGain(), eg = oc.createGain();
       fl.type = 'lowpass'; fl.frequency.value = filt.frequency.value; fl.Q.value = 0.8; lg.gain.value = laut.gain.value;
       ec.delayTime.value = echo.delayTime.value; rg.gain.value = 0.35; eg.gain.value = echoG.gain.value;
       e.connect(fl); fl.connect(lg); lg.connect(oc.destination); fl.connect(eg); eg.connect(ec); ec.connect(rg); rg.connect(ec); ec.connect(lg);
       var alt = Z, sw = swing(); Z = { ctx: oc, ein: e };
       try {
-        for (var r = 0; r < 2; r++) for (var s = 0; s < 16; s++) {
-          var t = (r * 16 + s) * d + (s % 2 ? sw * d : 0);
-          for (var i = 0; i < INSTR.length; i++) if (muster[i][s]) ton(i, t, s % 4 === 0 ? 1 : 0.82);
+        for (var r = 0; r < 2; r++) for (var k = 0; k < L; k++) {
+          var s = k % 16, m = takte[Math.min(Math.floor(k / 16), takte.length - 1)];
+          var t = r * n / sr + k * d + (s % 2 ? sw * d : 0);
+          if (t >= (r + 1) * n / sr) continue;   // was nach dem Ende der Runde käme, fällt weg (Raster aus)
+          for (var i = 0; i < INSTR.length; i++) if (m[i][s]) ton(i, t, s % 4 === 0 ? 1 : 0.82);
         }
       } finally { Z = alt; }
       var fertig = oc.startRendering();
@@ -338,22 +371,72 @@
       loopK.setAttribute('aria-pressed', an ? 'true' : 'false'); setz(loopK, an ? '■ Loop' : '● Loop');
       spurenZeigen();
     }
+    function kopie() { return muster.map(function (z) { return z.slice(); }); }
+    function schrittDauer() { return 60 / bpm / 4; }
     function loopTippen() {
       if (liveSpur < 0) {
         var ziel = wahl === 'auto' ? spuren.findIndex(function (s) { return !s.buf; }) : wahl;
         if (ziel < 0) { logZeile('Alle Spuren voll – eine löschen oder + Spur.', true); return; }
+        // erst scharf machen, dann starten – so beginnt die Aufnahme (oder der Vorlauf) schon auf der allerersten Eins
+        liveSpur = ziel; spurHalt(spuren[ziel]);
+        auf = { phase: 'warte', rest: vorlauf, takte: [], n: 0, start: 0, stopp: false };
         if (!spielt) start();
-        if (!ctx) return;
-        liveSpur = ziel; spurHalt(spuren[ziel]); loopAnzeige();
-        logZeile('● Loop → Spur ' + (ziel + 1) + ' · intern', true);
+        if (!ctx) { liveSpur = -1; auf = null; loopAnzeige(); return; }
+        loopAnzeige(); uhrZeigen();
+        logZeile('● Loop → Spur ' + (ziel + 1) + ' · intern · wartet auf die Eins', true);
+      } else if (!auf) {
+        return;                                   // Runde wird gerade gerechnet
+      } else if (auf.phase !== 'auf') {
+        logZeile('● Loop abgebrochen (Spur ' + (liveSpur + 1) + ')', true);
+        liveSpur = -1; auf = null; loopAnzeige(); uhrZeigen();
+      } else if (laenge === 0 && rasterArt === 'aus') {
+        aufEnde(Math.max(schrittDauer(), ctx.currentTime - auf.start));   // ohne Raster: genau jetzt
       } else {
-        var i = liveSpur, s = spuren[i];
-        runde().then(function (b) {
-          s.buf = b; s.bpm = bpm; spurHalt(s);
-          if (liveSpur === i) liveSpur = -1;
-          loopAnzeige(); logZeile('Loop auf Spur ' + (i + 1) + ' · ' + b.duration.toFixed(2) + ' s', true);
-        }).catch(function () { liveSpur = -1; loopAnzeige(); });
+        auf.stopp = true; uhrZeigen();          // endet auf dem nächsten Schlag/Takt (planen)
       }
+    }
+    // Wird für jeden geplanten Schritt aufgerufen (t = Zeit ohne Swing, s = Schritt 0–15).
+    function aufSchritt(t, s) {
+      if (!auf) return;
+      if (auf.phase !== 'auf') {
+        if (s !== 0) return;
+        if (auf.rest > 0) { auf.phase = 'vor'; auf.rest--; auf.vorT = t; return; }   // ein Takt Vorlauf
+        auf.phase = 'auf'; auf.start = t; auf.n = 0; auf.takte = [];
+      }
+      var n = auf.n, ende = false;
+      if (n > 0) {
+        if (laenge > 0) ende = n >= laenge * 16;
+        else if (auf.stopp) ende = rasterArt === 'takt' ? s === 0 : s % 4 === 0;
+        else ende = n >= 16 * 16;                 // Frei höchstens 16 Takte
+      }
+      if (ende) { aufEnde(n * schrittDauer()); return; }
+      if (s === 0 || n === 0) auf.takte.push(kopie());
+      auf.n++;
+    }
+    function aufEnde(sek) {
+      var i = liveSpur, s = spuren[i], takte = auf.takte.length ? auf.takte : [kopie()];
+      auf = null; spurenZeigen(); uhrZeigen();
+      runde(takte, sek).then(function (b) {
+        if (liveSpur !== i) return;               // inzwischen gelöscht
+        s.buf = b; s.bpm = bpm; spurHalt(s); liveSpur = -1;
+        loopAnzeige(); logZeile('Loop auf Spur ' + (i + 1) + ' · ' + b.duration.toFixed(2) + ' s · ' + takte.length + ' Takt(e)', true);
+      }).catch(function () { liveSpur = -1; loopAnzeige(); });
+    }
+    // ◷ Uhr: Ring = Fortschritt der Runde, in der Spur „Vorlauf 2“ / „● Takt 2/4“
+    function uhrZeigen() {
+      var p = 0, s = liveSpur >= 0 ? spuren[liveSpur] : null, tk = 16 * schrittDauer();
+      if (ctx && auf && auf.phase === 'auf') {
+        var tl = Math.max(0, ctx.currentTime - auf.start) / tk, nr = Math.floor(tl) + 1;
+        p = laenge ? Math.min(1, tl / laenge) : tl % 1;
+        if (s) { setz(s.stW, auf.stopp ? '● endet' : '● Takt'); setz(s.stZ, ' ' + (laenge ? Math.min(nr, laenge) + '/' + laenge : nr)); }
+      } else if (ctx && auf && auf.phase === 'vor') {
+        p = Math.max(0, ctx.currentTime - auf.vorT) / tk % 1;
+        if (s) { setz(s.stW, 'Vorlauf'); setz(s.stZ, ' ' + (auf.rest + 1)); }
+      } else if (auf) {
+        if (s) { setz(s.stW, 'wartet auf die Eins'); setz(s.stZ, ''); }
+      } else if (spielt && jetztS >= 0) p = (jetztS + 1) / 16;
+      ring.style.setProperty('--p', p.toFixed(3));
+      qK.classList.toggle('live', !!auf);
     }
     loopK.addEventListener('click', loopTippen);
     // auf jeder Eins: Spuren mit Loop, die noch nicht laufen, mitstarten (Tempo folgt dem BPM wie in der App)
@@ -386,10 +469,11 @@
       var dauer = 60 / bpm / 4;
       while (naechst < ctx.currentTime + 0.12) {
         var t = naechst + (schritt % 2 ? swing() * dauer : 0);
+        aufSchritt(naechst, schritt);
         if (schritt === 0) spurenAufEins(naechst);
         var noten = [];
         for (var i = 0; i < INSTR.length; i++) if (muster[i][schritt]) { ton(i, t, schritt % 4 === 0 ? 1 : 0.82); noten.push(INSTR[i][1]); }
-        if (klick && schritt % 4 === 0) klickTon(t, schritt === 0);
+        if ((klick || (auf && auf.phase === 'vor')) && schritt % 4 === 0) klickTon(naechst, schritt === 0);   // Vorlauf zählt immer hörbar ein
         warte.push({ s: schritt, t: t, n: noten });
         naechst += dauer; schritt = (schritt + 1) % 16;
       }
@@ -403,6 +487,7 @@
         punkte.forEach(function (p, k) { p.classList.toggle('an', k === Math.floor(w.s / 4)); });
         if (w.n.length) logZeile('Note ' + w.n.join(' ') + '  · Kanal 10', true);
       }
+      uhrZeigen();
       requestAnimationFrame(lauflicht);
     }
     function start() {
@@ -415,12 +500,16 @@
     }
     function stopp() {
       if (!spielt) return;
-      if (liveSpur >= 0) loopTippen();   // laufende Loop-Runde bleibt auf der Spur
+      // laufende Aufnahme: bis zum Raster aufgerundet behalten, Warten/Vorlauf abbrechen
+      if (auf && auf.phase === 'auf' && auf.n > 0) {
+        var g = laenge ? laenge * 16 : rasterArt === 'takt' ? 16 : rasterArt === 'schlag' ? 4 : 1;
+        aufEnde(Math.ceil(auf.n / g) * g * schrittDauer());
+      } else if (auf) { liveSpur = -1; auf = null; loopAnzeige(); }
       spielt = false; clearInterval(timer); timer = null; warte = [];
       spuren.forEach(spurHalt); spurenZeigen();
       spielK.textContent = '▶ Start'; spielK.setAttribute('aria-pressed', 'false');
       if (jetztS >= 0) zellen.forEach(function (r) { if (r[jetztS]) r[jetztS].classList.remove('jetzt'); });
-      punkte.forEach(function (p) { p.classList.remove('an'); }); jetztS = -1;
+      punkte.forEach(function (p) { p.classList.remove('an'); }); jetztS = -1; uhrZeigen();
       logZeile('MIDI-Clock Stopp', true);
     }
     spielK.addEventListener('click', function () { spielt ? stopp() : start(); });
@@ -432,7 +521,7 @@
     swMinus.addEventListener('click', function () { swingHand = klemm(Math.round((swingHand - 0.05) * 100) / 100, 0, 0.6); formen(); });
     swPlus.addEventListener('click', function () { swingHand = klemm(Math.round((swingHand + 0.05) * 100) / 100, 0, 0.6); formen(); });
     uhr.addEventListener('click', function () { klick = !klick; uhr.setAttribute('aria-pressed', klick ? 'true' : 'false'); });
-    bpmSetz(bpm); formen(); eqSetz(); spurenZeigen();
+    bpmSetz(bpm); formen(); eqSetz(); spurenZeigen(); qZeigen(); uhrZeigen();
     setInterval(function () { if (!spielt && platz.offsetParent) formen(); }, 200);   // Balken auch im Stand
     return { stopp: stopp, spielt: function () { return spielt; }, muster: function () { return muster; } };
   }

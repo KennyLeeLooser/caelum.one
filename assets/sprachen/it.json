@@ -698,5 +698,20 @@
   "● nimmt auf": "● registra",
   "spielt": "suona",
   "bereit": "pronta",
-  "leer": "vuota"
+  "leer": "vuota",
+  "Loop-Länge und Quantisieren": "Lunghezza loop e quantizzazione",
+  "Länge": "Lunghezza",
+  "Frei": "Libera",
+  "Raster": "Griglia",
+  "Aus": "Off",
+  "Schlag": "Battito",
+  "Takt": "Battuta",
+  "Takte": "battute",
+  "Vorlauf": "Conteggio",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "Libera: tocca di nuovo ● Loop per chiudere il giro – finisce sul battito o sulla battuta successiva (griglia). Lunghezza fissa: il giro finisce da solo. Il conteggio si sente.",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● Loop registra il sequencer stesso, mai il microfono. La registrazione parte dal prossimo primo tempo, la traccia resta muta mentre è in corso. Se nel frattempo cambi pattern, il loop registra ogni battuta così come suonava. Poi la traccia suona dal prossimo primo tempo – scegli un altro pattern e riempi la traccia successiva.",
+  "rechnet": "calcolo",
+  "● endet": "● fine",
+  "● Takt": "● Battuta",
+  "wartet auf die Eins": "attende il primo tempo"
 }

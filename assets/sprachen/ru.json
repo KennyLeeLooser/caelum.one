@@ -699,5 +699,20 @@
   "● nimmt auf": "● запись",
   "spielt": "играет",
   "bereit": "готова",
-  "leer": "пусто"
+  "leer": "пусто",
+  "Loop-Länge und Quantisieren": "Длина петли и квантизация",
+  "Länge": "Длина",
+  "Frei": "Свободно",
+  "Raster": "Сетка",
+  "Aus": "Выкл.",
+  "Schlag": "Доля",
+  "Takt": "Такт",
+  "Takte": "тактов",
+  "Vorlauf": "Отсчёт",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "Свободно: снова нажми ● Петля, чтобы закончить круг – он завершится на следующей доле или такте (сетка). Фиксированная длина: круг завершается сам. Отсчёт слышен.",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● Петля записывает сам секвенсор, никогда микрофон. Запись начинается со следующей сильной доли, пока она идёт, дорожка молчит. Если тем временем сменить паттерн, петля запишет каждый такт так, как он звучал. Затем дорожка играет со следующей сильной доли – выбери другой паттерн и заполни следующую дорожку.",
+  "rechnet": "расчёт",
+  "● endet": "● конец",
+  "● Takt": "● Такт",
+  "wartet auf die Eins": "ждёт сильную долю"
 }

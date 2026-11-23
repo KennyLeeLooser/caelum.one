@@ -698,5 +698,20 @@
   "● nimmt auf": "● grabando",
   "spielt": "suena",
   "bereit": "lista",
-  "leer": "vacía"
+  "leer": "vacía",
+  "Loop-Länge und Quantisieren": "Longitud del bucle y cuantización",
+  "Länge": "Longitud",
+  "Frei": "Libre",
+  "Raster": "Rejilla",
+  "Aus": "Desactivado",
+  "Schlag": "Tiempo",
+  "Takt": "Compás",
+  "Takte": "compases",
+  "Vorlauf": "Cuenta previa",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "Libre: toca ● Bucle otra vez para terminar la vuelta – acaba en el siguiente tiempo o compás (rejilla). Longitud fija: la vuelta acaba sola. La cuenta previa se oye.",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● Bucle graba el propio secuenciador, nunca el micrófono. La grabación empieza en el siguiente primer tiempo y la pista calla mientras dura. Si cambias de patrón mientras tanto, el bucle graba cada compás tal como sonó. Después la pista suena desde el siguiente primer tiempo – elige otro patrón y llena la pista siguiente.",
+  "rechnet": "calculando",
+  "● endet": "● termina",
+  "● Takt": "● Compás",
+  "wartet auf die Eins": "espera el primer tiempo"
 }

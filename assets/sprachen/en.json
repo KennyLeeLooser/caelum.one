@@ -700,5 +700,20 @@
   "● nimmt auf": "● recording",
   "spielt": "playing",
   "bereit": "ready",
-  "leer": "empty"
+  "leer": "empty",
+  "Loop-Länge und Quantisieren": "Loop length and quantize",
+  "Länge": "Length",
+  "Frei": "Free",
+  "Raster": "Grid",
+  "Aus": "Off",
+  "Schlag": "Beat",
+  "Takt": "Bar",
+  "Takte": "bars",
+  "Vorlauf": "Count-in",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "Free: tap ● Loop again to end the round – it ends on the next beat or bar (grid). Fixed length: the round ends by itself. Count-in counts you in audibly.",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● Loop records the sequencer itself, never the microphone. Recording starts on the next downbeat, and the track stays silent while it runs. If you switch patterns meanwhile, the loop records each bar as it sounded. Then the track plays along from the next downbeat – pick another pattern and fill the next track.",
+  "rechnet": "rendering",
+  "● endet": "● ending",
+  "● Takt": "● Bar",
+  "wartet auf die Eins": "waiting for the downbeat"
 }

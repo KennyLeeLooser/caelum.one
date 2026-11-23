@@ -698,5 +698,20 @@
   "● nimmt auf": "● a gravar",
   "spielt": "a tocar",
   "bereit": "pronta",
-  "leer": "vazia"
+  "leer": "vazia",
+  "Loop-Länge und Quantisieren": "Duração do loop e quantização",
+  "Länge": "Duração",
+  "Frei": "Livre",
+  "Raster": "Grelha",
+  "Aus": "Desligado",
+  "Schlag": "Tempo",
+  "Takt": "Compasso",
+  "Takte": "compassos",
+  "Vorlauf": "Contagem",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "Livre: toca em ● Loop outra vez para terminar a volta – acaba no tempo ou compasso seguinte (grelha). Duração fixa: a volta acaba sozinha. A contagem ouve-se.",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● Loop grava o próprio sequenciador, nunca o microfone. A gravação começa no próximo primeiro tempo e a pista fica em silêncio enquanto dura. Se mudares de padrão entretanto, o loop grava cada compasso tal como soou. Depois a pista toca a partir do próximo primeiro tempo – escolhe outro padrão e enche a pista seguinte.",
+  "rechnet": "a calcular",
+  "● endet": "● a terminar",
+  "● Takt": "● Compasso",
+  "wartet auf die Eins": "à espera do primeiro tempo"
 }

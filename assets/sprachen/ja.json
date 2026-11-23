@@ -699,5 +699,20 @@
   "● nimmt auf": "● 録音中",
   "spielt": "再生中",
   "bereit": "準備完了",
-  "leer": "空"
+  "leer": "空",
+  "Loop-Länge und Quantisieren": "ループ長とクオンタイズ",
+  "Länge": "長さ",
+  "Frei": "フリー",
+  "Raster": "グリッド",
+  "Aus": "オフ",
+  "Schlag": "拍",
+  "Takt": "小節",
+  "Takte": "小節",
+  "Vorlauf": "カウントイン",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "フリー：● ループ をもう一度タップするとラウンドが終わり、次の拍または小節で止まります（グリッド）。固定長：ラウンドは自動で終わります。カウントインは音で数えます。",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● ループ はシーケンサー自体を録音し、マイクは使いません。録音は次の1拍目から始まり、その間トラックは無音です。途中でパターンを替えると、各小節が鳴ったとおりに録音されます。その後トラックは次の1拍目から一緒に鳴ります――別のパターンを選んで次のトラックを埋めましょう。",
+  "rechnet": "計算中",
+  "● endet": "● 終了中",
+  "● Takt": "● 小節",
+  "wartet auf die Eins": "1拍目を待機中"
 }

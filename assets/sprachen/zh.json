@@ -699,5 +699,20 @@
   "● nimmt auf": "● 录制中",
   "spielt": "播放中",
   "bereit": "就绪",
-  "leer": "空"
+  "leer": "空",
+  "Loop-Länge und Quantisieren": "循环长度与量化",
+  "Länge": "长度",
+  "Frei": "自由",
+  "Raster": "网格",
+  "Aus": "关",
+  "Schlag": "拍",
+  "Takt": "小节",
+  "Takte": "小节",
+  "Vorlauf": "预备拍",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "自由：再次点按 ● 循环 结束这一轮——它会在下一拍或下一小节结束（网格）。固定长度：这一轮会自动结束。预备拍可以听到。",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● 循环 录制的是音序器本身，从不录麦克风。录制从下一个强拍开始，录制期间该音轨静音。期间切换节奏型，循环会按每小节实际的声音录下。之后音轨从下一个强拍开始一起播放——再选一个节奏型，填满下一条音轨。",
+  "rechnet": "计算中",
+  "● endet": "● 结束中",
+  "● Takt": "● 小节",
+  "wartet auf die Eins": "等待强拍"
 }

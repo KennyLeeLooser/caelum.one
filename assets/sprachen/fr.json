@@ -698,5 +698,20 @@
   "● nimmt auf": "● enregistre",
   "spielt": "joue",
   "bereit": "prête",
-  "leer": "vide"
+  "leer": "vide",
+  "Loop-Länge und Quantisieren": "Longueur de boucle et quantification",
+  "Länge": "Longueur",
+  "Frei": "Libre",
+  "Raster": "Grille",
+  "Aus": "Désactivé",
+  "Schlag": "Temps",
+  "Takt": "Mesure",
+  "Takte": "mesures",
+  "Vorlauf": "Décompte",
+  "Frei: ● Loop nochmal tippen beendet die Runde – sie endet auf dem nächsten Schlag oder Takt (Raster). Feste Länge: die Runde endet von selbst. Vorlauf zählt hörbar ein.": "Libre : touche ● Boucle à nouveau pour terminer le tour – il s’arrête sur le prochain temps ou la prochaine mesure (grille). Longueur fixe : le tour s’arrête tout seul. Le décompte se fait entendre.",
+  "● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.": "● Boucle enregistre le séquenceur lui-même, jamais le micro. L’enregistrement commence sur le prochain premier temps, la piste reste muette pendant ce temps. Si tu changes de motif entre-temps, la boucle enregistre chaque mesure telle qu’elle sonnait. Ensuite la piste joue dès le prochain premier temps – choisis un autre motif et remplis la piste suivante.",
+  "rechnet": "calcul",
+  "● endet": "● fin",
+  "● Takt": "● Mesure",
+  "wartet auf die Eins": "attend le premier temps"
 }
