@@ -1,0 +1,117 @@
+/* Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
+   Motion-Fenster im Browser (Sound Design): Handy-Nachbildung + Sensoren + MIDI-Bänke, Vorlage MotionFenster.cs (Caelum Vision).
+   Die App im Handy bleibt dunkel wie am Redmi (Purpur #C8479A = gehalten/aktive Bank), der Rest folgt hell/dunkel der Seite.
+   KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). */
+.mf-block { --mf-purpur: #C8479A; --mf-app: #141118; --mf-fl: #231E2A; }
+.mf { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 14px; }
+@media (max-width: 820px) { .mf { grid-template-columns: 1fr; } }
+.mf button { all: unset; cursor: pointer; box-sizing: border-box; }
+.mf button:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 2px; }
+
+/* links: Bühne mit Handy */
+.mf-buehne { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 26px 12px 12px;
+  perspective: 900px; touch-action: pan-y; cursor: grab; display: flex; flex-direction: column; align-items: center; min-width: 0;
+  user-select: none; -webkit-user-select: none; }
+.mf-buehne:active { cursor: grabbing; }
+.mf-handy { touch-action: none; width: min(240px, 72%); aspect-ratio: 9 / 19.5; border-radius: 28px; border: 6px solid #5A5A60; background: var(--mf-app);
+  box-shadow: 0 18px 40px rgba(0,0,0,.35); transform-style: preserve-3d; will-change: transform; overflow: hidden; }
+.mf-app { height: 100%; box-sizing: border-box; padding: 18px 9px 9px; display: flex; flex-direction: column; gap: 7px; color: #F2EEF5; font-size: 11px; }
+.mf-titel { font-weight: 600; font-size: 16px; padding-left: 3px; }
+.mf-status { color: #9C93A6; font-size: 10.5px; padding-left: 3px; margin-top: -4px; }
+.mf-baenke { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.mf-baenke button { text-align: center; padding: 6px 0; background: var(--mf-fl); border-radius: 6px; font-size: 10.5px; color: #F2EEF5; }
+.mf-baenke button[aria-pressed="true"] { background: var(--mf-purpur); }
+.mf-pads { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; min-height: 0; }
+.mf-pads button { position: relative; background: var(--mf-fl); border-radius: 12px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px; touch-action: none; user-select: none; -webkit-user-select: none; transition: background .12s; }
+.mf-pads button[aria-pressed="true"] { background: var(--mf-purpur); }
+.mf-pads b { font-size: 13px; font-weight: 600; color: #F2EEF5; }
+.mf-tag { position: absolute; left: 8px; top: 6px; color: #9C93A6; font-size: 10px; }
+.mf-cc { color: #9C93A6; font-size: 10px; }
+.mf-pads button[aria-pressed="true"] .mf-tag, .mf-pads button[aria-pressed="true"] .mf-cc { color: #fff; }
+.mf-spur { position: absolute; left: 12%; right: 12%; bottom: 10px; height: 4px; background: rgba(255,255,255,.22); border-radius: 2px; overflow: hidden; }
+.mf-spur i { display: block; height: 100%; width: 0; background: var(--mf-purpur); }
+.mf-pads button[aria-pressed="true"] .mf-spur i { background: #fff; }
+.mf-gehalten { color: #9C93A6; font-size: 10px; padding-left: 3px; }
+.mf-unten { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.mf-unten button { text-align: center; padding: 7px 0; background: #5A5A60; border-radius: 6px; font-size: 10.5px; color: #F2EEF5; }
+.mf-unten button[aria-pressed="true"] { background: var(--mf-purpur); }
+.mf-lage { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); margin: 14px 0 0; text-align: center; white-space: pre-wrap; }
+.mf-hilfe { color: var(--muted); font-size: 12.5px; margin: 8px 0 0; text-align: center; line-height: 1.45; }
+@media (hover: none) { .mf-buehne .mf-hilfe { display: none; } }
+@media (max-width: 520px) { .mf-handy { width: min(210px, 62%); } }
+
+/* rechts: Daten */
+.mf-daten { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; min-width: 0; }
+.mf-daten h3 { margin: 0 0 8px; font-size: 15px; color: var(--mf-purpur); }
+.mf-daten h3 + .mf-midi { margin-top: 2px; }
+.mf-sens { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 12px; margin: 0 0 16px; }
+.mf-k { color: var(--muted); font: 12px ui-monospace, Consolas, monospace; white-space: nowrap; }
+.mf-sens code { font: 12px ui-monospace, Consolas, monospace; color: var(--text); white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.mf-midi { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 460px) { .mf-midi { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.mf-bk { display: block; color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+.mf-bk.an { color: var(--mf-purpur); font-weight: 600; }
+.mf-z { display: grid; grid-template-columns: 1.6em minmax(0, 1fr) 2em; align-items: center; gap: 5px; font: 11.5px ui-monospace, Consolas, monospace; color: var(--muted); height: 19px; }
+.mf-bal { height: 8px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.mf-bal i { display: block; height: 100%; width: 0; background: color-mix(in srgb, var(--mf-purpur) 55%, transparent); }
+.mf-z.frisch .mf-bal i { background: var(--mf-purpur); }
+.mf-z.frisch .mf-w { color: var(--text); }
+.mf-w { text-align: right; }
+.mf-log { font: 11.5px/1.5 ui-monospace, Consolas, monospace; color: var(--muted); background: #141413; border-radius: 10px; padding: 7px 10px;
+  margin-top: 12px; min-height: 6em; white-space: pre; overflow: hidden; }
+.mf-daten .mf-hilfe { text-align: left; }
+.mf-unten { grid-template-columns: 1fr 1fr 1fr; }
+@media (prefers-reduced-motion: reduce) { .mf-pads button { transition: none; } }
+
+/* Leiste über dem Fenster: Handy-Sensoren · Sequenzer */
+.mf-block button { all: unset; cursor: pointer; box-sizing: border-box; }
+.mf-block button:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 2px; }
+.mf-leiste { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; }
+.mf-leiste > button, .mf-seq-karte button { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text-soft); font-size: 14px; }
+.mf-leiste > button:hover, .mf-seq-karte button:hover { border-color: var(--mf-purpur); }
+.mf-leiste > button.gross, .mf-seq-karte button.gross { background: var(--mf-purpur); border-color: var(--mf-purpur); color: #fff; font-weight: 600; }
+.mf-leiste > button.gross[aria-pressed="true"] { background: var(--surface); color: var(--text); }
+.mf-seq-karte button[aria-pressed="true"]:not(.gross):not(.mf-schritt), .mf-leiste > button[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--mf-purpur) 22%, var(--bg)); border-color: var(--mf-purpur); color: var(--text); }
+.mf-auf { display: inline-flex; align-items: center; gap: 8px; }
+.mf-pfeil { width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .25s; }
+.mf-auf[aria-expanded="true"] .mf-pfeil { transform: rotate(-135deg) translateY(-2px); }
+.mf-hinweis { color: var(--muted); font-size: 12.5px; }
+
+/* Sequenzer fährt aus */
+.mf-seq { display: grid; grid-template-rows: 0fr; opacity: 0; transform: translateY(-6px); transition: grid-template-rows .35s ease, opacity .25s ease, transform .35s ease, margin .35s ease; }
+.mf-seq.offen { grid-template-rows: 1fr; opacity: 1; transform: none; margin: 0 0 14px; }
+.mf-seq-in { overflow: hidden; min-height: 0; }
+@media (prefers-reduced-motion: reduce) { .mf-seq, .mf-pfeil { transition: none; } }
+.mf-seq-karte { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.mf-seq-karte h3 { margin: 0 0 10px; font-size: 15px; color: var(--mf-purpur); }
+.mf-seq-kopf, .mf-seq-zeile, .mf-seq-bew { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 10px; }
+.mf-wert { display: inline-flex; align-items: center; gap: 4px; }
+.mf-wert b { min-width: 3.2em; text-align: center; font: 600 14px ui-monospace, Consolas, monospace; color: var(--text); }
+.mf-seq-karte .mf-wert button { padding: 6px 11px; }
+.mf-einheit { color: var(--muted); font-size: 12px; }
+.mf-uhr { display: inline-flex; gap: 6px; align-items: center; }
+.mf-uhr i { width: 10px; height: 10px; border-radius: 50%; background: transparent; border: 1.5px solid var(--muted); box-sizing: border-box; transition: background .05s; }
+.mf-uhr i.an { border-color: var(--mf-purpur); }
+.mf-uhr i.an { background: var(--mf-purpur); }
+.mf-uhr[aria-pressed="true"] i:first-child { box-shadow: 0 0 0 2px var(--mf-purpur); }
+.mf-trenn { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+.mf-raster { background: var(--mf-app); border-radius: 12px; padding: 10px; margin: 0 0 12px; overflow-x: auto; }
+.mf-reihe { display: grid; grid-template-columns: 2.6em repeat(16, minmax(14px, 30px)); gap: 3px; margin-bottom: 3px; }
+.mf-reihe.gross { grid-template-columns: repeat(16, minmax(16px, 46px)); gap: 5px; }
+@media (max-width: 560px) { .mf-reihe.gross { grid-template-columns: repeat(8, 1fr); }
+  .mf-raster { padding: 8px 6px; } .mf-reihe:not(.gross) { grid-template-columns: 2.1em repeat(16, minmax(12px, 1fr)); gap: 2px; margin-bottom: 2px; } }
+.mf-seq-karte .mf-name { padding: 0; border: 0; background: none; color: #9C93A6; font: 600 11px ui-monospace, Consolas, monospace; display: flex; align-items: center; }
+.mf-seq-karte .mf-schritt { padding: 0; aspect-ratio: 1; border-radius: 4px; border: 0; background: var(--mf-fl); }
+.mf-seq-karte .mf-schritt.takt { background: #2E2737; }
+.mf-seq-karte .mf-schritt[aria-pressed="true"] { background: var(--mf-purpur); }
+.mf-seq-karte .mf-schritt.jetzt { box-shadow: inset 0 0 0 2px var(--c-motion, #E8C547); }
+.mf-reihe.gross .mf-schritt { border-radius: 7px; }
+.mf-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.mf-seq-karte .mf-chips button { padding: 5px 10px; font: 600 12px ui-monospace, Consolas, monospace; background: var(--mf-fl); border-color: transparent; color: #F2EEF5; }
+.mf-seq-karte .mf-chips button[aria-pressed="true"] { background: var(--mf-purpur); color: #fff; }
+.mf-bew { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 12.5px; }
+.mf-bew .mf-bal { width: 44px; height: 6px; margin-left: 4px; }
+.mf-bew .mf-bal i { background: var(--mf-purpur); }
+.mf-seq-karte .mf-hilfe { text-align: left; margin: 0; }

@@ -96,6 +96,20 @@
 .motion .werte code { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); min-width: 4.5em; text-align: right; }
 .motion .midi { font: 12px/1.5 ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--muted); background: #141413; border-radius: 10px; padding: 8px 10px; min-height: 5.6em; white-space: pre; overflow: hidden; }
 .motion .klein { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+/* Ansichten Synth · Datei · Live-Musik (23.11.2026) */
+.motion-block { touch-action: pan-y; }
+.motion-block [hidden] { display: none !important; }
+.motion-block .reiter { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0 0 12px; }
+.motion-block .reiter button { all: unset; cursor: pointer; padding: 7px 14px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--text-soft); font-size: 14px; }
+.motion-block .reiter button[aria-selected="true"] { background: color-mix(in srgb, var(--c-motion) 22%, var(--bg)); border-color: var(--c-motion); color: var(--text); }
+.motion-block .reiter button:focus-visible { outline: 2px solid var(--c-motion); outline-offset: 2px; }
+.motion-block .reiter .wisch { color: var(--muted); font-size: 12px; margin-left: 6px; }
+@media (hover: hover) and (pointer: fine) { .motion-block .reiter .wisch { display: none; } }
+.motion button[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+.motion .datei-name { overflow-wrap: anywhere; }
+.motion details.erkl { margin-top: 10px; font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+.motion details.erkl summary { cursor: pointer; color: var(--text); }
+.motion details.erkl p { margin: 6px 0 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .sb .flow.an, .sb .kreis.an .ring, .term .cursor { animation: none; }

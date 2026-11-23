@@ -64,7 +64,7 @@
         { "titel": "Caelum Rorschach", "untertitel": "Codes mit Befehlen", "text": "Ein QR-Code, der mehr kann als eine Adresse: Er trägt Befehle für unsere Apps.", "status": "Vorschau", "tags": ["Browser", "Handy"], "link": "/r/", "knopf": "Ausprobieren" },
         { "titel": "Good Goose", "untertitel": "Gans mit Wissen", "text": "Unsere Gans antwortet in 9 Sprachen auf Fragen zu Caelum – sie läuft ganz im Browser, ohne Server.", "status": "Live", "tags": ["9 Sprachen", "lokal"], "link": "/#p-goose", "knopf": "Zur Gans" }
       ],
-      "module": ["verbindungen"], "stile": ["/assets/schaubild.css?v=1"], "skripte": ["/assets/labor-schaubild.js?v=1"],
+      "module": ["verbindungen"], "stile": ["/assets/schaubild.css?v=2"], "skripte": ["/assets/labor-schaubild.js?v=1"],
       "wieTitel": "Wie ein Versuch zum Produkt wird",
       "wie": [
         ["Ausprobieren", "Ein kleiner Versuch im Browser, schnell gebaut."],
@@ -134,7 +134,7 @@
         { "titel": "Caelum Station", "untertitel": "Zusammen spielen", "text": "Der nächste Schritt nach Motion: mit dem Team in Runden spielen und live im Radio hören.", "status": "In Planung", "tags": ["Team", "Radio"], "link": "/sounddesign/station/", "knopf": "Als Nächstes: Station →" },
         { "titel": "Caelum Cut", "untertitel": "Ton im Schnitt", "text": "Lautstärke und weiche oder harte Übergänge – der Ton läuft im Videoschnitt mit.", "status": "In Planung", "tags": ["Windows", "Video"] }
       ],
-      "module": ["motion-web"], "stile": ["/assets/schaubild.css?v=1"], "skripte": ["/assets/motion-web.js?v=1"],
+      "module": ["motion-web", "motion-fenster"], "stile": ["/assets/schaubild.css?v=2", "/assets/motion-fenster.css?v=2"], "skripte": ["/assets/motion-web.js?v=3", "/assets/motion-fenster.js?v=2"],
       "wieTitel": "Wie ein Klang entsteht",
       "wie": [
         ["Bewegen", "Handy oder Joy-Con liefern die Bewegung."],
