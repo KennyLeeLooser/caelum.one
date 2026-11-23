@@ -131,6 +131,7 @@
       "kartenTitel": "Werkzeuge",
       "karten": [
         { "titel": "Caelum Motion", "untertitel": "Bewegung wird Klang", "text": "Neigen und Schwenken von Handy oder Joy-Con steuern Regler und Effekte in Ableton – live. Hier im Browser zum Ausprobieren.", "status": "Prototyp", "tags": ["VST3", "Ableton", "Android"], "link": "#motion", "knopf": "Im Browser ausprobieren" },
+        { "titel": "Caelum Station", "untertitel": "Zusammen spielen", "text": "Der nächste Schritt nach Motion: mit dem Team in Runden spielen und live im Radio hören.", "status": "In Planung", "tags": ["Team", "Radio"], "link": "/sounddesign/station/", "knopf": "Als Nächstes: Station →" },
         { "titel": "Caelum Cut", "untertitel": "Ton im Schnitt", "text": "Lautstärke und weiche oder harte Übergänge – der Ton läuft im Videoschnitt mit.", "status": "In Planung", "tags": ["Windows", "Video"] }
       ],
       "module": ["motion-web"], "stile": ["/assets/schaubild.css?v=1"], "skripte": ["/assets/motion-web.js?v=1"],
@@ -140,6 +141,18 @@
         ["Übersetzen", "Caelum Motion macht daraus Steuerdaten für Ableton."],
         ["Hören", "Der Klang ändert sich sofort – im Studio und auf der Bühne."]
       ]
+    },
+    {
+      "id": "sounddesign/station",
+      "_hinweis": "Unterseite von Sound Design (Kategorie Station, eigenes Projekt nach Motion, Kenny 23.11.2026) – kein eigenes Zeichen im Fusslogo. Hülle von Hand.",
+      "unterseite": true,
+      "titel": "Caelum Station",
+      "info": "Zusammen spielen, in Runden",
+      "farbe": "#C8479A",
+      "ueber": "/sounddesign/station",
+      "h1": "Bewegung wird Musik. Gemeinsam, in Runden.",
+      "text": "Die Caelum Station ist der nächste Schritt nach Caelum Motion: Mehrere Leute spielen mit Handy, Joy-Con oder im Browser zusammen, die Station mischt alle Runden, und das Radio sendet den Mix live an alle, die zuhören.",
+      "module": ["station-web"], "stile": ["/assets/station.css?v=1"], "skripte": ["/assets/station-web.js?v=1"]
     }
   ]
 }

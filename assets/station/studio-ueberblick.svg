@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. -->
+<!-- KI-Beitrag (Claude, GB-7), 23.11.2026 – Strang G1 „Studio-Überblick“, ENTWURF, Freigabe durch Kenny Looser ausstehend (GB-8). -->
+<!-- Kopie für caelum.one /sounddesign/station/ (23.11.2026, nur dunkel). Quelle: CaelumMotion/bild/. Farben nach CAELUM/DESIGN.md, Programmfarbe Purpur #C8479A. Dunkel ist Standard; bei hellem System schaltet @media um. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-labelledby="titel beschr">
+  <title id="titel">Caelum Motion Studio – Handy bewegen, Klang, Station, Radio</title>
+  <desc id="beschr">Mitspieler bewegen Handy oder Joy-Con, die Brücke macht daraus Klang, die Caelum Station mischt die Runden aller Mitspieler, Caelum Radio sendet den Mix mit Live-Chat an die Hörer. Ableton Live ist Gast, nicht Pflicht.</desc>
+  <defs>
+    <style>
+      .bg { fill: #262624; }
+      .card { fill: #30302E; stroke: #3D3D3A; stroke-width: 1.5; }
+      .haupt { fill: #30302E; stroke: #C8479A; stroke-width: 2.5; }
+      .gast { fill: none; stroke: #9C9A94; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .h { fill: #E8E6E1; font-size: 26px; font-weight: 600; }
+      .sub { fill: #9C9A94; font-size: 15px; }
+      .t { fill: #E8E6E1; font-size: 17px; font-weight: 600; }
+      .s { fill: #C9C6BF; font-size: 13.5px; }
+      .m { fill: #9C9A94; font-size: 12px; }
+      .f { fill: #6E6C66; font-size: 11.5px; }
+      .lab { fill: #9C9A94; font-size: 11px; }
+      .labA { fill: #C8479A; font-size: 11px; font-weight: 600; }
+      .stA { fill: #C8479A; font-size: 15px; font-weight: 600; }
+      .nr { fill: #C8479A; }
+      .nrT { fill: #FFFFFF; font-size: 13px; font-weight: 700; }
+      .big { fill: #E8E6E1; font-size: 26px; font-weight: 600; }
+      .ic { fill: none; stroke: #C9C6BF; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+      .icA { fill: none; stroke: #C8479A; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+      .ring { fill: none; stroke: #3D3D3A; stroke-width: 12; }
+      .ringA { fill: none; stroke: #C8479A; stroke-width: 12; }
+      .ringS { fill: none; stroke: #6E6C66; stroke-width: 12; }
+      .p { fill: none; stroke: #C9C6BF; stroke-width: 2; marker-end: url(#mk); }
+      .pg { fill: none; stroke: #9C9A94; stroke-width: 2; stroke-dasharray: 6 5; marker-end: url(#mk); }
+      .pA { fill: none; stroke: #C8479A; stroke-width: 3; marker-end: url(#mkA); }
+      .pAb { fill: none; stroke: #C8479A; stroke-width: 3; marker-end: url(#mkA); marker-start: url(#mkA); }
+      .mk { fill: #C9C6BF; }
+      .mkA { fill: #C8479A; }
+      .puls { fill: #C8479A; }
+      .zeiger { fill: #C8479A; stroke: #262624; stroke-width: 3; }
+      .kopf { stroke: #C8479A; stroke-width: 1.5; opacity: 0.75; }
+      @media (prefers-reduced-motion: reduce) { .bewegt { display: none; } }
+      /* Webseite caelum.one: immer dunkel wie die Seite (Hell-Block entfernt) */
+    </style>
+    <marker id="mk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="mk"/>
+    </marker>
+    <marker id="mkA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="mkA"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="640" rx="16" class="bg"/>
+  <text x="40" y="54" class="h">Caelum Motion Studio</text>
+  <text x="40" y="80" class="sub">Handy bewegen → Klang → Station → Radio · ein Team spielt zusammen, alle hören zu</text>
+
+  <!-- Schritte -->
+  <g>
+    <circle cx="54" cy="122" r="13" class="nr"/><text x="54" y="127" text-anchor="middle" class="nrT">1</text>
+    <text x="76" y="127" class="stA">Bewegen</text>
+    <circle cx="334" cy="122" r="13" class="nr"/><text x="334" y="127" text-anchor="middle" class="nrT">2</text>
+    <text x="356" y="127" class="stA">Klang</text>
+    <circle cx="614" cy="122" r="13" class="nr"/><text x="614" y="127" text-anchor="middle" class="nrT">3</text>
+    <text x="636" y="127" class="stA">Zusammen spielen</text>
+    <circle cx="934" cy="122" r="13" class="nr"/><text x="934" y="127" text-anchor="middle" class="nrT">4</text>
+    <text x="956" y="127" class="stA">Hören</text>
+  </g>
+
+  <!-- 1 · Mitspieler -->
+  <rect x="40" y="150" width="220" height="390" rx="12" class="card"/>
+  <text x="58" y="180" class="t">Mitspieler</text>
+  <text x="58" y="199" class="m">spielen mit Bewegung</text>
+
+  <rect x="60" y="222" width="20" height="32" rx="4" class="ic"/>
+  <line x1="67" y1="249" x2="73" y2="249" class="ic"/>
+  <text x="94" y="236" class="s">Handy (Redmi)</text>
+  <text x="94" y="253" class="m">Sensoren · Pads · Player</text>
+
+  <rect x="58" y="290" width="10" height="32" rx="5" class="ic"/>
+  <rect x="72" y="290" width="10" height="32" rx="5" class="ic"/>
+  <circle cx="63" cy="300" r="1.6" class="ic"/>
+  <circle cx="77" cy="312" r="1.6" class="ic"/>
+  <text x="94" y="304" class="s">Joy-Con L / R</text>
+  <text x="94" y="321" class="m">Bewegung · Tasten · Stick</text>
+
+  <circle cx="70" cy="370" r="7" class="ic"/>
+  <path d="M57,394 Q57,381 70,381 Q83,381 83,394" class="ic"/>
+  <text x="94" y="377" class="s">Gastgeber</text>
+  <text x="94" y="394" class="m">lädt ein · setzt das Tempo</text>
+
+  <rect x="57" y="438" width="26" height="22" rx="3" class="ic"/>
+  <line x1="57" y1="444" x2="83" y2="444" class="ic"/>
+  <text x="94" y="447" class="s">Browser</text>
+  <text x="94" y="464" class="m">mitspielen ohne App</text>
+
+  <!-- 2 · Brücke -->
+  <rect x="320" y="150" width="220" height="180" rx="12" class="card"/>
+  <text x="338" y="180" class="t">Brücke</text>
+  <text x="338" y="199" class="m">CaelumMotion.exe am PC</text>
+  <text x="338" y="230" class="s">Bewegung → MIDI und OSC</text>
+  <text x="338" y="252" class="s">Gesten: schütteln, klopfen</text>
+  <text x="338" y="274" class="s">Zuordnung entscheidet,</text>
+  <text x="338" y="292" class="s">was ein Wert bewirkt</text>
+  <text x="338" y="316" class="m">*.motion-map.json</text>
+
+  <!-- Ableton als Gast -->
+  <rect x="320" y="370" width="220" height="92" rx="12" class="gast"/>
+  <text x="338" y="398" class="t">Ableton Live</text>
+  <text x="338" y="418" class="m">Gast, nicht Pflicht</text>
+  <text x="338" y="442" class="s">zusätzliche Sendemaschine</text>
+
+  <!-- 3 · Station -->
+  <rect x="600" y="150" width="260" height="390" rx="12" class="haupt"/>
+  <text x="618" y="180" class="t">Caelum Station</text>
+  <text x="618" y="199" class="m">Endlos-Schleife nach NINJAM-Prinzip</text>
+  <!-- Runden-Ring: vier Runden, die laufende in Purpur -->
+  <g transform="translate(730 290)">
+    <path d="M0,-62 A62,62 0 0 1 62,0" class="ringS"/>
+    <path d="M62,0 A62,62 0 0 1 0,62" class="ringA"/>
+    <path d="M0,62 A62,62 0 0 1 -62,0" class="ring"/>
+    <path d="M-62,0 A62,62 0 0 1 0,-62" class="ring"/>
+    <line x1="0" y1="-69" x2="0" y2="-55" stroke-width="3" class="ic"/>
+    <line x1="69" y1="0" x2="55" y2="0" stroke-width="3" class="ic"/>
+    <line x1="0" y1="69" x2="0" y2="55" stroke-width="3" class="ic"/>
+    <line x1="-69" y1="0" x2="-55" y2="0" stroke-width="3" class="ic"/>
+    <text x="0" y="4" text-anchor="middle" class="big">8 s</text>
+    <text x="0" y="24" text-anchor="middle" class="m">je Runde</text>
+    <text x="80" y="-52" class="lab">n</text>
+    <text x="80" y="60" class="labA">n+1</text>
+  </g>
+  <text x="618" y="392" class="s">Was du in Runde n spielst,</text>
+  <text x="618" y="410" class="s">hören alle in Runde n+1.</text>
+  <text x="618" y="436" class="m">4 Takte · 120 BPM · bis 8 Spuren</text>
+  <text x="618" y="454" class="m">Grundmuster, wenn niemand spielt</text>
+  <text x="618" y="472" class="m">eigener Mix im Server</text>
+
+  <!-- 4 · Radio und Hörer -->
+  <rect x="920" y="150" width="240" height="200" rx="12" class="card"/>
+  <text x="938" y="180" class="t">Caelum Radio</text>
+  <text x="938" y="199" class="m">selbst gebauter HTTP-Strom</text>
+  <circle cx="1124" cy="176" r="4" class="icA"/>
+  <path d="M1114,166 A14,14 0 0 0 1114,186 M1134,166 A14,14 0 0 1 1134,186" class="icA"/>
+  <path d="M1107,159 A24,24 0 0 0 1107,193 M1141,159 A24,24 0 0 1 1141,193" class="icA"/>
+  <text x="938" y="232" class="s">Icecast-kompatibel</text>
+  <text x="938" y="254" class="s">Jetzt läuft · Live-Chat</text>
+  <text x="938" y="286" class="m">Webseite, Radio-Apps, VLC</text>
+  <text x="938" y="304" class="m">zuerst im eigenen Netz</text>
+  <text x="938" y="322" class="m">und über Tailscale</text>
+
+  <rect x="920" y="400" width="240" height="140" rx="12" class="card"/>
+  <path d="M1112,446 L1112,436 A16,16 0 0 1 1144,436 L1144,446" class="ic"/>
+  <rect x="1108" y="440" width="8" height="14" rx="3" class="ic"/>
+  <rect x="1140" y="440" width="8" height="14" rx="3" class="ic"/>
+  <text x="938" y="430" class="t">Hörer</text>
+  <text x="938" y="458" class="s">hören zu und chatten</text>
+  <text x="938" y="480" class="m">spielen nicht mit</text>
+  <text x="938" y="498" class="m">etwa eine Runde + 2 s hinter</text>
+  <text x="938" y="514" class="m">den Mitspielern</text>
+
+  <!-- Pfeile: Hauptweg in Purpur -->
+  <path d="M262,238 L316,238" class="pA"/>
+  <text x="270" y="230" class="labA">WLAN</text>
+  <path d="M262,306 L316,306" class="p"/>
+  <text x="264" y="298" class="lab">Bluetooth</text>
+  <path d="M542,240 L596,240" class="pA"/>
+  <text x="550" y="232" class="labA">Noten</text>
+  <path d="M430,332 L430,366" class="pg"/>
+  <text x="440" y="353" class="lab">MIDI</text>
+  <path d="M542,416 L596,416" class="pg"/>
+  <text x="550" y="408" class="lab">Audio</text>
+  <path d="M262,490 L596,490" class="p"/>
+  <text x="280" y="482" class="lab">WebSocket · Runden-Blöcke</text>
+  <path d="M598,520 L264,520" class="p"/>
+  <text x="280" y="535" class="lab">Mix der vorigen Runde zurück</text>
+  <path d="M862,240 L916,240" class="pA"/>
+  <text x="868" y="232" class="labA">Mix</text>
+  <path d="M1040,354 L1040,396" class="pAb"/>
+  <text x="1052" y="380" class="labA">Strom · Chat</text>
+
+  <text x="40" y="584" class="m">Bewegungsdaten bleiben im eigenen Netz oder Tailscale. Ableton ist Gast: Die Station mischt auch ohne Ableton.</text>
+  <text x="40" y="606" class="f">Entwurf 23.11.2026 · Caelum GmbH · Standard caelum-motion/1 · Station caelum-station/1 · Radio caelum-radio/1</text>
+  <!-- Bewegung (Web): Zeiger kreist einmal je Runde (8 s); einmal je Runde fliesst ein Impuls über den Hauptweg -->
+  <g class="bewegt">
+    <g>
+      <circle cx="730" cy="228" r="6" class="zeiger"/>
+      <animateTransform attributeName="transform" type="rotate" from="0 730 290" to="360 730 290" dur="8s" repeatCount="indefinite"/>
+    </g>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M262,238 L312,238" dur="8s" begin="0s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.1;1"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.09000000000000001;0.1;1" dur="8s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M542,240 L592,240" dur="8s" begin="0.9s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.1;1"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.09000000000000001;0.1;1" dur="8s" begin="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M862,240 L912,240" dur="8s" begin="1.8s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.1;1"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.09000000000000001;0.1;1" dur="8s" begin="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M1040,354 L1040,392" dur="8s" begin="2.7s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.1;1"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.09000000000000001;0.1;1" dur="8s" begin="2.7s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
