@@ -36,7 +36,7 @@
     var dlg = el('dialog', 'st-gross'); dlg.setAttribute('aria-label', 'Bild gross öffnen');
     var zu = el('button', 'st-gross-zu', '✕'); zu.type = 'button'; zu.setAttribute('aria-label', 'Schliessen');
     var flaeche = el('div', 'st-gross-flaeche');
-    var img = el('img'); img.decoding = 'async';
+    var img = el('img'); img.decoding = 'async'; img.alt = '';   // Text kommt beim Öffnen (k.alt)
     var tipp = el('p', 'st-gross-tipp', 'Mit dem Finger verschieben · antippen zum Zoomen');
     flaeche.appendChild(img); dlg.appendChild(zu); dlg.appendChild(flaeche); dlg.appendChild(tipp);
     document.body.appendChild(dlg);

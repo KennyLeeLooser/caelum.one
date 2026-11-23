@@ -1,7 +1,7 @@
 /* Rechtsseiten (Impressum, Datenschutz, AGB) – gleiche Farben wie index.html */
 :root {
   --bg-deep: #1F1E1D; --bg: #262624; --surface: #30302E; --hover: #33332F; --line: #3D3D3A;
-  --text: #E8E6E1; --text-soft: #C9C6BF; --muted: #9C9A94; --faint: #6E6C66;
+  --text: #E8E6E1; --text-soft: #C9C6BF; --muted: #9C9A94; --faint: #9A9892;   /* 23.11.2026: vorher #6E6C66, Kontrast 2,9 → 5,3 (WCAG AA), wie Startseite */
   --accent: #D97757; --sky: #A58BF5;
 }
 * { box-sizing: border-box; }

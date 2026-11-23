@@ -1,7 +1,7 @@
 /* Developer-Bereich /developer/ (Demos aus unseren Spielen) – baut auf recht.css auf, 20.11.2026 */
 body.dev main.wrap { max-width: 1040px; }
 .kopf { margin-bottom: 36px; }
-.kopf .ueber { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--sky); font-size: 14px; letter-spacing: .04em; margin: 0 0 6px; }
+.kopf .ueber { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; color: color-mix(in srgb, var(--sky) 70%, #fff); font-size: 14px; letter-spacing: .04em; margin: 0 0 6px; }
 .kopf p:last-child { color: var(--text-soft); font-size: 17px; max-width: 44em; }
 
 /* Umschalter Firma ⇄ Developer (gleich wie in index.html) */

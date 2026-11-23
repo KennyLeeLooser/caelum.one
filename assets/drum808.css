@@ -2,7 +2,7 @@
    Drum & 808 (Sound Design): 16 Pads wie das Ableton Drum Rack, Farbe wie Rec. › Drum in der Motion-App (Rot #E5484D).
    Die Pads bleiben dunkel wie am Handy, der Rest folgt hell/dunkel der Seite.
    KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). */
-.d8-block { --d8-rot: #E5484D; --d8-rot-fl: #2E1A1C; --d8-leise: #C08A8C; --d8-app: #141118; margin: 28px 0 0; }
+.d8-block { --d8-rot: #E5484D; --d8-rot-text: #F27B7E; --d8-rot-fl: #2E1A1C; --d8-leise: #C08A8C; --d8-app: #141118; margin: 28px 0 0; }
 .d8-block h2 { margin: 0 0 4px; }
 .d8-hilfe { color: var(--muted); margin: 0 0 12px; }
 .d8 { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 14px; align-items: start; }
@@ -22,14 +22,14 @@
 .d8-pad b { font: 600 clamp(13px, 3.4vw, 18px) ui-monospace, Consolas, monospace; }
 .d8-pad .d8-name { font-size: 10.5px; color: var(--d8-leise); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 92%; }
 .d8-pad .d8-note { position: absolute; left: 7px; top: 5px; font: 10px ui-monospace, Consolas, monospace; color: var(--d8-leise); }
-.d8-pad .d8-taste { position: absolute; right: 7px; top: 5px; font: 10px ui-monospace, Consolas, monospace; color: #6E6475; }
+.d8-pad .d8-taste { position: absolute; right: 7px; top: 5px; font: 10px ui-monospace, Consolas, monospace; color: #A89DAD; }   /* 23.11.2026: 2,9 → 6,3 */
 @media (hover: none) { .d8-pad .d8-taste, .d8-tasten { display: none; } }
 @media (max-width: 420px) { .d8-pad .d8-name { display: none; } }
 .d8-pad.gewaehlt { box-shadow: inset 0 0 0 2px var(--d8-rot); }
 .d8-pad.an { background: var(--d8-rot); transition: none; transform: scale(.97); }
 .d8-pad.an .d8-name, .d8-pad.an .d8-note, .d8-pad.an .d8-taste { color: #fff; }
 .d8-info { color: var(--muted); font-size: 12.5px; margin: 10px 0 0; line-height: 1.45; }
-.d8-stimme h3 { margin: 0 0 12px; font-size: 15px; color: var(--d8-rot); }
+.d8-stimme h3 { margin: 0 0 12px; font-size: 15px; color: var(--d8-rot-text); }   /* 23.11.2026 Kontrast 3,4 → 5,0 */
 .d8-stimme h3 .d8-note { color: var(--muted); font-weight: 400; font-size: 13px; }
 .d8-regler { display: grid; grid-template-columns: 4.2em minmax(0, 1fr) 4.4em; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 13.5px; color: var(--text-soft); }
 .d8-leiste .d8-laut { flex: 1 1 200px; margin: 0; grid-template-columns: auto minmax(80px, 1fr) 3.6em; }

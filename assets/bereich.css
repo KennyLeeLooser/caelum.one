@@ -3,6 +3,7 @@ body.bereich main.wrap { max-width: 1040px; }
 .abschnitt { font-size: 22px; margin: 8px 0 16px; }
 .demo .streif { height: 6px; }
 .demo .btn { color: #1F1E1D; }
+.demo .btn.aus { color: var(--faint); }   /* 23.11.2026: „Folgt bald“ war 1,1:1 */
 
 /* Community-Chat */
 .chat-platz { margin: 0 0 48px; }

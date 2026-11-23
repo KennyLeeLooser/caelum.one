@@ -57,7 +57,7 @@
 .term .leiste span { margin-left: 8px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
 .term pre { margin: 0; padding: 12px 14px; font: 13px/1.55 ui-monospace, "Cascadia Code", Consolas, monospace; color: #C9C6BF; white-space: pre-wrap; overflow-wrap: anywhere; flex: 1; }
 .term .p { color: var(--sky); }
-.term .k { color: #7E7C76; }
+.term .k { color: #8A8882; }   /* 23.11.2026: 4,4 → 5,3 */
 .term .ok { color: var(--ok); }
 .term .w { color: #E8C547; }
 .term .cursor { display: inline-block; width: .55em; height: 1.1em; vertical-align: -0.15em; background: var(--sky); animation: blink 1s steps(1) infinite; }
