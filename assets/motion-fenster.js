@@ -6,7 +6,7 @@
 // mit 4 Bänken × 4 Balken. Pad halten = Kupplung: nur solange gehalten, bewegt die Bewegung diesen Wert; loslassen → Wert bleibt.
 // Quelle: Maus (ziehen = kippen/neigen, Rad = schwenken, Umschalt+Rad = Höhe) oder echte Handy-Sensoren (DeviceOrientation/-Motion).
 // Ohne Eingabe läuft ein Beispiel. Nichts wird gesendet oder gespeichert.
-// KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). v3 (23.11. nachts): ● Loop + Looper-Spuren, EQ 8 Bänder + Balance.
 (function () {
   'use strict';
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -41,7 +41,8 @@
   function sequenzer(platz, holeCc, logZeile) {
     var muster = [], instr = 0, schritt = 0, naechst = 0, spielt = false, timer = null, warte = [], jetztS = -1;
     var bpm = 112, swingHand = 0.1, klick = false, koppeln = true, ansicht = 'matrix';
-    var ctx = null, rausch = null, eingang, filt, laut, echo, echoG, rueck;
+    var ctx = null, rausch = null, eingang, filt, laut, echo, echoG, rueck, summe, eqB = [], pan;
+    var Z = null;   // Ziel der Stimmen: { ctx, ein } – live oder beim ● Loop eine OfflineAudioContext
     function laden(n) { muster = MUSTER[n].map(function (z) { return z.split('').map(function (c) { return c === 'x'; }); }); }
     laden('grund');
 
@@ -85,6 +86,56 @@
     kopK.addEventListener('click', function () { koppeln = !koppeln; kopK.setAttribute('aria-pressed', koppeln ? 'true' : 'false'); });
     karte.appendChild(bew);
     karte.appendChild(el('p', 'mf-hilfe', 'Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.'));
+
+    // ---- ● Loop + Looper (wie LooperSeite.java / ROADMAP Motion: „● Loop = live“, Spurwahl Auto · 1 · 2 …) ----
+    var lpK = el('div', 'mf-seq-zeile mf-lp-kopf');
+    var loopK = knopf('● Loop', 'mf-loop'); loopK.setAttribute('aria-pressed', 'false');
+    var wahlK = knopf('', 'mf-wahl'); wahlK.setAttribute('aria-expanded', 'false'); wahlK.setAttribute('aria-label', 'Spurwahl für ● Loop');
+    var wahlZ = el('span'); wahlK.appendChild(document.createTextNode('▸ ')); wahlK.appendChild(wahlZ);
+    var eqK = knopf('', 'mf-auf'); eqK.appendChild(el('span', null, 'EQ')); eqK.appendChild(el('i', 'mf-pfeil'));
+    eqK.setAttribute('aria-expanded', 'false');
+    lpK.appendChild(loopK); lpK.appendChild(wahlK); lpK.appendChild(el('span', 'mf-trenn')); lpK.appendChild(eqK);
+    karte.appendChild(lpK);
+    var wahlZeile = el('div', 'mf-seq-zeile mf-chips mf-wahlzeile'); wahlZeile.hidden = true; karte.appendChild(wahlZeile);
+
+    // EQ (Eq.java: 8 Glocken 60 Hz – 15 kHz, ±12 dB, Q 1,4, doppelt tippen = 0, Flach, Balance)
+    var FREQ = [60, 150, 400, 1000, 2400, 6000, 10000, 15000], EQ_Q = 1.4, db = FREQ.map(function () { return 0; }), balance = 0;
+    var eqHuelle = el('div', 'mf-seq mf-eq-huelle'), eqIn = el('div', 'mf-seq-in'), eqKarte = el('div', 'mf-eq');
+    eqHuelle.id = 'mf-eq'; eqHuelle.inert = true; eqK.setAttribute('aria-controls', 'mf-eq');
+    eqHuelle.appendChild(eqIn); eqIn.appendChild(eqKarte);
+    eqKarte.appendChild(el('h4', null, 'EQ wie in der Motion-App'));
+    var kurve = el('canvas', 'mf-kurve'); kurve.setAttribute('aria-hidden', 'true'); eqKarte.appendChild(kurve);
+    var fader = el('div', 'mf-fader'), regler = [], dbZ = [];
+    FREQ.forEach(function (fq, i) {
+      var sp = el('label', 'mf-band'), z = el('b'), r = el('input');
+      r.type = 'range'; r.min = '-12'; r.max = '12'; r.step = '0.5'; r.value = '0';
+      r.setAttribute('aria-label', (fq >= 1000 ? (fq / 1000) + ' kHz' : fq + ' Hz'));
+      r.addEventListener('input', function () { db[i] = Number(r.value); eqSetz(); });
+      r.addEventListener('dblclick', function () { r.value = '0'; db[i] = 0; eqSetz(); });
+      sp.appendChild(z); sp.appendChild(r); sp.appendChild(el('span', 'mf-hz', fq >= 1000 ? String(fq / 1000).replace('.', ',') + 'k' : String(fq)));
+      fader.appendChild(sp); regler.push(r); dbZ.push(z);
+    });
+    eqKarte.appendChild(fader);
+    var balZ = el('div', 'mf-seq-zeile mf-balance'), balR = el('input'), flachK = knopf('Flach');
+    balR.type = 'range'; balR.min = '-1'; balR.max = '1'; balR.step = '0.05'; balR.value = '0'; balR.setAttribute('aria-label', 'Balance');
+    balR.addEventListener('input', function () { balance = Number(balR.value); eqSetz(); });
+    balR.addEventListener('dblclick', function () { balR.value = '0'; balance = 0; eqSetz(); });
+    var balL = el('span', 'mf-einheit', 'links'), balRe = el('span', 'mf-einheit', 'rechts');
+    balZ.appendChild(el('span', 'mf-einheit', 'Balance')); balZ.appendChild(balL); balZ.appendChild(balR); balZ.appendChild(balRe); balZ.appendChild(flachK);
+    eqKarte.appendChild(balZ);
+    eqKarte.appendChild(el('p', 'mf-hilfe', 'Fader ziehen: ±12 dB je Band, doppelt tippen = 0. Der EQ wirkt hier auf alles, was klingt – Sequenzer und Loops. In der App wirkt er auf alle Apps am Handy.'));
+    karte.appendChild(eqHuelle);
+    flachK.addEventListener('click', function () { db = db.map(function () { return 0; }); regler.forEach(function (r) { r.value = '0'; }); balance = 0; balR.value = '0'; eqSetz(); });
+    eqK.addEventListener('click', function () {
+      var auf = eqK.getAttribute('aria-expanded') !== 'true';
+      eqHuelle.classList.toggle('offen', auf); eqHuelle.inert = !auf; eqK.setAttribute('aria-expanded', auf ? 'true' : 'false');
+      if (auf) requestAnimationFrame(kurveZeichnen);
+    });
+
+    var looper = el('div', 'mf-looper'); karte.appendChild(looper);
+    var lpFuss = el('div', 'mf-seq-zeile'), dazuK = knopf('+ Spur'), alleWegK = knopf('⌫ Alle Spuren');
+    lpFuss.appendChild(dazuK); lpFuss.appendChild(alleWegK); karte.appendChild(lpFuss);
+    karte.appendChild(el('p', 'mf-hilfe', '● Loop nimmt den Sequenzer selbst auf, nie das Mikrofon. Die Spur schweigt, solange die Runde läuft; tippst du ● Loop nochmal, bleibt die letzte Runde auf der Spur und spielt ab der nächsten Eins mit. Dann ein anderes Muster wählen und die nächste Spur füllen.'));
     platz.appendChild(karte);
 
     // ---- Raster ----
@@ -127,20 +178,27 @@
       eingang = ctx.createGain(); filt = ctx.createBiquadFilter(); filt.type = 'lowpass'; filt.frequency.value = 12000; filt.Q.value = 0.8;
       laut = ctx.createGain(); laut.gain.value = 0.7;
       echo = ctx.createDelay(1); rueck = ctx.createGain(); rueck.gain.value = 0.35; echoG = ctx.createGain(); echoG.gain.value = 0;
-      eingang.connect(filt); filt.connect(laut); laut.connect(ctx.destination);
+      // Summe (Sequenzer + Loop-Spuren) → 8 Glocken (EQ) → Balance → Lautsprecher
+      summe = ctx.createGain();
+      eqB = FREQ.map(function (fq) { var b = ctx.createBiquadFilter(); b.type = 'peaking'; b.frequency.value = Math.min(fq, ctx.sampleRate * 0.45); b.Q.value = EQ_Q; return b; });
+      pan = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain();
+      summe.connect(eqB[0]); for (var k = 1; k < eqB.length; k++) eqB[k - 1].connect(eqB[k]); eqB[eqB.length - 1].connect(pan); pan.connect(ctx.destination);
+      eingang.connect(filt); filt.connect(laut); laut.connect(summe);
       filt.connect(echoG); echoG.connect(echo); echo.connect(rueck); rueck.connect(echo); echo.connect(laut);
+      Z = { ctx: ctx, ein: eingang };
+      spuren.forEach(spurAnschliessen); eqSetz();
     }
-    function huell(t, a, dauer) { var g = ctx.createGain(); g.gain.setValueAtTime(a, t); g.gain.exponentialRampToValueAtTime(0.001, t + dauer); g.connect(eingang); return g; }
+    function huell(t, a, dauer) { var g = Z.ctx.createGain(); g.gain.setValueAtTime(a, t); g.gain.exponentialRampToValueAtTime(0.001, t + dauer); g.connect(Z.ein); return g; }
     function rauschen(t, typ, freq, a, dauer) {
-      var q = ctx.createBufferSource(); q.buffer = rausch; var fl = ctx.createBiquadFilter(); fl.type = typ; fl.frequency.value = freq;
+      var q = Z.ctx.createBufferSource(); q.buffer = rausch; var fl = Z.ctx.createBiquadFilter(); fl.type = typ; fl.frequency.value = freq;
       q.connect(fl); fl.connect(huell(t, a, dauer)); q.start(t); q.stop(t + dauer + 0.02);
     }
     function osz(t, typ, f0, f1, a, dauer) {
-      var o = ctx.createOscillator(); o.type = typ; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dauer * 0.6);
+      var o = Z.ctx.createOscillator(); o.type = typ; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dauer * 0.6);
       o.connect(huell(t, a, dauer)); o.start(t); o.stop(t + dauer + 0.02);
     }
     function ton(i, t, v) {
-      audio(); if (!ctx) return; t = Math.max(t || 0, ctx.currentTime); v = v || 1;
+      audio(); if (!ctx) return; t = Math.max(t || 0, Z.ctx.currentTime); v = v || 1;
       switch (INSTR[i][0]) {
         case 'BD': osz(t, 'sine', 140, 45, 1.0 * v, 0.45); break;
         case 'SD': osz(t, 'triangle', 220, 160, 0.35 * v, 0.12); rauschen(t, 'highpass', 1200, 0.5 * v, 0.18); break;
@@ -153,6 +211,160 @@
       }
     }
     function klickTon(t, eins) { osz(t, 'sine', eins ? 1800 : 1200, eins ? 1800 : 1200, 0.18, 0.04); }
+
+    // ---- EQ setzen + Kurve (RBJ-Glocke, gleich wie Biquad.glocke in der App) ----
+    function eqSetz() {
+      regler.forEach(function (r, i) { setz(dbZ[i], (db[i] > 0 ? '+' : '') + String(db[i]).replace('.', ',')); });
+      if (ctx) {
+        var t = ctx.currentTime;
+        eqB.forEach(function (b, i) { b.gain.setTargetAtTime(db[i], t, 0.02); });
+        if (pan.pan) pan.pan.setTargetAtTime(balance, t, 0.03);
+      }
+      kurveZeichnen();
+    }
+    function glockeDb(f, f0, g) {
+      var sr = 48000, A = Math.pow(10, g / 40), w0 = 2 * Math.PI * f0 / sr, al = Math.sin(w0) / (2 * EQ_Q), cw = Math.cos(w0);
+      var b0 = 1 + al * A, b1 = -2 * cw, b2 = 1 - al * A, a0 = 1 + al / A, a1 = -2 * cw, a2 = 1 - al / A;
+      var w = 2 * Math.PI * f / sr, c1 = Math.cos(w), s1 = Math.sin(w), c2 = Math.cos(2 * w), s2 = Math.sin(2 * w);
+      var nr = b0 + b1 * c1 + b2 * c2, ni = -(b1 * s1 + b2 * s2), dr = a0 + a1 * c1 + a2 * c2, di = -(a1 * s1 + a2 * s2);
+      return 10 * Math.log10((nr * nr + ni * ni) / (dr * dr + di * di));
+    }
+    function kurveZeichnen() {
+      if (!kurve.offsetParent) return;
+      var dpr = window.devicePixelRatio || 1, w = kurve.clientWidth, h = kurve.clientHeight;
+      if (kurve.width !== Math.round(w * dpr)) { kurve.width = Math.round(w * dpr); kurve.height = Math.round(h * dpr); }
+      var g = kurve.getContext('2d'), cs = getComputedStyle(kurve);
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+      g.strokeStyle = cs.getPropertyValue('--mf-linie') || '#555'; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
+      g.strokeStyle = cs.getPropertyValue('--mf-gelb') || '#E8C547'; g.lineWidth = 2; g.beginPath();
+      for (var x = 0; x <= w; x += 2) {
+        var f = 30 * Math.pow(20000 / 30, x / w), s = 0;
+        for (var i = 0; i < FREQ.length; i++) if (db[i]) s += glockeDb(f, FREQ[i], db[i]);
+        var y = h / 2 - klemm(s, -15, 15) / 15 * (h / 2 - 3);
+        x ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.stroke();
+    }
+
+    // ---- Looper-Spuren ----
+    var spuren = [], wahl = 'auto', liveSpur = -1;
+    function spurNeu() {
+      var s = { buf: null, bpm: bpm, stumm: false, pegel: 0.9, g: null, q: null };
+      var z = el('div', 'mf-spurzeile'), nm = el('span', 'mf-spurname'); wort(nm, 'Spur'); var nr = el('span'); nm.appendChild(document.createTextNode(' ')); nm.appendChild(nr);
+      var welle = el('canvas', 'mf-welle'), st = el('span', 'mf-spurstand'), m = knopf('M', 'mf-m'), pg = el('input'), weg = knopf('⌫', 'mf-weg');
+      m.setAttribute('aria-pressed', 'false'); m.setAttribute('aria-label', 'Stumm schalten'); weg.setAttribute('aria-label', 'Spur löschen');
+      pg.type = 'range'; pg.min = '0'; pg.max = '1.2'; pg.step = '0.05'; pg.value = String(s.pegel); pg.setAttribute('aria-label', 'Pegel');
+      [nm, welle, st, m, pg, weg].forEach(function (e) { z.appendChild(e); });
+      m.addEventListener('click', function () { s.stumm = !s.stumm; m.setAttribute('aria-pressed', s.stumm ? 'true' : 'false'); spurPegel(s); });
+      pg.addEventListener('input', function () { s.pegel = Number(pg.value); spurPegel(s); });
+      weg.addEventListener('click', function () { spurLeeren(spuren.indexOf(s)); });
+      s.z = z; s.nr = nr; s.welle = welle; s.st = st;
+      spuren.push(s); looper.appendChild(z); if (ctx) spurAnschliessen(s);
+      return s;
+    }
+    function spurAnschliessen(s) { if (s.g) return; s.g = ctx.createGain(); s.g.connect(summe); spurPegel(s); }
+    function spurPegel(s) {
+      if (!s.g) return;
+      var live = spuren.indexOf(s) === liveSpur;
+      s.g.gain.setTargetAtTime(s.stumm || live ? 0 : s.pegel, ctx.currentTime, 0.02);
+    }
+    function spurHalt(s) { if (s.q) { try { s.q.stop(); } catch (x) { } s.q.disconnect(); s.q = null; } }
+    function spurLeeren(i) {
+      var s = spuren[i]; if (!s) return;
+      if (i === liveSpur) { liveSpur = -1; loopAnzeige(); }
+      spurHalt(s); s.buf = null; spurenZeigen(); logZeile('Spur ' + (i + 1) + ' gelöscht', true);
+    }
+    function welleZeichnen(s) {
+      var c = s.welle, dpr = window.devicePixelRatio || 1, w = c.clientWidth || 120, h = c.clientHeight || 24;
+      c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+      var g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+      if (!s.buf) return;
+      var d = s.buf.getChannelData(0), schritt = Math.max(1, Math.floor(d.length / w));
+      g.fillStyle = getComputedStyle(c).getPropertyValue('--mf-purpur') || '#C8479A';
+      for (var x = 0; x < w; x++) {
+        var m = 0; for (var k = x * schritt, e = Math.min(d.length, k + schritt); k < e; k += 4) { var a = Math.abs(d[k]); if (a > m) m = a; }
+        var hh = Math.max(1, Math.min(1, m) * (h - 2)); g.fillRect(x, (h - hh) / 2, 1, hh);
+      }
+    }
+    function spurenZeigen() {
+      spuren.forEach(function (s, i) {
+        setz(s.nr, String(i + 1));
+        var live = i === liveSpur;
+        s.z.classList.toggle('live', live);
+        setz(s.st, live ? '● nimmt auf' : s.buf ? (spielt ? 'spielt' : 'bereit') : 'leer');
+        welleZeichnen(s); if (ctx) spurPegel(s);
+      });
+      dazuK.disabled = spuren.length >= 8;
+      // Spurwahl: Auto · 1 · 2 · … (passt sich der Spurenzahl an)
+      wahlZeile.textContent = '';
+      ['auto'].concat(spuren.map(function (s, i) { return i; })).forEach(function (w) {
+        var b = knopf(w === 'auto' ? 'Auto' : String(w + 1)); b.setAttribute('aria-pressed', w === wahl ? 'true' : 'false');
+        b.addEventListener('click', function () { wahl = w; spurenZeigen(); wahlK.click(); });
+        wahlZeile.appendChild(b);
+      });
+      setz(wahlZ, wahl === 'auto' ? 'Auto' : String(wahl + 1));
+    }
+    for (var sp0 = 0; sp0 < 4; sp0++) spurNeu();
+    dazuK.addEventListener('click', function () { if (spuren.length < 8) { spurNeu(); spurenZeigen(); } });
+    alleWegK.addEventListener('click', function () { for (var i = 0; i < spuren.length; i++) spurLeeren(i); });
+    wahlK.addEventListener('click', function () { var auf = wahlZeile.hidden; wahlZeile.hidden = !auf; wahlK.setAttribute('aria-expanded', auf ? 'true' : 'false'); });
+
+    // Eine Runde (16 Schritte) offline rendern – zwei Runden, die zweite bleibt (der Echo-Schwanz der ersten läuft hinein, die Schleife ist nahtlos)
+    function runde() {
+      var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC || !ctx) return Promise.reject(new Error('kein Audio'));
+      var d = 60 / bpm / 4, sr = ctx.sampleRate, n = Math.round(16 * d * sr), oc = new OAC(2, n * 2, sr);
+      var e = oc.createGain(), fl = oc.createBiquadFilter(), lg = oc.createGain(), ec = oc.createDelay(1), rg = oc.createGain(), eg = oc.createGain();
+      fl.type = 'lowpass'; fl.frequency.value = filt.frequency.value; fl.Q.value = 0.8; lg.gain.value = laut.gain.value;
+      ec.delayTime.value = echo.delayTime.value; rg.gain.value = 0.35; eg.gain.value = echoG.gain.value;
+      e.connect(fl); fl.connect(lg); lg.connect(oc.destination); fl.connect(eg); eg.connect(ec); ec.connect(rg); rg.connect(ec); ec.connect(lg);
+      var alt = Z, sw = swing(); Z = { ctx: oc, ein: e };
+      try {
+        for (var r = 0; r < 2; r++) for (var s = 0; s < 16; s++) {
+          var t = (r * 16 + s) * d + (s % 2 ? sw * d : 0);
+          for (var i = 0; i < INSTR.length; i++) if (muster[i][s]) ton(i, t, s % 4 === 0 ? 1 : 0.82);
+        }
+      } finally { Z = alt; }
+      var fertig = oc.startRendering();
+      if (!fertig || !fertig.then) fertig = new Promise(function (ok) { oc.oncomplete = function (ev) { ok(ev.renderedBuffer); }; });
+      return fertig.then(function (b) {
+        var aus = ctx.createBuffer(2, n, sr);
+        for (var ch = 0; ch < 2; ch++) aus.getChannelData(ch).set(b.getChannelData(Math.min(ch, b.numberOfChannels - 1)).subarray(n, 2 * n));
+        return aus;
+      });
+    }
+    function loopAnzeige() {
+      var an = liveSpur >= 0;
+      loopK.setAttribute('aria-pressed', an ? 'true' : 'false'); setz(loopK, an ? '■ Loop' : '● Loop');
+      spurenZeigen();
+    }
+    function loopTippen() {
+      if (liveSpur < 0) {
+        var ziel = wahl === 'auto' ? spuren.findIndex(function (s) { return !s.buf; }) : wahl;
+        if (ziel < 0) { logZeile('Alle Spuren voll – eine löschen oder + Spur.', true); return; }
+        if (!spielt) start();
+        if (!ctx) return;
+        liveSpur = ziel; spurHalt(spuren[ziel]); loopAnzeige();
+        logZeile('● Loop → Spur ' + (ziel + 1) + ' · intern', true);
+      } else {
+        var i = liveSpur, s = spuren[i];
+        runde().then(function (b) {
+          s.buf = b; s.bpm = bpm; spurHalt(s);
+          if (liveSpur === i) liveSpur = -1;
+          loopAnzeige(); logZeile('Loop auf Spur ' + (i + 1) + ' · ' + b.duration.toFixed(2) + ' s', true);
+        }).catch(function () { liveSpur = -1; loopAnzeige(); });
+      }
+    }
+    loopK.addEventListener('click', loopTippen);
+    // auf jeder Eins: Spuren mit Loop, die noch nicht laufen, mitstarten (Tempo folgt dem BPM wie in der App)
+    function spurenAufEins(t) {
+      spuren.forEach(function (s, i) {
+        if (!s.buf || s.q || i === liveSpur) return;
+        spurAnschliessen(s);
+        var q = ctx.createBufferSource(); q.buffer = s.buf; q.loop = true; q.playbackRate.value = bpm / s.bpm;
+        q.connect(s.g); q.start(t); s.q = q;
+      });
+    }
 
     // ---- Bewegung → Klang (Bank A = CC 20–23), sonst Handwerte ----
     function wert(k, std) { var v = holeCc(k); return koppeln && v >= 0 ? v / 127 : std; }
@@ -174,6 +386,7 @@
       var dauer = 60 / bpm / 4;
       while (naechst < ctx.currentTime + 0.12) {
         var t = naechst + (schritt % 2 ? swing() * dauer : 0);
+        if (schritt === 0) spurenAufEins(naechst);
         var noten = [];
         for (var i = 0; i < INSTR.length; i++) if (muster[i][schritt]) { ton(i, t, schritt % 4 === 0 ? 1 : 0.82); noten.push(INSTR[i][1]); }
         if (klick && schritt % 4 === 0) klickTon(t, schritt === 0);
@@ -198,22 +411,28 @@
       spielK.textContent = '■ Stopp'; spielK.setAttribute('aria-pressed', 'true');
       logZeile('MIDI-Clock Start · ' + bpm + ' BPM', true);
       timer = setInterval(function () { formen(); planen(); }, 25); planen(); requestAnimationFrame(lauflicht);
+      spurenZeigen();
     }
     function stopp() {
       if (!spielt) return;
+      if (liveSpur >= 0) loopTippen();   // laufende Loop-Runde bleibt auf der Spur
       spielt = false; clearInterval(timer); timer = null; warte = [];
+      spuren.forEach(spurHalt); spurenZeigen();
       spielK.textContent = '▶ Start'; spielK.setAttribute('aria-pressed', 'false');
       if (jetztS >= 0) zellen.forEach(function (r) { if (r[jetztS]) r[jetztS].classList.remove('jetzt'); });
       punkte.forEach(function (p) { p.classList.remove('an'); }); jetztS = -1;
       logZeile('MIDI-Clock Stopp', true);
     }
     spielK.addEventListener('click', function () { spielt ? stopp() : start(); });
-    function bpmSetz(v) { bpm = klemm(v, 60, 180); setz(bpmZ, String(bpm)); }
+    function bpmSetz(v) {
+      bpm = klemm(v, 60, 180); setz(bpmZ, String(bpm));
+      spuren.forEach(function (s) { if (s.q) s.q.playbackRate.setTargetAtTime(bpm / s.bpm, ctx.currentTime, 0.05); });
+    }
     bpmMinus.addEventListener('click', function () { bpmSetz(bpm - 2); }); bpmPlus.addEventListener('click', function () { bpmSetz(bpm + 2); });
     swMinus.addEventListener('click', function () { swingHand = klemm(Math.round((swingHand - 0.05) * 100) / 100, 0, 0.6); formen(); });
     swPlus.addEventListener('click', function () { swingHand = klemm(Math.round((swingHand + 0.05) * 100) / 100, 0, 0.6); formen(); });
     uhr.addEventListener('click', function () { klick = !klick; uhr.setAttribute('aria-pressed', klick ? 'true' : 'false'); });
-    bpmSetz(bpm); formen();
+    bpmSetz(bpm); formen(); eqSetz(); spurenZeigen();
     setInterval(function () { if (!spielt && platz.offsetParent) formen(); }, 200);   // Balken auch im Stand
     return { stopp: stopp, spielt: function () { return spielt; }, muster: function () { return muster; } };
   }

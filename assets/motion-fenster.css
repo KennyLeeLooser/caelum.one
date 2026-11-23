@@ -115,3 +115,43 @@
 .mf-bew .mf-bal { width: 44px; height: 6px; margin-left: 4px; }
 .mf-bew .mf-bal i { background: var(--mf-purpur); }
 .mf-seq-karte .mf-hilfe { text-align: left; margin: 0; }
+
+/* ---------- ● Loop, Looper-Spuren, EQ (23.11.2026, wie LooperSeite.java + Eq.java der Motion-App) ---------- */
+.mf-block { --mf-gelb: #E8C547; --mf-linie: #3A3442; }
+.mf-lp-kopf { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.mf-seq-karte button.mf-loop { font-weight: 600; }
+.mf-seq-karte button.mf-loop[aria-pressed="true"] { background: #C0392B; border-color: #C0392B; color: #fff; }
+.mf-seq-karte button.mf-wahl { padding: 8px 10px; font: 600 13px ui-monospace, Consolas, monospace; }
+.mf-seq-karte button.mf-auf[aria-expanded="true"] { background: color-mix(in srgb, var(--mf-gelb) 18%, var(--bg)); border-color: var(--mf-gelb); color: var(--text); }
+.mf-wahlzeile { margin-top: -4px; }
+.mf-looper { display: grid; gap: 5px; margin: 0 0 10px; }
+.mf-spurzeile { display: grid; grid-template-columns: 4.2em minmax(0, 1fr) 6.5em auto 84px auto; align-items: center; gap: 8px;
+  background: var(--mf-app); border-radius: 10px; padding: 5px 8px; color: #F2EEF5; font-size: 12.5px; }
+.mf-spurzeile.live { box-shadow: inset 0 0 0 2px #C0392B; }
+.mf-spurname { font: 600 12px ui-monospace, Consolas, monospace; color: #9C93A6; white-space: nowrap; }
+.mf-welle { width: 100%; height: 24px; display: block; background: var(--mf-fl); border-radius: 4px; }
+.mf-spurstand { color: #9C93A6; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mf-spurzeile.live .mf-spurstand { color: #FF6B5B; }
+.mf-seq-karte .mf-spurzeile button { padding: 4px 9px; background: var(--mf-fl); border-color: transparent; color: #F2EEF5; font: 600 12px ui-monospace, Consolas, monospace; }
+.mf-seq-karte .mf-spurzeile button.mf-m[aria-pressed="true"] { background: var(--mf-gelb); color: #141118; }
+.mf-spurzeile input[type="range"] { width: 100%; accent-color: var(--mf-purpur); }
+@media (max-width: 560px) {
+  .mf-spurzeile { grid-template-columns: 3.6em minmax(0, 1fr) auto auto; row-gap: 4px; }
+  .mf-spurstand { grid-column: 1; grid-row: 2; } .mf-spurzeile input[type="range"] { grid-column: 2 / 4; grid-row: 2; }
+}
+.mf-seq-karte button:disabled { opacity: .45; cursor: default; }
+.mf-eq-huelle.offen { margin: 0 0 12px; }
+.mf-eq { background: var(--mf-app); border-radius: 12px; padding: 12px 14px; color: #F2EEF5; }
+.mf-eq h4 { margin: 0 0 8px; font-size: 14px; color: var(--mf-gelb); }
+.mf-kurve { width: 100%; height: 74px; display: block; background: var(--mf-fl); border-radius: 8px; margin: 0 0 10px; }
+.mf-fader { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; }
+.mf-band { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+.mf-band b { font: 600 11.5px ui-monospace, Consolas, monospace; color: var(--mf-gelb); min-height: 1.2em; }
+.mf-band input[type="range"] { writing-mode: vertical-lr; direction: rtl; width: 26px; height: 130px; accent-color: var(--mf-gelb); margin: 0; }
+.mf-hz { font: 11px ui-monospace, Consolas, monospace; color: #9C93A6; }
+@media (max-width: 460px) { .mf-band input[type="range"] { height: 104px; width: 22px; } }
+.mf-balance { margin: 10px 0 6px; }
+.mf-balance input[type="range"] { flex: 1 1 120px; min-width: 100px; accent-color: var(--mf-gelb); }
+.mf-eq .mf-einheit { color: #9C93A6; }
+.mf-seq-karte .mf-eq button { background: var(--mf-fl); border-color: transparent; color: #F2EEF5; }
+.mf-seq-karte .mf-eq .mf-hilfe { color: #9C93A6; }
