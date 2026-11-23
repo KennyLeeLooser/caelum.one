@@ -1,5 +1,5 @@
 /* Bereiche (Webdesign, Studio, Labor, Partner, Community) – baut auf recht.css und developer.css auf, 20.11.2026 */
-body.bereich main.wrap { max-width: 1040px; }
+body.bereich main.wrap { max-width: 1040px; min-height: calc(100vh - 64px); }   /* 23.11.2026: bereich.js füllt die Seite erst nach dem Laden – so springt die Fusszeile nicht (Lighthouse CLS 0,8) */
 .abschnitt { font-size: 22px; margin: 8px 0 16px; }
 .demo .streif { height: 6px; }
 .demo .btn { color: #1F1E1D; }
