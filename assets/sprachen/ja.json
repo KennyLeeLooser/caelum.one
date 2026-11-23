@@ -715,5 +715,17 @@
   "rechnet": "計算中",
   "● endet": "● 終了中",
   "● Takt": "● 小節",
-  "wartet auf die Eins": "1拍目を待機中"
+  "wartet auf die Eins": "1拍目を待機中",
+  "Einfach": "シンプル",
+  "Drum & 808": "Drum & 808",
+  "16 Pads wie das Drum Rack in Ableton, Klang wie die Caelum Motion App: rein gerechnet, ohne Samples.": "Ableton の Drum Rack と同じ 16 パッド、音は Caelum Motion アプリと同じ：すべて計算で生成、サンプルなし。",
+  "Pad 1 unten links = C1 wie im Ableton Drum Rack.": "パッド 1 は左下 = C1、Ableton の Drum Rack と同じです。",
+  "Das zuletzt gespielte Pad ist gewählt. Doppelt tippen = Grundwert.": "最後に叩いたパッドが選択されます。ダブルタップ = 初期値。",
+  "Anschlag nach Höhe im Pad an oder aus": "パッド内の高さでベロシティ：オン／オフ",
+  "Drum Pads": "ドラムパッド",
+  "Dynamik": "ダイナミクス",
+  "▶ Anhören": "▶ 試聴",
+  "Grundwerte": "初期値",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Y–V (Umschalt = Akzent).": "キーボード：まずパッドをタップし、次に 1–4 · Q–R · A–F · Y–V（Shift = アクセント）。",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Z–V (Umschalt = Akzent).": "キーボード：まずパッドをタップし、次に 1–4 · Q–R · A–F · Z–V（Shift = アクセント）。"
 }

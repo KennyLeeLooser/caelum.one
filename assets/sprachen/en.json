@@ -716,5 +716,17 @@
   "● endet": "● ending",
   "● Takt": "● Bar",
   "wartet auf die Eins": "waiting for the downbeat",
-  "Mit dem Finger verschieben · antippen zum Zoomen": "Drag with your finger · tap to zoom"
+  "Mit dem Finger verschieben · antippen zum Zoomen": "Drag with your finger · tap to zoom",
+  "Einfach": "Simple",
+  "Drum & 808": "Drum & 808",
+  "16 Pads wie das Drum Rack in Ableton, Klang wie die Caelum Motion App: rein gerechnet, ohne Samples.": "16 pads like the Drum Rack in Ableton, sound like the Caelum Motion app: purely calculated, no samples.",
+  "Pad 1 unten links = C1 wie im Ableton Drum Rack.": "Pad 1 bottom left = C1, as in the Ableton Drum Rack.",
+  "Das zuletzt gespielte Pad ist gewählt. Doppelt tippen = Grundwert.": "The last pad played is selected. Double-tap = default value.",
+  "Anschlag nach Höhe im Pad an oder aus": "Velocity by position in the pad on or off",
+  "Drum Pads": "Drum pads",
+  "Dynamik": "Dynamics",
+  "▶ Anhören": "▶ Listen",
+  "Grundwerte": "Defaults",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Y–V (Umschalt = Akzent).": "Keyboard: tap a pad first, then 1–4 · Q–R · A–F · Y–V (Shift = accent).",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Z–V (Umschalt = Akzent).": "Keyboard: tap a pad first, then 1–4 · Q–R · A–F · Z–V (Shift = accent)."
 }

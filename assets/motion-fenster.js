@@ -7,6 +7,8 @@
 // Quelle: Maus (ziehen = kippen/neigen, Rad = schwenken, Umschalt+Rad = Höhe) oder echte Handy-Sensoren (DeviceOrientation/-Motion).
 // Ohne Eingabe läuft ein Beispiel. Nichts wird gesendet oder gespeichert.
 // KI-Beitrag (Claude, GB-7), 23.11.2026 – Freigabe durch Kenny Looser ausstehend (GB-8). v3 (23.11. nachts): ● Loop + Looper-Spuren, EQ 8 Bänder + Balance. v4 (23.11. spätnachts): ◷ Uhr – Loop-Länge, Raster, Vorlauf (quantisiert).
+// v5 (23.11.): Strang Drum & 808 Schritt 3 – Klang-Wahl „808“ (Stimmen aus drum808.js), Pads der Karte „Drum & 808“ klingen in die
+// Summe vor dem EQ, ● Loop nimmt die Pad-Anschläge mit.
 (function () {
   'use strict';
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -38,9 +40,12 @@
     break: ['x.....x...x.....', '....x.....x.x..x', '................', 'x.xxx.x.x.xxx.x.', '......x.......x.', '.........x......', '.............x..', '..x.........x...'],
     leer: ['................', '................', '................', '................', '................', '................', '................', '................']
   };
+  // INSTR → Stimme in drum808.js (BD RS SD CP CL LT CH MT MA HT OH …): BD SD CP CH OH LT HT RS
+  var MAP808 = [0, 2, 3, 6, 10, 5, 9, 1];
+  function d808() { return window.CaelumDrum808 || null; }
   function sequenzer(platz, holeCc, logZeile) {
     var muster = [], instr = 0, schritt = 0, naechst = 0, spielt = false, timer = null, warte = [], jetztS = -1;
-    var bpm = 112, swingHand = 0.1, klick = false, koppeln = true, ansicht = 'matrix';
+    var bpm = 112, swingHand = 0.1, klick = false, koppeln = true, ansicht = 'matrix', klang = 'einfach', eigen808 = null;
     var ctx = null, rausch = null, eingang, filt, laut, echo, echoG, rueck, summe, eqB = [], pan;
     var Z = null;   // Ziel der Stimmen: { ctx, ein } – live oder beim ● Loop eine OfflineAudioContext
     function laden(n) { muster = MUSTER[n].map(function (z) { return z.split('').map(function (c) { return c === 'x'; }); }); }
@@ -73,6 +78,20 @@
       var b = knopf(p[1]); mus[p[0]] = b; zeile2.appendChild(b);
       b.addEventListener('click', function () { laden(p[0]); bauen(); });
     });
+    // Klang: Einfach (Oszillator + Rauschen) · 808 (16 Stimmen aus drum808.js, wie die App)
+    zeile2.appendChild(el('span', 'mf-trenn')); zeile2.appendChild(el('span', 'mf-einheit', 'Klang'));
+    var klangK = {};
+    [['einfach', 'Einfach'], ['808', '808']].forEach(function (p) {
+      var b = knopf(p[1]); klangK[p[0]] = b; zeile2.appendChild(b);
+      b.addEventListener('click', function () {
+        if (p[0] === '808' && !d808()) return;
+        klang = p[0]; klangZeigen(); if (ctx && klang === '808') satz808().vorbereiten(ctx); if (!spielt) ton(0, 0, 0.8);
+      });
+    });
+    function klangZeigen() {
+      Object.keys(klangK).forEach(function (k) { klangK[k].setAttribute('aria-pressed', k === klang ? 'true' : 'false'); });
+      klangK['808'].disabled = !d808();
+    }
     karte.appendChild(zeile2);
     var raster = el('div', 'mf-raster'); karte.appendChild(raster);
     // Bewegung koppeln
@@ -212,7 +231,10 @@
       filt.connect(echoG); echoG.connect(echo); echo.connect(rueck); rueck.connect(echo); echo.connect(laut);
       Z = { ctx: ctx, ein: eingang };
       spuren.forEach(spurAnschliessen); eqSetz();
+      if (d808()) satz808().vorbereiten(ctx);
     }
+    // Satz der Karte „Drum & 808“ (gleiche Ton/Länge/Pegel wie die Pads), sonst ein eigener
+    function satz808() { var D = d808(); return D.satz || eigen808 || (eigen808 = D.neu()); }
     function huell(t, a, dauer) { var g = Z.ctx.createGain(); g.gain.setValueAtTime(a, t); g.gain.exponentialRampToValueAtTime(0.001, t + dauer); g.connect(Z.ein); return g; }
     function rauschen(t, typ, freq, a, dauer) {
       var q = Z.ctx.createBufferSource(); q.buffer = rausch; var fl = Z.ctx.createBiquadFilter(); fl.type = typ; fl.frequency.value = freq;
@@ -224,6 +246,7 @@
     }
     function ton(i, t, v) {
       audio(); if (!ctx) return; t = Math.max(t || 0, Z.ctx.currentTime); v = v || 1;
+      if (klang === '808' && d808()) { satz808().spielen(Z.ctx, Z.ein, MAP808[i], t, v); return; }
       switch (INSTR[i][0]) {
         case 'BD': osz(t, 'sine', 140, 45, 1.0 * v, 0.45); break;
         case 'SD': osz(t, 'triangle', 220, 160, 0.35 * v, 0.12); rauschen(t, 'highpass', 1200, 0.5 * v, 0.18); break;
@@ -341,7 +364,7 @@
 
     // Die aufgenommene Runde offline rendern (takte = Muster je Takt, sek = Länge) – zweimal, die zweite bleibt
     // (der Echo-Schwanz der ersten läuft hinein, die Schleife ist nahtlos)
-    function runde(takte, sek) {
+    function runde(takte, sek, pads) {
       var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC || !ctx) return Promise.reject(new Error('kein Audio'));
       var d = 60 / bpm / 4, sr = ctx.sampleRate, n = Math.max(1, Math.round(sek * sr)), oc = new OAC(2, n * 2, sr);
       var L = Math.ceil(sek / d - 1e-6);
@@ -349,14 +372,27 @@
       fl.type = 'lowpass'; fl.frequency.value = filt.frequency.value; fl.Q.value = 0.8; lg.gain.value = laut.gain.value;
       ec.delayTime.value = echo.delayTime.value; rg.gain.value = 0.35; eg.gain.value = echoG.gain.value;
       e.connect(fl); fl.connect(lg); lg.connect(oc.destination); fl.connect(eg); eg.connect(ec); ec.connect(rg); rg.connect(ec); ec.connect(lg);
-      var alt = Z, sw = swing(); Z = { ctx: oc, ein: e };
-      try {
-        for (var r = 0; r < 2; r++) for (var k = 0; k < L; k++) {
+      // Pads (Karte „Drum & 808“) gehen wie live an Filter und Echo vorbei direkt in die Summe
+      var padZiel = oc.createGain(); padZiel.connect(oc.destination);
+      if (d808() && typeof d808().padLaut === 'function') padZiel.gain.value = d808().padLaut();   // Lautstärke der Pads
+      var alt = Z, sw = swing(), ev = [];
+      for (var r = 0; r < 2; r++) {
+        for (var k = 0; k < L; k++) {
           var s = k % 16, m = takte[Math.min(Math.floor(k / 16), takte.length - 1)];
           var t = r * n / sr + k * d + (s % 2 ? sw * d : 0);
           if (t >= (r + 1) * n / sr) continue;   // was nach dem Ende der Runde käme, fällt weg (Raster aus)
-          for (var i = 0; i < INSTR.length; i++) if (m[i][s]) ton(i, t, s % 4 === 0 ? 1 : 0.82);
+          for (var i = 0; i < INSTR.length; i++) if (m[i][s]) ev.push({ t: t, i: i, v: s % 4 === 0 ? 1 : 0.82 });
         }
+        (pads || []).forEach(function (p) { if (p.dt < sek) ev.push({ t: r * n / sr + p.dt, pad: p.i, v: p.vel }); });
+      }
+      // nach Zeit geordnet planen – die 808-Stimmen sind einstimmig, ein späterer Anschlag darf keinen früheren abwürgen
+      ev.sort(function (a, b) { return a.t - b.t; });
+      Z = { ctx: oc, ein: e };
+      try {
+        ev.forEach(function (x) {
+          if (x.pad == null) ton(x.i, x.t, x.v);
+          else if (d808()) satz808().spielen(oc, padZiel, x.pad, x.t, x.v);
+        });
       } finally { Z = alt; }
       var fertig = oc.startRendering();
       if (!fertig || !fertig.then) fertig = new Promise(function (ok) { oc.oncomplete = function (ev) { ok(ev.renderedBuffer); }; });
@@ -379,7 +415,7 @@
         if (ziel < 0) { logZeile('Alle Spuren voll – eine löschen oder + Spur.', true); return; }
         // erst scharf machen, dann starten – so beginnt die Aufnahme (oder der Vorlauf) schon auf der allerersten Eins
         liveSpur = ziel; spurHalt(spuren[ziel]);
-        auf = { phase: 'warte', rest: vorlauf, takte: [], n: 0, start: 0, stopp: false };
+        auf = { phase: 'warte', rest: vorlauf, takte: [], pads: [], n: 0, start: 0, stopp: false };
         if (!spielt) start();
         if (!ctx) { liveSpur = -1; auf = null; loopAnzeige(); return; }
         loopAnzeige(); uhrZeigen();
@@ -401,7 +437,7 @@
       if (auf.phase !== 'auf') {
         if (s !== 0) return;
         if (auf.rest > 0) { auf.phase = 'vor'; auf.rest--; auf.vorT = t; return; }   // ein Takt Vorlauf
-        auf.phase = 'auf'; auf.start = t; auf.n = 0; auf.takte = [];
+        auf.phase = 'auf'; auf.start = t; auf.n = 0; auf.takte = []; auf.pads = [];
       }
       var n = auf.n, ende = false;
       if (n > 0) {
@@ -414,12 +450,12 @@
       auf.n++;
     }
     function aufEnde(sek) {
-      var i = liveSpur, s = spuren[i], takte = auf.takte.length ? auf.takte : [kopie()];
+      var i = liveSpur, s = spuren[i], takte = auf.takte.length ? auf.takte : [kopie()], pads = auf.pads;
       auf = null; spurenZeigen(); uhrZeigen();
-      runde(takte, sek).then(function (b) {
+      runde(takte, sek, pads).then(function (b) {
         if (liveSpur !== i) return;               // inzwischen gelöscht
         s.buf = b; s.bpm = bpm; spurHalt(s); liveSpur = -1;
-        loopAnzeige(); logZeile('Loop auf Spur ' + (i + 1) + ' · ' + b.duration.toFixed(2) + ' s · ' + takte.length + ' Takt(e)', true);
+        loopAnzeige(); logZeile('Loop auf Spur ' + (i + 1) + ' · ' + b.duration.toFixed(2) + ' s · ' + takte.length + ' Takt(e)' + (pads.length ? ' · ' + pads.length + ' Pads' : ''), true);
       }).catch(function () { liveSpur = -1; loopAnzeige(); });
     }
     // ◷ Uhr: Ring = Fortschritt der Runde, in der Spur „Vorlauf 2“ / „● Takt 2/4“
@@ -521,7 +557,20 @@
     swMinus.addEventListener('click', function () { swingHand = klemm(Math.round((swingHand - 0.05) * 100) / 100, 0, 0.6); formen(); });
     swPlus.addEventListener('click', function () { swingHand = klemm(Math.round((swingHand + 0.05) * 100) / 100, 0, 0.6); formen(); });
     uhr.addEventListener('click', function () { klick = !klick; uhr.setAttribute('aria-pressed', klick ? 'true' : 'false'); });
-    bpmSetz(bpm); formen(); eqSetz(); spurenZeigen(); qZeigen(); uhrZeigen();
+    // ---- Karte „Drum & 808“ anschliessen: Pads klingen in die Summe (vor EQ), ● Loop nimmt die Anschläge mit ----
+    function drumAnschliessen() {
+      var D = d808(); if (!D) return;
+      D.ausgang = function () { audio(); return ctx ? { ctx: ctx, ein: summe } : null; };
+      D.angeschlagen = function (i, vel) {
+        if (!ctx || !auf || auf.phase !== 'auf') return;
+        var dt = ctx.currentTime - auf.start;   // auf.start liegt bis 0,12 s voraus (geplant) – knapp davor zählt als Eins
+        if (dt > -0.08) auf.pads.push({ i: i, vel: vel, dt: Math.max(0, dt) });
+      };
+      klangZeigen();
+    }
+    drumAnschliessen();
+    document.addEventListener('caelum-modul', function (e) { if (e.detail === 'drum808') drumAnschliessen(); });
+    bpmSetz(bpm); formen(); eqSetz(); spurenZeigen(); qZeigen(); uhrZeigen(); klangZeigen();
     setInterval(function () { if (!spielt && platz.offsetParent) formen(); }, 200);   // Balken auch im Stand
     return { stopp: stopp, spielt: function () { return spielt; }, muster: function () { return muster; } };
   }

@@ -715,5 +715,17 @@
   "rechnet": "расчёт",
   "● endet": "● конец",
   "● Takt": "● Такт",
-  "wartet auf die Eins": "ждёт сильную долю"
+  "wartet auf die Eins": "ждёт сильную долю",
+  "Einfach": "Простой",
+  "Drum & 808": "Drum & 808",
+  "16 Pads wie das Drum Rack in Ableton, Klang wie die Caelum Motion App: rein gerechnet, ohne Samples.": "16 пэдов как Drum Rack в Ableton, звук как в приложении Caelum Motion: полностью рассчитан, без сэмплов.",
+  "Pad 1 unten links = C1 wie im Ableton Drum Rack.": "Пэд 1 внизу слева = C1, как в Drum Rack Ableton.",
+  "Das zuletzt gespielte Pad ist gewählt. Doppelt tippen = Grundwert.": "Выбран последний сыгранный пэд. Двойное касание = значение по умолчанию.",
+  "Anschlag nach Höhe im Pad an oder aus": "Сила удара по высоте в пэде: вкл. или выкл.",
+  "Drum Pads": "Барабанные пэды",
+  "Dynamik": "Динамика",
+  "▶ Anhören": "▶ Прослушать",
+  "Grundwerte": "По умолчанию",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Y–V (Umschalt = Akzent).": "Клавиатура: сначала коснись пэда, затем 1–4 · Q–R · A–F · Y–V (Shift = акцент).",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Z–V (Umschalt = Akzent).": "Клавиатура: сначала коснись пэда, затем 1–4 · Q–R · A–F · Z–V (Shift = акцент)."
 }

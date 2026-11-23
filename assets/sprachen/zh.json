@@ -715,5 +715,17 @@
   "rechnet": "计算中",
   "● endet": "● 结束中",
   "● Takt": "● 小节",
-  "wartet auf die Eins": "等待强拍"
+  "wartet auf die Eins": "等待强拍",
+  "Einfach": "简单",
+  "Drum & 808": "Drum & 808",
+  "16 Pads wie das Drum Rack in Ableton, Klang wie die Caelum Motion App: rein gerechnet, ohne Samples.": "16 个打击垫，布局同 Ableton 的 Drum Rack，声音同 Caelum Motion 应用：完全实时计算，不用采样。",
+  "Pad 1 unten links = C1 wie im Ableton Drum Rack.": "左下角的 1 号垫 = C1，与 Ableton Drum Rack 相同。",
+  "Das zuletzt gespielte Pad ist gewählt. Doppelt tippen = Grundwert.": "最后敲击的打击垫即为选中。双击 = 恢复默认值。",
+  "Anschlag nach Höhe im Pad an oder aus": "按垫内位置决定力度：开或关",
+  "Drum Pads": "鼓垫",
+  "Dynamik": "力度",
+  "▶ Anhören": "▶ 试听",
+  "Grundwerte": "默认值",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Y–V (Umschalt = Akzent).": "键盘：先点一下打击垫，然后用 1–4 · Q–R · A–F · Y–V（Shift = 重音）。",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Z–V (Umschalt = Akzent).": "键盘：先点一下打击垫，然后用 1–4 · Q–R · A–F · Z–V（Shift = 重音）。"
 }

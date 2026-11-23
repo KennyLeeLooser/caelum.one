@@ -714,5 +714,17 @@
   "rechnet": "calculando",
   "● endet": "● termina",
   "● Takt": "● Compás",
-  "wartet auf die Eins": "espera el primer tiempo"
+  "wartet auf die Eins": "espera el primer tiempo",
+  "Einfach": "Sencillo",
+  "Drum & 808": "Drum & 808",
+  "16 Pads wie das Drum Rack in Ableton, Klang wie die Caelum Motion App: rein gerechnet, ohne Samples.": "16 pads como el Drum Rack de Ableton, el sonido de la app Caelum Motion: totalmente calculado, sin samples.",
+  "Pad 1 unten links = C1 wie im Ableton Drum Rack.": "Pad 1 abajo a la izquierda = C1, como en el Drum Rack de Ableton.",
+  "Das zuletzt gespielte Pad ist gewählt. Doppelt tippen = Grundwert.": "Queda seleccionado el último pad tocado. Doble toque = valor predeterminado.",
+  "Anschlag nach Höhe im Pad an oder aus": "Fuerza según la altura en el pad, activada o no",
+  "Drum Pads": "Pads de batería",
+  "Dynamik": "Dinámica",
+  "▶ Anhören": "▶ Escuchar",
+  "Grundwerte": "Valores predeterminados",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Y–V (Umschalt = Akzent).": "Teclado: toca primero un pad, luego 1–4 · Q–R · A–F · Y–V (Mayús = acento).",
+  "Tastatur: erst ein Pad antippen, dann 1–4 · Q–R · A–F · Z–V (Umschalt = Akzent).": "Teclado: toca primero un pad, luego 1–4 · Q–R · A–F · Z–V (Mayús = acento)."
 }
