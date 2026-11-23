@@ -15,7 +15,8 @@
 .d8-leiste button:hover { border-color: var(--d8-rot); }
 .d8-leiste button[aria-pressed="true"] { background: color-mix(in srgb, var(--d8-rot) 22%, var(--bg)); border-color: var(--d8-rot); color: var(--text); }
 .d8-pads { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; background: var(--d8-app); border-radius: 12px; padding: 6px;
-  touch-action: none; user-select: none; -webkit-user-select: none; }
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.d8-pads .d8-pad:focus { outline: none; }
 .d8-pads .d8-pad { position: relative; aspect-ratio: 1; background: var(--d8-rot-fl); border-radius: 10px; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 2px; color: #F2EEF5; touch-action: none; transition: background .25s, transform .06s; min-width: 0; }
 @media (min-width: 821px) { .d8-pads .d8-pad { aspect-ratio: 1.3; } }

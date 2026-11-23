@@ -70,7 +70,12 @@
 
     (b.module || []).forEach(function (m) {   // eigene Module (Schaubilder, Prototypen) aus /assets/*.js, siehe „skripte“
       var s = el('section', 'modul'); s.setAttribute('data-modul', m); main.appendChild(s);
-      var los = function () { if (s.dataset.an) return; s.dataset.an = '1'; window.CaelumModul[m](s, f); };
+      var los = function () {
+        if (s.dataset.an) return; s.dataset.an = '1'; window.CaelumModul[m](s, f);
+        // Sprungmarke (#drum-808 …) zeigt in ein Modul, das erst jetzt da ist – der Browser ist schon vorbeigesprungen
+        var h = location.hash.slice(1), z = h && document.getElementById(decodeURIComponent(h));
+        if (z && s.contains(z)) setTimeout(function () { z.scrollIntoView({ block: 'start' }); }, 50);
+      };
       if (window.CaelumModul && window.CaelumModul[m]) los();
       else document.addEventListener('caelum-modul', function h(e) { if (e.detail === m) { document.removeEventListener('caelum-modul', h); los(); } });
     });
