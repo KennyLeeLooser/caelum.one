@@ -51,11 +51,18 @@
   }
 
   function baue(platz, spec) {
-    var sec = el('div', 'schaubild-block');
-    sec.appendChild(el('h2', null, spec.titel));
-    sec.appendChild(el('p', 'lead', spec.lead));
+    // Thema per Klick ausfahren (Wunsch Kenny 23.11.2026: nicht alles offen → keine Informationsflut). Kopf = Titel + Kurztext + Knopf,
+    // Schaubild und Spieler fahren darunter aus; Abspielen startet erst, wenn das Thema offen und zu sehen ist. #anker öffnet direkt.
+    var sec = el('div', 'schaubild-block thema'); if (spec.anker) sec.id = spec.anker;
+    var kopf = el('div', 'thema-kopf'), kt = el('div', 'thema-text');
+    kt.appendChild(el('h2', null, spec.titel)); kt.appendChild(el('p', 'lead', spec.lead)); kopf.appendChild(kt);
+    var auf = el('button', 'thema-auf'); auf.type = 'button'; auf.setAttribute('aria-expanded', 'false');
+    var aufT = el('span', null, 'Ausfahren'); auf.appendChild(aufT); auf.appendChild(el('i', 'thema-pfeil')); kopf.appendChild(auf);
+    sec.appendChild(kopf);
+    var huelle = el('div', 'thema-huelle'), inhalt = el('div', 'thema-inhalt'); huelle.inert = true;
+    huelle.appendChild(inhalt); sec.appendChild(huelle);
     var box = el('div', 'sb'), b = zeichne(spec, 'breit'), h = zeichne(spec, 'hoch');
-    box.appendChild(b.svg); box.appendChild(h.svg); sec.appendChild(box);
+    box.appendChild(b.svg); box.appendChild(h.svg); inhalt.appendChild(box);
 
     var sp = el('div', 'spieler'), leiste = el('div', 'schritte'); leiste.setAttribute('role', 'group'); leiste.setAttribute('aria-label', 'Schritte');
     var knoepfe = spec.schritte.map(function (st, i) {
@@ -76,10 +83,17 @@
     var uk = el('div', 'k'); uk.appendChild(el('span', 'ja', 'Ja')); uk.appendChild(el('span', null, 'Nein')); uac.appendChild(uk);
     term.appendChild(uac);
     var erk = el('div', 'erklaer'), eh = el('h3'), ep = el('p'); erk.appendChild(eh); erk.appendChild(ep);
-    sp.appendChild(term); sp.appendChild(erk); sec.appendChild(sp);
+    sp.appendChild(term); sp.appendChild(erk); inhalt.appendChild(sp);
     platz.appendChild(sec);
 
-    var jetzt = -1, laeuft = false, uhr = null, tipp = null, sichtbar = false, selbst = false;   // selbst = Nutzer hat gewählt → kein Selbststart
+    var jetzt = -1, laeuft = false, uhr = null, tipp = null, sichtbar = false, selbst = false, offen = false;   // selbst = Nutzer hat gewählt → kein Selbststart
+    function oeffne(an) {
+      offen = an; sec.classList.toggle('offen', an); huelle.inert = !an;
+      auf.setAttribute('aria-expanded', an ? 'true' : 'false'); aufT.textContent = an ? 'Einfahren' : 'Ausfahren';
+      if (!an) { auto(false); stopTipp(); }
+      else if (sichtbar && !selbst && !laeuft) { auto(true); uhr = setTimeout(function () { zeige((jetzt + 1) % spec.schritte.length); }, 3400); }
+    }
+    auf.addEventListener('click', function () { oeffne(!offen); });
     function stopTipp() { if (tipp) { clearTimeout(tipp); tipp = null; } }
     function schreibe(zeilen, fertig) {
       stopTipp(); pre.textContent = '';
@@ -121,15 +135,16 @@
       var gestartet = false;
       new IntersectionObserver(function (e) {
         sichtbar = e[0].isIntersecting;
-        if (sichtbar && !gestartet && !selbst) { gestartet = true; auto(true); uhr = setTimeout(function () { zeige(1); }, 3400); }
+        if (sichtbar && offen && !gestartet && !selbst) { gestartet = true; auto(true); uhr = setTimeout(function () { zeige(1); }, 3400); }
         else if (!sichtbar && laeuft) auto(false);
-      }, { threshold: 0.35 }).observe(box);
+      }, { threshold: 0.2 }).observe(sec);
     }
+    if (spec.anker && location.hash === '#' + spec.anker) { selbst = false; oeffne(true); setTimeout(function () { sec.scrollIntoView({ block: 'start' }); }, 60); }
   }
 
   // ---- Inhalt ----
   var WLAN = {
-    titel: 'Vom PC aufs Handy – ohne Kabel',
+    anker: 'wlan', titel: 'Vom PC aufs Handy – ohne Kabel',
     lead: 'So spricht Caelum Vision mit einem Android-Handy: über kabelloses Debugging im eigenen WLAN – oder über die Handy-Seite im Browser, ganz ohne Entwickleroptionen.',
     aria: 'Links der PC mit Caelum Vision, adb und eigener Zertifizierungsstelle, rechts das Android-Handy mit kabellosem Debugging, Bildschirm und Handy-Seite. In der Mitte Caelum im privaten WLAN.',
     lblLinks: 'PC · WINDOWS', lblRechts: 'HANDY · ANDROID', kreis: 'privates WLAN', terminal: 'PowerShell · Caelum Vision',
@@ -166,7 +181,7 @@
   };
 
   var MASTER = {
-    titel: 'Master und Arbeitsplatz – CAELUM Pandora',
+    anker: 'master', titel: 'Master und Arbeitsplatz – CAELUM Pandora',
     lead: 'Wie unsere Zentrale einem Arbeitsplatz Aufträge gibt: unterschrieben, direkt von PC zu PC, und mit einem Menschen vor Ort, wenn Windows nach Adminrechten fragt.',
     aria: 'Links der Master mit CAELUM Pandora, Aufträgen und Updates, rechts der Arbeitsplatz mit Pandora, UAC und Antwort. In der Mitte Caelum mit Tailscale und Syncthing.',
     lblLinks: 'MASTER · ZENTRALE', lblRechts: 'ARBEITSPLATZ', kreis: 'Tailscale · Syncthing', terminal: 'PowerShell · CAELUM Pandora',

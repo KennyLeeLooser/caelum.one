@@ -674,5 +674,7 @@
   "Leer": "Пусто",
   "Bewegung koppeln": "Связать с движением",
   "Lautstärke": "Громкость",
-  "Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.": "Удерживай банк A и двигай телефон: поворот, наклон, крен и высота формируют бит. В приложении ноты и MIDI-клок (24 импульса на четверть) тоже идут в Ableton."
+  "Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.": "Удерживай банк A и двигай телефон: поворот, наклон, крен и высота формируют бит. В приложении ноты и MIDI-клок (24 импульса на четверть) тоже идут в Ableton.",
+  "Ausfahren": "Развернуть",
+  "Einfahren": "Свернуть"
 }

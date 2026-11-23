@@ -674,5 +674,7 @@
   "Leer": "空",
   "Bewegung koppeln": "動きと連動",
   "Lautstärke": "音量",
-  "Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.": "バンク A を押さえてスマホを動かす：回転・前後傾き・左右傾き・高さでビートを形づくります。アプリではノートと MIDI クロック（四分音符あたり 24 ティック）も Ableton に送られます。"
+  "Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.": "バンク A を押さえてスマホを動かす：回転・前後傾き・左右傾き・高さでビートを形づくります。アプリではノートと MIDI クロック（四分音符あたり 24 ティック）も Ableton に送られます。",
+  "Ausfahren": "開く",
+  "Einfahren": "閉じる"
 }

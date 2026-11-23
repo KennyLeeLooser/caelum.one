@@ -675,5 +675,7 @@
   "Leer": "Empty",
   "Bewegung koppeln": "Link motion",
   "Lautstärke": "Volume",
-  "Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.": "Hold bank A and move the phone: pan, tilt, roll and height shape the beat. In the app, the notes and the MIDI clock (24 ticks per quarter note) also go to Ableton."
+  "Bank A halten und das Handy bewegen: Schwenken, Kippen, Drehen und Höhe formen den Beat. In der App gehen dazu die Noten und die MIDI-Clock (24 Takte je Viertel) an Ableton.": "Hold bank A and move the phone: pan, tilt, roll and height shape the beat. In the app, the notes and the MIDI clock (24 ticks per quarter note) also go to Ableton.",
+  "Ausfahren": "Expand",
+  "Einfahren": "Collapse"
 }

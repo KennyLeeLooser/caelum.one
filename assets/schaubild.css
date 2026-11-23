@@ -114,3 +114,22 @@
 @media (prefers-reduced-motion: reduce) {
   .sb .flow.an, .sb .kreis.an .ring, .term .cursor { animation: none; }
 }
+
+/* Labor: Themen per Klick ausfahren (Wunsch Kenny 23.11.2026, KI-Beitrag Claude GB-7) */
+.thema { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); padding: 16px 18px; margin: 0 0 16px; }
+.thema-kopf { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.thema-kopf h2 { margin: 0 0 4px; font-size: 20px; }
+.thema-kopf .lead { margin: 0; color: var(--text-soft); max-width: 46em; }
+.thema-auf { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
+  border-radius: 10px; border: 1px solid var(--c-labor, #7BC47F); color: var(--text); font-size: 14px; white-space: nowrap; }
+.thema-auf:hover, .thema.offen .thema-auf { background: color-mix(in srgb, var(--c-labor, #7BC47F) 18%, transparent); }
+.thema-auf:focus-visible { outline: 2px solid var(--c-labor, #7BC47F); outline-offset: 2px; }
+.thema-pfeil { width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .25s; }
+.thema.offen .thema-pfeil { transform: rotate(-135deg) translateY(-2px); }
+.thema-huelle { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .4s ease, opacity .3s ease; }
+.thema.offen .thema-huelle { grid-template-rows: 1fr; opacity: 1; }
+.thema-inhalt { overflow: hidden; min-height: 0; }
+.thema.offen .thema-inhalt { padding-top: 16px; }
+.thema .sb { background: var(--bg); }
+@media (max-width: 560px) { .thema { padding: 14px 12px; } .thema-kopf { flex-direction: column; } }
+@media (prefers-reduced-motion: reduce) { .thema-huelle, .thema-pfeil { transition: none; } }
