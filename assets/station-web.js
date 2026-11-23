@@ -27,8 +27,41 @@
       punkte: ['Einmal gebaut, dreimal genutzt', 'Geprüft: Ton für Ton gleich', 'Handy-App, VST3, Browser'] }
   ];
 
+  // Grossansicht (Redmi-Test 23.11.2026: der neue Tab zeigte das SVG hochkant klein auf weissem Grund).
+  // Dunkles <dialog>: am Handy in voller Bildgrösse zum Verschieben, Antippen wechselt zwischen gross und ganz.
+  // Zurück-Taste am Handy schliesst (eigener Verlaufseintrag), ebenso Esc und der Knopf.
+  var gross = null;
+  function baueGross() {
+    if (typeof HTMLDialogElement !== 'function') return null;
+    var dlg = el('dialog', 'st-gross'); dlg.setAttribute('aria-label', 'Bild gross öffnen');
+    var zu = el('button', 'st-gross-zu', '✕'); zu.type = 'button'; zu.setAttribute('aria-label', 'Schliessen');
+    var flaeche = el('div', 'st-gross-flaeche');
+    var img = el('img'); img.decoding = 'async';
+    var tipp = el('p', 'st-gross-tipp', 'Mit dem Finger verschieben · antippen zum Zoomen');
+    flaeche.appendChild(img); dlg.appendChild(zu); dlg.appendChild(flaeche); dlg.appendChild(tipp);
+    document.body.appendChild(dlg);
+    var verlauf = false;
+    function schliess() { if (dlg.open) dlg.close(); }
+    zu.addEventListener('click', function () { if (verlauf) history.back(); else schliess(); });
+    img.addEventListener('click', function () { dlg.classList.toggle('st-ganz'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target === flaeche) zu.click(); });
+    dlg.addEventListener('close', function () { document.documentElement.classList.remove('st-gross-auf'); if (verlauf) { verlauf = false; history.back(); } });
+    window.addEventListener('popstate', function () { if (verlauf) { verlauf = false; schliess(); } });
+    return {
+      zeig: function (k) {
+        img.src = '/assets/station/' + k.bild; img.alt = k.alt; img.width = k.w; img.height = k.h; img.style.setProperty('--w', k.w + 'px');   // SVG hat nur viewBox: Breite fest vorgeben
+        dlg.classList.toggle('st-ganz', window.innerWidth >= k.w);   // breiter Bildschirm: gleich ganz
+        document.documentElement.classList.add('st-gross-auf');
+        dlg.showModal(); flaeche.scrollLeft = 0; flaeche.scrollTop = 0;
+        try { history.pushState({ stGross: 1 }, ''); verlauf = true; } catch (e) { verlauf = false; }
+        zu.focus();
+      }
+    };
+  }
+
   function start(platz) {
     platz.classList.add('station');
+    gross = baueGross();
     var zurueck = el('a', 'st-zurueck', '← Zurück zu Sound Design'); zurueck.href = '/sounddesign/';
     platz.appendChild(zurueck);
     platz.appendChild(el('p', 'st-entwurf', 'Entwurf – so planen wir die Station. Die Bilder wachsen mit.'));
@@ -47,6 +80,10 @@
       a.appendChild(kopf);
       var bl = el('a', 'st-bild'); bl.href = '/assets/station/' + k.bild; bl.target = '_blank'; bl.rel = 'noopener';
       bl.title = 'Bild gross öffnen';
+      bl.addEventListener('click', function (e) {   // Grossansicht auf der Seite; Strg/Mittelklick öffnet weiter das SVG im neuen Tab
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button || !gross) return;
+        e.preventDefault(); gross.zeig(k);
+      });
       var img = el('img'); img.src = '/assets/station/' + k.bild; img.width = k.w; img.height = k.h; img.alt = k.alt;
       img.loading = i ? 'lazy' : 'eager'; img.decoding = 'async';
       bl.appendChild(img); a.appendChild(bl);

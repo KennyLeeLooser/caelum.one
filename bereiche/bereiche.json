@@ -152,7 +152,7 @@
       "ueber": "/sounddesign/station",
       "h1": "Bewegung wird Musik. Gemeinsam, in Runden.",
       "text": "Die Caelum Station ist der nächste Schritt nach Caelum Motion: Mehrere Leute spielen mit Handy, Joy-Con oder im Browser zusammen, die Station mischt alle Runden, und das Radio sendet den Mix live an alle, die zuhören.",
-      "module": ["station-web"], "stile": ["/assets/station.css?v=1"], "skripte": ["/assets/station-web.js?v=1"]
+      "module": ["station-web"], "stile": ["/assets/station.css?v=3"], "skripte": ["/assets/station-web.js?v=3"]
     }
   ]
 }
