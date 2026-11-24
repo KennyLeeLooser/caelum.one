@@ -37,3 +37,9 @@
 .d8-regler input { width: 100%; accent-color: var(--d8-rot); margin: 0; }
 .d8-wert { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); text-align: right; }
 .d8-stimme .d8-leiste { margin: 14px 0 0; }
+/* U2 (23.11.2026 nachts): Fokusrahmen ums Pad-Raster nur bei Tastatur – nach Antippen nicht; runder */
+.d8-pads.zeiger:focus-visible { outline: none; }
+.d8-links, .d8-stimme { border-radius: 20px; }
+.d8-pads { border-radius: 18px; padding: 8px; gap: 7px; }
+.d8-pads .d8-pad { border-radius: 14px; }
+.d8-leiste button { border-radius: 999px; }

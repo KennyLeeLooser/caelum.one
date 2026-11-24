@@ -134,7 +134,7 @@
         { "titel": "Caelum Station", "untertitel": "Zusammen spielen", "text": "Der nächste Schritt nach Motion: mit dem Team in Runden spielen und live im Radio hören.", "status": "In Planung", "tags": ["Team", "Radio"], "link": "/sounddesign/station/", "knopf": "Als Nächstes: Station →" },
         { "titel": "Caelum Cut", "untertitel": "Ton im Schnitt", "text": "Lautstärke und weiche oder harte Übergänge – der Ton läuft im Videoschnitt mit.", "status": "In Planung", "tags": ["Windows", "Video"] }
       ],
-      "module": ["motion-web", "motion-fenster", "drum808"], "stile": ["/assets/schaubild.css?v=4", "/assets/motion-fenster.css?v=5", "/assets/drum808.css?v=3"], "skripte": ["/assets/motion-web.js?v=3", "/assets/motion-fenster.js?v=5", "/assets/drum808.js?v=4"],
+      "module": ["motion-web", "motion-fenster", "drum808"], "stile": ["/assets/schaubild.css?v=4", "/assets/motion-fenster.css?v=13", "/assets/drum808.css?v=4"], "skripte": ["/assets/motion-web.js?v=3", "/assets/motion-fenster.js?v=12", "/assets/drum808.js?v=7"],
       "wieTitel": "Wie ein Klang entsteht",
       "wie": [
         ["Bewegen", "Handy oder Joy-Con liefern die Bewegung."],

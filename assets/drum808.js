@@ -222,7 +222,7 @@
   function setz(e, t) { if (e._t !== t) { e._t = t; e.textContent = t; } }   // nur bei Änderung (sprache.js übersetzt jede Änderung neu)
 
   function karte(platz) {
-    var satz = new Satz(), eigenCtx = null, gewaehlt = 0, dynamik = true, laut = 0.8, lautG = null;
+    var satz = new Satz(), eigenCtx = null, gewaehlt = 0, dynamik = true, laut = 0.8, lautG = null, panG = null, kopp = null, bw = { s: 0, k: 0, d: 0, h: 0 };
     api.padLaut = function () { return laut; };   // Lautstärke der Pads (das Motion-Fenster nimmt sie für ● Loop mit)
     function roh() {
       var a = typeof api.ausgang === 'function' ? api.ausgang() : null;
@@ -238,13 +238,17 @@
     function ausgang() {
       var a = roh(); if (!a) return null;
       if (!lautG || lautG.context !== a.ctx || lautG._ziel !== a.ein) {
-        lautG = a.ctx.createGain(); lautG.gain.value = laut; lautG.connect(a.ein); lautG._ziel = a.ein;
+        lautG = a.ctx.createGain(); lautG.gain.value = lautJetzt(); lautG._ziel = a.ein;
+        panG = a.ctx.createStereoPanner ? a.ctx.createStereoPanner() : null;
+        if (panG) { panG.pan.value = bw.s; lautG.connect(panG); panG.connect(a.ein); } else lautG.connect(a.ein);
       }
       return { ctx: a.ctx, ein: lautG };
     }
     function spielen(i, vel) {
       var a = ausgang(); if (!a) return;
-      satz.spielen(a.ctx, a.ein, i, a.ctx.currentTime, vel);
+      bewegung();
+      var q = satz.spielen(a.ctx, a.ein, i, a.ctx.currentTime, vel);
+      if (q && bw.k) q.playbackRate.value = Math.pow(2, bw.k * 7 / 12);   // Kippen → Ton ±7 Halbtöne
       var p = pads[i]; p.classList.remove('an'); void p.offsetWidth; p.classList.add('an');
       clearTimeout(p._aus); p._aus = setTimeout(function () { p.classList.remove('an'); }, 140);
       if (gewaehlt !== i) { gewaehlt = i; waehlen(); }
@@ -252,7 +256,7 @@
     }
 
     var block = el('div', 'd8-block'); block.id = 'drum-808';
-    block.appendChild(el('h2', null, 'Drum & 808'));
+    block.appendChild(el('h2', null, 'Drum Pads'));
     block.appendChild(el('p', 'd8-hilfe', '16 Pads wie das Drum Rack in Ableton, Klang wie die Caelum Motion App: rein gerechnet, ohne Samples.'));
     var gross = el('div', 'd8');
     var links = el('div', 'd8-links'), leiste = el('div', 'd8-leiste');
@@ -260,9 +264,23 @@
     var lautZ = el('label', 'd8-regler d8-laut'), lautR = el('input'), lautW = el('span', 'd8-wert');
     lautR.type = 'range'; lautR.min = 0; lautR.max = 100; lautR.step = 1; lautR.value = Math.round(laut * 100);
     lautZ.appendChild(el('span', null, 'Lautstärke')); lautZ.appendChild(lautR); lautZ.appendChild(lautW);
+    function lautJetzt() { return Math.max(0, Math.min(1.5, laut * (1 + bw.h * 0.5))); }   // Höhe → Lautstärke
     function lautSetz() {
       setz(lautW, Math.round(laut * 100) + ' %');
-      if (lautG) lautG.gain.setTargetAtTime(laut, lautG.context.currentTime, 0.02);
+      if (lautG) lautG.gain.setTargetAtTime(lautJetzt(), lautG.context.currentTime, 0.02);
+    }
+    // Bewegung vom Handy oben (Motion-Fenster, U0): Kippen → Ton, Schwenken → Panorama, Höhe → Lautstärke
+    function bewegung() {
+      if (!kopp) return;
+      bw = kopp.lesen();
+      if (lautG) { var t = lautG.context.currentTime; lautG.gain.setTargetAtTime(lautJetzt(), t, 0.04); if (panG) panG.pan.setTargetAtTime(Math.max(-1, Math.min(1, bw.s)), t, 0.04); }
+    }
+    function koppAnbauen() {
+      var B = wurzel.CaelumBewegung; if (kopp || !B || typeof B.kopplung !== 'function') return;
+      kopp = B.kopplung([['k', 'Ton'], ['s', 'Panorama'], ['h', 'Lautstärke']], 'd8-kopp');
+      gross.parentNode.insertBefore(kopp.el, gross);
+      if (typeof B.aufklappen === 'function') B.aufklappen(block, true);   // U2: Karte klappt auf/zu wie die Module darüber
+      setInterval(function () { if (block.offsetParent) bewegung(); }, 80);
     }
     lautR.addEventListener('input', function () { laut = Number(lautR.value) / 100; lautSetz(); });
     lautR.addEventListener('dblclick', function () { laut = 0.8; lautR.value = 80; lautSetz(); });
@@ -276,7 +294,7 @@
       b.appendChild(el('span', 'd8-note', notenName(36 + i)));
       b.appendChild(el('span', 'd8-taste', TASTEN[i] === 'KeyZ' ? tasteZ : TASTEN[i].slice(-1)));
       b.addEventListener('pointerdown', function (e) {
-        e.preventDefault(); try { raster.focus({ preventScroll: true }); } catch (x) { }
+        e.preventDefault(); raster.classList.add('zeiger'); try { raster.focus({ preventScroll: true }); } catch (x) { }
         var r = b.getBoundingClientRect(), y = (e.clientY - r.top) / Math.max(1, r.height);
         spielen(i, dynamik ? Math.max(0.15, Math.min(1, 1 - y * 0.85)) : 0.85);
       });
@@ -284,7 +302,9 @@
     }
     for (var i = 0; i < ANZAHL; i++) padBauen(i);
     for (var reihe = 3; reihe >= 0; reihe--) for (var sp = 0; sp < 4; sp++) raster.appendChild(pads[reihe * 4 + sp]);   // Pad 1 unten links
+    raster.addEventListener('blur', function () { raster.classList.remove('zeiger'); });
     raster.addEventListener('keydown', function (e) {
+      raster.classList.remove('zeiger');
       if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
       var k = TASTEN.indexOf(e.code);
       if (k < 0 && (e.key === 'Enter' || e.key === ' ')) k = gewaehlt;
@@ -331,6 +351,8 @@
     hoerK.addEventListener('click', function () { spielen(gewaehlt, 0.85); });
     grundK.addEventListener('click', function () { ['ton', 'laenge', 'pegel'].forEach(grund); zeigeWerte(); spielen(gewaehlt, 0.85); });
     waehlen();
+    koppAnbauen();
+    document.addEventListener('caelum-modul', function (e) { if (e.detail === 'motion-fenster') koppAnbauen(); });
     api.satz = satz;   // für Schritt 3 (Sequenzer-Klang „808“) und die Prüfung
   }
   (wurzel.CaelumModul = wurzel.CaelumModul || {}).drum808 = karte;

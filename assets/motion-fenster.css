@@ -14,13 +14,15 @@
   perspective: 900px; touch-action: pan-y; cursor: grab; display: flex; flex-direction: column; align-items: center; min-width: 0;
   user-select: none; -webkit-user-select: none; }
 .mf-buehne:active { cursor: grabbing; }
-.mf-handy { touch-action: none; width: min(240px, 72%); aspect-ratio: 9 / 19.5; border-radius: 28px; border: 6px solid #5A5A60; background: var(--mf-app);
+.mf-handy { touch-action: none; width: min(210px, 60%); aspect-ratio: 9 / 19.5; border-radius: 28px; border: 6px solid #5A5A60; background: var(--mf-app);
   box-shadow: 0 18px 40px rgba(0,0,0,.35); transform-style: preserve-3d; will-change: transform; overflow: hidden; }
+/* U8: am Handy kleiner und senkrecht wischen scrollt die Seite (waagrecht kippt weiter) */
+@media (pointer: coarse), (max-width: 560px) { .mf-handy { width: min(170px, 50%); aspect-ratio: 9 / 17; touch-action: pan-y; border-radius: 24px; border-width: 5px; } .mf-buehne { padding-top: 18px; } }
 .mf-app { height: 100%; box-sizing: border-box; padding: 18px 9px 9px; display: flex; flex-direction: column; gap: 7px; color: #F2EEF5; font-size: 11px; }
 .mf-titel { font-weight: 600; font-size: 16px; padding-left: 3px; }
 .mf-status { color: #9C93A6; font-size: 10.5px; padding-left: 3px; margin-top: -4px; }
 .mf-baenke { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
-.mf-baenke button { text-align: center; padding: 6px 0; background: var(--mf-fl); border-radius: 6px; font-size: 10.5px; color: #F2EEF5; }
+.mf-baenke button { text-align: center; padding: 7px 0; min-height: 24px; background: var(--mf-fl); border-radius: 6px; font-size: 10.5px; color: #F2EEF5; }
 .mf-baenke button[aria-pressed="true"] { background: var(--mf-purpur-tief); }
 .mf-pads { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; min-height: 0; }
 .mf-pads button { position: relative; background: var(--mf-fl); border-radius: 12px; display: flex; flex-direction: column; align-items: center;
@@ -92,11 +94,14 @@
 .mf-wert b { min-width: 3.2em; text-align: center; font: 600 14px ui-monospace, Consolas, monospace; color: var(--text); }
 .mf-seq-karte .mf-wert button { padding: 6px 11px; }
 .mf-einheit { color: var(--muted); font-size: 12px; }
-.mf-uhr { display: inline-flex; gap: 6px; align-items: center; }
-.mf-uhr i { width: 10px; height: 10px; border-radius: 50%; background: transparent; border: 1.5px solid var(--muted); box-sizing: border-box; transition: background .05s; }
-.mf-uhr i.an { border-color: var(--mf-purpur); }
-.mf-uhr i.an { background: var(--mf-purpur); }
-.mf-uhr[aria-pressed="true"] i:first-child { box-shadow: 0 0 0 2px var(--mf-purpur); }
+/* U4 Kreispunkt-Uhr (v12): 16 Punkte im Kreis, Schläge grösser, Mitte leuchtet bei Klick an */
+.mf-module button.mf-uhr { position: relative; width: 52px; height: 52px; padding: 0; border-radius: 50%; flex: none; }
+.mf-uhr i { position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: color-mix(in srgb, var(--muted) 55%, transparent); transform: rotate(var(--w)) translateY(-19px); transition: background .05s; }
+.mf-uhr i.schlag { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; background: transparent; border: 1.5px solid var(--muted); box-sizing: border-box; transform: rotate(var(--w)) translateY(-18px); }
+.mf-uhr i.takt { border-color: var(--mf-purpur); }
+.mf-uhr i.an { background: var(--mf-purpur); border-color: var(--mf-purpur); }
+.mf-uhr .mitte { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; border: 1.5px solid var(--muted); box-sizing: border-box; }
+.mf-uhr[aria-pressed="true"] .mitte { background: var(--mf-purpur); border-color: var(--mf-purpur); }
 .mf-trenn { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
 .mf-raster { background: var(--mf-app); border-radius: 12px; padding: 10px; margin: 0 0 12px; overflow-x: auto; }
 .mf-reihe { display: grid; grid-template-columns: 2.6em repeat(16, minmax(14px, 30px)); gap: 3px; margin-bottom: 3px; }
@@ -116,12 +121,27 @@
 .mf-bew .mf-bal { width: 44px; height: 6px; margin-left: 4px; }
 .mf-bew .mf-bal i { background: var(--mf-purpur); }
 .mf-seq-karte .mf-hilfe { text-align: left; margin: 0; }
+/* U0 Bewegung für alle Module: gelb wie Caelum Motion oben, Balken ab der Mitte, abgerundet */
+.mf-kopp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 0 0 10px; padding: 7px 12px 7px 7px;
+  border-radius: 999px; background: color-mix(in srgb, var(--mf-gelb, #E8C547) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mf-gelb, #E8C547) 28%, transparent); }
+.mf-kopp .mf-kopp-k { padding: 5px 12px; border-radius: 999px; font-size: 12.5px; }
+.mf-kopp button.mf-kopp-k[aria-pressed="true"], .mf-seq-karte .mf-kopp button.mf-kopp-k[aria-pressed="true"]:not(.gross) { background: var(--mf-gelb, #E8C547); border-color: var(--mf-gelb, #E8C547); color: #1A1620; }
+.mf-kopp .mf-bew .mf-bal { position: relative; width: 52px; height: 6px; border-radius: 999px; }
+.mf-kopp .mf-bal-mitte::after { content: ''; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); opacity: .6; }
+.mf-kopp .mf-bal-mitte i { position: absolute; top: 0; bottom: 0; width: 0; border-radius: 999px; background: var(--mf-gelb, #E8C547); transition: left .08s, width .08s; }
+.mf-kopp.aus .mf-bew, .mf-kopp.still .mf-bew { opacity: .55; }
+@media (max-width: 560px) { .mf-kopp { border-radius: 16px; } }
+@media (prefers-reduced-motion: reduce) { .mf-kopp .mf-bal-mitte i { transition: none; } }
 
 /* ---------- ● Loop, Looper-Spuren, EQ (23.11.2026, wie LooperSeite.java + Eq.java der Motion-App) ---------- */
 .mf-block { --mf-gelb: #E8C547; --mf-linie: #3A3442; }
 .mf-lp-kopf { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .mf-seq-karte button.mf-loop { font-weight: 600; }
-.mf-seq-karte button.mf-loop[aria-pressed="true"] { background: #C0392B; border-color: #C0392B; color: #fff; }
+.mf-seq-karte button.mf-loop[aria-pressed="true"] { background: #E5484D; border-color: #E5484D; color: #fff; }
+/* U7: Looper in der App-Farbe Rot (RecSeite.ROT #E5484D), nicht Pink */
+#mf-looper { --mf-purpur: #E5484D; --mf-purpur-text: #F07A7E; --mf-purpur-tief: #C93A3F; border-color: color-mix(in srgb, #E5484D 35%, var(--line)); }
+#mf-looper .mf-loop { color: #F07A7E; }
 .mf-seq-karte button.mf-wahl { padding: 8px 10px; font: 600 13px ui-monospace, Consolas, monospace; }
 .mf-seq-karte button.mf-auf[aria-expanded="true"] { background: color-mix(in srgb, var(--mf-gelb) 18%, var(--bg)); border-color: var(--mf-gelb); color: var(--text); }
 .mf-wahlzeile { margin-top: -4px; }
@@ -164,3 +184,100 @@
 .mf-eq .mf-einheit { color: #9C93A6; }
 .mf-seq-karte .mf-eq button { background: var(--mf-fl); border-color: transparent; color: #F2EEF5; }
 .mf-seq-karte .mf-eq .mf-hilfe { color: #9C93A6; }
+/* U1 eigene Karten unter dem Motion-Fenster: Sequenzer (Modul 1) · TR 808 (Modul 2) · Looper · EQ */
+.mf-module { display: grid; gap: 14px; margin: 16px 0 0; }
+.mf-module .mf-modul { border-radius: 20px; padding: 16px 18px; scroll-margin-top: 80px; }
+.mf-module .mf-modul h3 { display: flex; align-items: baseline; gap: 8px; }
+.mf-modnr { font: 600 11px ui-monospace, Consolas, monospace; color: var(--muted); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+.mf-module .mf-modul button { border-radius: 999px; }
+.mf-module .mf-modul .mf-schritt { border-radius: 6px; }
+.mf-module .mf-modul .mf-reihe.gross .mf-schritt { border-radius: 10px; }
+.mf-module .mf-raster { border-radius: 16px; }
+#mf-tr808 h3 { color: #F07A7E; }
+#mf-tr808 .mf-schritt[aria-pressed="true"] { background: #E5484D; }
+#mf-tr808 .mf-chips button[aria-pressed="true"] { background: #A8343A; }
+.mf-eq.mf-seq-karte { border-color: transparent; }
+.mf-eq.mf-seq-karte h3 { color: var(--mf-gelb); }
+.mf-eq.mf-seq-karte button { background: var(--mf-fl); border-color: transparent; color: #F2EEF5; }
+.mf-eq.mf-seq-karte .mf-hilfe { color: #9C93A6; }
+@media (max-width: 560px) { .mf-module .mf-modul { padding: 14px 12px; border-radius: 18px; } }
+/* U2 Karten auf/zu (wie /labor/): Titel = Knopf mit Pfeil, Inhalt fährt über die Höhe aus */
+.mf-klappbar > h2, .mf-klappbar > h3 { margin: 0; }
+.mf-klappbar .mf-klapp { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: baseline; gap: 8px; width: 100%;
+  padding: 2px 4px 2px 0; border-radius: 12px; color: inherit; font: inherit; }
+.mf-klappbar .mf-klapp:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 4px; }
+.mf-klappbar .mf-klapp .mf-pfeil { margin-left: auto; align-self: center; flex: none; color: var(--muted); }
+.mf-klappbar .mf-klapp[aria-expanded="true"] .mf-pfeil { transform: rotate(-135deg) translateY(-2px); }
+.mf-klappbar .mf-klapp:hover .mf-pfeil { color: var(--text); }
+.mf-huelle { display: grid; grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows .4s ease, opacity .3s ease; }
+.mf-huelle-in { overflow: hidden; min-height: 0; padding: 12px 8px 0; margin: 0 -8px; transition: padding-top .4s ease; } /* seitlich Luft für den Puls-Schein */
+.mf-klappbar.zu .mf-huelle-in { padding-top: 0; }
+.mf-klappbar.zu .mf-huelle { grid-template-rows: 0fr; opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .mf-huelle { transition: none; } }
+/* Pads-Karte (#drum-808) als Karte wie die Module */
+.d8-block.mf-klappbar { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 16px 18px; }
+.d8-block.mf-klappbar .d8-links, .d8-block.mf-klappbar .d8-stimme { background: var(--bg); }
+@media (max-width: 560px) { .d8-block.mf-klappbar { padding: 14px 12px; border-radius: 18px; } }
+/* U2: Looper ist eine eigene Karte – keine Trennlinie mehr über ● Loop; zugeklappte Wahlzeilen bleiben zu */
+#mf-looper .mf-lp-kopf { margin-top: 0; padding-top: 0; border-top: 0; }
+.mf-module [hidden] { display: none !important; }
+/* TR 808 (Modul 2) im Stil einer klassischen Drum Machine (Wunsch Kenny 23.11.2026 spät): dunkles Gerät, Farbstreifen,
+   4 Muster A B C D als Zeilen, Drehschalter, 16 Tasten in Rot · Orange · Gelb · Elfenbein mit Leuchtpunkt */
+#mf-tr808.tr8 { --t8-rot: #E5484D; --t8-or: #F08A24; --t8-ge: #F2C230; --t8-el: #ECE4D2; --t8-geh: #1C1B1A; --t8-pl: #2A2826;
+  background: linear-gradient(180deg, #262422, #1E1D1B); border-color: #3A3733; position: relative; overflow: hidden; }
+#mf-tr808.tr8::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 5px;
+  background: linear-gradient(90deg, var(--t8-rot) 0 25%, var(--t8-or) 25% 50%, var(--t8-ge) 50% 75%, var(--t8-el) 75%); }
+#mf-tr808.tr8 h3 { color: #F3EDE2; letter-spacing: .04em; }
+.tr8-zeilen { display: grid; gap: 6px; margin: 0 0 10px; }
+.mf-module .tr8 .tr8-zeile { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 2em 1fr; align-items: center; gap: 8px;
+  padding: 7px 12px; border-radius: 999px; background: var(--t8-geh); border: 1px solid #34312D; }
+.tr8 .tr8-zeile b { font: 700 15px ui-monospace, Consolas, monospace; color: #8F887D; text-align: center; }
+.tr8 .tr8-zeile[aria-pressed="true"] { border-color: var(--t8-or); box-shadow: 0 0 0 1px var(--t8-or) inset; }
+.tr8 .tr8-zeile[aria-pressed="true"] b { color: var(--t8-or); }
+.tr8 .tr8-zeile:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 2px; }
+.tr8-punkte { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; }
+.tr8-punkte i { aspect-ratio: 1; max-width: 12px; justify-self: center; width: 100%; border-radius: 50%; background: #3A3733; }
+.tr8-punkte i.takt { background: #4A4640; }
+.tr8-punkte i.an { background: var(--t8-or); }
+.tr8-punkte i.jetzt { box-shadow: 0 0 0 2px var(--t8-el); }
+.tr8-zw { margin-bottom: 12px; }
+.mf-module .tr8 .tr8-zw button { background: var(--t8-pl); border-color: #3A3733; color: #E8E1D4; }
+.mf-module .tr8 .tr8-zw button.tr8-folge[aria-pressed="true"] { background: var(--t8-or); border-color: var(--t8-or); color: #1C1B1A; }
+.tr8-instr { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px 6px; margin: 0 0 14px; padding: 12px 8px; border-radius: 18px; background: var(--t8-geh); }
+@media (min-width: 700px) { .tr8-instr { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
+.mf-module .tr8 .tr8-knopf { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tr8-dreh { width: 34px; height: 34px; border-radius: 50%; position: relative; background: radial-gradient(circle at 35% 30%, #5A5650, #2B2926 70%);
+  box-shadow: 0 2px 0 #111, inset 0 0 0 2px #45413B; }
+.tr8-dreh::after { content: ''; position: absolute; left: 50%; top: 4px; width: 3px; height: 11px; margin-left: -1.5px; border-radius: 2px; background: var(--t8-el);
+  transform-origin: 50% 13px; transform: rotate(var(--w, 0deg)); }
+.tr8-knopf b { font: 600 11px ui-monospace, Consolas, monospace; color: #A39B8E; }
+.tr8-knopf.hat b { color: #E8E1D4; }
+.tr8-knopf[aria-pressed="true"] .tr8-dreh { box-shadow: 0 2px 0 #111, 0 0 0 3px var(--t8-or); }
+.tr8-knopf[aria-pressed="true"] b { color: var(--t8-or); }
+.tr8-knopf:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 3px; border-radius: 12px; }
+.tr8-tasten { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 5px; margin: 0 0 14px; }
+@media (max-width: 700px) { .tr8-tasten { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 7px; } }
+.mf-module .tr8 .tr8-taste { all: unset; box-sizing: border-box; cursor: pointer; position: relative; aspect-ratio: .8; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 5px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, .55); transition: transform .05s, box-shadow .05s; -webkit-tap-highlight-color: transparent; }
+.tr8-taste.f0 { background: var(--t8-rot); } .tr8-taste.f1 { background: var(--t8-or); } .tr8-taste.f2 { background: var(--t8-ge); } .tr8-taste.f3 { background: var(--t8-el); }
+.tr8-taste span { font: 600 10px ui-monospace, Consolas, monospace; color: rgba(28, 27, 26, .75); }
+.tr8-taste:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, .55); }
+.tr8-led { position: absolute; top: 7px; left: 50%; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #4A1B14; box-shadow: inset 0 1px 1px rgba(0,0,0,.5); }
+.tr8-taste[aria-pressed="true"] .tr8-led { background: #FF4A2E; box-shadow: 0 0 8px 2px rgba(255, 74, 46, .75); }
+.tr8-taste.jetzt { box-shadow: 0 3px 0 rgba(0, 0, 0, .55), 0 0 0 3px #F3EDE2; }
+.tr8-taste:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 3px; }
+.tr8 .mf-hilfe { color: #A39B8E; }
+/* TR 808: eigene Farben vor der allgemeinen „gedrückt = lila“-Regel der Sequenzer-Karten */
+#mf-tr808 .tr8-taste.f0 { background: var(--t8-rot); } #mf-tr808 .tr8-taste.f1 { background: var(--t8-or); }
+#mf-tr808 .tr8-taste.f2 { background: var(--t8-ge); } #mf-tr808 .tr8-taste.f3 { background: var(--t8-el); }
+#mf-tr808 .tr8-taste { color: #1C1B1A; border: 0; }
+#mf-tr808 .tr8-zeile, #mf-tr808 .tr8-zeile[aria-pressed="true"] { background: var(--t8-geh); color: inherit; }
+#mf-tr808 .tr8-knopf, #mf-tr808 .tr8-knopf[aria-pressed="true"] { background: transparent; border: 0; color: inherit; }
+#mf-tr808 .tr8-zw .tr8-folge[aria-pressed="true"] { background: var(--t8-or); border-color: var(--t8-or); color: #1C1B1A; }
+#mf-tr808 .tr8-zeile[aria-pressed="true"] { border-color: var(--t8-or); box-shadow: 0 0 0 1px var(--t8-or) inset; }
+/* U3 Start/Stopp: nur ▶ / ■, rund; läuft der Takt, wird er komplementär grün (zum Purpur) */
+.mf-module button.gross.mf-start { width: 52px; height: 52px; padding: 0; border-radius: 50%; font-size: 20px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; }
+.mf-module button.gross.mf-start[aria-pressed="true"] { background: #2FA36B; border-color: #2FA36B; color: #fff; box-shadow: 0 0 0 4px color-mix(in srgb, #2FA36B 28%, transparent); }
+@media (prefers-reduced-motion: no-preference) { .mf-module button.gross.mf-start[aria-pressed="true"] { animation: mf-puls 1.2s ease-in-out infinite; } }
+@keyframes mf-puls { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, #2FA36B 12%, transparent); } }
