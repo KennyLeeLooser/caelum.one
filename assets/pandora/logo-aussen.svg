@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. Pandora-Zeichen: nur die Aussenkanten des Caelum-Linien-Logos (der Rahmen, die Box, die alles umschliesst). Masse aus assets/logo-linie.svg (aussen 55.4–968.8, innen 77.7–946.5), gleiche viewBox, damit es deckungsgleich über dem Logo liegt. Variante A gewählt von Kenny 23.11.2026. KI-Beitrag (Claude, GB-7) – Freigabe durch Kenny Looser offen (GB-8). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="44 44 936 936" width="1024" height="1024">
+  <title>Pandora</title>
+  <path fill="#D97757" fill-rule="evenodd" d="M55.4,55.4 H968.8 V968.8 H55.4 Z M77.7,77.7 V946.5 H946.5 V77.7 Z"/>
+</svg>
