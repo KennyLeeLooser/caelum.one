@@ -313,3 +313,21 @@
 .mf-mix-led i.heiss { box-shadow: 0 0 6px #E5484D; }
 .mf-mix-db { font: 600 11.5px ui-monospace, Consolas, monospace; color: #E8C547; min-height: 1.2em; }
 @media (max-width: 460px) { .mf-mix { gap: 5px; padding: 10px 6px; } .mf-mix-fz { height: 128px; } .mf-mix-name { font-size: 11px; } }
+
+/* ---------- Effekte (24.11.2026, Effekte.java): zwei Reihen wie die Wisch-Seiten der App, Stärke füllt das Pad von unten ---------- */
+.mf-fx { display: grid; gap: 12px; background: var(--mf-app); border-radius: 16px; padding: 12px; margin: 0 0 12px; color: #F2EEF5; }
+.mf-fx-reihe { --fx: #C8479A; --fx-t: #E07BBE; }
+.mf-fx-reihe.r2 { --fx: #3E9E5E; --fx-t: #6FD08C; }
+.mf-fx-titel { display: block; font: 600 11.5px ui-monospace, Consolas, monospace; color: var(--fx-t); margin: 0 0 6px 2px; }
+.mf-fx-pads { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.mf-seq-karte .mf-fx-pads button.mf-fx-pad { position: relative; overflow: hidden; min-height: 72px; padding: 8px 4px; border-radius: 14px; border: 1px solid #3A3442;
+  background: var(--mf-fl); color: #F2EEF5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  touch-action: none; user-select: none; -webkit-user-select: none; text-align: center; }
+.mf-fx-pad b { position: relative; font-size: 12.5px; font-weight: 600; line-height: 1.15; }
+.mf-fx-w { position: relative; font: 11px ui-monospace, Consolas, monospace; color: #B8AFC2; }
+.mf-fx-bal { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: color-mix(in srgb, var(--fx) 55%, transparent); transition: height .06s; }
+.mf-seq-karte .mf-fx-pads button.mf-fx-pad[aria-pressed="true"] { border-color: var(--fx); }
+.mf-seq-karte .mf-fx-pads button.mf-fx-pad[aria-pressed="true"] .mf-fx-w { color: #fff; }
+.mf-seq-karte .mf-fx-pads button.mf-fx-pad.halt { box-shadow: 0 0 0 2px var(--fx-t); }
+@media (max-width: 460px) { .mf-fx { padding: 10px 8px; } .mf-fx-pads { gap: 6px; } .mf-fx-pad b { font-size: 11.5px; } }
+@media (prefers-reduced-motion: reduce) { .mf-fx-bal { transition: none; } }

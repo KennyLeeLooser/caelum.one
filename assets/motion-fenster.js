@@ -359,6 +359,119 @@
     lpKarte.appendChild(el('p', 'mf-hilfe', '● Loop nimmt den Sequenzer, die TR 808 und die Pads auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.'));
     platz.appendChild(lpKarte);
 
+    // ---- Effekte (eigene Karte, 24.11.2026; Vorlage Effekte.java der App): 8 Pads in zwei Reihen wie die Wisch-Seiten der App ----
+    // Reihe 1 „Filter“ (Purpur, in der App auch auf alle Apps): Filter · Auto Filter · Auto Pan · Pumpen.
+    // Reihe 2 „Raum · FX“ (Grün, in der App nur eigener Track): Hall · Echo · Crush · Gate.
+    // Steuerung wie in der App: Pad halten = Kupplung, ziehen (oder mit Sensoren neigen) = Stärke, loslassen = Wert bleibt, doppelt tippen = aus.
+    // Weg: Summe → Crush → Filter → Auto Filter → Gate → Pumpen → Auto Pan → (trocken + Hall + Echo) → EQ. Takt-Effekte folgen dem BPM.
+    var FX = [['filter', 'Filter', 1], ['auto', 'Auto Filter', 1], ['pan', 'Auto Pan', 1], ['pump', 'Pumpen', 1],
+      ['hall', 'Hall', 2], ['echo', 'Echo', 2], ['crush', 'Crush', 2], ['gate', 'Gate', 2]].map(function (p) {
+      return { id: p[0], name: p[1], reihe: p[2], wert: 0, mitte: p[0] === 'filter', el: null };
+    });
+    var fxN = null, fxHalt = null;
+    function fxWert(id) { for (var i = 0; i < FX.length; i++) if (FX[i].id === id) return FX[i].wert; return 0; }
+    function fxText(e) { return e.mitte ? (e.wert === 0 ? 'aus' : e.wert < 0 ? '↓ ' + Math.round(-e.wert * 100) + ' %' : '↑ ' + Math.round(e.wert * 100) + ' %') : (e.wert === 0 ? 'aus' : Math.round(e.wert * 100) + ' %'); }
+    function fxBauen(c, ziel) {
+      var n = { c: c }, schlag = 60 / bpm;
+      n.ein = c.createGain();
+      n.crushD = c.createGain(); n.crushW = c.createGain(); n.crushS = c.createWaveShaper(); n.crushW.gain.value = 0;
+      var kurve = new Float32Array(1024); for (var i = 0; i < 1024; i++) { var x = i / 511.5 - 1; kurve[i] = Math.round(x * 6) / 6; } n.crushS.curve = kurve;
+      n.lp = c.createBiquadFilter(); n.lp.type = 'lowpass'; n.lp.frequency.value = 20000; n.lp.Q.value = 0.9;
+      n.hp = c.createBiquadFilter(); n.hp.type = 'highpass'; n.hp.frequency.value = 20; n.hp.Q.value = 0.9;
+      n.auto = c.createBiquadFilter(); n.auto.type = 'lowpass'; n.auto.frequency.value = 20000; n.auto.Q.value = 4;
+      n.gate = c.createGain(); n.pump = c.createGain();
+      n.pan = c.createStereoPanner ? c.createStereoPanner() : c.createGain();
+      n.trocken = c.createGain(); n.hallS = c.createGain(); n.hallS.gain.value = 0; n.hall = c.createConvolver();
+      var lang = Math.round(c.sampleRate * 2.4), ir = c.createBuffer(2, lang, c.sampleRate);
+      for (var ch = 0; ch < 2; ch++) { var d = ir.getChannelData(ch); for (var k = 0; k < lang; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / lang, 3.2); }
+      n.hall.buffer = ir;
+      n.echoS = c.createGain(); n.echoS.gain.value = 0; n.echo = c.createDelay(2); n.echo.delayTime.value = schlag * 0.75; n.echoR = c.createGain(); n.echoR.gain.value = 0.42;
+      n.ein.connect(n.crushD); n.ein.connect(n.crushS); n.crushS.connect(n.crushW);
+      n.crushD.connect(n.lp); n.crushW.connect(n.lp); n.lp.connect(n.hp); n.hp.connect(n.auto); n.auto.connect(n.gate); n.gate.connect(n.pump); n.pump.connect(n.pan);
+      n.pan.connect(n.trocken); n.trocken.connect(ziel);
+      n.pan.connect(n.hallS); n.hallS.connect(n.hall); n.hall.connect(ziel);
+      n.pan.connect(n.echoS); n.echoS.connect(n.echo); n.echo.connect(n.echoR); n.echoR.connect(n.echo); n.echo.connect(ziel);
+      // Takt-Schwinger (LFO): Auto Filter 1/2 Takt, Auto Pan 1 Takt, Gate 1/16, Pumpen je Schlag – Tiefe über Gain
+      n.lfo = {};
+      [['auto', 'sine', 2], ['pan', 'sine', 4], ['gate', 'square', 0.25], ['pump', 'sawtooth', 1]].forEach(function (p) {
+        var o = c.createOscillator(), t = c.createGain(); o.type = p[1]; o.frequency.value = 1 / (schlag * p[2]); t.gain.value = 0; o.connect(t); o.start();
+        n.lfo[p[0]] = { o: o, t: t, schlaege: p[2] };
+      });
+      n.lfo.auto.t.connect(n.auto.frequency); n.lfo.pan.t.connect(n.pan.pan || n.pan.gain);
+      n.lfo.gate.t.connect(n.gate.gain); n.lfo.pump.t.connect(n.pump.gain);
+      return n;
+    }
+    // Takt-Schwinger neu starten (beim Start auf die Eins) und dem BPM folgen
+    function fxTakt(beiEins) {
+      if (!fxN) return; var c = fxN.c, schlag = 60 / bpm;
+      Object.keys(fxN.lfo).forEach(function (k) {
+        var l = fxN.lfo[k];
+        if (beiEins != null) { try { l.o.stop(); } catch (x) { } l.o.disconnect(); var o = c.createOscillator(); o.type = k === 'gate' ? 'square' : k === 'pump' ? 'sawtooth' : 'sine';
+          o.frequency.value = 1 / (schlag * l.schlaege); o.connect(l.t); o.start(beiEins); l.o = o; }
+        else l.o.frequency.setTargetAtTime(1 / (schlag * l.schlaege), c.currentTime, 0.05);
+      });
+      fxN.echo.delayTime.setTargetAtTime(schlag * 0.75, c.currentTime, 0.1);
+    }
+    function fxSetz() {
+      FX.forEach(function (e) { setz(e.z.w, fxText(e)); e.z.k.setAttribute('aria-pressed', e.wert !== 0 ? 'true' : 'false');
+        e.z.bal.style.height = (Math.abs(e.wert) * 100).toFixed(0) + '%'; });
+      if (!fxN) return; var n = fxN, t = n.c.currentTime, T = function (p, v) { p.setTargetAtTime(v, t, 0.03); };
+      var fl = fxWert('filter');
+      T(n.lp.frequency, fl < 0 ? 20000 * Math.pow(250 / 20000, -fl) : 20000); T(n.hp.frequency, fl > 0 ? 20 * Math.pow(3000 / 20, fl) : 20);
+      var au = fxWert('auto'); T(n.auto.frequency, au ? 1400 : 20000); T(n.lfo.auto.t.gain, au * 1300);
+      var pa = fxWert('pan'); T(n.lfo.pan.t.gain, pa * 0.9);
+      var ga = fxWert('gate'); T(n.gate.gain, 1 - ga / 2); T(n.lfo.gate.t.gain, ga / 2);
+      var pu = fxWert('pump'); T(n.pump.gain, 1 - pu * 0.45); T(n.lfo.pump.t.gain, pu * 0.45);
+      var ha = fxWert('hall'); T(n.hallS.gain, ha * 0.9); T(n.trocken.gain, 1 - ha * 0.25);
+      T(n.echoS.gain, fxWert('echo') * 0.7);
+      var cr = fxWert('crush'); T(n.crushW.gain, cr); T(n.crushD.gain, 1 - cr);
+    }
+    var fxKarte = karteNeu('Effekte', null, 'mf-fx');
+    var fxFeld = el('div', 'mf-fx');
+    [['Filter', 1], ['Raum · FX', 2]].forEach(function (r) {
+      var reihe = el('div', 'mf-fx-reihe r' + r[1]); reihe.appendChild(el('span', 'mf-fx-titel', r[0]));
+      var pads = el('div', 'mf-fx-pads');
+      FX.filter(function (e) { return e.reihe === r[1]; }).forEach(function (e) {
+        var k = knopf('', 'mf-fx-pad'), bal = el('i', 'mf-fx-bal'), w = el('span', 'mf-fx-w');
+        k.appendChild(bal); k.appendChild(el('b', null, e.name)); k.appendChild(w); k.setAttribute('aria-pressed', 'false');
+        var y0 = 0, w0 = 0, letzt = 0;
+        k.addEventListener('pointerdown', function (ev) {
+          ev.preventDefault(); audio(); var jetzt = performance.now();
+          if (jetzt - letzt < 320) { e.wert = 0; fxHalt = null; letzt = 0; fxSetz(); return; }   // doppelt tippen = aus
+          letzt = jetzt; y0 = ev.clientY; w0 = e.wert; try { k.setPointerCapture(ev.pointerId); } catch (x) { }
+          var b = BEW.jetzt(), sens = b.quelle === 'sensor'; fxHalt = { e: e, w0: e.wert, k0: b.k, aktiv: sens }; k.classList.add('halt');
+          if (!e.mitte && e.wert === 0 && !sens) { e.wert = 0.5; fxSetz(); }   // antippen = halbe Stärke
+        });
+        k.addEventListener('pointermove', function (ev) {
+          if (!fxHalt || fxHalt.e !== e) return;
+          var v = w0 + (y0 - ev.clientY) / 110; e.wert = Math.round(klemm(v, e.mitte ? -1 : 0, 1) * 100) / 100; fxSetz();
+        });
+        var los = function () { if (fxHalt && fxHalt.e === e) fxHalt = null; k.classList.remove('halt'); };
+        k.addEventListener('pointerup', los); k.addEventListener('pointercancel', los); k.addEventListener('lostpointercapture', los);
+        k.addEventListener('keydown', function (ev) {
+          var d = ev.key === 'ArrowUp' || ev.key === 'ArrowRight' ? 0.1 : ev.key === 'ArrowDown' || ev.key === 'ArrowLeft' ? -0.1 : 0;
+          if (d) { ev.preventDefault(); audio(); e.wert = Math.round(klemm(e.wert + d, e.mitte ? -1 : 0, 1) * 10) / 10; fxSetz(); }
+          else if (ev.key === 'Delete' || ev.key === 'Backspace') { ev.preventDefault(); e.wert = 0; fxSetz(); }
+        });
+        e.z = { k: k, w: w, bal: bal }; pads.appendChild(k);
+      });
+      reihe.appendChild(pads); fxFeld.appendChild(reihe);
+    });
+    fxKarte.appendChild(fxFeld);
+    var fxZeile = el('div', 'mf-seq-zeile'), fxAus = knopf('Alle aus');
+    fxAus.addEventListener('click', function () { FX.forEach(function (e) { e.wert = 0; }); fxSetz(); }); fxZeile.appendChild(fxAus);
+    fxKarte.appendChild(fxZeile);
+    fxKarte.appendChild(el('p', 'mf-hilfe', 'Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.'));
+    platz.appendChild(fxKarte);
+    FX.forEach(function (e) { e.z.w.textContent = fxText(e); });
+    // mit Sensoren: gehaltenes Pad folgt dem Neigen (relativ ab dem Griff, wie die Kupplung der App)
+    function fxNeigen() {
+      if (!fxHalt) return; var b = BEW.jetzt(); if (b.quelle !== 'sensor') return;   // Maus/Finger zieht selbst
+      if (!fxHalt.aktiv) { fxHalt.aktiv = true; fxHalt.k0 = b.k; fxHalt.w0 = fxHalt.e.wert; }
+      var e = fxHalt.e, v = Math.round(klemm(fxHalt.w0 + (b.k - fxHalt.k0) * 1.4, e.mitte ? -1 : 0, 1) * 100) / 100;
+      if (v !== e.wert) { e.wert = v; fxSetz(); }
+    }
+
     // ---- Mixer (eigene Karte, 24.11.2026; Vorlage MixerSeite.java „wie ein Akai“): ein Kanalzug je Quelle ----
     // Fader (dB, doppelt tippen = 0 dB) · Panorama · M = stumm (Orange wie in der App) · ● = kommt in den ● Loop · Pegelanzeige.
     // Weg: Sequenzer/TR 808 (je Kette) → Kanal → Summe → EQ; Drum Pads → Kanal; Loops (Bus + Filter) → Kanal. Bewegung: Kippen = Überblenden
@@ -479,7 +592,8 @@
       summe = ctx.createGain();
       eqB = FREQ.map(function (fq) { var b = ctx.createBiquadFilter(); b.type = 'peaking'; b.frequency.value = Math.min(fq, ctx.sampleRate * 0.45); b.Q.value = EQ_Q; return b; });
       pan = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain();
-      summe.connect(eqB[0]); for (var k = 1; k < eqB.length; k++) eqB[k - 1].connect(eqB[k]); eqB[eqB.length - 1].connect(pan); pan.connect(ctx.destination);
+      fxN = fxBauen(ctx, eqB[0]); summe.connect(fxN.ein); fxSetz();   // Summe → Effekte → EQ
+       for (var k = 1; k < eqB.length; k++) eqB[k - 1].connect(eqB[k]); eqB[eqB.length - 1].connect(pan); pan.connect(ctx.destination);
       // Mixer: je Quelle ein Kanal (Fader, Panorama, stumm) vor der Summe
       var kanal = mix.map(function (c, i) { return mixKanal(ctx, i, summe, true); });
       mods.forEach(function (m, i) { m.kette = ketteBauen(ctx, kanal[Math.min(i, 1)]); });
@@ -783,7 +897,7 @@
     // ---- Bewegung → Klang (direkt vom Handy, U0); in der Mitte klingt alles wie ohne Bewegung ----
     function swing() { return klemm(swingHand + Math.abs(m1.bw.s) * 0.5, 0, 0.6); }
     function formen() {
-      m1.bw = m1.kopp.lesen(); m2.bw = m2.kopp.lesen();
+      m1.bw = m1.kopp.lesen(); m2.bw = m2.kopp.lesen(); fxNeigen();
       var bwLp = bewLp.lesen(), bwEq = bewEq.lesen();
       setz(swZ, Math.round(swing() * 100) + ' %');
       // EQ: Kippen = Klangwaage (Tiefen ↔ Höhen, ±6 dB), Schwenken = Balance
@@ -844,6 +958,7 @@
       mods.forEach(function (m) { if (m.start) m.start(); });
       startZeigen();
       logZeile('MIDI-Clock Start · ' + bpm + ' BPM', true);
+      fxTakt(naechst);   // Takt-Effekte auf die Eins
       timer = setInterval(function () { formen(); planen(); }, 25); planen(); requestAnimationFrame(lauflicht);
       spurenZeigen();
     }
@@ -862,7 +977,7 @@
       logZeile('MIDI-Clock Stopp', true);
     }
     function bpmSetz(v) {
-      bpm = klemm(v, 60, 180); setz(bpmZ, String(bpm));
+      bpm = klemm(v, 60, 180); setz(bpmZ, String(bpm)); fxTakt();
       spuren.forEach(function (s) { if (s.q) s.q.playbackRate.setTargetAtTime(bpm / s.bpm, ctx.currentTime, 0.05); });
     }
     bpmMinus.addEventListener('click', function () { bpmSetz(bpm - 2); }); bpmPlus.addEventListener('click', function () { bpmSetz(bpm + 2); });
@@ -887,6 +1002,7 @@
     // U2: jede Karte klappt auf/zu – Sequenzer, TR 808 und Looper offen, EQ zu (keine Informationsflut)
     BEW.aufklappen(m1.karte, true); BEW.aufklappen(m2.karte, true);
     BEW.aufklappen(lpKarte, true, function (an) { if (an) requestAnimationFrame(spurenZeigen); });
+    BEW.aufklappen(fxKarte, true);
     BEW.aufklappen(mixKarte, true);
     BEW.aufklappen(eqKarte, false, function (an) { if (an) requestAnimationFrame(kurveZeichnen); });
     ankerAuf();

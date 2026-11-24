@@ -836,5 +836,15 @@
   "Loops": "循环",
   "In den ● Loop aufnehmen": "录入 ● Loop",
   "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.": "每个音源一个通道：拖动推子（双击 = 0 dB），左右声像，M = 静音，● = 录入 ● Loop。倾斜可在音序器和 TR 808 之间交叉渐变。在应用中，每个音色库有 8 个推子和 8 个旋钮，以 MIDI 发送到 Ableton。",
-  "Überblenden": "交叉渐变"
+  "Überblenden": "交叉渐变",
+  "Auto Filter": "Auto Filter",
+  "Auto Pan": "Auto Pan",
+  "Pumpen": "泵感",
+  "Hall": "混响",
+  "Crush": "Crush",
+  "Gate": "门限",
+  "Raum · FX": "空间 · FX",
+  "Alle aus": "全部关闭",
+  "aus": "关",
+  "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "按住一个打击垫并向上拖 = 更强，向下 = 更弱；使用手机传感器时，按住打击垫并倾斜手机。松开 = 数值保持，双击 = 关闭。滤波：向下 = 发闷，向上 = 变薄。Auto Filter、Auto Pan、泵感、门限和回声随节拍运行。在应用中，滤波打击垫也作用于所有应用，空间和 FX 只作用于你自己的音轨。"
 }

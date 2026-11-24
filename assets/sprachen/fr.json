@@ -835,5 +835,15 @@
   "Loops": "Boucles",
   "In den ● Loop aufnehmen": "Enregistrer dans la ● Loop",
   "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.": "Une tranche par source : tire le fader (double appui = 0 dB), panoramique gauche/droite, M = muet, ● = va dans la ● Loop. Incliner fait un fondu entre le séquenceur et la TR 808. Dans l’app, chaque banque a 8 faders et 8 potentiomètres qui partent en MIDI vers Ableton.",
-  "Überblenden": "Fondu enchaîné"
+  "Überblenden": "Fondu enchaîné",
+  "Auto Filter": "Auto Filter",
+  "Auto Pan": "Auto Pan",
+  "Pumpen": "Pompage",
+  "Hall": "Réverb",
+  "Crush": "Crush",
+  "Gate": "Gate",
+  "Raum · FX": "Espace · FX",
+  "Alle aus": "Tout couper",
+  "aus": "coupé",
+  "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "Maintiens un pad et tire vers le haut = plus fort, vers le bas = plus faible ; avec les capteurs du téléphone, maintiens le pad et incline le téléphone. Relâcher = la valeur reste, double appui = coupé. Filtre : vers le bas = sourd, vers le haut = fin. Auto Filter, Auto Pan, Pompage, Gate et Écho suivent le tempo. Dans l’app, les pads Filtre agissent aussi sur toutes les apps, Espace et FX seulement sur ton propre morceau."
 }
