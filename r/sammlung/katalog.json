@@ -2,6 +2,11 @@
   "_kopf": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
   "_hinweis": "GLB-Sammlung für den Befehl „Überraschung“. Der QR trägt nur die id (1–255). Neue Objekte: GLB in diesen Ordner, Eintrag ergänzen, ids nie neu vergeben. KI-Beitrag (Claude, GB-7), 19.11.2026.",
   "objekte": [
-    { "id": 1, "name": "Rakete", "datei": "rakete.glb", "aktion": "starten", "quelle": "blender/rakete.py" }
+    { "id": 1, "name": "Rakete", "datei": "rakete.glb", "aktion": "starten", "quelle": "blender/rakete.py" },
+    { "id": 2, "name": "Torre de Belém", "datei": "2-torre-de-belem.glb", "aktion": "zeigen", "quelle": "bibliothek/torre_de_belem.glb" },
+    { "id": 3, "name": "Pastel de Nata", "datei": "3-pastel-de-nata.glb", "aktion": "zeigen", "quelle": "bibliothek/pastel_de_nata.glb" },
+    { "id": 4, "name": "Springer", "datei": "4-springer.glb", "aktion": "zeigen", "quelle": "bibliothek/ChessCaelum_White_Knight.glb" },
+    { "id": 5, "name": "Ponte 25 de Abril", "datei": "5-ponte-25-de-abril.glb", "aktion": "zeigen", "quelle": "bibliothek/ponte_25_de_abril.glb" },
+    { "id": 6, "name": "Hafenlaterne", "datei": "6-hafenlaterne.glb", "aktion": "zeigen", "quelle": "bibliothek/coastal_lantern.glb" }
   ]
 }
