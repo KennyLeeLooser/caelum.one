@@ -828,5 +828,12 @@
   "■ Anhalten": "■ Pausa",
   "Darum zählt jeder Kopf:": "Por eso cuenta cada cabeza:",
   "Kein Schritt braucht das verlorene Gerät. Alles kommt von den anderen.": "Ningún paso necesita el dispositivo perdido. Todo viene de los demás.",
-  "Deine Arbeit bleibt, auch wenn ein Gerät weg ist": "Tu trabajo permanece, aunque falte un dispositivo"
+  "Deine Arbeit bleibt, auch wenn ein Gerät weg ist": "Tu trabajo permanece, aunque falte un dispositivo",
+  "L · R": "L · R",
+  "●": "●",
+  "−∞": "−∞",
+  "Loops": "Loops",
+  "In den ● Loop aufnehmen": "Grabar en el ● Loop",
+  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.": "Un canal por fuente: arrastra el fader (doble toque = 0 dB), panorama izquierda/derecha, M = silencio, ● = entra en el ● Loop. Al inclinar se hace un fundido entre el secuenciador y la TR 808. En la app, cada banco tiene 8 faders y 8 perillas que van a Ableton como MIDI.",
+  "Überblenden": "Fundido cruzado"
 }

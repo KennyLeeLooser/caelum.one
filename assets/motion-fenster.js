@@ -320,9 +320,10 @@
     var lpKarte = karteNeu('Looper', null, 'mf-looper');
     var lpK = el('div', 'mf-seq-zeile mf-lp-kopf');
     var loopK = knopf('● Loop', 'mf-loop'); loopK.setAttribute('aria-pressed', 'false');
-    var wahlK = knopf('', 'mf-wahl'); wahlK.setAttribute('aria-expanded', 'false'); wahlK.setAttribute('aria-label', 'Spurwahl für ● Loop');
+    // 24.11.2026 Lighthouse label-content-name-mismatch: Name = verborgener Titel + sichtbarer Wert (statt aria-label ohne den Wert)
+    var wahlK = knopf('', 'mf-wahl'); wahlK.setAttribute('aria-expanded', 'false'); wahlK.appendChild(el('span', 'mf-vh', 'Spurwahl für ● Loop'));
     var wahlZ = el('span'); wahlK.appendChild(document.createTextNode('▸ ')); wahlK.appendChild(wahlZ);
-    var qK = knopf('', 'mf-wahl mf-q'); qK.setAttribute('aria-expanded', 'false'); qK.setAttribute('aria-label', 'Loop-Länge und Quantisieren');
+    var qK = knopf('', 'mf-wahl mf-q'); qK.setAttribute('aria-expanded', 'false'); qK.appendChild(el('span', 'mf-vh', 'Loop-Länge und Quantisieren'));
     var ring = el('i', 'mf-ring'), qN = el('span'), qW = el('span'); qK.appendChild(ring); qK.appendChild(qN); qK.appendChild(qW);
     lpStartK = knopf('▶', 'gross mf-start mf-lp-start'); lpStartK.setAttribute('aria-pressed', 'false'); lpStartK.setAttribute('aria-label', 'Start');
     lpStartK.addEventListener('click', looperTippen);
@@ -357,6 +358,79 @@
     var bewLp = BEW.kopplung([['k', 'Filter'], ['h', 'Pegel']]); lpKarte.appendChild(bewLp.el);
     lpKarte.appendChild(el('p', 'mf-hilfe', '● Loop nimmt den Sequenzer, die TR 808 und die Pads auf, nie das Mikrofon. Die Aufnahme beginnt auf der nächsten Eins, die Spur schweigt, solange sie läuft. Wechselst du dabei das Muster, nimmt der Loop jeden Takt so auf, wie er klang. Danach spielt die Spur ab der nächsten Eins mit – dann ein anderes Muster wählen und die nächste Spur füllen.'));
     platz.appendChild(lpKarte);
+
+    // ---- Mixer (eigene Karte, 24.11.2026; Vorlage MixerSeite.java „wie ein Akai“): ein Kanalzug je Quelle ----
+    // Fader (dB, doppelt tippen = 0 dB) · Panorama · M = stumm (Orange wie in der App) · ● = kommt in den ● Loop · Pegelanzeige.
+    // Weg: Sequenzer/TR 808 (je Kette) → Kanal → Summe → EQ; Drum Pads → Kanal; Loops (Bus + Filter) → Kanal. Bewegung: Kippen = Überblenden
+    // Sequenzer ↔ TR 808, Schwenken = Panorama aller Kanäle. Der ● Loop nimmt auf, was man hört (Fader, Panorama, stumm, ●).
+    var mix = [['seq', 'Sequenzer'], ['tr', 'TR 808'], ['pads', 'Drum Pads'], ['loops', 'Loops']].map(function (p) {
+      return { id: p[0], name: p[1], pegel: 1, pan: 0, stumm: false, rec: p[0] !== 'loops', g: null, p: null, ana: null, z: {} };
+    });
+    var mixXf = 0, mixPanBew = 0;
+    function mixDb(v) { return v <= 0.0001 ? '−∞' : ((v >= 1 ? '+' : '') + (20 * Math.log10(v)).toFixed(1)).replace('.', ',').replace('+0,0', '0,0'); }
+    function mixFaktor(i) { return i === 0 ? Math.min(1, 1 - mixXf) : i === 1 ? Math.min(1, 1 + mixXf) : 1; }   // Überblenden
+    function mixGain(i) { var c = mix[i]; return c.stumm ? 0 : c.pegel * mixFaktor(i); }
+    function mixPan(i) { return klemm(mix[i].pan + mixPanBew, -1, 1); }
+    function mixSetz() {
+      mix.forEach(function (c, i) {
+        setz(c.z.db, mixDb(c.pegel)); c.z.r.value = String(c.pegel);
+        c.z.m.setAttribute('aria-pressed', c.stumm ? 'true' : 'false'); if (c.z.rec) c.z.rec.setAttribute('aria-pressed', c.rec ? 'true' : 'false');
+        c.z.zug.classList.toggle('stumm', c.stumm);
+        if (c.g) { var t = ctx.currentTime; c.g.gain.setTargetAtTime(mixGain(i), t, 0.03); if (c.p.pan) c.p.pan.setTargetAtTime(mixPan(i), t, 0.04); }
+      });
+    }
+    // Kanal im Klangweg (live oder in der OfflineAudioContext des ● Loop): Eingang → Panorama → Ziel (+ Abgriff für die Anzeige)
+    function mixKanal(c, i, ziel, live) {
+      var g = c.createGain(), p = c.createStereoPanner ? c.createStereoPanner() : c.createGain();
+      g.gain.value = mixGain(i); if (p.pan) p.pan.value = mixPan(i);
+      g.connect(p); p.connect(ziel);
+      if (live) { var a = c.createAnalyser(); a.fftSize = 512; p.connect(a); mix[i].g = g; mix[i].p = p; mix[i].ana = a; }
+      return g;
+    }
+    var mixKarte = karteNeu('Mixer', null, 'mf-mixer');
+    var mixZuege = el('div', 'mf-mix');
+    mix.forEach(function (c, i) {
+      var zug = el('div', 'mf-mix-zug'), r = el('input'), pr = el('input'), db = el('b', 'mf-mix-db'), led = el('span', 'mf-mix-led'), li = el('i');
+      zug.appendChild(el('span', 'mf-mix-name', c.name));
+      pr.type = 'range'; pr.min = '-1'; pr.max = '1'; pr.step = '0.05'; pr.value = '0'; pr.className = 'mf-mix-pan'; pr.setAttribute('aria-label', 'Panorama');
+      pr.addEventListener('input', function () { c.pan = Number(pr.value); mixSetz(); });
+      pr.addEventListener('dblclick', function () { pr.value = '0'; c.pan = 0; mixSetz(); });
+      zug.appendChild(pr); zug.appendChild(el('span', 'mf-mix-lr', 'L · R'));
+      var knoepfe = el('div', 'mf-mix-k'), m = knopf('M', 'mf-mix-m'); m.setAttribute('aria-label', 'Stumm schalten'); m.setAttribute('aria-pressed', 'false');
+      m.addEventListener('click', function () { c.stumm = !c.stumm; mixSetz(); }); knoepfe.appendChild(m);
+      if (c.rec) {
+        var rk = knopf('●', 'mf-mix-rec'); rk.setAttribute('aria-label', 'In den ● Loop aufnehmen'); rk.setAttribute('aria-pressed', 'true');
+        rk.addEventListener('click', function () { c.rec = !c.rec; mixSetz(); }); knoepfe.appendChild(rk); c.z.rec = rk;
+      } else knoepfe.appendChild(el('span', 'mf-mix-rec leer'));
+      zug.appendChild(knoepfe);
+      var fz = el('div', 'mf-mix-fz');
+      r.type = 'range'; r.min = '0'; r.max = '1.41'; r.step = '0.01'; r.value = '1'; r.setAttribute('aria-label', 'Lautstärke'); zug.setAttribute('role', 'group'); zug.setAttribute('aria-label', c.name);
+      r.addEventListener('input', function () { c.pegel = Number(r.value); if (Math.abs(c.pegel - 1) < 0.03) c.pegel = 1; mixSetz(); });   // rastet bei 0 dB
+      r.addEventListener('dblclick', function () { c.pegel = 1; mixSetz(); });
+      led.appendChild(li); fz.appendChild(r); fz.appendChild(led); zug.appendChild(fz); zug.appendChild(db);
+      c.z = { zug: zug, r: r, db: db, m: m, rec: c.z.rec, led: li };
+      mixZuege.appendChild(zug);
+    });
+    mixKarte.appendChild(mixZuege);
+    var bewMix = BEW.kopplung([['k', 'Überblenden'], ['s', 'Panorama']]); mixKarte.appendChild(bewMix.el);
+    mixKarte.appendChild(el('p', 'mf-hilfe', 'Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.'));
+    platz.appendChild(mixKarte);
+    // Pegelanzeige: nur solange die Karte offen und sichtbar ist und Klang da ist
+    var mixSicht = false, mixLaeuft = false, mixPuffer = null;
+    function mixAnzeige() {
+      if (!mixSicht || !ctx || document.hidden) { mixLaeuft = false; mix.forEach(function (c) { c.z.led.style.height = '0%'; }); return; }
+      mix.forEach(function (c) {
+        if (!c.ana) return; if (!mixPuffer) mixPuffer = new Float32Array(c.ana.fftSize);
+        c.ana.getFloatTimeDomainData(mixPuffer); var spitze = 0; for (var k = 0; k < mixPuffer.length; k++) { var a = Math.abs(mixPuffer[k]); if (a > spitze) spitze = a; }
+        var dbv = spitze > 0 ? 20 * Math.log10(spitze) : -60, h = klemm((dbv + 48) / 54, 0, 1);   // −48 … +6 dB
+        c.z.led.style.height = (h * 100).toFixed(0) + '%'; c.z.led.classList.toggle('heiss', dbv > -1);
+      });
+      requestAnimationFrame(mixAnzeige);
+    }
+    function mixAnzeigeStart() { if (!mixLaeuft && mixSicht && ctx) { mixLaeuft = true; requestAnimationFrame(mixAnzeige); } }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { mixSicht = e[e.length - 1].isIntersecting; mixAnzeigeStart(); }).observe(mixZuege);
+    else mixSicht = true;
+    mixSetz();
 
     // ---- EQ (eigene Karte; Eq.java: 8 Glocken 60 Hz – 15 kHz, ±12 dB, Q 1,4, doppelt tippen = 0, Flach, Balance) ----
     var FREQ = [60, 150, 400, 1000, 2400, 6000, 10000, 15000], EQ_Q = 1.4, db = FREQ.map(function () { return 0; }), balance = 0;
@@ -406,10 +480,13 @@
       eqB = FREQ.map(function (fq) { var b = ctx.createBiquadFilter(); b.type = 'peaking'; b.frequency.value = Math.min(fq, ctx.sampleRate * 0.45); b.Q.value = EQ_Q; return b; });
       pan = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain();
       summe.connect(eqB[0]); for (var k = 1; k < eqB.length; k++) eqB[k - 1].connect(eqB[k]); eqB[eqB.length - 1].connect(pan); pan.connect(ctx.destination);
-      mods.forEach(function (m) { m.kette = ketteBauen(ctx, summe); });
-      // Loops: eigener Bus mit Filter (Bewegung des Loopers), dann in die Summe
+      // Mixer: je Quelle ein Kanal (Fader, Panorama, stumm) vor der Summe
+      var kanal = mix.map(function (c, i) { return mixKanal(ctx, i, summe, true); });
+      mods.forEach(function (m, i) { m.kette = ketteBauen(ctx, kanal[Math.min(i, 1)]); });
+      // Loops: eigener Bus mit Filter (Bewegung des Loopers), dann über den Kanal „Loops“ in die Summe
       loopBus = ctx.createGain(); loopFilt = ctx.createBiquadFilter(); loopFilt.type = 'lowpass'; loopFilt.frequency.value = 18000; loopFilt.Q.value = 0.7;
-      loopBus.connect(loopFilt); loopFilt.connect(summe);
+      loopBus.connect(loopFilt); loopFilt.connect(kanal[3]);
+      mixAnzeigeStart();
       spuren.forEach(spurAnschliessen); eqSetz(); formen();
       if (d808()) satz808().vorbereiten(ctx);
     }
@@ -589,9 +666,12 @@
       var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC || !ctx) return Promise.reject(new Error('kein Audio'));
       var d = 60 / bpm / 4, sr = ctx.sampleRate, n = Math.max(1, Math.round(sek * sr)), oc = new OAC(2, n * 2, sr);
       var L = Math.ceil(sek / d - 1e-6);
-      var ketten = mods.map(function (m) { return ketteBauen(oc, oc.destination, ketteWerte(m.kette)); });
-      // Pads (Karte „Drum & 808“) gehen wie live an Filter und Echo vorbei direkt in die Summe
-      var padZiel = oc.createGain(); padZiel.connect(oc.destination);
+      // wie live: Kette → Mixer-Kanal (Fader, Panorama, stumm) → Summe; ● aus im Mixer = Quelle kommt nicht in die Runde
+      var ketten = mods.map(function (m, i) { return ketteBauen(oc, mixKanal(oc, Math.min(i, 1), oc.destination), ketteWerte(m.kette)); });
+      var nimm = function (i) { var c = mix[i]; return c.rec && !c.stumm; };
+      if (!nimm(2)) pads = [];
+      // Pads (Karte „Drum & 808“) gehen wie live an Filter und Echo vorbei über ihren Kanal in die Summe
+      var padZiel = oc.createGain(); padZiel.connect(mixKanal(oc, 2, oc.destination));
       if (d808() && typeof d808().padLaut === 'function') padZiel.gain.value = d808().padLaut();   // Lautstärke der Pads
       var sw = swing(), ev = [];
       for (var r = 0; r < 2; r++) {
@@ -599,7 +679,7 @@
           var s = k % 16, tk = takte[Math.min(Math.floor(k / 16), takte.length - 1)];
           var t = r * n / sr + k * d + (s % 2 ? sw * d : 0);
           if (t >= (r + 1) * n / sr) continue;   // was nach dem Ende der Runde käme, fällt weg (Raster aus)
-          mods.forEach(function (m, mi) { var mu = tk[mi]; for (var i = 0; i < m.def.instr.length; i++) if (mu[i][s]) ev.push({ t: t, m: mi, i: i, v: s % 4 === 0 ? 1 : 0.82 }); });
+          mods.forEach(function (m, mi) { if (!nimm(Math.min(mi, 1))) return; var mu = tk[mi]; for (var i = 0; i < m.def.instr.length; i++) if (mu[i][s]) ev.push({ t: t, m: mi, i: i, v: s % 4 === 0 ? 1 : 0.82 }); });
         }
         (pads || []).forEach(function (p) { if (p.dt < sek) ev.push({ t: r * n / sr + p.dt, pad: p.i, v: p.vel }); });
       }
@@ -709,6 +789,9 @@
       // EQ: Kippen = Klangwaage (Tiefen ↔ Höhen, ±6 dB), Schwenken = Balance
       var kn = Math.round(bwEq.k * 6 * 4) / 4, bn = Math.round(bwEq.s * 0.8 * 20) / 20;
       if (kn !== kippEq || bn !== balBew) { kippEq = kn; balBew = bn; eqSetz(); }
+      // Mixer: Kippen = Überblenden Sequenzer ↔ TR 808, Schwenken = Panorama aller Kanäle
+      var bwMix = bewMix.lesen(), xn = Math.round(bwMix.k * 20) / 20, pn = Math.round(bwMix.s * 0.8 * 20) / 20;
+      if (xn !== mixXf || pn !== mixPanBew) { mixXf = xn; mixPanBew = pn; mixSetz(); }
       m2.ton = Math.round(m2.bw.d * 5 * 2) / 2;   // TR 808: Drehen → Ton ±5 Halbtöne (bei jedem Anschlag)
       if (!ctx) return;
       var t = ctx.currentTime, k1 = m1.kette, k2 = m2.kette;
@@ -789,7 +872,7 @@
     // ---- Karte „Drum & 808“ anschliessen: Pads klingen in die Summe (vor EQ), ● Loop nimmt die Anschläge mit ----
     function drumAnschliessen() {
       var D = d808(); if (!D) return;
-      D.ausgang = function () { audio(); return ctx ? { ctx: ctx, ein: summe } : null; };
+      D.ausgang = function () { audio(); return ctx ? { ctx: ctx, ein: mix[2].g || summe } : null; };   // Kanal „Drum Pads“ im Mixer
       D.angeschlagen = function (i, vel) {
         if (!ctx || !auf || auf.phase !== 'auf') return;
         var dt = ctx.currentTime - auf.start;   // auf.start liegt bis 0,12 s voraus (geplant) – knapp davor zählt als Eins
@@ -804,6 +887,7 @@
     // U2: jede Karte klappt auf/zu – Sequenzer, TR 808 und Looper offen, EQ zu (keine Informationsflut)
     BEW.aufklappen(m1.karte, true); BEW.aufklappen(m2.karte, true);
     BEW.aufklappen(lpKarte, true, function (an) { if (an) requestAnimationFrame(spurenZeigen); });
+    BEW.aufklappen(mixKarte, true);
     BEW.aufklappen(eqKarte, false, function (an) { if (an) requestAnimationFrame(kurveZeichnen); });
     ankerAuf();
     return { stopp: stopp, spielt: function () { return spielt; } };
@@ -835,7 +919,7 @@
     for (var i = 0; i < 4; i++) (function (i) {
       var p = knopf(''), tag = el('span', 'mf-tag'), ach = el('b', null, ACHSE[i]), cc = el('span', 'mf-cc'), sp = el('span', 'mf-spur'), vo = el('i');
       sp.appendChild(vo); p.appendChild(tag); p.appendChild(ach); p.appendChild(cc); p.appendChild(sp);
-      p.setAttribute('aria-pressed', 'false'); p.setAttribute('aria-label', ACHSE[i]);
+      p.setAttribute('aria-pressed', 'false');   // Name = sichtbarer Inhalt (A1 Schwenken CC 20), kein aria-label (24.11.2026)
       function an(e) { e.preventDefault(); e.stopPropagation(); demoAus(); halte(i, true); try { p.setPointerCapture(e.pointerId); } catch (x) { } }
       function aus() { halte(i, false); }
       p.addEventListener('pointerdown', an); p.addEventListener('pointerup', aus); p.addEventListener('pointercancel', aus); p.addEventListener('lostpointercapture', aus);
@@ -1060,7 +1144,9 @@
       return { s: klemm(a.dre / 90, -1, 1), k: klemm(a.kip / 60, -1, 1), d: klemm(a.nei / 60, -1, 1), h: klemm(a.h / 0.5, -1, 1), aktiv: true, quelle: quelle };
     };
     function schleife(t) {
-      if (!document.hidden) { var r = rechnen(t); if (sichtbar) zeigen(r); }
+      // 24.11.2026 Leistung: das Beispiel rechnet nur, wenn man es sieht (BEW.jetzt liefert im Beispiel ohnehin die Mitte)
+      if (!document.hidden && (sichtbar || quelle !== 'demo')) { var r = rechnen(t); if (sichtbar) zeigen(r); }
+      else letzt = null;
       requestAnimationFrame(schleife);
     }
     requestAnimationFrame(schleife);

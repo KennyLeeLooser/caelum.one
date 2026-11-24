@@ -315,7 +315,13 @@
 
     // ---- Bild ----
     var g = cv.getContext('2d'), daten = null;
+    // 24.11.2026 Leistung (Lighthouse): nur zeichnen, solange die Fläche sichtbar ist – sonst ruht die Schleife (kein Layout je Bild)
+    var padSicht = !('IntersectionObserver' in window), malt = false;
+    function malenStart() { if (!malt && padSicht && !document.hidden) { malt = true; requestAnimationFrame(malen); } }
+    if (!padSicht) new IntersectionObserver(function (e) { padSicht = e[e.length - 1].isIntersecting; malenStart(); }).observe(pad);
+    document.addEventListener('visibilitychange', malenStart);
     function malen() {
+      if (!padSicht || document.hidden) { malt = false; return; }
       var r = pad.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1), w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
       g.clearRect(0, 0, w, h); g.lineWidth = 1 * dpr;
@@ -344,7 +350,7 @@
       if (on) { g.strokeStyle = rgba(.35); g.lineWidth = 2 * dpr; g.beginPath(); g.arc(px, py, 22 * dpr, 0, Math.PI * 2); g.stroke(); }
       requestAnimationFrame(malen);
     }
-    setze(false); requestAnimationFrame(malen);
+    setze(false); malenStart();
   }
   (window.CaelumModul = window.CaelumModul || {})['motion-web'] = start;
   document.dispatchEvent(new CustomEvent('caelum-modul', { detail: 'motion-web' }));

@@ -128,7 +128,8 @@
   var knopf = document.createElement('button'); knopf.type = 'button'; knopf.className = 'sprache-knopf';
   knopf.setAttribute('aria-haspopup', 'dialog'); knopf.setAttribute('aria-expanded', 'false');
   knopf.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span></span>';
-  function knopfText() { knopf.querySelector('span').textContent = aktuell === 'de' ? 'DE' : aktuell.toUpperCase().replace('PT-', 'PT·'); knopf.setAttribute('aria-label', (aktuell === 'de' ? 'Sprache' : (woerter && woerter['Sprache']) || 'Language') + ': ' + eintrag(aktuell)[1]); }
+  // 24.11.2026 Lighthouse: der sichtbare Code (DE) muss im Namen stehen → „DE · Sprache: Deutsch“
+  function knopfText() { var code = aktuell === 'de' ? 'DE' : aktuell.toUpperCase().replace('PT-', 'PT·'); knopf.querySelector('span').textContent = code; knopf.setAttribute('aria-label', code + ' · ' + (aktuell === 'de' ? 'Sprache' : (woerter && woerter['Sprache']) || 'Language') + ': ' + eintrag(aktuell)[1]); }
   var nav = document.querySelector('header nav'); if (nav) nav.appendChild(knopf);
 
   var wahl = document.createElement('div'); wahl.className = 'sprache-wahl'; wahl.hidden = true;

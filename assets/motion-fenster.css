@@ -21,8 +21,8 @@
 .mf-app { height: 100%; box-sizing: border-box; padding: 18px 9px 9px; display: flex; flex-direction: column; gap: 7px; color: #F2EEF5; font-size: 11px; }
 .mf-titel { font-weight: 600; font-size: 16px; padding-left: 3px; }
 .mf-status { color: #9C93A6; font-size: 10.5px; padding-left: 3px; margin-top: -4px; }
-.mf-baenke { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
-.mf-baenke button { text-align: center; padding: 7px 0; min-height: 24px; background: var(--mf-fl); border-radius: 6px; font-size: 10.5px; color: #F2EEF5; }
+.mf-baenke { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 2px; position: relative; z-index: 1; }   /* 24.11.: ≥ 24 px, nicht verdeckt */
+.mf-baenke button { text-align: center; padding: 7px 0; min-height: 26px; background: var(--mf-fl); border-radius: 6px; font-size: 10.5px; color: #F2EEF5; }
 .mf-baenke button[aria-pressed="true"] { background: var(--mf-purpur-tief); }
 .mf-pads { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; min-height: 0; }
 .mf-pads button { position: relative; background: var(--mf-fl); border-radius: 12px; display: flex; flex-direction: column; align-items: center;
@@ -107,7 +107,11 @@
 .mf-reihe { display: grid; grid-template-columns: 2.6em repeat(16, minmax(14px, 30px)); gap: 3px; margin-bottom: 3px; }
 .mf-reihe.gross { grid-template-columns: repeat(16, minmax(16px, 46px)); gap: 5px; }
 @media (max-width: 560px) { .mf-reihe.gross { grid-template-columns: repeat(8, 1fr); }
-  .mf-raster { padding: 8px 6px; } .mf-reihe:not(.gross) { grid-template-columns: 2.1em repeat(16, minmax(12px, 1fr)); gap: 2px; margin-bottom: 2px; } }
+  .mf-raster { padding: 8px 6px; }
+  /* 24.11.2026 am Handy gut bedienbar (Lighthouse target-size ≥ 24 px): Matrix je Instrument 2 × 8 statt 16 schmale Felder */
+  .mf-reihe:not(.gross) { grid-template-columns: 2.6em repeat(8, 1fr); gap: 3px; margin-bottom: 9px; }
+  .mf-reihe:not(.gross) .mf-name { grid-row: span 2; justify-content: center; }
+  .mf-seq-karte .mf-reihe:not(.gross) .mf-schritt { aspect-ratio: auto; min-height: 26px; } }
 .mf-seq-karte .mf-name { padding: 0; border: 0; background: none; color: #9C93A6; font: 600 11px ui-monospace, Consolas, monospace; display: flex; align-items: center; }
 .mf-seq-karte .mf-schritt { padding: 0; aspect-ratio: 1; border-radius: 4px; border: 0; background: var(--mf-fl); }
 .mf-seq-karte .mf-schritt.takt { background: #2E2737; }
@@ -130,7 +134,10 @@
 .mf-kopp .mf-bew .mf-bal { position: relative; width: 52px; height: 6px; border-radius: 999px; }
 .mf-kopp .mf-bal-mitte::after { content: ''; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); opacity: .6; }
 .mf-kopp .mf-bal-mitte i { position: absolute; top: 0; bottom: 0; width: 0; border-radius: 999px; background: var(--mf-gelb, #E8C547); transition: left .08s, width .08s; }
-.mf-kopp.aus .mf-bew, .mf-kopp.still .mf-bew { opacity: .55; }
+/* 24.11.2026 Kontrast: gedimmt wird nur der Balken, die Schrift bleibt lesbar (war 2,2:1 mit opacity) */
+.mf-kopp.aus .mf-bew .mf-bal, .mf-kopp.still .mf-bew .mf-bal { opacity: .55; }
+.mf-kopp .mf-bew { color: color-mix(in srgb, var(--text, #F2EEF5) 55%, var(--muted)); }   /* 3,85 → ≥ 4,5 auf dem gelben Hauch */
+.mf-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 560px) { .mf-kopp { border-radius: 16px; } }
 @media (prefers-reduced-motion: reduce) { .mf-kopp .mf-bal-mitte i { transition: none; } }
 
@@ -281,3 +288,28 @@
 .mf-module button.gross.mf-start[aria-pressed="true"] { background: #2FA36B; border-color: #2FA36B; color: #fff; box-shadow: 0 0 0 4px color-mix(in srgb, #2FA36B 28%, transparent); }
 @media (prefers-reduced-motion: no-preference) { .mf-module button.gross.mf-start[aria-pressed="true"] { animation: mf-puls 1.2s ease-in-out infinite; } }
 @keyframes mf-puls { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, #2FA36B 12%, transparent); } }
+
+/* ---------- Mixer (24.11.2026, MixerSeite.java „wie ein Akai“): ein Kanalzug je Quelle, dunkel wie die App ---------- */
+#mf-mixer { --mf-mix-or: #F29A3A; --mf-mix-of: #33281C; }
+.mf-mix { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; background: var(--mf-app); border-radius: 16px; padding: 12px 10px; margin: 0 0 12px; color: #F2EEF5; }
+.mf-mix-zug { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; padding: 8px 4px; border-radius: 12px; background: var(--mf-fl); transition: opacity .15s; }
+.mf-mix-zug.stumm { opacity: .72; }
+.mf-mix-name { font: 600 12px ui-monospace, Consolas, monospace; color: #E07BBE; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.mf-mix-zug:nth-child(2) .mf-mix-name { color: #F27B7E; }
+.mf-mix-zug:nth-child(3) .mf-mix-name { color: #E8C547; }
+.mf-mix-zug:nth-child(4) .mf-mix-name { color: #F07A7E; }
+.mf-mix-pan { width: 100%; max-width: 92px; height: 24px; accent-color: #9C93A6; margin: 0; }
+.mf-mix-lr { font: 10.5px ui-monospace, Consolas, monospace; color: #A89DAD; margin-top: -6px; }
+.mf-mix-k { display: flex; gap: 6px; }
+.mf-seq-karte .mf-mix-k button { width: 32px; height: 32px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font: 700 13px ui-monospace, Consolas, monospace; background: #2E2737; border: 1px solid #4A4054; color: #D9D2E0; }
+.mf-seq-karte .mf-mix-k button.mf-mix-m[aria-pressed="true"] { background: var(--mf-mix-or); border-color: var(--mf-mix-or); color: #1A1620; }
+.mf-seq-karte .mf-mix-k button.mf-mix-rec[aria-pressed="true"] { background: #C93A3F; border-color: #E5484D; color: #fff; }
+.mf-mix-rec.leer { width: 32px; height: 32px; display: inline-block; }
+.mf-mix-fz { display: flex; align-items: stretch; gap: 5px; height: 150px; }
+.mf-mix-fz input[type="range"] { writing-mode: vertical-lr; direction: rtl; width: 28px; height: 100%; accent-color: #E8C547; margin: 0; }
+.mf-mix-led { position: relative; width: 6px; border-radius: 3px; background: #14101A; overflow: hidden; }
+.mf-mix-led i { position: absolute; left: 0; right: 0; bottom: 0; height: 0; border-radius: 3px; background: linear-gradient(to top, #2FA36B 0%, #2FA36B 65%, #E8C547 85%, #E5484D 100%); background-size: 100% 150px; background-position: bottom; }
+.mf-mix-led i.heiss { box-shadow: 0 0 6px #E5484D; }
+.mf-mix-db { font: 600 11.5px ui-monospace, Consolas, monospace; color: #E8C547; min-height: 1.2em; }
+@media (max-width: 460px) { .mf-mix { gap: 5px; padding: 10px 6px; } .mf-mix-fz { height: 128px; } .mf-mix-name { font-size: 11px; } }

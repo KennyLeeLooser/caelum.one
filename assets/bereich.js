@@ -76,8 +76,17 @@
         var h = location.hash.slice(1), z = h && document.getElementById(decodeURIComponent(h));
         if (z && s.contains(z)) setTimeout(function () { z.scrollIntoView({ block: 'start' }); }, 50);
       };
-      if (window.CaelumModul && window.CaelumModul[m]) los();
-      else document.addEventListener('caelum-modul', function h(e) { if (e.detail === m) { document.removeEventListener('caelum-modul', h); los(); } });
+      // 24.11.2026 Leistung (Lighthouse TBT): ein Modul wird erst gebaut, wenn man in seine Nähe scrollt; mit Sprungmarke sofort
+      var nah = !('IntersectionObserver' in window) || !!location.hash, bereit = false;
+      var versuch = function () { if (nah && bereit) { s.style.minHeight = ''; los(); } };
+      if (!nah) {
+        s.style.minHeight = '60vh';   // Platzhalter, damit die Module untereinander liegen und nicht alle zugleich „nah“ sind
+        var io = new IntersectionObserver(function (e) { if (e.some(function (x) { return x.isIntersecting; })) { io.disconnect(); nah = true; versuch(); } }, { rootMargin: '700px 0px' });
+        io.observe(s);
+        window.addEventListener('hashchange', function () { io.disconnect(); nah = true; versuch(); }, { once: true });
+      }
+      if (window.CaelumModul && window.CaelumModul[m]) { bereit = true; versuch(); }
+      else document.addEventListener('caelum-modul', function h(e) { if (e.detail === m) { document.removeEventListener('caelum-modul', h); bereit = true; versuch(); } });
     });
 
     if (b.wie && b.wie.length) {
