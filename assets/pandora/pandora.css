@@ -95,3 +95,48 @@ body.pandora main.wrap { max-width: 1040px; }
   .pd-bild[data-s="4"] .pd-c use, .pd-bild[data-s="4"] .pd-d use { fill: var(--accent); }
   .pd-schritte li { transition: none; }
 }
+
+/* --- P3 Schaubild „Was Pandora ist“: Rahmen in der Mitte, vier Köpfe der Hydra in den Ecken (schaubild.js) ------------- */
+.pd-was { margin: 0 0 48px; }
+.pd-was h2 { font-size: 22px; margin: 0 0 8px; }
+.pd-lead { color: var(--text-soft); margin: 0 0 20px; max-width: 68ch; }
+.pd-was-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.pd-karte { margin: 0; background: var(--bg-deep); border: 1px solid var(--line); border-radius: 18px; padding: 5%; }
+.pd-karte svg { display: block; width: 100%; height: auto; overflow: visible; }
+.pd-karte text { text-anchor: middle; font-size: 14px; fill: var(--text); }
+.pd-karte text.sub { font-size: 11px; fill: var(--muted); }
+.pd-adern line { stroke: var(--line); stroke-width: 2; }
+.pd-fluesse line { stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 6 10; animation: pd-fluss 1.6s linear infinite; }
+.pd-fluesse line.weg, .pd-adern line.weg { opacity: .15; animation: none; transition: opacity .6s; }
+.pd-mitte rect { fill: none; stroke: var(--accent); stroke-width: 6; }
+.pd-was.fehlt .pd-mitte rect { animation: pd-halten 1.6s ease-in-out infinite; }
+.pd-kopf { cursor: pointer; transition: opacity .6s; }
+.pd-kopf rect { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; transition: stroke .4s; }
+.pd-kopf.an rect { stroke: var(--accent); }
+.pd-kopf.weg { opacity: .3; }
+.pd-kopf.weg rect { stroke-dasharray: 5 5; }
+@keyframes pd-fluss { to { stroke-dashoffset: -16; } }
+@keyframes pd-halten { 50% { filter: drop-shadow(0 0 10px rgba(217, 119, 87, .7)); } }
+
+.pd-koepfe { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pd-koepfe li { border-left: 2px solid var(--line); padding: 4px 0 4px 14px; color: var(--text-soft); transition: border-color .4s; }
+.pd-koepfe li button { all: unset; cursor: pointer; display: block; width: 100%; border-radius: 6px; }
+.pd-koepfe li button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.pd-koepfe b { display: block; color: var(--text); }
+.pd-koepfe span, .pd-koepfe em { display: block; font-style: normal; }
+.pd-koepfe em { color: var(--muted); margin-top: 4px; }
+/* mit Skript: nur der gewählte Kopf zeigt seinen Text, die Folge des Wegnehmens nur, wenn er fehlt */
+.pd-was.lebt .pd-koepfe li:not(.an) span, .pd-was.lebt .pd-koepfe li:not(.weg) em { display: none; }
+.pd-was.lebt .pd-koepfe li.an { border-color: var(--accent); }
+.pd-was.lebt .pd-koepfe li.weg b { text-decoration: line-through; color: var(--muted); }
+.pd-was-lage { min-height: 1.5em; margin: 0 0 12px; color: var(--text); }
+.pd-regel { margin: 20px 0 0; color: var(--text-soft); }
+.pd-regel b { color: var(--accent); font-weight: 600; }
+
+@media (max-width: 760px) {
+  .pd-was-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .pd-karte { max-width: 420px; width: 100%; margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd-fluesse line, .pd-was.fehlt .pd-mitte rect { animation: none; }
+}

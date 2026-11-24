@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
 <link rel="stylesheet" href="/assets/recht.css">
 <link rel="stylesheet" href="/assets/developer.css">
-<link rel="stylesheet" href="/assets/pandora/pandora.css?v=3">
+<link rel="stylesheet" href="/assets/pandora/pandora.css?v=4">
 </head>
 <body class="dev pandora">
 <!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. Bereich Pandora (Strang Pandora, WEBSEITE-STRANG-PANDORA.md): öffentlich, ohne Login.
@@ -74,7 +74,45 @@
     </div>
   </section>
 
-  <p class="pd-bald">Bald hier: wie Pandora aufgebaut ist und die 7 Schritte, mit denen alles nach einem Verlust zurückkommt.</p>
+  <section class="pd-was" aria-labelledby="pd-was-titel">
+    <h2 id="pd-was-titel">Was Pandora ist</h2>
+    <p class="pd-lead">Pandora hält deine Arbeit an mehreren Orten. Jeder Ort ist ein Kopf der Hydra: Fällt einer weg, tragen die anderen weiter, und Pandora holt ihn zurück.</p>
+    <div class="pd-was-grid">
+      <figure class="pd-karte" aria-hidden="true">
+        <svg viewBox="0 0 440 400" focusable="false">
+          <g class="pd-adern">
+            <line data-k="geraete" x1="75" y1="47" x2="155" y2="135"/><line data-k="stick" x1="365" y1="47" x2="285" y2="135"/>
+            <line data-k="cloud" x1="75" y1="353" x2="155" y2="265"/><line data-k="archiv" x1="365" y1="353" x2="285" y2="265"/>
+          </g>
+          <g class="pd-fluesse">
+            <line data-k="geraete" x1="75" y1="47" x2="155" y2="135"/><line data-k="stick" x1="365" y1="47" x2="285" y2="135"/>
+            <line data-k="cloud" x1="75" y1="353" x2="155" y2="265"/><line data-k="archiv" x1="365" y1="353" x2="285" y2="265"/>
+          </g>
+          <g class="pd-mitte">
+            <rect x="155" y="135" width="130" height="130" rx="2"/>
+            <text x="220" y="197">Pandora</text><text class="sub" x="220" y="216">der Rahmen</text>
+          </g>
+          <g class="pd-kopf" data-k="geraete"><rect x="0" y="20" width="150" height="54" rx="10"/><text x="75" y="43">Deine Geräte</text><text class="sub" x="75" y="60">hier arbeitest du</text></g>
+          <g class="pd-kopf" data-k="stick"><rect x="290" y="20" width="150" height="54" rx="10"/><text x="365" y="43">Tresor-Stick</text><text class="sub" x="365" y="60">USB, meist offline</text></g>
+          <g class="pd-kopf" data-k="cloud"><rect x="0" y="326" width="150" height="54" rx="10"/><text x="75" y="349">Ausser Haus</text><text class="sub" x="75" y="366">verschlüsselt</text></g>
+          <g class="pd-kopf" data-k="archiv"><rect x="290" y="326" width="150" height="54" rx="10"/><text x="365" y="349">Archiv</text><text class="sub" x="365" y="366">frühere Stände</text></g>
+        </svg>
+      </figure>
+      <div class="pd-was-text">
+        <ul class="pd-koepfe">
+          <li data-k="geraete"><button type="button"><b>Deine Geräte</b><span>Hier arbeitest du. Jede Änderung geht von hier in die anderen Köpfe.</span><em>Ist ein Gerät weg, holt ein neues alles aus den anderen Köpfen zurück.</em></button></li>
+          <li data-k="stick"><button type="button"><b>Tresor-Stick</b><span>Ein USB-Stick, der meist ausgesteckt liegt. Offline ist er aus dem Netz nicht erreichbar.</span><em>Ist der Stick weg, sind die Kopien im Netz noch da. Ein neuer Stick wird daraus befüllt.</em></button></li>
+          <li data-k="cloud"><button type="button"><b>Ausser Haus</b><span>Eine Kopie an einem anderen Ort. Sie wird verschlüsselt, bevor sie dein Gerät verlässt.</span><em>Brennt es zu Hause, liegt hier noch alles. Fällt dieser Ort aus, legt Pandora ihn neu an.</em></button></li>
+          <li data-k="archiv"><button type="button"><b>Archiv</b><span>Frühere Stände bleiben erhalten. So kommst du auch zu gestern zurück.</span><em>Der aktuelle Stand liegt in den anderen Köpfen. Das Archiv wächst ab dann neu.</em></button></li>
+        </ul>
+        <p class="pd-was-lage" aria-live="polite"></p>
+        <button class="pd-nochmal pd-weg" type="button" hidden>Diesen Kopf wegnehmen</button>
+      </div>
+    </div>
+    <p class="pd-regel"><b>Die Regel der Hydra:</b> Was dir wichtig ist, liegt mindestens dreifach, an mindestens zwei Orten.</p>
+  </section>
+
+  <p class="pd-bald">Bald hier: die 7 Schritte, mit denen alles nach einem Verlust oder einer Bedrohung zurückkommt.</p>
 </main>
 
 <footer>
@@ -84,6 +122,7 @@
   </div>
 </footer>
 <script src="/assets/pandora/hauptbild.js?v=3" defer></script>
+<script src="/assets/pandora/schaubild.js?v=1" defer></script>
 <script src="/assets/sprache.js?v=9" defer></script>
 </body>
 </html>
