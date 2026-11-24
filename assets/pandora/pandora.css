@@ -186,7 +186,7 @@ body.pandora main.wrap { max-width: 1040px; }
 .pd-not-schritte b i { font-style: normal; color: var(--accent); font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-weight: 400; }
 .nf-satz, .pd-not-schritte em { display: block; font-style: normal; margin-top: 2px; }
 .pd-not-schritte em { color: var(--muted); }
-.nf-bd::before { content: "Bei Bedrohung: "; color: var(--accent); }
+.nf-wenn { font-style: normal; color: var(--accent); }
 /* Mit Skript: Liste kurz (nur Titel), der Text des aktuellen Schritts steht darunter in .pd-not-jetzt */
 .pd-not.lebt .nf-satz, .pd-not.lebt .pd-not-schritte em { display: none; }
 .pd-not.lebt .pd-not-schritte li { color: var(--faint); }

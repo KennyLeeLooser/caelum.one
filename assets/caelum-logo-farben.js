@@ -185,8 +185,11 @@
     };
     alle(false);
     el.setAttribute('data-spektrum', HARMONIEN[spek.art][0]);
-    el.addEventListener('click', weiter);
+    // Ein Link im Signet (Pandora-Tor: Rahmen → /pandora/) führt, statt das Spektrum zu wechseln
+    function imLink(e) { return e.target && e.target.closest && e.target.closest('a'); }
+    el.addEventListener('click', function (e) { if (!imLink(e)) weiter(); });
     el.addEventListener('keydown', function (e) {
+      if (imLink(e)) return;
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); weiter(); }
     });
     if (ruhig) { spek.halten = true; return; }

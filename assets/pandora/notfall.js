@@ -14,18 +14,21 @@
   var ruhig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var n = lis.length, s = 0, uhr = 0, TAKT = 6000;
 
-  // Satz des Schritts im gewählten Fall: eigener Satz für Bedrohung, sonst der gemeinsame
+  // Satz des Schritts im gewählten Fall: eigener Satz für Bedrohung, sonst der gemeinsame (ohne das Vorwort „Bei Bedrohung:“)
+  var WAHL = { verlust: '.nf-v', bedrohung: '.nf-bd' }, AKTUELL = ['false', 'step'];
   function satz(li) {
-    var f = sec.getAttribute('data-f');
-    var e = li.querySelector(f === 'bedrohung' ? '.nf-bd' : '.nf-v') || li.querySelector('.nf-satz:not(.nf-v):not(.nf-bd)');
-    return e ? e.textContent : '';
+    var e = li.querySelector(WAHL[sec.getAttribute('data-f')]) || li.querySelector('.nf-satz:not(.nf-v):not(.nf-bd)');
+    if (!e) return '';
+    var x = e.cloneNode(true), w = x.querySelector('.nf-wenn');
+    if (w) w.remove();
+    return x.textContent.trim();
   }
 
   function zeige() {
     lis.forEach(function (li, i) {
       li.classList.toggle('an', i <= s);
       li.classList.toggle('jetzt', i === s);
-      li.querySelector('button').setAttribute('aria-current', i === s ? 'step' : 'false');
+      li.querySelector('button').setAttribute('aria-current', AKTUELL[+(i === s)]);
     });
     bild.setAttribute('data-s', String(s + 1));
     var li = lis[s];
@@ -43,6 +46,9 @@
     spielen.textContent = '■ Anhalten'; spielen.setAttribute('aria-pressed', 'true');
     uhr = setInterval(function () { if (s === n - 1) { halt(); return; } geh(s + 1); }, TAKT);
   }
+
+  // Der Kasten liest die (schon übersetzten) Texte der Liste – nach einem Sprachwechsel neu füllen
+  document.addEventListener('caelum-sprache', zeige);
 
   lis.forEach(function (li, i) { li.querySelector('button').addEventListener('click', function () { halt(); geh(i); }); });
   sec.querySelector('.pd-not-zurueck').addEventListener('click', function () { halt(); geh(s - 1); });

@@ -14,6 +14,14 @@
   var gewaehlt = 'geraete', fehlt = '';
 
   function name(k) { var li = sec.querySelector('.pd-koepfe li[data-k="' + k + '"] b'); return li ? li.textContent : k; }
+  // Lage-Satz über das Wörterbuch (Schlüssel = deutscher Satz mit {name}); nach einem Sprachwechsel neu setzen
+  var letzte = null;
+  function meld(de, k) {
+    letzte = [de, k];
+    var w = { name: name(k) };
+    lage.textContent = window.CaelumSprache ? window.CaelumSprache.t(de, w) : de.replace('{name}', w.name);
+  }
+  document.addEventListener('caelum-sprache', function () { if (letzte) meld(letzte[0], letzte[1]); });
 
   function zeige() {
     lis.forEach(function (li) {
@@ -45,10 +53,10 @@
   weg.addEventListener('click', function () {
     if (fehlt === gewaehlt) {
       fehlt = '';
-      lage.textContent = name(gewaehlt) + ' ist zurück. Pandora hat ihn aus den anderen Köpfen neu befüllt. Wieder vier.';
+      meld('Der Kopf „{name}“ ist zurück. Pandora hat ihn aus den anderen Köpfen neu befüllt. Wieder vier.', gewaehlt);
     } else {
       fehlt = gewaehlt;
-      lage.textContent = name(fehlt) + ' ist weg. Die anderen drei Köpfe tragen weiter: deine Arbeit ist noch da.';
+      meld('Der Kopf „{name}“ ist weg. Die anderen drei Köpfe tragen weiter: deine Arbeit ist noch da.', fehlt);
     }
     zeige();
   });

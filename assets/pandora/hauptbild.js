@@ -16,7 +16,19 @@
   var uhr = 0;
   var ruhig = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  var stufe = 0;
+  // Handy: nur Nummern-Knöpfe, darunter Name + Satz des aktuellen Schritts (am Desktop ausgeblendet).
+  // Liest die (schon übersetzten) Texte der Liste – nach einem Sprachwechsel neu füllen.
+  function fuelle() {
+    var li = schritte[Math.max(stufe, 1) - 1];
+    if (!jetzt || !li) return;
+    jetzt.querySelector('b').textContent = li.querySelector('b span').textContent.replace(/^\s*·\s*/, '');
+    jetzt.querySelector('span').textContent = li.querySelector('.pd-satz').textContent;
+  }
+  document.addEventListener('caelum-sprache', fuelle);
+
   function zeige(n) {
+    stufe = n;
     bild.removeAttribute('data-s');
     void bild.getBoundingClientRect();   // gleiche Stufe nochmal: Animation neu starten
     bild.setAttribute('data-s', String(n));
@@ -24,14 +36,9 @@
       li.classList.toggle('an', i < n);
       li.classList.toggle('jetzt', i === n - 1);
       var b = li.querySelector('button');
-      if (b) b.setAttribute('aria-current', i === n - 1 ? 'step' : 'false');
+      if (b) b.setAttribute('aria-current', ['false', 'step'][+(i === n - 1)]);
     });
-    // Handy: nur Nummern-Knöpfe, darunter Name + Satz des aktuellen Schritts (am Desktop ausgeblendet)
-    var li = schritte[Math.max(n, 1) - 1];
-    if (jetzt && li) {
-      jetzt.querySelector('b').textContent = li.querySelector('b span').textContent.replace(/^\s*·\s*/, '');
-      jetzt.querySelector('span').textContent = li.querySelector('.pd-satz').textContent;
-    }
+    fuelle();
   }
 
   function ab(n) {   // Schritt n zeigen und von dort weiterlaufen

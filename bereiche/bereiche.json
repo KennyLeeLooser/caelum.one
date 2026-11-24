@@ -9,6 +9,15 @@
       "eigeneSeite": true
     },
     {
+      "id": "pandora",
+      "titel": "Pandora",
+      "info": "Deine Arbeit bleibt, auch wenn ein Gerät weg ist",
+      "farbe": "#D97757",
+      "eigeneSeite": true,
+      "_hinweis": "Öffentlich, ohne Login. Seite von Hand gebaut (Strang Pandora), keine Hülle, kein Mond-Segment. skripte nur für fehlend.mjs.",
+      "skripte": ["/assets/pandora/hauptbild.js", "/assets/pandora/schaubild.js", "/assets/pandora/notfall.js"]
+    },
+    {
       "id": "webdesign",
       "titel": "Webdesign",
       "info": "Webseiten und Web-Module",
