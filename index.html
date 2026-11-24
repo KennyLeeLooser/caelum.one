@@ -143,6 +143,7 @@
   .card code { font-size: 12px; word-break: break-all; }
   .card .links { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
   .card .links a { font-size: 14px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; color: var(--text-soft); }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .card .links a:hover { text-decoration: none; border-color: var(--accent); color: var(--text); }
   .dl-file { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; font-size: 14px; }
   .dl-file .size { color: var(--muted); margin-left: 6px; }
@@ -459,7 +460,7 @@
               <li>Regeln der Golden Base, versiegelte Hauptmatrix</li>
               <li>Brücken in Unity und Blender, Backups, Spiel-Builds</li>
             </ul>
-            <div class="links"><a href="#kontakt">Auf Anfrage</a><a href="#pandora">Aufbau</a><a href="/produkte/pandora/">Mehr</a></div>
+            <div class="links"><a href="#kontakt">Auf Anfrage</a><a href="#pandora">Aufbau</a><a href="/produkte/pandora/">Mehr<span class="vh"> · Pandora</span></a></div>
           </article>
           <article class="card" id="p-goose" style="border-top:3px solid var(--c-goose)">
             <div class="tag"><i style="background:var(--c-goose)"></i>Freeware</div>
@@ -470,7 +471,7 @@
               <li>Hinweis bei fertigen Aufgaben und vollem Kontext</li>
               <li>Plugin für Claude Code und Codex</li>
             </ul>
-            <div class="links"><a href="#" data-gans="oeffnen">Hier öffnen</a><a href="#downloads">Download</a><a href="https://github.com/KennyLeeLooser/good-goose-plugin">GitHub</a><a href="/produkte/goose/">Mehr</a></div>
+            <div class="links"><a href="#" data-gans="oeffnen">Hier öffnen</a><a href="#downloads">Download</a><a href="https://github.com/KennyLeeLooser/good-goose-plugin">GitHub</a><a href="/produkte/goose/">Mehr<span class="vh"> · Good Goose</span></a></div>
           </article>
         </div>
         <article class="card" id="p-vision" style="border-top:3px solid var(--c-vision)">
@@ -482,7 +483,7 @@
             <li>Aufbereitung wie ein Flachbettscanner</li>
             <li>Schnittstelle für die anderen Caelum-Programme</li>
           </ul>
-          <div class="links"><a href="#downloads">Android · bald</a><a href="#updates">Updates</a><a href="/produkte/vision/">Mehr</a></div>
+          <div class="links"><a href="#downloads">Android · bald</a><a href="#updates">Updates</a><a href="/produkte/vision/">Mehr<span class="vh"> · Caelum Vision</span></a></div>
         </article>
         <article class="card" id="p-cut" style="border-top:3px solid var(--c-cut)">
           <div class="tag"><i style="background:var(--c-cut)"></i>In Entwicklung</div>
@@ -493,7 +494,7 @@
             <li>Zielgrösse in MB, hochkant oder quer, Einpassen oder Füllen</li>
             <li>Editor mit Spuren, Übergängen, Musik und Titeln</li>
           </ul>
-          <div class="links"><a href="#updates">Updates</a><a href="/produkte/cut/">Mehr</a></div>
+          <div class="links"><a href="#updates">Updates</a><a href="/produkte/cut/">Mehr<span class="vh"> · Caelum Cut</span></a></div>
         </article>
         <article class="card" id="p-viewer" style="border-top:3px solid var(--c-viewer)">
           <div class="tag"><i style="background:var(--c-viewer)"></i>Freeware</div>
@@ -505,7 +506,7 @@
             <li>360°-Drehung und Kamerafahrten ohne Abschneiden</li>
           </ul>
           <p class="small">Ohne Installation: in ChatGPT oder claude.ai als Connector <code>https://api.caelum.one/viewer/mcp</code> hinzufügen (keine Anmeldung).</p>
-          <div class="links"><a href="#downloads">Download</a><a href="https://github.com/KennyLeeLooser/caelum-viewer-plugin">GitHub</a><a href="https://api.caelum.one/viewer/mcp">Server</a><a href="/produkte/viewer/">Mehr</a></div>
+          <div class="links"><a href="#downloads">Download</a><a href="https://github.com/KennyLeeLooser/caelum-viewer-plugin">GitHub</a><a href="https://api.caelum.one/viewer/mcp">Server</a><a href="/produkte/viewer/">Mehr<span class="vh"> · Caelum Viewer</span></a></div>
         </article>
         <article class="card" id="p-gravur" style="border-top:3px solid var(--c-gravur)">
           <div class="tag"><i style="background:var(--c-gravur)"></i>Freeware · Datenpunkt engineering AG</div>
@@ -517,7 +518,7 @@
             <li>Bestellformular und Montageverzeichnis</li>
           </ul>
           <p class="small">Freeware der Datenpunkt engineering AG, erstellt von Caelum GmbH.</p>
-          <div class="links"><a href="#portale">Kundenportal</a><a href="#updates">Updates</a><a href="/produkte/gravur/">Mehr</a></div>
+          <div class="links"><a href="#portale">Kundenportal</a><a href="#updates">Updates</a><a href="/produkte/gravur/">Mehr<span class="vh"> · Caelum Gravur</span></a></div>
         </article>
         <article class="card" id="p-qr" style="border-top:3px solid var(--c-qr)">
           <div class="tag"><i style="background:var(--c-qr)"></i>In Entwicklung</div>
@@ -528,7 +529,7 @@
             <li>Animierter Wechsel – Augen und Logo bleiben stehen</li>
             <li>Kern für alle QR-Codes der Caelum-Programme</li>
           </ul>
-          <div class="links"><a href="#updates">Updates</a><a href="/produkte/qr/">Mehr</a></div>
+          <div class="links"><a href="#updates">Updates</a><a href="/produkte/qr/">Mehr<span class="vh"> · Caelum QR</span></a></div>
         </article>
         <article class="card" id="p-replay" style="border-top:3px solid var(--c-replay)">
           <div class="tag"><i style="background:var(--c-replay)"></i>In Entwicklung</div>
