@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
 <link rel="stylesheet" href="/assets/recht.css">
 <link rel="stylesheet" href="/assets/developer.css">
-<link rel="stylesheet" href="/assets/pandora/pandora.css?v=4">
+<link rel="stylesheet" href="/assets/pandora/pandora.css?v=5">
 </head>
 <body class="dev pandora">
 <!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. Bereich Pandora (Strang Pandora, WEBSEITE-STRANG-PANDORA.md): öffentlich, ohne Login.
@@ -112,7 +112,97 @@
     <p class="pd-regel"><b>Die Regel der Hydra:</b> Was dir wichtig ist, liegt mindestens dreifach, an mindestens zwei Orten.</p>
   </section>
 
-  <p class="pd-bald">Bald hier: die 7 Schritte, mit denen alles nach einem Verlust oder einer Bedrohung zurückkommt.</p>
+  <section class="pd-not" aria-labelledby="pd-not-titel" data-f="verlust">
+    <h2 id="pd-not-titel">Die 7 Schritte im Notfall</h2>
+    <p class="pd-lead">Ein Gerät ist weg: gestohlen, verbrannt, kaputt, oder es wurde dir abgenommen. So kommt alles zurück, Schritt für Schritt. Der Rahmen hält dabei die ganze Zeit.</p>
+    <div class="pd-fall" role="group" aria-label="Welcher Fall?" hidden>
+      <button type="button" data-f="verlust" aria-pressed="true">Verlust</button>
+      <button type="button" data-f="bedrohung" aria-pressed="false">Bedrohung</button>
+    </div>
+    <div class="pd-not-grid">
+      <figure class="pd-not-bild" aria-hidden="true">
+        <svg viewBox="0 0 400 300" focusable="false">
+          <rect class="nf-rahmen" x="12" y="12" width="376" height="276" rx="4"/>
+          <!-- 1 aussperren: altes Gerät, Verbindung gekappt, Schloss -->
+          <g class="nf-b nf-b1">
+            <g class="nf-alt"><rect x="70" y="95" width="120" height="80" rx="6"/><path d="M55 185 H205"/></g>
+            <path class="nf-kappe" d="M200 135 H250 M262 135 H330"/><path class="nf-kreuz" d="M243 122 l26 26 M269 122 l-26 26"/>
+            <g class="nf-schloss"><rect x="300" y="128" width="44" height="36" rx="5"/><path d="M309 128 v-10 a13 13 0 0 1 26 0 v10"/></g>
+          </g>
+          <!-- 2 neues Gerät + ruhiges Netz -->
+          <g class="nf-b nf-b2">
+            <g class="nf-neu"><rect x="140" y="110" width="120" height="80" rx="6"/><path d="M125 200 H275"/></g>
+            <path class="nf-netz" d="M172 85 a40 40 0 0 1 56 0 M182 95 a26 26 0 0 1 36 0"/><circle class="nf-punkt" cx="200" cy="104" r="4"/>
+          </g>
+          <!-- 3 Start-Up: die Ecken des Logos setzen sich ins neue Gerät -->
+          <g class="nf-b nf-b3">
+            <g class="nf-neu"><rect x="140" y="95" width="120" height="80" rx="6"/><path d="M125 185 H275"/></g>
+            <path class="nf-ecke" d="M150 118 v-13 h13 M250 118 v-13 h-13 M150 152 v13 h13 M250 152 v13 h-13"/>
+            <rect class="nf-balken" x="160" y="215" width="80" height="6" rx="3"/>
+          </g>
+          <!-- 4 zurückholen: drei Köpfe fliessen ins neue Gerät -->
+          <g class="nf-b nf-b4">
+            <g class="nf-neu"><rect x="150" y="190" width="100" height="66" rx="6"/></g>
+            <g class="nf-kopf"><rect x="34" y="40" width="92" height="40" rx="8"/><rect x="154" y="40" width="92" height="40" rx="8"/><rect x="274" y="40" width="92" height="40" rx="8"/></g>
+            <path class="nf-fluss" d="M80 80 L180 190 M200 80 V190 M320 80 L220 190"/>
+          </g>
+          <!-- 5 neuer Tresor-Stick, der alte gilt nicht mehr -->
+          <g class="nf-b nf-b5">
+            <g class="nf-alt"><rect x="70" y="120" width="90" height="40" rx="6"/><rect x="160" y="130" width="20" height="20"/></g>
+            <path class="nf-kreuz" d="M100 125 l30 30 M130 125 l-30 30"/>
+            <g class="nf-neu"><rect x="220" y="120" width="90" height="40" rx="6"/><rect x="310" y="130" width="20" height="20"/></g>
+            <rect class="nf-fuellung" x="226" y="126" width="78" height="28" rx="3"/>
+          </g>
+          <!-- 6 prüfen: zwei Stände nebeneinander, Häkchen -->
+          <g class="nf-b nf-b6">
+            <g class="nf-kopf"><rect x="70" y="80" width="100" height="130" rx="6"/><rect x="230" y="80" width="100" height="130" rx="6"/></g>
+            <path class="nf-zeilen" d="M86 106 h68 M86 130 h68 M86 154 h68 M86 178 h48 M246 106 h68 M246 130 h68 M246 154 h68 M246 178 h48"/>
+            <path class="nf-haken" d="M178 148 l14 14 l30 -34"/>
+          </g>
+          <!-- 7 bereit: neues Gerät im ganzen Rahmen, alle Köpfe -->
+          <g class="nf-b nf-b7">
+            <g class="nf-neu"><rect x="140" y="110" width="120" height="80" rx="6"/><path d="M125 200 H275"/></g>
+            <g class="nf-kopf"><circle cx="60" cy="60" r="12"/><circle cx="340" cy="60" r="12"/><circle cx="60" cy="240" r="12"/><circle cx="340" cy="240" r="12"/></g>
+          </g>
+        </svg>
+      </figure>
+      <div class="pd-not-text">
+        <ol class="pd-not-schritte">
+          <li><button type="button"><b><i>1</i><span> · Aussperren</span></b>
+            <span class="nf-satz nf-v">Das verlorene Gerät verliert sofort jeden Zugang. Was darauf liegt, ist verschlüsselt und für Fremde wertlos.</span>
+            <span class="nf-satz nf-bd">Du zuerst: Gib her, was verlangt wird. Das Gerät zeigt nur, was gerade offen ist. Sobald du in Sicherheit bist, sperrst du es von einem anderen Gerät aus.</span>
+            <em>Pandora: Alle Schlüssel des alten Geräts werden ungültig.</em></button></li>
+          <li><button type="button"><b><i>2</i><span> · Neues Gerät, ruhiges Netz</span></b>
+            <span class="nf-satz nf-v">Ein neues Gerät und eine stabile Verbindung. Mehr brauchst du nicht, um anzufangen.</span>
+            <span class="nf-satz nf-bd">Erst an einem sicheren Ort und mit einem Gerät, das nie in fremden Händen war.</span>
+            <em>Pandora wartet. Deine Arbeit liegt sicher in den anderen Köpfen.</em></button></li>
+          <li><button type="button"><b><i>3</i><span> · Start-Up</span></b>
+            <span class="nf-satz">Ein einziges Programm richtet das neue Gerät ein. Du bestätigst nur, was es tun darf.</span>
+            <em>Start-Up legt die Grundlage: Programme, Ordner, Verbindungen.</em></button></li>
+          <li><button type="button"><b><i>4</i><span> · Zurückholen</span></b>
+            <span class="nf-satz">Deine Arbeit kommt aus den anderen Köpfen zurück: der neueste Stand, und wenn du willst, auch frühere.</span>
+            <em>Pandora holt jede Datei und prüft, ob sie unverändert ist.</em></button></li>
+          <li><button type="button"><b><i>5</i><span> · Neuer Tresor-Stick</span></b>
+            <span class="nf-satz nf-v">Ein neuer Stick ersetzt den alten. Der alte gilt ab jetzt nicht mehr, auch wenn er wieder auftaucht.</span>
+            <span class="nf-satz nf-bd">Wurde der Stick mitgenommen, ist er ab jetzt wertlos. Ein neuer Stick wird aus den anderen Köpfen befüllt.</span>
+            <em>Pandora befüllt den neuen Stick und vergisst den alten.</em></button></li>
+          <li><button type="button"><b><i>6</i><span> · Prüfen, neuer Master</span></b>
+            <span class="nf-satz">Stimmt alles? Ein Vergleich zeigt es. Erst dann wird das neue Gerät zum Haupt, mit neuen Schlüsseln.</span>
+            <em>Pandora vergleicht, meldet Lücken und macht eine Probe, bevor es weitergeht.</em></button></li>
+          <li><button type="button"><b><i>7</i><span> · Bereit</span></b>
+            <span class="nf-satz">Du arbeitest weiter, wo du aufgehört hast. Die Hydra hat wieder alle Köpfe.</span>
+            <em>Der Rahmen schliesst sich. Pandora sichert ab jetzt wieder wie gewohnt.</em></button></li>
+        </ol>
+        <p class="pd-not-jetzt" aria-live="polite"></p>
+        <div class="pd-not-knoepfe" hidden>
+          <button class="pd-nochmal pd-not-zurueck" type="button" aria-label="Schritt zurück">◀</button>
+          <button class="pd-nochmal pd-not-spielen" type="button">▶ Abspielen</button>
+          <button class="pd-nochmal pd-not-weiter" type="button" aria-label="Nächster Schritt">▶▶</button>
+        </div>
+      </div>
+    </div>
+    <p class="pd-regel"><b>Darum zählt jeder Kopf:</b> Kein Schritt braucht das verlorene Gerät. Alles kommt von den anderen.</p>
+  </section>
 </main>
 
 <footer>
@@ -123,6 +213,7 @@
 </footer>
 <script src="/assets/pandora/hauptbild.js?v=3" defer></script>
 <script src="/assets/pandora/schaubild.js?v=1" defer></script>
+<script src="/assets/pandora/notfall.js?v=1" defer></script>
 <script src="/assets/sprache.js?v=9" defer></script>
 </body>
 </html>

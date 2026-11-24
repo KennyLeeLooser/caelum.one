@@ -21,7 +21,6 @@ body.pandora main.wrap { max-width: 1040px; }
 .pd-nochmal:hover { color: var(--text); border-color: var(--accent); }
 .pd-nochmal:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-.pd-bald { color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; margin-bottom: 48px; }
 
 /* --- Schichten ---------------------------------------------------------------------------------------------------- */
 /* Jede Schicht erscheint an ihrem Platz aus dem Nichts: eine Linie zeichnet die Umrisse, dann füllt sich die Form.
@@ -139,4 +138,80 @@ body.pandora main.wrap { max-width: 1040px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pd-fluesse line, .pd-was.fehlt .pd-mitte rect { animation: none; }
+}
+
+/* --- P4 „Die 7 Schritte im Notfall“: Schritt-Spieler, Umschalter Verlust | Bedrohung (notfall.js) ------------------------ */
+.pd-not { margin: 0 0 56px; border-top: 1px solid var(--line); padding-top: 32px; }
+.pd-not h2 { font-size: 22px; margin: 0 0 8px; }
+.pd-fall { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 20px; }
+.pd-fall[hidden] { display: none; }
+.pd-fall button { all: unset; cursor: pointer; padding: 8px 18px; font-size: 15px; color: var(--text-soft); }
+.pd-fall button[aria-pressed="true"] { background: var(--bg-deep); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+.pd-fall button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.pd-not-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.pd-not-bild { margin: 0; background: var(--bg-deep); border: 1px solid var(--line); border-radius: 18px; padding: 5%; touch-action: pan-y; }
+.pd-not-bild svg { display: block; width: 100%; height: auto; }
+.pd-not-bild svg * { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.nf-rahmen { stroke: var(--accent); stroke-width: 5; }
+.nf-alt rect, .nf-alt path { stroke: var(--muted); stroke-width: 3; stroke-dasharray: 6 6; }
+.nf-neu rect, .nf-neu path { stroke: var(--text); stroke-width: 3; }
+.nf-kopf rect, .nf-kopf circle { stroke: var(--sky); stroke-width: 3; }
+.nf-kappe, .nf-netz, .nf-zeilen { stroke: var(--text-soft); stroke-width: 3; }
+.nf-kreuz { stroke: var(--accent); stroke-width: 4; }
+.nf-schloss rect, .nf-schloss path { stroke: var(--accent); stroke-width: 3; }
+.pd-not-bild svg .nf-punkt, .pd-not-bild svg .nf-balken, .pd-not-bild svg .nf-fuellung { fill: var(--sky); stroke: none; }
+.nf-ecke { stroke: var(--sky); stroke-width: 5; }
+.nf-fluss { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 6 10; }
+.nf-haken { stroke: var(--accent); stroke-width: 6; }
+/* Ohne Skript: nur das letzte Bild (bereit); mit Skript das Bild des aktuellen Schritts */
+.nf-b { display: none; }
+.pd-not-bild:not([data-s]) .nf-b7 { display: inline; }
+.pd-not-bild[data-s="1"] .nf-b1, .pd-not-bild[data-s="2"] .nf-b2, .pd-not-bild[data-s="3"] .nf-b3, .pd-not-bild[data-s="4"] .nf-b4,
+.pd-not-bild[data-s="5"] .nf-b5, .pd-not-bild[data-s="6"] .nf-b6, .pd-not-bild[data-s="7"] .nf-b7 { display: inline; animation: nf-ein .7s ease both; }
+.pd-not-bild[data-s="4"] .nf-fluss { animation: pd-fluss 1.6s linear infinite; }
+.pd-not-bild[data-s="3"] .nf-balken { transform-box: fill-box; transform-origin: left; animation: nf-laden 4s ease-out both; }
+.pd-not-bild[data-s="5"] .nf-fuellung { transform-box: fill-box; transform-origin: left; animation: nf-laden 4s ease-out .4s both; }
+.pd-not-bild[data-s="6"] .nf-haken { stroke-dasharray: 80; animation: nf-strich 1.2s ease 1s both; }
+.pd-not-bild[data-s="7"] .nf-rahmen { animation: pd-glanz 2.2s ease-in-out .4s both; }
+.pd-not-bild[data-s="1"] .nf-rahmen, .pd-not-bild[data-s="2"] .nf-rahmen { stroke-dasharray: 12 10; }
+@keyframes nf-ein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes nf-laden { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes nf-strich { from { stroke-dashoffset: 80; } to { stroke-dashoffset: 0; } }
+
+.pd-not-schritte { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.pd-not-schritte li { border-left: 2px solid var(--line); padding: 4px 0 4px 14px; color: var(--text-soft); transition: border-color .4s, color .4s; }
+.pd-not-schritte li button { all: unset; cursor: pointer; display: block; width: 100%; border-radius: 6px; }
+.pd-not-schritte li button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.pd-not-schritte b { display: block; color: var(--text); font-weight: 600; }
+.pd-not-schritte b i { font-style: normal; color: var(--accent); font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-weight: 400; }
+.nf-satz, .pd-not-schritte em { display: block; font-style: normal; margin-top: 2px; }
+.pd-not-schritte em { color: var(--muted); }
+.nf-bd::before { content: "Bei Bedrohung: "; color: var(--accent); }
+/* Mit Skript: Liste kurz (nur Titel), der Text des aktuellen Schritts steht darunter in .pd-not-jetzt */
+.pd-not.lebt .nf-satz, .pd-not.lebt .pd-not-schritte em { display: none; }
+.pd-not.lebt .pd-not-schritte li { color: var(--faint); }
+.pd-not.lebt .pd-not-schritte li b { color: inherit; font-weight: 400; }
+.pd-not.lebt .pd-not-schritte li.an { color: var(--text-soft); }
+.pd-not.lebt .pd-not-schritte li.jetzt { color: var(--text); border-color: var(--accent); }
+.pd-not-jetzt { display: none; }
+.pd-not.lebt .pd-not-jetzt { display: block; min-height: 7.5em; margin: 0 0 16px; color: var(--text); }
+.pd-not-jetzt b { display: block; color: var(--accent); font-size: 13px; letter-spacing: .04em; font-weight: 400; margin-bottom: 4px;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+.pd-not-jetzt span, .pd-not-jetzt em { display: block; }
+.pd-not-jetzt em { font-style: normal; color: var(--muted); margin-top: 6px; }
+.pd-not[data-f="bedrohung"] .pd-not-bild { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.pd-not-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
+.pd-not-knoepfe[hidden] { display: none; }
+
+@media (max-width: 760px) {
+  .pd-not-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .pd-not-bild { max-width: 420px; width: 100%; margin: 0 auto; }
+  .pd-not.lebt .pd-not-schritte { flex-direction: row; gap: 6px; }
+  .pd-not.lebt .pd-not-schritte li { flex: 1; border: 1px solid var(--line); border-radius: 10px; padding: 0; }
+  .pd-not.lebt .pd-not-schritte li.jetzt { background: var(--bg-deep); }
+  .pd-not.lebt .pd-not-schritte li button { text-align: center; padding: 10px 0; }
+  .pd-not.lebt .pd-not-schritte b span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd-not-bild .nf-b, .pd-not-bild .nf-fluss, .pd-not-bild .nf-balken, .pd-not-bild .nf-fuellung, .pd-not-bild .nf-haken, .pd-not-bild .nf-rahmen { animation: none !important; }
 }
