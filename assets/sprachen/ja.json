@@ -846,5 +846,6 @@
   "Raum · FX": "空間 · FX",
   "Alle aus": "すべてオフ",
   "aus": "オフ",
-  "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "パッドを押さえて上にドラッグ = 強く、下 = 弱く。スマホのセンサーを使うときは、パッドを押さえたままスマホを傾けます。離す = 値はそのまま、ダブルタップ = オフ。フィルター：下 = こもる、上 = 細くなる。Auto Filter、Auto Pan、パンピング、ゲート、エコーはテンポに合わせて動きます。アプリではフィルターのパッドはすべてのアプリにも効き、空間と FX は自分のトラックだけに効きます。"
+  "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "パッドを押さえて上にドラッグ = 強く、下 = 弱く。スマホのセンサーを使うときは、パッドを押さえたままスマホを傾けます。離す = 値はそのまま、ダブルタップ = オフ。フィルター：下 = こもる、上 = 細くなる。Auto Filter、Auto Pan、パンピング、ゲート、エコーはテンポに合わせて動きます。アプリではフィルターのパッドはすべてのアプリにも効き、空間と FX は自分のトラックだけに効きます。",
+  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "四角形を認識しました。ここでログイン：現場コードまたは Google で。"
 }

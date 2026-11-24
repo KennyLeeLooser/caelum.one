@@ -211,6 +211,10 @@
   .signet .pd-tor .tor-licht { fill: var(--c-pandora); opacity: 0; pointer-events: none; transition: opacity .35s ease, filter .35s ease; }
   .signet .pd-tor:hover .tor-licht, .signet .pd-tor:focus-visible .tor-licht { opacity: 1; filter: drop-shadow(0 0 14px rgba(217, 119, 87, .85)); }
   .signet .pd-tor:focus-visible svg { outline: 2px solid var(--c-pandora); outline-offset: 4px; border-radius: 4px; }
+  /* P7 Viereck ziehen = Kundenzugang (assets/pandora/viereck.js): Ziehen auf dem Logo scrollt nicht, erkannt → Rahmen leuchtet */
+  .signet .logo { touch-action: none; }
+  .signet.viereck .pd-tor .tor-licht { opacity: 1; filter: drop-shadow(0 0 18px rgba(217, 119, 87, .9)); }
+  #zugang.viereck-ziel { outline: 2px solid var(--c-pandora); outline-offset: 6px; border-radius: 10px; transition: outline-color .6s; }
   @keyframes pop { 0% { transform: scale(0) rotate(-45deg); } 100% { transform: scale(1) rotate(0); } }
   @keyframes cell { 0% { transform: scale(0); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes sweep { from { --sweep: 0deg; } to { --sweep: 360deg; } }
@@ -684,6 +688,7 @@
 <script src="assets/seite.js?v=1"></script>
 <!-- Web-Module „Im Browser ausprobieren“ (CAELUM-STANDARD.md, Teil B): Liste in apps/apps.json, erzeugt aus den Apps -->
 <script src="assets/caelum-logo-farben.js?v=5" defer></script>
+<script src="assets/pandora/viereck.js?v=2" defer></script>
 <script src="assets/sprache.js?v=9" defer></script>
 <script src="assets/logo-werkstatt.js?v=9" defer></script>
 <script src="assets/gans.js?v=8" defer></script>
