@@ -1053,6 +1053,16 @@
     function winkelZeile(e) {   // „kippen 0.0°  neigen 0.0°  drehen 0.0°“ mit übersetzbaren Wörtern
       return ['kippen', 'neigen', 'drehen'].map(function (w, k) { if (k) e.appendChild(document.createTextNode('  ')); wort(e, w); var v = el('span'); e.appendChild(v); return v; });
     }
+    // Hoch-/Querformat (25.11.2026): folgt dem echten Handy (quer gehalten = quer), der Knopf übersteuert; neue Seiten mit Tastatur hängen
+    // ihren breiten Teil als .mf-breit in die App (siehe motion-fenster.css „Querformat“).
+    var lagek = knopf('Querformat', 'mf-lagek'), querWahl = null, querMq = window.matchMedia ? matchMedia('(orientation: landscape) and (pointer: coarse)') : null;
+    function querSetzen() {
+      var q = querWahl != null ? querWahl : !!(querMq && querMq.matches);
+      handy.classList.toggle('quer', q); lagek.setAttribute('aria-pressed', q ? 'true' : 'false');
+    }
+    lagek.addEventListener('click', function () { querWahl = !handy.classList.contains('quer'); querSetzen(); });
+    if (querMq) { var mqNeu = function () { querWahl = null; querSetzen(); }; if (querMq.addEventListener) querMq.addEventListener('change', mqNeu); else if (querMq.addListener) querMq.addListener(mqNeu); }
+    querSetzen(); buehne.appendChild(lagek);
     var lageZ = el('p', 'mf-lage'), lageW = winkelZeile(lageZ); buehne.appendChild(lageZ);
     var hilfe = el('p', 'mf-hilfe', 'Am PC: Handy ziehen = kippen/neigen · Mausrad auf dem Handy = schwenken · Umschalt+Rad = Höhe · Tasten 1–4 halten Pads');
     buehne.appendChild(hilfe);
@@ -1220,7 +1230,7 @@
 
     function zeigen(r) {
       var a = r.a;
-      handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * 0.5).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
+      handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
       [a.kip, a.nei, a.dre].forEach(function (v, k) { setz(lageW[k], ' ' + v.toFixed(1) + '°'); setz(winkelW[k], f(v, 1)); });
       var tasten = [];
       padK.forEach(function (p, i) {

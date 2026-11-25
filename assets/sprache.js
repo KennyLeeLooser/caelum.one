@@ -127,9 +127,10 @@
 
   var knopf = document.createElement('button'); knopf.type = 'button'; knopf.className = 'sprache-knopf';
   knopf.setAttribute('aria-haspopup', 'dialog'); knopf.setAttribute('aria-expanded', 'false');
-  knopf.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span></span>';
+  knopf.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span></span>';
   // 24.11.2026 Lighthouse: der sichtbare Code (DE) muss im Namen stehen → „DE · Sprache: Deutsch“
   function knopfText() { var code = aktuell === 'de' ? 'DE' : aktuell.toUpperCase().replace('PT-', 'PT·'); knopf.querySelector('span').textContent = code; knopf.setAttribute('aria-label', code + ' · ' + (aktuell === 'de' ? 'Sprache' : (woerter && woerter['Sprache']) || 'Language') + ': ' + eintrag(aktuell)[1]); }
+  // 25.11.2026 CLS: Grundmasse des Knopfs stehen schon im statischen recht.css, das Symbol hat feste 15 px (sonst 300 × 150 bis sprache.css da ist)
   var nav = document.querySelector('header nav'); if (nav) nav.appendChild(knopf);
 
   var wahl = document.createElement('div'); wahl.className = 'sprache-wahl'; wahl.hidden = true;

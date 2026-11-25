@@ -44,6 +44,26 @@
 @media (hover: none) { .mf-buehne .mf-hilfe { display: none; } }
 @media (max-width: 520px) { .mf-handy { width: min(210px, 62%); } }
 
+/* Querformat (25.11.2026, Wunsch Kenny: „quer und hochformat schlau abstimmen, es kommen neue Synths mit Keyboard“) – wie Spalten.java der App:
+   oben Titel | Bänke, Mitte Status | Pads (4 nebeneinander), darunter .mf-breit (z. B. Tastatur, ganze Breite), unten die Knopfleiste.
+   Neue Seiten hängen ihre breiten Teile als .mf-breit ein; hochkant bleibt jede Seite eine Spalte. Ziele ≥ 24 px in beiden Lagen. */
+.mf-handy.quer { width: min(440px, 100%); aspect-ratio: 19.5 / 9; }
+.mf-handy.quer .mf-app { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr); grid-template-rows: auto minmax(0, 1fr) auto auto;
+  column-gap: 8px; row-gap: 6px; padding: 9px 22px 9px 26px; }   /* seitlich Platz für den Rahmen-Ausschnitt */
+.mf-handy.quer .mf-titel { grid-column: 1; grid-row: 1; align-self: center; font-size: 14px; }
+.mf-handy.quer .mf-baenke { grid-column: 2; grid-row: 1; margin: 0; }
+.mf-handy.quer .mf-status { grid-column: 1; grid-row: 2; margin: 0; align-self: start; }
+.mf-handy.quer .mf-gehalten { grid-column: 1; grid-row: 2; align-self: end; }
+.mf-handy.quer .mf-pads { grid-column: 2; grid-row: 2; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: 1fr; }
+.mf-handy.quer .mf-pads b { font-size: 12px; }
+.mf-handy.quer .mf-breit { grid-column: 1 / -1; grid-row: 3; }
+.mf-handy.quer .mf-unten { grid-column: 1 / -1; grid-row: 4; }
+@media (pointer: coarse), (max-width: 560px) { .mf-handy.quer { width: 100%; aspect-ratio: 16 / 9; } }
+@media (max-width: 400px) { .mf-handy.quer .mf-app { padding: 7px 12px 7px 14px; } .mf-handy.quer .mf-status { display: none; } }
+.mf-buehne:has(.mf-handy.quer) { padding-top: 44px; padding-bottom: 20px; }   /* breites Bild braucht beim Kippen mehr Luft */
+.mf .mf-lagek { margin-top: 10px; padding: 6px 14px; min-height: 32px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-soft); font-size: 12.5px; }
+.mf .mf-lagek[aria-pressed="true"] { border-color: var(--mf-purpur); color: var(--mf-purpur-text); }
+
 /* rechts: Daten */
 .mf-daten { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; min-width: 0; }
 .mf-daten h3 { margin: 0 0 8px; font-size: 15px; color: var(--mf-purpur-text); }
@@ -68,7 +88,8 @@
 @media (prefers-reduced-motion: reduce) { .mf-pads button { transition: none; } }
 
 /* Leiste über dem Fenster: Handy-Sensoren · Sequenzer */
-.mf-block button { all: unset; cursor: pointer; box-sizing: border-box; }
+/* 25.11.2026: :where() – sonst löscht diese spätere Regel Polster/Höhe/Hintergrund der Handy-Knöpfe oben (Bank-Knöpfe waren 18 px, target-size) */
+:where(.mf-block) button { all: unset; cursor: pointer; box-sizing: border-box; }
 .mf-block button:focus-visible { outline: 2px solid var(--c-motion, #E8C547); outline-offset: 2px; }
 .mf-leiste { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; }
 .mf-leiste > button, .mf-seq-karte button { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text-soft); font-size: 14px; }

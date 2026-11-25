@@ -122,3 +122,7 @@ footer a { color: var(--muted); }
   p, li, dd, dt, h3 { color: #000 !important; }
   .toc, dl.daten, .box { background: #fff; border-color: #999; }
 }
+/* 25.11.2026 CLS: Sprachknopf (sprache.js) schon vor sprache.css richtig gross – sonst springt am Handy der Kopf und main */
+.sprache-knopf{all:unset;cursor:pointer;color:var(--text-soft);font-size:inherit;display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px}
+.sprache-knopf svg{width:15px;height:15px}
+@media (max-width:640px){.sprache-knopf{padding:4px;border:0;font-size:12px;gap:3px}}
