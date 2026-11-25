@@ -68,6 +68,9 @@
       s.appendChild(g); main.appendChild(s);
     }
 
+    // 25.11.2026 „zusammen“: Module, die gemeinsam gebaut werden (Motion-Fenster steht oben im Motion-Block, Wunsch Kenny)
+    var wecker = {}, zusammen = b.zusammen || [];
+    function weckeMit(m) { if (zusammen.indexOf(m) >= 0) zusammen.forEach(function (n) { if (n !== m && wecker[n]) wecker[n](); }); }
     (b.module || []).forEach(function (m) {   // eigene Module (Schaubilder, Prototypen) aus /assets/*.js, siehe „skripte“
       var s = el('section', 'modul'); s.setAttribute('data-modul', m); main.appendChild(s);
       var los = function () {
@@ -81,9 +84,10 @@
       var versuch = function () { if (nah && bereit) { s.style.minHeight = ''; los(); } };
       if (!nah) {
         s.style.minHeight = '60vh';   // Platzhalter, damit die Module untereinander liegen und nicht alle zugleich „nah“ sind
-        var io = new IntersectionObserver(function (e) { if (e.some(function (x) { return x.isIntersecting; })) { io.disconnect(); nah = true; versuch(); } }, { rootMargin: '700px 0px' });
-        io.observe(s);
-        window.addEventListener('hashchange', function () { io.disconnect(); nah = true; versuch(); }, { once: true });
+        var wach = function () { if (nah) return; io.disconnect(); nah = true; versuch(); weckeMit(m); };
+        var io = new IntersectionObserver(function (e) { if (e.some(function (x) { return x.isIntersecting; })) wach(); }, { rootMargin: '700px 0px' });
+        io.observe(s); wecker[m] = wach;
+        window.addEventListener('hashchange', wach, { once: true });
       }
       if (window.CaelumModul && window.CaelumModul[m]) { bereit = true; versuch(); }
       else document.addEventListener('caelum-modul', function h(e) { if (e.detail === m) { document.removeEventListener('caelum-modul', h); bereit = true; versuch(); } });

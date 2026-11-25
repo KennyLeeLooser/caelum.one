@@ -1010,9 +1010,12 @@
   }
 
   function start(platz) {
-    var block = el('div', 'mf-block'); block.id = 'motion-fenster';
-    block.appendChild(el('h2', null, 'Motion-Fenster: was in Ableton ankommt'));
-    block.appendChild(el('p', 'lead', 'So sieht es am PC aus, wenn das Handy mit Caelum Motion verbunden ist: links das Handy mit der App, rechts die echten Sensorwerte und die MIDI-Regler, die Ableton bekommt. Pad halten und bewegen – nur das gehaltene Pad ändert seinen Wert.'));
+    // 25.11.2026 (Kenny): das Motion-Fenster ist die erste Einstellung – es steht oben im Block „Caelum Motion im Browser“
+    // (nach Titel + Text, vor Synth/Datei/Live-Musik); die Module (Sequenzer, TR 808 …) bleiben hier unten.
+    var oben = el('div', 'mf-block mf-oben'); oben.id = 'motion-fenster';
+    var block = el('div', 'mf-block');
+    oben.appendChild(el('h3', 'mf-ueber', 'Motion-Fenster: was in Ableton ankommt'));
+    oben.appendChild(el('p', 'mf-einleitung','So sieht es am PC aus, wenn das Handy mit Caelum Motion verbunden ist: links das Handy mit der App, rechts die echten Sensorwerte und die MIDI-Regler, die Ableton bekommt. Pad halten und bewegen – nur das gehaltene Pad ändert seinen Wert.'));
 
     // ---------- Leiste: Handy-Sensoren · Sequenzer (fährt aus) ----------
     // Leiste: Handy-Sensoren · Sprung zum Sequenzer (die Module stehen als eigene Karten unter dem Fenster, U1)
@@ -1020,7 +1023,7 @@
     sensGross.setAttribute('aria-pressed', 'false');
     leiste.appendChild(sensGross); leiste.appendChild(seqK);
     var sensInfo = el('span', 'mf-hinweis', 'Am Handy: einschalten und erlauben – dann bewegt das echte Handy alles.'); leiste.appendChild(sensInfo);
-    block.appendChild(leiste);
+    oben.appendChild(leiste);
 
     var fenster = el('div', 'mf');
     // ---------- links: Handy ----------
@@ -1063,6 +1066,51 @@
     lagek.addEventListener('click', function () { querWahl = !handy.classList.contains('quer'); querSetzen(); });
     if (querMq) { var mqNeu = function () { querWahl = null; querSetzen(); }; if (querMq.addEventListener) querMq.addEventListener('change', mqNeu); else if (querMq.addListener) querMq.addListener(mqNeu); }
     querSetzen(); buehne.appendChild(lagek);
+    // Modellwahl (25.11.2026, Kenny: „Pfeile auf der Seite und das Modell im Bild kann gewechselt werden zu einem dickeren Handy
+    // und einer GLB + GLB einfügen“): ‹ › an den Seiten der Bühne. Handy · Handy dick (beides Bild mit App) · 3D-Handy · Eigenes GLB
+    // (3D: assets/motion-modell.js, erst beim Wechsel geladen; die App wird dann flach daneben bedient, das Modell folgt der Lage).
+    var letzteLage = null;
+    function lageJetzt() { if (m3d && modellNr >= 2 && letzteLage) m3d.lage(letzteLage.kip, letzteLage.nei); }
+    var MODELLE = ['Handy', 'Handy dick', '3D-Handy', 'Eigenes GLB'], modellNr = 0, m3d = null, m3dPlatz = null, m3dMod = null, eigenM = null;
+    var zurK = knopf('‹', 'mf-pfeil links'), vorK = knopf('›', 'mf-pfeil rechts'), modName = el('span', 'mf-modellname', MODELLE[0]);
+    zurK.setAttribute('aria-label', 'Modell zurück'); vorK.setAttribute('aria-label', 'Nächstes Modell');
+    zurK.addEventListener('click', function () { modellSetzen(modellNr - 1); }); vorK.addEventListener('click', function () { modellSetzen(modellNr + 1); });
+    buehne.appendChild(zurK); buehne.appendChild(vorK);
+    var glbZeile = el('div', 'mf-glbzeile'), glbK = knopf('GLB einfügen', 'mf-glbk'), glbIn = el('input'), glbInfo = el('span', 'mf-glbinfo', 'Datei bleibt in deinem Browser.');
+    glbIn.type = 'file'; glbIn.accept = '.glb,.gltf,.obj,.stl,.3mf'; glbIn.hidden = true; glbZeile.hidden = true;
+    glbK.addEventListener('click', function () { glbIn.click(); });
+    glbIn.addEventListener('change', function () { if (glbIn.files[0]) glbOeffnen(glbIn.files[0]); glbIn.value = ''; });
+    glbZeile.appendChild(glbK); glbZeile.appendChild(glbIn); glbZeile.appendChild(glbInfo);
+    var modZeile = el('div', 'mf-modellzeile'); modZeile.appendChild(modName); modZeile.appendChild(lagek);
+    buehne.appendChild(modZeile); buehne.appendChild(glbZeile);
+    function dreiLaden() {
+      if (m3dMod) return Promise.resolve(m3dMod);
+      return import('/assets/motion-modell.js?v=1').then(function (mod) {
+        m3d = mod.modellBuehne(m3dPlatz); if (!m3d) m3dPlatz.appendChild(el('p', 'mf-glbinfo', '3D braucht WebGL2.'));
+        m3dMod = mod; return mod;
+      });
+    }
+    function dreiZeigen() {
+      if (!m3dPlatz) { m3dPlatz = el('div', 'mf-3d'); buehne.insertBefore(m3dPlatz, handy); }
+      m3dPlatz.hidden = false;
+      dreiLaden().then(function (mod) { if (!m3d || modellNr < 2) return; m3d.zeigen(modellNr === 3 && eigenM ? eigenM : mod.handy3d(true)); lageJetzt(); })
+        .catch(function () { glbInfo.textContent = '3D lässt sich nicht laden.'; });
+    }
+    function glbOeffnen(f) {
+      if (modellNr !== 3) modellSetzen(3);
+      dreiLaden().then(function () { return m3d ? m3d.datei(f) : null; })
+        .then(function (m) { if (m) { eigenM = m; glbInfo.textContent = f.name; lageJetzt(); } })
+        .catch(function () { glbInfo.textContent = 'Datei lässt sich nicht öffnen.'; });
+    }
+    function modellSetzen(n) {
+      modellNr = (n + MODELLE.length) % MODELLE.length; modName.textContent = MODELLE[modellNr];
+      handy.classList.toggle('dick', modellNr === 1); handy.classList.toggle('flach', modellNr >= 2);
+      glbZeile.hidden = modellNr !== 3;
+      if (modellNr >= 2) dreiZeigen(); else if (m3dPlatz) m3dPlatz.hidden = true;
+      lageJetzt();
+    }
+    buehne.addEventListener('dragover', function (e) { if (e.dataTransfer && [].indexOf.call(e.dataTransfer.types, 'Files') >= 0) e.preventDefault(); });
+    buehne.addEventListener('drop', function (e) { var f = e.dataTransfer && e.dataTransfer.files[0]; if (f) { e.preventDefault(); glbOeffnen(f); } });
     var lageZ = el('p', 'mf-lage'), lageW = winkelZeile(lageZ); buehne.appendChild(lageZ);
     var hilfe = el('p', 'mf-hilfe', 'Am PC: Handy ziehen = kippen/neigen · Mausrad auf dem Handy = schwenken · Umschalt+Rad = Höhe · Tasten 1–4 halten Pads');
     buehne.appendChild(hilfe);
@@ -1091,9 +1139,16 @@
     var log = el('div', 'mf-log'); log.setAttribute('aria-live', 'off'); daten.appendChild(log);
     daten.appendChild(el('p', 'mf-hilfe', 'Halten = Kupplung · Lautstärketasten = Bank. Im Browser wird nichts gesendet – in Ableton macht Caelum Motion genau diese Regler.'));
     fenster.appendChild(daten);
-    block.appendChild(fenster);
+    oben.appendChild(fenster);
     var modulePlatz = el('div', 'mf-module'); block.appendChild(modulePlatz);
-    platz.appendChild(block);
+    platz.appendChild(oben); platz.appendChild(block);
+    // nach oben in den Motion-Block, sobald dessen Reiter stehen (bereiche.json „zusammen“ baut beide Module gleichzeitig)
+    (function obenSetzen() {
+      function setzen() { var r = document.querySelector('#motion > .reiter'); if (!r) return false; r.parentNode.insertBefore(oben, r); return true; }
+      if (setzen()) return;
+      var mo = new MutationObserver(function () { if (setzen()) mo.disconnect(); });
+      mo.observe(document.querySelector('main') || document.body, { childList: true, subtree: true });
+    })();
 
     // ---------- Zustand ----------
     var roh = { kip: 0, nei: 0, dre: 0, h: 0 }, mitte = { kip: 0, nei: 0, dre: 0, h: 0 };
@@ -1230,7 +1285,10 @@
 
     function zeigen(r) {
       var a = r.a;
-      handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
+      letzteLage = a;
+      if (modellNr >= 2) { handy.style.transform = ''; if (m3d) m3d.lage(a.kip, a.nei); }
+      else
+        handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
       [a.kip, a.nei, a.dre].forEach(function (v, k) { setz(lageW[k], ' ' + v.toFixed(1) + '°'); setz(winkelW[k], f(v, 1)); });
       var tasten = [];
       padK.forEach(function (p, i) {

@@ -14,10 +14,10 @@
   perspective: 900px; touch-action: pan-y; cursor: grab; display: flex; flex-direction: column; align-items: center; min-width: 0;
   user-select: none; -webkit-user-select: none; }
 .mf-buehne:active { cursor: grabbing; }
-.mf-handy { touch-action: none; width: min(210px, 60%); aspect-ratio: 9 / 19.5; border-radius: 28px; border: 6px solid #5A5A60; background: var(--mf-app);
+.mf-handy { touch-action: none; width: min(180px, 52%); aspect-ratio: 9 / 19.5; border-radius: 28px; border: 6px solid #5A5A60; background: var(--mf-app);
   box-shadow: 0 18px 40px rgba(0,0,0,.35); transform-style: preserve-3d; will-change: transform; overflow: hidden; }
 /* U8: am Handy kleiner und senkrecht wischen scrollt die Seite (waagrecht kippt weiter) */
-@media (pointer: coarse), (max-width: 560px) { .mf-handy { width: min(170px, 50%); aspect-ratio: 9 / 17; touch-action: pan-y; border-radius: 24px; border-width: 5px; } .mf-buehne { padding-top: 18px; } }
+@media (pointer: coarse), (max-width: 560px) { .mf-handy { width: min(150px, 46%); aspect-ratio: 9 / 17; touch-action: pan-y; border-radius: 24px; border-width: 5px; } .mf-buehne { padding-top: 18px; } }
 .mf-app { height: 100%; box-sizing: border-box; padding: 18px 9px 9px; display: flex; flex-direction: column; gap: 7px; color: #F2EEF5; font-size: 11px; }
 .mf-titel { font-weight: 600; font-size: 16px; padding-left: 3px; }
 .mf-status { color: #9C93A6; font-size: 10.5px; padding-left: 3px; margin-top: -4px; }
@@ -42,7 +42,7 @@
 .mf-lage { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); margin: 14px 0 0; text-align: center; white-space: pre-wrap; }
 .mf-hilfe { color: var(--muted); font-size: 12.5px; margin: 8px 0 0; text-align: center; line-height: 1.45; }
 @media (hover: none) { .mf-buehne .mf-hilfe { display: none; } }
-@media (max-width: 520px) { .mf-handy { width: min(210px, 62%); } }
+@media (max-width: 520px) { .mf-handy { width: min(160px, 50%); } }   /* 25.11.: kleiner (Kenny) */
 
 /* Querformat (25.11.2026, Wunsch Kenny: „quer und hochformat schlau abstimmen, es kommen neue Synths mit Keyboard“) – wie Spalten.java der App:
    oben Titel | Bänke, Mitte Status | Pads (4 nebeneinander), darunter .mf-breit (z. B. Tastatur, ganze Breite), unten die Knopfleiste.
@@ -352,3 +352,41 @@
 .mf-seq-karte .mf-fx-pads button.mf-fx-pad.halt { box-shadow: 0 0 0 2px var(--fx-t); }
 @media (max-width: 460px) { .mf-fx { padding: 10px 8px; } .mf-fx-pads { gap: 6px; } .mf-fx-pad b { font-size: 11.5px; } }
 @media (prefers-reduced-motion: reduce) { .mf-fx-bal { transition: none; } }
+
+/* 25.11.2026: Motion-Fenster oben im Block „Caelum Motion im Browser“ (erste Einstellung, vor Synth/Datei/Live-Musik) */
+.mf-oben { margin: 4px 0 26px; }
+.mf-oben .mf-ueber { margin: 0 0 6px; font-size: 18px; color: var(--text); }
+.mf-oben .mf-einleitung { color: var(--text-soft); margin: 0 0 14px; max-width: 46em; }
+/* kleines Handy: „Bank“ nur für Screenreader, sichtbar A B C D (sonst bricht „Bank A“ um) */
+.mf-handy { container-type: inline-size; }
+.mf-baenke button { white-space: nowrap; }
+@container (max-width: 190px) { .mf-baenke button > span:first-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .mf-baenke button { font-size: 12px; font-weight: 600; } }
+@container (max-width: 190px) { .mf-tag { left: 5px; top: 3px; font-size: 9px; } .mf-pads b { font-size: 12px; margin-top: 6px; } .mf-cc { font-size: 9px; } }
+@container (max-width: 190px) { .mf-handy:not(.quer) .mf-unten { grid-template-columns: 1fr 1fr; }
+  .mf-handy:not(.quer) .mf-unten button:first-child { grid-column: 1 / -1; }
+  .mf-unten button { font-size: 9.5px; padding: 5px 0; min-height: 24px; white-space: nowrap; } }
+
+/* Modellwahl (25.11.2026): ‹ › an den Seiten der Bühne, Name + Querformat darunter */
+.mf .mf-pfeil { position: absolute; top: 42%; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 24px; line-height: 1; z-index: 2; }
+.mf .mf-pfeil.links { left: 8px; } .mf .mf-pfeil.rechts { right: 8px; }
+.mf .mf-pfeil:hover { border-color: var(--mf-purpur); }
+.mf-modellzeile { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+.mf-modellname { color: var(--text); font-size: 13px; font-weight: 600; }
+.mf .mf-modellzeile .mf-lagek { margin-top: 0; }
+.mf-glbzeile { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 10px; margin-top: 8px; }
+.mf-glbzeile[hidden] { display: none; }
+.mf .mf-glbk { padding: 6px 14px; min-height: 32px; border-radius: 999px; background: var(--mf-purpur-tief); color: #fff; font-size: 12.5px; }
+.mf-glbinfo { color: var(--muted); font-size: 12px; }
+/* Handy dick: breiterer Rahmen und sichtbare Kante (gestapelte Schatten) */
+.mf-handy.dick { border-width: 11px; border-color: #46464C; border-radius: 34px;
+  box-shadow: 1px 1px 0 #38383D, 2px 2px 0 #343439, 3px 3px 0 #303035, 4px 4px 0 #2C2C31, 5px 5px 0 #28282D, 6px 6px 0 #242429, 0 22px 44px rgba(0,0,0,.4); }
+/* 3D-Modell: Fläche über der App, die App wird flach (ohne Kippen) bedient */
+.mf-3d { width: min(260px, 84%); aspect-ratio: 1 / 1.05; border-radius: 14px; overflow: hidden; background: #262624; margin-bottom: 12px; }
+.mf-3d[hidden] { display: none; }
+.mf-handy.flach { transform: none !important; box-shadow: none; border-width: 3px; aspect-ratio: 9 / 15; }
+.mf-handy.flach.quer { aspect-ratio: 19.5 / 9; }
+@media (max-width: 560px) { .mf .mf-pfeil { width: 34px; height: 34px; font-size: 21px; left: 4px; } .mf .mf-pfeil.rechts { left: auto; right: 4px; } }
+@container (max-width: 190px) { .mf-titel { font-size: 13px; white-space: nowrap; } .mf-handy:not(.quer) .mf-gehalten { display: none; } }
+@media (pointer: coarse), (max-width: 560px) { .mf-handy.dick { border-width: 8px; border-radius: 28px; } }
