@@ -1058,7 +1058,7 @@
     }
     // Hoch-/Querformat (25.11.2026): folgt dem echten Handy (quer gehalten = quer), der Knopf übersteuert; neue Seiten mit Tastatur hängen
     // ihren breiten Teil als .mf-breit in die App (siehe motion-fenster.css „Querformat“).
-    var lagek = knopf('Querformat', 'mf-lagek'), querWahl = null, querMq = window.matchMedia ? matchMedia('(orientation: landscape) and (pointer: coarse)') : null;
+    var lagek = knopf('Querformat', 'mf-lagek'), querWahl = null, querMq = null;   // 25.11.: keine Automatik mehr (quer gehalten wurde das Bild XXL, Kenny)
     function querSetzen() {
       var q = querWahl != null ? querWahl : !!(querMq && querMq.matches);
       handy.classList.toggle('quer', q); lagek.setAttribute('aria-pressed', q ? 'true' : 'false');
@@ -1066,58 +1066,6 @@
     lagek.addEventListener('click', function () { querWahl = !handy.classList.contains('quer'); querSetzen(); });
     if (querMq) { var mqNeu = function () { querWahl = null; querSetzen(); }; if (querMq.addEventListener) querMq.addEventListener('change', mqNeu); else if (querMq.addListener) querMq.addListener(mqNeu); }
     querSetzen(); buehne.appendChild(lagek);
-    // Modellwahl (25.11.2026, Kenny: „Pfeile auf der Seite und das Modell im Bild kann gewechselt werden zu einem dickeren Handy
-    // und einer GLB + GLB einfügen“): ‹ › an den Seiten der Bühne. Handy · Handy dick (beides Bild mit App) · 3D-Handy · Eigenes GLB
-    // (3D: assets/motion-modell.js, erst beim Wechsel geladen; die App wird dann flach daneben bedient, das Modell folgt der Lage).
-    var letzteLage = null;
-    function lageJetzt() { if (m3d && modellNr >= 2 && letzteLage) m3d.lage(letzteLage.kip, letzteLage.nei); }
-    var MODELLE = ['Handy', 'Handy dick', '3D-Handy', 'Eigenes GLB'], modellNr = 0, m3d = null, m3dPlatz = null, m3dMod = null, eigenM = null;
-    var zurK = knopf('‹', 'mf-pfeil links'), vorK = knopf('›', 'mf-pfeil rechts'), modName = el('span', 'mf-modellname', MODELLE[0]);
-    zurK.setAttribute('aria-label', 'Modell zurück'); vorK.setAttribute('aria-label', 'Nächstes Modell');
-    zurK.addEventListener('click', function () { modellSetzen(modellNr - 1); }); vorK.addEventListener('click', function () { modellSetzen(modellNr + 1); });
-    buehne.appendChild(zurK); buehne.appendChild(vorK);
-    var glbZeile = el('div', 'mf-glbzeile'), glbK = knopf('GLB einfügen', 'mf-glbk'), glbIn = el('input'), glbInfo = el('span', 'mf-glbinfo', 'Datei bleibt in deinem Browser.');
-    glbIn.type = 'file'; glbIn.accept = '.glb,.gltf,.obj,.stl,.3mf'; glbIn.hidden = true; glbZeile.hidden = true;
-    glbK.addEventListener('click', function () { glbIn.click(); });
-    glbIn.addEventListener('change', function () { if (glbIn.files[0]) glbOeffnen(glbIn.files[0]); glbIn.value = ''; });
-    glbZeile.appendChild(glbK); glbZeile.appendChild(glbIn); glbZeile.appendChild(glbInfo);
-    var modZeile = el('div', 'mf-modellzeile'); modZeile.appendChild(modName); modZeile.appendChild(lagek);
-    buehne.appendChild(modZeile); buehne.appendChild(glbZeile);
-    function dreiLaden() {
-      if (m3dMod) return Promise.resolve(m3dMod);
-      return import('/assets/motion-modell.js?v=1').then(function (mod) {
-        m3d = mod.modellBuehne(m3dPlatz); if (!m3d) m3dPlatz.appendChild(el('p', 'mf-glbinfo', '3D braucht WebGL2.'));
-        m3dMod = mod; return mod;
-      });
-    }
-    function dreiZeigen() {
-      if (!m3dPlatz) { m3dPlatz = el('div', 'mf-3d'); buehne.insertBefore(m3dPlatz, handy); }
-      m3dPlatz.hidden = false;
-      dreiLaden().then(function (mod) { if (!m3d || modellNr < 2) return; m3d.zeigen(modellNr === 3 && eigenM ? eigenM : mod.handy3d(true)); lageJetzt(); })
-        .catch(function () { glbInfo.textContent = '3D lässt sich nicht laden.'; });
-    }
-    function glbOeffnen(f) {
-      if (modellNr !== 3) modellSetzen(3);
-      dreiLaden().then(function () { return m3d ? m3d.datei(f) : null; })
-        .then(function (m) { if (m) { eigenM = m; glbInfo.textContent = f.name; lageJetzt(); } })
-        .catch(function () { glbInfo.textContent = 'Datei lässt sich nicht öffnen.'; });
-    }
-    function modellSetzen(n) {
-      modellNr = (n + MODELLE.length) % MODELLE.length; modName.textContent = MODELLE[modellNr];
-      handy.classList.toggle('dick', modellNr === 1); handy.classList.toggle('flach', modellNr >= 2);
-      glbZeile.hidden = modellNr !== 3;
-      if (modellNr >= 2) dreiZeigen(); else if (m3dPlatz) m3dPlatz.hidden = true;
-      pfeileSetzen();
-      lageJetzt();
-    }
-    // 3D: Pfeile auf die Mitte der 3D-Fläche, nicht über die flache App (Redmi quer, 25.11.2026)
-    function pfeileSetzen() {
-      var y = modellNr >= 2 && m3dPlatz && !m3dPlatz.hidden ? (m3dPlatz.offsetTop + m3dPlatz.offsetHeight / 2 - zurK.offsetHeight / 2) + 'px' : '';
-      zurK.style.top = y; vorK.style.top = y;
-    }
-    if ('ResizeObserver' in window) new ResizeObserver(pfeileSetzen).observe(buehne);
-    buehne.addEventListener('dragover', function (e) { if (e.dataTransfer && [].indexOf.call(e.dataTransfer.types, 'Files') >= 0) e.preventDefault(); });
-    buehne.addEventListener('drop', function (e) { var f = e.dataTransfer && e.dataTransfer.files[0]; if (f) { e.preventDefault(); glbOeffnen(f); } });
     var lageZ = el('p', 'mf-lage'), lageW = winkelZeile(lageZ); buehne.appendChild(lageZ);
     var hilfe = el('p', 'mf-hilfe', 'Am PC: Handy ziehen = kippen/neigen · Mausrad auf dem Handy = schwenken · Umschalt+Rad = Höhe · Tasten 1–4 halten Pads');
     buehne.appendChild(hilfe);
@@ -1298,10 +1246,7 @@
 
     function zeigen(r) {
       var a = r.a;
-      letzteLage = a;
-      if (modellNr >= 2) { handy.style.transform = ''; if (m3d) m3d.lage(a.kip, a.nei); }
-      else
-        handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
+      handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
       [a.kip, a.nei, a.dre].forEach(function (v, k) { setz(lageW[k], ' ' + v.toFixed(1) + '°'); setz(winkelW[k], f(v, 1)); });
       var tasten = [];
       padK.forEach(function (p, i) {
