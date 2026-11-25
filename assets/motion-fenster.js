@@ -1144,7 +1144,13 @@
     platz.appendChild(oben); platz.appendChild(block);
     // nach oben in den Motion-Block, sobald dessen Reiter stehen (bereiche.json „zusammen“ baut beide Module gleichzeitig)
     (function obenSetzen() {
-      function setzen() { var r = document.querySelector('#motion > .reiter'); if (!r) return false; r.parentNode.insertBefore(oben, r); return true; }
+      function setzen() {
+        var r = document.querySelector('#motion > .reiter'); if (!r) return false; r.parentNode.insertBefore(oben, r);
+        // Sprungmarke ins Fenster (#motion-fenster …): bereich.js springt nur, wenn das Ziel noch im eigenen Abschnitt liegt
+        var h = location.hash.slice(1), z = h && document.getElementById(decodeURIComponent(h));
+        if (z && oben.contains(z)) setTimeout(function () { z.scrollIntoView({ block: 'start' }); }, 80);
+        return true;
+      }
       if (setzen()) return;
       var mo = new MutationObserver(function () { if (setzen()) mo.disconnect(); });
       mo.observe(document.querySelector('main') || document.body, { childList: true, subtree: true });
@@ -1320,7 +1326,7 @@
       });
     }
 
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { sichtbar = e[0].isIntersecting; }).observe(block);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { sichtbar = e[0].isIntersecting; }).observe(oben);   // 25.11.: oben = Handy + Werte (block hat nur noch die Module)
     // Quelle für alle Module: immer rechnen (auch wenn das Handy-Bild weggescrollt ist), nur sichtbar zeichnen
     BEW.jetzt = function () {
       if (quelle === 'demo') return NULL_BEW;
