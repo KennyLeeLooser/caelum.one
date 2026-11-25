@@ -1107,8 +1107,15 @@
       handy.classList.toggle('dick', modellNr === 1); handy.classList.toggle('flach', modellNr >= 2);
       glbZeile.hidden = modellNr !== 3;
       if (modellNr >= 2) dreiZeigen(); else if (m3dPlatz) m3dPlatz.hidden = true;
+      pfeileSetzen();
       lageJetzt();
     }
+    // 3D: Pfeile auf die Mitte der 3D-Fläche, nicht über die flache App (Redmi quer, 25.11.2026)
+    function pfeileSetzen() {
+      var y = modellNr >= 2 && m3dPlatz && !m3dPlatz.hidden ? (m3dPlatz.offsetTop + m3dPlatz.offsetHeight / 2 - zurK.offsetHeight / 2) + 'px' : '';
+      zurK.style.top = y; vorK.style.top = y;
+    }
+    if ('ResizeObserver' in window) new ResizeObserver(pfeileSetzen).observe(buehne);
     buehne.addEventListener('dragover', function (e) { if (e.dataTransfer && [].indexOf.call(e.dataTransfer.types, 'Files') >= 0) e.preventDefault(); });
     buehne.addEventListener('drop', function (e) { var f = e.dataTransfer && e.dataTransfer.files[0]; if (f) { e.preventDefault(); glbOeffnen(f); } });
     var lageZ = el('p', 'mf-lage'), lageW = winkelZeile(lageZ); buehne.appendChild(lageZ);
