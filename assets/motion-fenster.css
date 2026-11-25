@@ -316,9 +316,9 @@
 .mf-mix-zug { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; padding: 8px 4px; border-radius: 12px; background: var(--mf-fl); transition: opacity .15s; }
 .mf-mix-zug.stumm { opacity: .72; }
 .mf-mix-name { font: 600 12px ui-monospace, Consolas, monospace; color: #E07BBE; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.mf-mix-zug:nth-child(2) .mf-mix-name { color: #F27B7E; }
-.mf-mix-zug:nth-child(3) .mf-mix-name { color: #E8C547; }
-.mf-mix-zug:nth-child(4) .mf-mix-name { color: #F07A7E; }
+.mf-mix-zug:not(.mf-midi):nth-child(2) .mf-mix-name { color: #F27B7E; }
+.mf-mix-zug:not(.mf-midi):nth-child(3) .mf-mix-name { color: #E8C547; }
+.mf-mix-zug:not(.mf-midi):nth-child(4) .mf-mix-name { color: #F07A7E; }
 .mf-mix-pan { width: 100%; max-width: 92px; height: 24px; accent-color: #9C93A6; margin: 0; }
 .mf-mix-lr { font: 10.5px ui-monospace, Consolas, monospace; color: #A89DAD; margin-top: -6px; }
 .mf-mix-k { display: flex; gap: 6px; }
@@ -371,3 +371,19 @@
 /* 25.11.2026 (Kenny: „lass es bei unserem Modell, mach es bloss ein wenig dicker“): etwas breiterer Rahmen + feine Kante */
 .mf-handy { border-width: 8px; box-shadow: 1px 1px 0 #48484E, 2px 2px 0 #3E3E44, 3px 3px 0 #36363B, 0 18px 40px rgba(0,0,0,.35); }
 @media (pointer: coarse), (max-width: 560px) { .mf-handy { border-width: 7px; } }
+
+/* Bänke A–D im Mixer (25.11.2026, wie MixerSeite.java): 8 Züge je Bank, breit in einer Reihe, schmal 2 × 4 */
+.mf-mix-baenke { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0 0 8px; }
+.mf-seq-karte .mf-mix-baenke button { min-height: 36px; padding: 6px 4px; border-radius: 10px; background: var(--mf-fl); color: #F2EEF5; border: 1px solid transparent; font-size: 13px; text-align: center; }
+.mf-seq-karte .mf-mix-baenke button[aria-pressed="true"] { background: var(--mf-purpur-tief); border-color: var(--mf-purpur); }
+.mf-mix-wrap { container-type: inline-size; }
+.mf-mix[hidden] { display: none; }
+@container (min-width: 700px) { .mf-mix { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+.mf-mix-zug.mf-midi .mf-mix-name { color: #C9BFD0; }
+.mf-mix-cc { font: 600 11px ui-monospace, Consolas, monospace; color: #A89DAD; height: 24px; display: flex; align-items: center; }
+.mf-mix-midi { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); margin: 0 0 4px; }
+.mf-mix-letzt { color: var(--text-soft); min-height: 1.4em; }
+/* Tippen auf das Handy-Bild blitzt sonst blau wie ein Link (Chrome Android, Meldung Kenny 25.11.2026) */
+.mf-buehne, .mf-buehne * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+.mf-mix-zug.mf-midi .mf-mix-led { visibility: hidden; }   /* MIDI-Fader haben keinen Klang im Browser */
+@container (max-width: 190px) { .mf-handy:not(.quer) .mf-unten { gap: 8px; } .mf-unten button { min-height: 26px; } }   /* target-size: Abstand ≥ 8 px (Lighthouse 25.11.) */

@@ -485,6 +485,8 @@
     function mixGain(i) { var c = mix[i]; return c.stumm ? 0 : c.pegel * mixFaktor(i); }
     function mixPan(i) { return klemm(mix[i].pan + mixPanBew, -1, 1); }
     function mixSetz() {
+      midiZ.forEach(function (l) { l.forEach(function (c) { if (!c.z.zug) return; setz(c.z.db, mixDb(c.pegel)); c.z.r.value = String(c.pegel);
+        c.z.m.setAttribute('aria-pressed', c.stumm ? 'true' : 'false'); c.z.rec.setAttribute('aria-pressed', c.rec ? 'true' : 'false'); c.z.zug.classList.toggle('stumm', c.stumm); }); });
       mix.forEach(function (c, i) {
         setz(c.z.db, mixDb(c.pegel)); c.z.r.value = String(c.pegel);
         c.z.m.setAttribute('aria-pressed', c.stumm ? 'true' : 'false'); if (c.z.rec) c.z.rec.setAttribute('aria-pressed', c.rec ? 'true' : 'false');
@@ -501,30 +503,66 @@
       return g;
     }
     var mixKarte = karteNeu('Mixer', null, 'mf-mixer');
-    var mixZuege = el('div', 'mf-mix');
-    mix.forEach(function (c, i) {
-      var zug = el('div', 'mf-mix-zug'), r = el('input'), pr = el('input'), db = el('b', 'mf-mix-db'), led = el('span', 'mf-mix-led'), li = el('i');
-      zug.appendChild(el('span', 'mf-mix-name', c.name));
-      pr.type = 'range'; pr.min = '-1'; pr.max = '1'; pr.step = '0.05'; pr.value = '0'; pr.className = 'mf-mix-pan'; pr.setAttribute('aria-label', 'Panorama');
-      pr.addEventListener('input', function () { c.pan = Number(pr.value); mixSetz(); });
-      pr.addEventListener('dblclick', function () { pr.value = '0'; c.pan = 0; mixSetz(); });
-      zug.appendChild(pr); zug.appendChild(el('span', 'mf-mix-lr', 'L · R'));
+    // Bänke A–D wie die App (MixerSeite.java, Kenny 25.11.2026): je Bank 8 Kanalzüge (Fader · M · ●). Bank A Spur 1–4 = die vier
+    // Klangkanäle oben, alle übrigen Züge sind MIDI-Fader wie in der App (im Browser ohne Klang). MIDI wie STANDARD.md: Kanal Bank + 2,
+    // Fader CC 40–47, M CC 72–79, ● CC 80–87; Fader-Wert wie die App (0 dB = 0,85 → CC 108).
+    var mixBank = 0, mixBankK = [], mixSeiten = [], mixBeiBank = null;
+    var midiZ = [0, 1, 2, 3].map(function (b) { var l = []; for (var s = 0; s < 8; s++) l.push({ name: 'Spur ' + (s + 1), pegel: 1, pan: 0, stumm: false, rec: false, midi: true, z: {} }); return l; });
+    function faderCC(p) { return Math.round(Math.min(1, 0.85 * Math.sqrt(Math.max(0, p))) * 127); }
+    var mixMidiZ = el('p', 'mf-mix-midi'), mixLetztZ = el('p', 'mf-mix-midi mf-mix-letzt');
+    function midiZeile() {
+      mixMidiZ.textContent = ''; wort(mixMidiZ, 'Bank'); mixMidiZ.appendChild(document.createTextNode(' ' + BANK[mixBank] + ' · ')); wort(mixMidiZ, 'MIDI-Kanal');
+      mixMidiZ.appendChild(document.createTextNode(' ' + (mixBank + 2) + ' · Fader CC 40–47 · M CC 72–79 · ● CC 80–87'));
+    }
+    function midiGesendet(c, s, art) {   // was Ableton jetzt bekäme (im Browser wird nichts gesendet)
+      var cc = art === 'm' ? 72 + s : art === 'r' ? 80 + s : 40 + s, w = art === 'm' ? (c.stumm ? 127 : 0) : art === 'r' ? (c.rec ? 127 : 0) : faderCC(c.pegel);
+      mixLetztZ.textContent = ''; wort(mixLetztZ, 'Zuletzt:'); mixLetztZ.appendChild(document.createTextNode(' ' + BANK[mixBank] + (s + 1) + ' · '));
+      wort(mixLetztZ, 'MIDI-Kanal'); mixLetztZ.appendChild(document.createTextNode(' ' + (mixBank + 2) + ' · CC ' + cc + ' = ' + w));
+    }
+    function zugBauen(c, s) {
+      var klang = !c.midi, zug = el('div', 'mf-mix-zug'), r = el('input'), db = el('b', 'mf-mix-db'), led = el('span', 'mf-mix-led'), li = el('i');
+      var nm = el('span', 'mf-mix-name'); if (klang) nm.textContent = c.name; else { wort(nm, 'Spur'); nm.appendChild(document.createTextNode(' ' + (s + 1))); }
+      zug.appendChild(nm); if (!klang) zug.classList.add('mf-midi');
+      if (klang) {
+        var pr = el('input'); pr.type = 'range'; pr.min = '-1'; pr.max = '1'; pr.step = '0.05'; pr.value = '0'; pr.className = 'mf-mix-pan'; pr.setAttribute('aria-label', 'Panorama');
+        pr.addEventListener('input', function () { c.pan = Number(pr.value); mixSetz(); });
+        pr.addEventListener('dblclick', function () { pr.value = '0'; c.pan = 0; mixSetz(); });
+        zug.appendChild(pr); zug.appendChild(el('span', 'mf-mix-lr', 'L · R'));
+      } else { zug.appendChild(el('span', 'mf-mix-cc', 'CC ' + (40 + s))); zug.appendChild(el('span', 'mf-mix-lr', 'MIDI')); }
       var knoepfe = el('div', 'mf-mix-k'), m = knopf('M', 'mf-mix-m'); m.setAttribute('aria-label', 'Stumm schalten'); m.setAttribute('aria-pressed', 'false');
-      m.addEventListener('click', function () { c.stumm = !c.stumm; mixSetz(); }); knoepfe.appendChild(m);
-      if (c.rec) {
-        var rk = knopf('●', 'mf-mix-rec'); rk.setAttribute('aria-label', 'In den ● Loop aufnehmen'); rk.setAttribute('aria-pressed', 'true');
-        rk.addEventListener('click', function () { c.rec = !c.rec; mixSetz(); }); knoepfe.appendChild(rk); c.z.rec = rk;
+      m.addEventListener('click', function () { c.stumm = !c.stumm; mixSetz(); midiGesendet(c, s, 'm'); }); knoepfe.appendChild(m);
+      var rk = null;
+      if (c.id !== 'loops') {
+        rk = knopf('●', 'mf-mix-rec'); rk.setAttribute('aria-label', 'In den ● Loop aufnehmen'); rk.setAttribute('aria-pressed', c.rec ? 'true' : 'false');
+        rk.addEventListener('click', function () { c.rec = !c.rec; mixSetz(); midiGesendet(c, s, 'r'); }); knoepfe.appendChild(rk);
       } else knoepfe.appendChild(el('span', 'mf-mix-rec leer'));
       zug.appendChild(knoepfe);
       var fz = el('div', 'mf-mix-fz');
-      r.type = 'range'; r.min = '0'; r.max = '1.41'; r.step = '0.01'; r.value = '1'; r.setAttribute('aria-label', 'Lautstärke'); zug.setAttribute('role', 'group'); zug.setAttribute('aria-label', c.name);
-      r.addEventListener('input', function () { c.pegel = Number(r.value); if (Math.abs(c.pegel - 1) < 0.03) c.pegel = 1; mixSetz(); });   // rastet bei 0 dB
-      r.addEventListener('dblclick', function () { c.pegel = 1; mixSetz(); });
+      r.type = 'range'; r.min = '0'; r.max = '1.41'; r.step = '0.01'; r.value = '1'; r.setAttribute('aria-label', 'Lautstärke'); zug.setAttribute('role', 'group');
+      if (klang) zug.setAttribute('aria-label', c.name);
+      r.addEventListener('input', function () { c.pegel = Number(r.value); if (Math.abs(c.pegel - 1) < 0.03) c.pegel = 1; mixSetz(); midiGesendet(c, s, 'f'); });   // rastet bei 0 dB
+      r.addEventListener('dblclick', function () { c.pegel = 1; mixSetz(); midiGesendet(c, s, 'f'); });
       led.appendChild(li); fz.appendChild(r); fz.appendChild(led); zug.appendChild(fz); zug.appendChild(db);
-      c.z = { zug: zug, r: r, db: db, m: m, rec: c.z.rec, led: li };
-      mixZuege.appendChild(zug);
+      c.z = { zug: zug, r: r, db: db, m: m, rec: rk, led: li };
+      return zug;
+    }
+    var mixBaenke = el('div', 'mf-mix-baenke');
+    var mixZuege = el('div', 'mf-mix-wrap');
+    [0, 1, 2, 3].forEach(function (b) {
+      var bk = knopf(); wort(bk, 'Bank'); bk.appendChild(document.createTextNode(' ' + BANK[b])); bk.setAttribute('aria-pressed', b === 0 ? 'true' : 'false');
+      bk.addEventListener('click', function () { mixBankSetzen(b, true); }); mixBankK.push(bk); mixBaenke.appendChild(bk);
+      var seite = el('div', 'mf-mix'); seite.hidden = b !== 0;
+      for (var s = 0; s < 8; s++) seite.appendChild(zugBauen(b === 0 && s < 4 ? mix[s] : midiZ[b][s], s));
+      mixSeiten.push(seite); mixZuege.appendChild(seite);
     });
-    mixKarte.appendChild(mixZuege);
+    function mixBankSetzen(b, hand) {
+      mixBank = b; mixBankK.forEach(function (k, i) { k.setAttribute('aria-pressed', i === b ? 'true' : 'false'); });
+      mixSeiten.forEach(function (x, i) { x.hidden = i !== b; }); midiZeile();
+      if (hand && mixBeiBank) mixBeiBank(b);
+    }
+    midiZeile();
+    mixKarte.appendChild(mixBaenke);
+    mixKarte.appendChild(mixZuege); mixKarte.appendChild(mixMidiZ); mixKarte.appendChild(mixLetztZ);
     var bewMix = BEW.kopplung([['k', 'Überblenden'], ['s', 'Panorama']]); mixKarte.appendChild(bewMix.el);
     mixKarte.appendChild(el('p', 'mf-hilfe', 'Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.'));
     platz.appendChild(mixKarte);
@@ -1006,7 +1044,7 @@
     BEW.aufklappen(mixKarte, true);
     BEW.aufklappen(eqKarte, false, function (an) { if (an) requestAnimationFrame(kurveZeichnen); });
     ankerAuf();
-    return { stopp: stopp, spielt: function () { return spielt; } };
+    return { stopp: stopp, spielt: function () { return spielt; }, bank: function (b) { mixBankSetzen(b, false); }, beiBank: function (f) { mixBeiBank = f; } };
   }
 
   function start(platz) {
@@ -1124,7 +1162,7 @@
       return klemm(Math.round(63.5 + v * 63.5), 0, 127);
     }
     function geste(g) { gesten.push(g); if (gesten.length > 6) gesten.shift(); }
-    function bankWahl(i, hand) { if (hand) demoAus(); bank = i; bankK.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); }); gehalten = [false, false, false, false]; }
+    function bankWahl(i, hand) { if (hand) demoAus(); bank = i; bankK.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); }); gehalten = [false, false, false, false]; if (seq && seq.bank) seq.bank(i); }   // Mixer-Bank folgt (wie die App)
     function halte(i, an) {
       if (gehalten[i] === an) return; gehalten[i] = an;
       if (an) { var k = bank * 4 + i; basis[k] = { a: achswert(rel(), i), c: cc[k] < 0 ? achswert(rel(), i) : cc[k] }; if (quelle !== 'demo' && navigator.vibrate) try { navigator.vibrate(12); } catch (x) { } }
@@ -1241,6 +1279,7 @@
 
     // ---------- Sequenzer (wie die Motion-App 0.9.0: Lauflicht + Matrix, ▶ · BPM · Clock-Punkte · Swing) ----------
     var seq = sequenzer(modulePlatz, logZeile);
+    seq.beiBank(function (b) { bankWahl(b, true); });   // Bank im Mixer = Bank am Handy
     function zumSequenzer() { var z = document.getElementById('mf-sequenzer'); if (z) { if (z._klapp) z._klapp.auf(); z.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
     seqK.addEventListener('click', zumSequenzer); seqApp.addEventListener('click', zumSequenzer);
 
