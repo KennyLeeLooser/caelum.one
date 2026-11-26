@@ -87,6 +87,9 @@ export async function katalog() {
  * opt.schleife  nach DAUER von vorn beginnen (Startseite)
  * opt.still     nur ein Standbild zu dieser Zeit (Selbsttest)
  * opt.zeigen(an) wird gerufen, wenn die Botschaft erscheinen bzw. verschwinden soll
+ * opt.rand()   {oben, unten} in Pixeln, die Texte und Knöpfe verdecken – das Objekt wird in die freie Fläche dazwischen eingepasst
+ *              (Wunsch Kenny 24.11.2026: Hoch- und Querformat zentrieren sich von selbst); ohne: ganze Leinwand
+ * opt.fuellen  Anteil der freien Fläche, den das Objekt füllt (Standard 0,74)
  * Rückgabe: { befehl, objekt, stand, neu(), stop() } – wirft, wenn kein Rorschach-Befehl oder kein WebGL2.
  */
 export async function spielen(canvas, opt) {
@@ -119,13 +122,25 @@ export async function spielen(canvas, opt) {
   for (const c of alle) c.d = dunkel(c);
 
   // ------------------------------------------------ Objekt aus der Sammlung
-  let netzObjekt = -1, form = null;
+  let netzObjekt = -1, form = null, glbTeile = null;
   const S = 1.35;                                                   // Maßstab des Objekts in der Szene
-  if (obj?.datei) { try { const g = await lesenGlb(await (await fetch(new URL("sammlung/" + obj.datei, import.meta.url))).arrayBuffer()); netzObjekt = drei.netz(g.teile); stand.glb = true;
+  if (obj?.datei) { try { const g = await lesenGlb(await (await fetch(new URL("sammlung/" + obj.datei, import.meta.url))).arrayBuffer()); netzObjekt = drei.netz(g.teile); stand.glb = true; glbTeile = g.teile;
     if (opt.form !== "ei") { try { form = voxeln(g.teile, M, g.hoehe); } catch (e) { stand.voxelFehler = String(e); } } } catch (e) { stand.glbFehler = String(e); } }
   if (form) { stand.form = "modell"; stand.voxel = form.vox.length;
     ord.forEach((ci, k) => { alle[ci].vox = form.vox[Math.floor(k * form.vox.length / M)]; }); }
   const voxGroesse = form ? form.zelle * S * 1.04 : 0;
+  // Hülle des Objekts in der Szene (für die Kamera): Höhe ab dem Fuß und größter Abstand von der Drehachse
+  const OY = -0.86;                                                  // Fuß des Objekts (oy ohne Schweben/Start)
+  let huelle = { unten: -1.1, oben: 1.0, r: 1.0 };                   // Ei (ohne GLB): Schale + Splitter
+  if (netzObjekt >= 0 && glbTeile) { let r = 0, h = 0;
+    for (const t of glbTeile) for (let v = 0; v < t.pos.length; v += 3) { r = Math.max(r, Math.hypot(t.pos[v], t.pos[v + 2])); h = Math.max(h, t.pos[v + 1]); }
+    const m = { unten: OY, oben: OY + h * S, r: r * S + (form ? voxGroesse / 2 : 0) };
+    huelle = form ? m : { unten: Math.min(m.unten, huelle.unten), oben: Math.max(m.oben, huelle.oben), r: Math.max(m.r, huelle.r) }; }
+  stand.huelle = huelle;
+  let randCache = null, randZeit = -1;
+  const rand = now => { if (!opt.rand) return { oben: 0, unten: 0 };
+    if (now - randZeit > 400 || !randCache) { try { randCache = opt.rand() || { oben: 0, unten: 0 }; } catch { randCache = { oben: 0, unten: 0 }; } randZeit = now; }
+    return randCache; };
   const netzPapier = drei.netz(kasten(K + 8 * s, K + 8 * s, 0.04, [PAPER[0] / 255, PAPER[1] / 255, PAPER[2] / 255, 1]));
   const raketenStart = obj?.aktion === "starten";
 
@@ -189,16 +204,27 @@ export async function spielen(canvas, opt) {
     const papier = 1 - ease(clamp((T - 0.9) / 1.3)), auftritte = [];
     if (papier > 0.01) auftritte.push({ netz: netzPapier, M: modell(0, 0, -0.08, 0, papier, 0) });
     if (netzObjekt >= 0 && so > 0.001) auftritte.push({ netz: netzObjekt, M: modell(0, oy, 0, th, form ? S * (0.97 + 0.03 * ease(clamp((T - 4.45) / 1.2))) : S * so) });
-    // Kamera: Abstand so, dass Karte und Flügel (Breite ≈ 3,4) auch im Hochformat ganz zu sehen sind
-    const asp = (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight), fov = asp < 1 ? 0.95 : 0.7;
-    const R0 = Math.max(4.6, 1.75 / (Math.tan(fov / 2) * Math.min(asp, 1.4)));
-    const cam = ease(clamp((T - 2.2) / 2.0)), az = dreh * 0.35, R = R0 * (1 + cam * 0.08) + (raketenStart ? 0.8 * clamp((T - 7.6) / 1.5) * (T < 11 ? 1 : 0) : 0);
-    const zy = -0.55 * ease(clamp((T - 4.0) / 1.4)) + (raketenStart && T > 7.6 && T < 11 ? Math.min(2.2, Math.max(0, oy + 0.4) * 0.45) : 0);
-    drei.zeichnen({ auge: [Math.sin(az) * R, 0.15 + cam * 0.9 + zy, Math.cos(az) * R], ziel: [0, zy, 0], hg: (opt.hg || DEEP).map(v => v / 255), auftritte });
+    // Kamera: zuerst so weit, dass Karte und Flügel (Breite ≈ 3,4) ganz zu sehen sind; ab 2,2 s gleitet sie auf das Objekt
+    // und passt es in die freie Fläche ein – im Hoch- wie im Querformat mittig und groß (Wunsch Kenny 24.11.2026)
+    const W = canvas.clientWidth || innerWidth, H = canvas.clientHeight || innerHeight, asp = W / H, fov = asp < 1 ? 0.95 : 0.7, tf = Math.tan(fov / 2);
+    const R0 = Math.max(4.6, 1.75 / (tf * Math.min(asp, 1.4)));
+    const rd = rand(performance.now()); stand.rand = rd;
+    const li = rd.links || 0, re = rd.rechts || 0;
+    const frei = clamp((H - rd.oben - rd.unten) / H, 0.25, 1), yc = 1 - (rd.oben + (H - rd.unten)) / H;   // Mitte der freien Fläche (NDC)
+    const freiB = clamp((W - li - re) / W, 0.25, 1), xc = (li + (W - re)) / W - 1;
+    const fu = opt.fuellen || 0.74, hh = (huelle.oben - huelle.unten) / 2, ym = (huelle.oben + huelle.unten) / 2;
+    const Rfit = Math.max(hh / (tf * frei * fu), huelle.r / (tf * asp * freiB * fu), huelle.r * 2 + 0.6) + huelle.r;
+    const cam = ease(clamp((T - 2.2) / 2.0)), az = dreh * 0.35;
+    const start = raketenStart && T > 7.6 && T < 11, R = R0 + (Rfit - R0) * cam + (raketenStart ? 0.8 * clamp((T - 7.6) / 1.5) * (T < 11 ? 1 : 0) : 0);
+    const zy = (ym - yc * R * tf) * cam + (start ? Math.min(2.2, Math.max(0, oy + 0.4) * 0.45) : 0);
+    const sx = -xc * R * tf * asp * cam, rx = Math.cos(az) * sx, rz = -Math.sin(az) * sx;            // seitlich schieben (Botschaft rechts)
+    drei.zeichnen({ auge: [Math.sin(az) * R + rx, zy + 0.15 + cam * 0.16 * R, Math.cos(az) * R + rz],   // gleicher Blickwinkel von oben, egal wie weit
+      ziel: [rx, zy, rz], hg: (opt.hg || DEEP).map(v => v / 255), auftritte });
     zeigen(T > ZEIGEN_AB);
   }
 
-  if (opt.still != null) bild(opt.still);
+  if (opt.still != null) { bild(opt.still);                          // nach dem Einsetzen der Botschaft den freien Platz neu messen
+    requestAnimationFrame(() => requestAnimationFrame(() => { randCache = null; bild(opt.still); })); }
   else {
     const lauf = now => { if (!laeuft) return; let T = (now - t0) / 1000;
       if (opt.schleife && T > DAUER) { t0 = now; T = 0; dreh = 0; }

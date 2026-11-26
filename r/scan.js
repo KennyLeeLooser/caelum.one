@@ -26,6 +26,12 @@ function fehler(titel, text) { $("fehlerTitel").textContent = titel; $("fehlerTe
       still: sp.has("t") ? +sp.get("t") : null,
       form: sp.get("form"),                                          // „ei“ = alte Form zum Vergleich
       zeigen: an => document.body.classList.toggle("zeigen", an),
+      // freie Fläche zwischen Kopfzeile und Botschaft/Knöpfen – das Objekt wird dort hinein zentriert (hoch wie quer)
+      // (flaches Querformat: Botschaft steht rechts, dann zählt sie als Rand rechts statt unten)
+      rand: () => { const o = document.querySelector(".oben")?.getBoundingClientRect(), u = document.querySelector(".unten")?.getBoundingClientRect();
+        if (!u) return { oben: o?.bottom || 0, unten: 0 };
+        return u.left > innerWidth * 0.3 ? { oben: o?.bottom || 0, unten: 0, rechts: innerWidth - u.left }
+                                         : { oben: o?.bottom || 0, unten: innerHeight - u.top }; },
     });
     Object.assign(stand, sp1.stand);
     $("botschaft").textContent = sp1.befehl.botschaft || (sp1.objekt ? `Eine Überraschung: ${sp1.objekt.name}` : "Überraschung!");
