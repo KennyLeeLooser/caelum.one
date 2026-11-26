@@ -1301,7 +1301,9 @@
       if (gehalten[i] === an) return; gehalten[i] = an;
       if (an) { var k = bank * 4 + i; basis[k] = { a: achswert(rel(), i), c: cc[k] < 0 ? achswert(rel(), i) : cc[k] }; if (quelle !== 'demo' && navigator.vibrate) try { navigator.vibrate(12); } catch (x) { } }
     }
-    function demoAus() { if (quelle === 'demo') { quelle = 'maus'; gehalten = [false, false, false, false]; status.textContent = 'Maus · Handy ziehen'; } }
+    var eingabeZeit = 0;   // letzte Hand am Handy-Bild (für die Rückkehr ins Beispiel)
+    function demoAus() { eingabeZeit = performance.now(); if (quelle === 'demo') { quelle = 'maus'; gehalten = [false, false, false, false]; roh = { kip: mitte.kip, nei: mitte.nei, dre: mitte.dre, h: mitte.h };   // Kippen beginnt gerade, nicht in der Lage des Beispiels
+      status.textContent = 'Maus · Handy ziehen'; } }
 
     // ---------- Maus / Finger am Handy ----------
     var zieh = null;
@@ -1311,7 +1313,7 @@
       zieh = { x: e.clientX, y: e.clientY, kip: roh.kip, nei: roh.nei }; try { buehne.setPointerCapture(e.pointerId); } catch (x) { }
     });
     buehne.addEventListener('pointermove', function (e) {
-      if (!zieh) return;
+      if (!zieh) return; eingabeZeit = performance.now();
       roh.nei = klemm(zieh.nei + (e.clientX - zieh.x) * 0.45, -90, 90);
       roh.kip = klemm(zieh.kip + (e.clientY - zieh.y) * 0.45, -90, 90);
     });
@@ -1417,9 +1419,27 @@
     function zumSequenzer() { var z = document.getElementById('mf-sequenzer'); if (z) { if (z._klapp) z._klapp.auf(); z.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
     seqK.addEventListener('click', zumSequenzer); seqApp.addEventListener('click', zumSequenzer);
 
+    // Kippen des Handy-Bilds (Kenny 26.11.2026): erst nach Berühren (Maus/Finger/Sensoren) – im Beispiel bleibt es gerade, die Pads laufen weiter.
+    // Ein- und Ausblenden ganz weich (Stärke 0 → 1 über ≈ 1 s, Smoothstep), dazu Glätten je Achse: kleine Bewegungen gleiten langsam (0,35 s),
+    // grosse folgen schnell (0,05 s). Nebenbei misst Lighthouse ohne Berühren ein gerades Handy (target-size, Befund Stufe 3).
+    var lage = { kip: 0, nei: 0, dre: 0, h: 0 }, kippStaerke = 0, lageT = 0;
+    function lageNachfuehren(a, t) {
+      var dt = lageT ? Math.min(0.1, (t - lageT) / 1000) : 0.016; lageT = t;
+      var ziel = quelle === 'demo' ? 0 : 1;
+      kippStaerke += (ziel - kippStaerke) * (1 - Math.exp(-dt / 0.35));
+      if (Math.abs(ziel - kippStaerke) < 0.001) kippStaerke = ziel;
+      ['kip', 'nei', 'dre', 'h'].forEach(function (k) {
+        var d = k === 'dre' ? wrap180(a[k] - lage[k]) : a[k] - lage[k], gross = k === 'h' ? Math.abs(d) / 0.3 : Math.abs(d) / 25;
+        var tau = 0.35 - 0.30 * Math.min(1, gross);
+        lage[k] += d * (1 - Math.exp(-dt / tau));
+        if (k === 'dre') lage[k] = wrap180(lage[k]);
+      });
+      var s = kippStaerke * kippStaerke * (3 - 2 * kippStaerke);   // Smoothstep: weich ein, weich aus
+      return { kip: lage.kip * s, nei: lage.nei * s, dre: lage.dre * s, h: lage.h * s };
+    }
     function zeigen(r) {
-      var a = r.a;
-      handy.style.transform = 'rotateX(' + (-a.kip * 0.8).toFixed(1) + 'deg) rotateY(' + (a.nei * 0.8).toFixed(1) + 'deg) rotateZ(' + (-a.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(1) + 'deg) translateY(' + (-a.h * 60).toFixed(1) + 'px)';
+      var a = r.a, l = lageNachfuehren(a, performance.now());
+      handy.style.transform = 'rotateX(' + (-l.kip * 0.8).toFixed(2) + 'deg) rotateY(' + (l.nei * 0.8).toFixed(2) + 'deg) rotateZ(' + (-l.dre * (handy.classList.contains('quer') ? 0.25 : 0.5)).toFixed(2) + 'deg) translateY(' + (-l.h * 60).toFixed(2) + 'px)';
       [a.kip, a.nei, a.dre].forEach(function (v, k) { setz(lageW[k], ' ' + v.toFixed(1) + '°'); setz(winkelW[k], f(v, 1)); });
       var tasten = [];
       padK.forEach(function (p, i) {
@@ -1458,7 +1478,10 @@
       var a = rel();
       return { s: klemm(a.dre / 90, -1, 1), k: klemm(a.kip / 60, -1, 1), d: klemm(a.nei / 60, -1, 1), h: klemm(a.h / 0.5, -1, 1), aktiv: true, quelle: quelle };
     };
+    // Nach 15 s ohne Hand (nicht bei Sensoren) läuft wieder das Beispiel; das Kippen blendet dabei weich aus
+    function demoZurueck() { if (quelle !== 'maus' || zieh || performance.now() - eingabeZeit < 15000) return; quelle = 'demo'; letzt = null; status.textContent = 'Beispiel läuft'; }
     function schleife(t) {
+      demoZurueck();
       // 24.11.2026 Leistung: das Beispiel rechnet nur, wenn man es sieht (BEW.jetzt liefert im Beispiel ohnehin die Mitte)
       if (!document.hidden && (sichtbar || quelle !== 'demo')) { var r = rechnen(t); if (sichtbar) zeigen(r); }
       else letzt = null;
