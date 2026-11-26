@@ -21,6 +21,24 @@
     return f || b.farbe || '#8FB8F0';
   }
 
+  // 26.11.2026 Leistung (Lighthouse TBT ≈ 550 ms am Handy): jedes Modul wird in einem eigenen Task gebaut, nie mehrere in einem Zug.
+  // Warteschlange: ein Bau je Durchgang, dazwischen bekommt der Browser die Hand zurück (Eingaben, Zeichnen).
+  var schlange = [], laeuft = false;
+  function pause() {
+    if (window.scheduler && typeof window.scheduler.yield === 'function') return window.scheduler.yield();
+    return new Promise(function (r) { setTimeout(r, 0); });
+  }
+  function abarbeiten() {
+    var fn = schlange.shift();
+    if (!fn) { laeuft = false; return; }
+    try { fn(); } catch (e) { setTimeout(function () { throw e; }); }
+    pause().then(abarbeiten);
+  }
+  function haeppchen(fn) {
+    schlange.push(fn);
+    if (!laeuft) { laeuft = true; pause().then(abarbeiten); }
+  }
+
   function karte(k, f) {
     var a = el('article', 'demo');
     var streif = el('div', 'streif'); streif.style.background = f; a.appendChild(streif);
@@ -74,10 +92,13 @@
     (b.module || []).forEach(function (m) {   // eigene Module (Schaubilder, Prototypen) aus /assets/*.js, siehe „skripte“
       var s = el('section', 'modul'); s.setAttribute('data-modul', m); main.appendChild(s);
       var los = function () {
-        if (s.dataset.an) return; s.dataset.an = '1'; window.CaelumModul[m](s, f);
-        // Sprungmarke (#drum-808 …) zeigt in ein Modul, das erst jetzt da ist – der Browser ist schon vorbeigesprungen
-        var h = location.hash.slice(1), z = h && document.getElementById(decodeURIComponent(h));
-        if (z && s.contains(z)) setTimeout(function () { z.scrollIntoView({ block: 'start' }); }, 50);
+        if (s.dataset.an) return; s.dataset.an = '1';
+        haeppchen(function () {
+          window.CaelumModul[m](s, f, haeppchen);   // 3. Wert: Module können eigene Teile (z. B. Bänke B–D) hinten anstellen
+          // Sprungmarke (#drum-808 …) zeigt in ein Modul, das erst jetzt da ist – der Browser ist schon vorbeigesprungen
+          var h = location.hash.slice(1), z = h && document.getElementById(decodeURIComponent(h));
+          if (z && s.contains(z)) setTimeout(function () { z.scrollIntoView({ block: 'start' }); }, 50);
+        });
       };
       // 24.11.2026 Leistung (Lighthouse TBT): ein Modul wird erst gebaut, wenn man in seine Nähe scrollt; mit Sprungmarke sofort
       var nah = !('IntersectionObserver' in window) || !!location.hash, bereit = false;
