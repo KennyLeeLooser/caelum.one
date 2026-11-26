@@ -1,0 +1,398 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "hierarchie",
+  "titel": "Hierarchie",
+  "bild": "hierarchie.svg",
+  "teile": [
+    {
+      "id": "netz",
+      "titel": "0 · Netz",
+      "satz": "Ganz oben das Netz: Hörer im Browser oder Radio-Player, Mitspieler von außen über ein eigenes, verschlüsseltes Netz.",
+      "punkte": [
+        "Eigenes Netz und VPN statt offener Cloud",
+        "Viele Hörer gleichzeitig",
+        "Ein Relais in der Cloud ist geplant"
+      ],
+      "bezug": [
+        "hierarchie/pfoertner",
+        "signalfluss/zuhoerer"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Hörer",
+          "viele"
+        ],
+        [
+          "Cloud-Relais",
+          "geplant"
+        ]
+      ],
+      "mehr": "Bewegungs- und Klangdaten bleiben im eigenen Netz. Wer von außen mitspielt, kommt über das VPN herein."
+    },
+    {
+      "id": "pfoertner",
+      "titel": "1 · Pförtner",
+      "satz": "Ein kleines, festes Tor hält die Adresse des Radios – dahinter wechseln die Werke ohne Lücke. Läuft seit 25.11.2026; das Tor vor der Station ist geplant.",
+      "punkte": [
+        "Je Dienst ein Tor, es rechnet keinen Klang",
+        "Werk A sendet, Werk B wird erneuert – dann wechselt das Tor auf der Takt-Eins",
+        "Live geprüft: an der Naht 0 Samples Sprung, der Hörer bleibt verbunden",
+        "Fällt ein Werk aus, schaltet das Tor auf das andere",
+        "Live vor dem Radio seit 25.11.2026; das Tor vor der Station ist geplant"
+      ],
+      "bezug": [
+        "ki-master/pfoertner",
+        "hierarchie/sender"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Sprung an der Naht",
+          "0 Samples (live geprüft A → B → A)"
+        ],
+        [
+          "Wartezeit des Hörers",
+          "0–1 ms"
+        ],
+        [
+          "Radio",
+          "läuft seit 25.11.2026"
+        ],
+        [
+          "Station",
+          "Tor geplant"
+        ]
+      ],
+      "mehr": "Heute hält jeder Dienst seine Adresse selbst; ein Update bedeutet einen Neustart. Mit dem Pförtner wird das Werk dahinter gewechselt, während das Tor die Verbindungen hält."
+    },
+    {
+      "id": "sender",
+      "titel": "2 · Sender",
+      "satz": "Ein Sender ist das, was die Hörer hören: ein durchgehender Strom mit Chat und Ausschnitten – es kann mehrere geben.",
+      "punkte": [
+        "Je Sender ein Strom",
+        "Chat und Ausschnitte gehören zum Sender",
+        "Mehrere Sender nebeneinander"
+      ],
+      "bezug": [
+        "signalfluss/radio",
+        "klang-verbund/radio"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Format",
+          "MP3-Strom"
+        ],
+        [
+          "Sender",
+          "mehrere"
+        ]
+      ],
+      "mehr": "Der Sender bekommt seinen Ton vom Crossfader darunter und reicht ihn an die Hörer weiter."
+    },
+    {
+      "id": "crossfader",
+      "titel": "3 · Crossfader",
+      "satz": "Der Crossfader blendet zwischen den Decks – immer auf einer Takt-Eins, damit kein Schlag verrutscht.",
+      "punkte": [
+        "Je Sender ein Crossfader",
+        "Heute: ganzes Signal von A nach B",
+        "Gleiches Material linear, verschiedenes mit Equal Power",
+        "Je Band und mit mehr als zwei Stationen: geplant"
+      ],
+      "bezug": [
+        "hierarchie/band-crossfader",
+        "hierarchie/matrix",
+        "hierarchie/decks"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Wechsel",
+          "nur auf der Takt-Eins"
+        ],
+        [
+          "Decks",
+          "2 (A und B)"
+        ]
+      ],
+      "mehr": "Weil beide Decks derselben Uhr folgen, liegt der Wechsel genau auf dem Schlag. Ein Deck, das nicht im selben Takt ist, gilt als „nicht bereit“."
+    },
+    {
+      "id": "decks",
+      "titel": "4 · Decks",
+      "satz": "Jedes Deck ist der fertige Mix einer Station, mit Runden-Marken, damit der Crossfader weiß, wo die Eins liegt.",
+      "punkte": [
+        "Deck A und Deck B",
+        "Je Deck eine Station",
+        "Runden-Marke an jeder Takt-Eins"
+      ],
+      "bezug": [
+        "hierarchie/stationen",
+        "hierarchie/crossfader"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Decks",
+          "A, B – später mehr"
+        ]
+      ],
+      "mehr": "Wie beim DJ-Pult: zwei Quellen, ein Überblender. Hier ist jede Quelle eine ganze Session mit Mitspielern."
+    },
+    {
+      "id": "stationen",
+      "titel": "5 · Stationen",
+      "satz": "Die Station ist der Takt-Server einer Session: sie zählt die Runden, spielt das Grundmuster und mischt die Mitspieler.",
+      "punkte": [
+        "Runden-Uhr abtastgenau",
+        "Grundmuster läuft immer",
+        "Station B folgt Station A im selben Takt",
+        "Mehrere Stationen nebeneinander"
+      ],
+      "bezug": [
+        "klang-verbund/uhr",
+        "signalfluss/station",
+        "jam-zyklus/jam-server"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Runde",
+          "4 Takte bei 120 BPM = 8 s"
+        ],
+        [
+          "Folgen",
+          "B übernimmt Takt und Zustand von A"
+        ]
+      ],
+      "mehr": "Folgt B der Station A, lässt sich auf B wechseln, ohne dass die Musik stoppt – etwa für ein Update oder eine neue Besetzung."
+    },
+    {
+      "id": "mixer",
+      "titel": "6 · Mixer",
+      "satz": "Je Station ein Mixer – wie ein Crossfader über alle Spuren, nur feiner: Fader, Pan, Mute, Solo, Aufnahme.",
+      "punkte": [
+        "Gleicht die Lautheit jeder Spur selbst an",
+        "Hält die Summe im Ziel",
+        "Grundmuster als eigener Zug"
+      ],
+      "bezug": [
+        "pult/kanalzug",
+        "pult/summe",
+        "pult/ki-master"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Kanalzüge",
+          "8 + Grundmuster"
+        ],
+        [
+          "Summe",
+          "−18 dBFS"
+        ]
+      ],
+      "mehr": "Der Inhaber: Ein Mixer ist ähnlich wie ein Crossfader an allen Spuren, aber anders. Einzelheiten in Kapitel 5 „Pult“."
+    },
+    {
+      "id": "spuren",
+      "titel": "7 · Spuren",
+      "satz": "Eine Spur ist der Platz eines Mitspielers oder Instruments im Mixer.",
+      "punkte": [
+        "Bis zu acht Spuren je Station",
+        "Jede Spur hat ihren Kanalzug",
+        "Gespielt in Runde n, gehört in Runde n+1"
+      ],
+      "bezug": [
+        "jam-zyklus/mix",
+        "pult/kanalzug"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Spuren",
+          "bis 8 je Station"
+        ]
+      ],
+      "mehr": "Jede Spur wird je Runde gemessen und angeglichen, bevor sie in den Mix geht."
+    },
+    {
+      "id": "spieler",
+      "titel": "8 · Spieler",
+      "satz": "Ganz unten der Mensch – oder die KI: wer eine Spur füllt, im Browser, am Smartphone, in der DAW oder als Simulation.",
+      "punkte": [
+        "Browser-Mitspieler",
+        "Android-App mit eigenen Instrumenten",
+        "DAW mit Motion-Bridge und Plugin",
+        "KI-Spieler (Perkussion, Fläche, Arpeggio)",
+        "Simulierte Spieler für Proben"
+      ],
+      "bezug": [
+        "signalfluss/controller",
+        "klang-verbund/handy",
+        "ki-master/spieler"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Wege",
+          "Browser · Android · DAW · KI · Simulation"
+        ]
+      ],
+      "mehr": "Hier entsteht der Ton. Er steigt Ebene für Ebene nach oben, bis er bei den Hörern ankommt."
+    },
+    {
+      "id": "uhr",
+      "titel": "Eine Uhr",
+      "satz": "Durch alle Ebenen läuft eine Uhr: jede Ebene schaltet nur auf einer Takt-Eins.",
+      "punkte": [
+        "Zeitbasis der Station, gezählt in Samples",
+        "Rundenstart auf der Maschinen-Uhr für alle lesbar",
+        "Crossfader, Decks und Stationen wechseln nur auf der Eins"
+      ],
+      "bezug": [
+        "klang-verbund/uhr",
+        "hierarchie/stationen"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Genauigkeit des Wechsels",
+          "≤ 128 Samples"
+        ]
+      ],
+      "mehr": "Ohne gemeinsame Uhr würde jeder Wechsel zwischen Stationen oder Decks einen Holperer erzeugen."
+    },
+    {
+      "id": "inhaber",
+      "titel": "Inhaber – Vorrang",
+      "satz": "Der Mensch hat immer Vorrang: greift der Inhaber ein, hält die KI vier Runden still und stellt nichts zurück.",
+      "punkte": [
+        "Vorrang auf jeder Ebene",
+        "KI hält 4 Runden still",
+        "Neustart, Tempo, Spur entfernen nur auf sein Wort"
+      ],
+      "bezug": [
+        "ki-master/vorrang",
+        "pult/regeln"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Stillhalten der KI",
+          "4 Runden ≈ 32 s bei 120 BPM"
+        ]
+      ],
+      "mehr": "Die Steuerung kommt von der Seite und greift in mehrere Ebenen ein – vom Sender bis zum Mixer."
+    },
+    {
+      "id": "ki-master",
+      "titel": "KI-Master",
+      "satz": "Der KI-Master liest jede Ebene mit, löst Übergaben zwischen Decks aus, kann Not-Aus geben und spielt selbst mit.",
+      "punkte": [
+        "Übergabe A ↔ B auf der Takt-Eins",
+        "Not-Aus und Freigeben",
+        "Spielt als KI eine eigene Spur"
+      ],
+      "bezug": [
+        "ki-master/ki-master",
+        "ki-master/leiten",
+        "ki-master/notaus"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Rolle",
+          "Gastgeber am Station-PC"
+        ]
+      ],
+      "mehr": "Alles über den KI-Master, seinen Wächter, den Wachhund und den Pförtner steht in Kapitel 7."
+    },
+    {
+      "id": "wachhund",
+      "titel": "Wachhund",
+      "satz": "Der Wachhund schaut alle zwei Sekunden nach Stationen, Radio und Bridge und startet nur, was wirklich weg ist.",
+      "punkte": [
+        "Fällt Station A aus, startet sie als Folgerin von B",
+        "Nie ein zweiter Prozess auf derselben Adresse",
+        "Regel: niemals Unterbruch"
+      ],
+      "bezug": [
+        "ki-master/wachhund",
+        "hierarchie/stationen"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Blick",
+          "alle 2 s"
+        ],
+        [
+          "Neustart",
+          "nach > 10 s weg, Adresse 3× frei und kein Prozess mehr"
+        ],
+        [
+          "nach Standby",
+          "30 s Schonfrist"
+        ]
+      ],
+      "mehr": "Er bewacht die Ebenen 2 und 5 und die Motion-Bridge. Einzelheiten in Kapitel 7."
+    },
+    {
+      "id": "band-crossfader",
+      "titel": "Band-Crossfader",
+      "satz": "Geplant: je Frequenzband ein eigener Fader – zum Beispiel den Bass von Deck A, Mitten und Höhen von Deck B.",
+      "punkte": [
+        "Bänder Tief < 200 Hz · Mitte · Hoch > 2,5 kHz",
+        "Weichen nach Linkwitz-Riley 4. Ordnung – die Summe bleibt flach",
+        "Gleiches Material linear, verschiedenes mit Equal Power, je Band gewählt",
+        "Bass immer nur aus einer Station"
+      ],
+      "bezug": [
+        "hierarchie/crossfader",
+        "hierarchie/matrix"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Bänder",
+          "2–3"
+        ],
+        [
+          "Wechsel",
+          "nur auf der Takt-Eins"
+        ]
+      ],
+      "mehr": "Zwei Bassläufe zugleich matschen – darum gilt die Bass-Regel fest im Mischer. Die KI darf sie nicht überstimmen, der Inhaber schon."
+    },
+    {
+      "id": "matrix",
+      "titel": "Stationen-Matrix",
+      "satz": "Geplant: mehr als zwei Decks – jede Station liefert je Band einen Anteil, zusammen genau 100 %.",
+      "punkte": [
+        "x Stationen × 3 Bänder",
+        "Je Band Summe der Anteile = 1",
+        "Die Vielfalt wächst mit Stationen hoch Bändern"
+      ],
+      "bezug": [
+        "hierarchie/band-crossfader",
+        "hierarchie/stationen"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Beispiel",
+          "4 Stationen, 3 Bänder → 4³ = 64 Kombinationen"
+        ],
+        [
+          "mit Zwischenstellungen",
+          "stufenlos"
+        ]
+      ],
+      "mehr": "Schon ohne Zwischenstellungen ergibt jede Wahl „welche Station liefert welches Band“ einen eigenen Klang – bei vier Stationen und drei Bändern 64."
+    }
+  ]
+}

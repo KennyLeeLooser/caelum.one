@@ -1,0 +1,328 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "jam-zyklus",
+  "titel": "Jam-Zyklus",
+  "bild": "jam-runde.svg",
+  "teile": [
+    {
+      "id": "backing-loop",
+      "titel": "Backing-Loop",
+      "stand": "läuft",
+      "satz": "Das Fundament der Session: ein selbst komponierendes Pattern, das nie aufhört.",
+      "punkte": [
+        "Spielt Drums (Kick, Snare, Clap, Hats, Shaker), Bass, Fläche und Glocke – komplett gerechnete, eigene Klänge, keine Samples",
+        "Wechselt zwischen den Teilen „ruhig“, „treiben“, „offen“ und „schweben“, gewichtet zufällig nach der Stimmung",
+        "Tritt um 12 dB zurück (nur Drums + Bass), sobald jemand spielt, und kommt über 2 Zyklen zurück, wenn alle still sind"
+      ],
+      "werte": [
+        [
+          "Raster",
+          "16 Steps je Takt, metrisch gewichtet; Akzente und Ghost Notes je Step"
+        ],
+        [
+          "Teil-Länge",
+          "2–8 Zyklen, Wechsel immer an der Zyklusgrenze"
+        ],
+        [
+          "Stimmung",
+          "Energie und Helligkeit (0…1) steuern Dichte, Swing, Filter und Teil-Wahl"
+        ],
+        [
+          "Stimmton",
+          "432 Hz"
+        ],
+        [
+          "Übergang",
+          "alter Teil klingt im letzten Takt aus (Filter zu, −6 dB), neuer setzt mit Auftakt ein"
+        ],
+        [
+          "Schalter",
+          "Session-Host kann ihn an- und abschalten, gilt ab dem nächsten Zyklus"
+        ]
+      ],
+      "mehr": "Jeder Zyklus variiert in sich – Fills, Akkordumkehrungen, Velocity-Streuung, Pausen –, aber mit festem Startwert: Derselbe Zyklus klingt beim Wiederholen exakt gleich. So bleibt das Programm lebendig und trotzdem prüfbar. Was ein Teil spielt, steht in einer Muster-Datei, nicht im Code.",
+      "bezug": [
+        "jam-zyklus/nie-stille",
+        "audio-kern/drums-808",
+        "signalfluss/station"
+      ]
+    },
+    {
+      "id": "drums",
+      "titel": "Musiker 1 · Drums",
+      "stand": "läuft",
+      "satz": "Spielt im Web-Client im Browser und steigt in Zyklus n ein.",
+      "punkte": [
+        "Monitoring direkt am eigenen Gerät, ohne Latenz",
+        "Schickt seinen Zyklus in Stücken, während er spielt – nicht erst am Ende",
+        "Hört den Mix des letzten Zyklus und spielt dazu"
+      ],
+      "werte": [
+        [
+          "Zugang",
+          "Einladungs-Code, einmal gültig, läuft nach 48 h ab"
+        ],
+        [
+          "Audio",
+          "PCM 16 Bit, 48 kHz, Stereo"
+        ],
+        [
+          "Datenrate",
+          "≈ 1,5 MB je Zyklus und Spur"
+        ],
+        [
+          "Wiedereinstieg",
+          "nach Verbindungsabbruch 60 s lang auf derselben Spur"
+        ]
+      ],
+      "bezug": [
+        "audio-kern/browser",
+        "jam-zyklus/latenz",
+        "jam-zyklus/jam-server"
+      ]
+    },
+    {
+      "id": "bass",
+      "titel": "Musiker 2 · Bass",
+      "stand": "geplant",
+      "satz": "Spielt mit der Android-App über die Motion-Bridge und steigt in Zyklus n+1 ein. Die Anbindung der App an die Station ist der nächste Schritt.",
+      "punkte": [
+        "Hört in Zyklus n+1 die Drums aus Zyklus n und spielt dazu",
+        "Sein Zyklus n+1 erscheint im Mix von Zyklus n+2",
+        "Einstieg jederzeit, immer auf die Eins des Zyklus"
+      ],
+      "werte": [
+        [
+          "Heute",
+          "simulierte Mitspieler prüfen den Weg im Selbsttest"
+        ],
+        [
+          "Steuer-Spuren",
+          "Bewegung, Noten und Pads als Ereignisliste je Zyklus statt als Audio – geplant"
+        ],
+        [
+          "Bass als MIDI",
+          "App → Bridge → DAW läuft seit 24.11.2026, Slide als Legato"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/motion-bridge",
+        "audio-kern/android",
+        "signalfluss/controller"
+      ]
+    },
+    {
+      "id": "jam-server",
+      "titel": "Jam-Server",
+      "stand": "läuft",
+      "satz": "Die Master-Clock der Session: zählt die Zyklen sample-genau, sammelt jeden Zyklus ein und mischt den letzten.",
+      "punkte": [
+        "Einzige Uhr für alle – Clients gleichen sich per Ping/Pong wie bei NTP ab",
+        "Setzt die Stücke jedes Musikers sample-genau zusammen",
+        "Sendet die Clock an die Bridge; dass DAW und Smartphones ihr folgen, ist in Arbeit"
+      ],
+      "werte": [
+        [
+          "Zykluslänge",
+          "Takte × 4 Schläge; Standard 4 Takte bei 120 BPM = 8 s = 384 000 Samples"
+        ],
+        [
+          "Tempo-Wechsel",
+          "immer erst ab dem nächsten Zyklus"
+        ],
+        [
+          "Mix fertig",
+          "≈ 6–9 ms nach Zyklusende"
+        ],
+        [
+          "Toleranz",
+          "1,5 s nach Zyklusende, dann wird ohne Nachzügler gemischt"
+        ],
+        [
+          "Clock an die Bridge",
+          "≈ 20× je Sekunde (unter Windows gemessen ≈ 16×): BPM, läuft, Position in Vierteln"
+        ],
+        [
+          "Neustart",
+          "hängt sich nach Absturz in die laufende Uhr ein statt bei null zu beginnen"
+        ],
+        [
+          "Selbsttest",
+          "66/66"
+        ]
+      ],
+      "mehr": "Die Zykluslänge wird in Samples festgelegt und ganzzahlig gerundet – so summieren sich über Stunden keine Rundungsfehler auf. Jeder Zyklus beginnt auf einer Takt-Eins; deshalb decken sich Zyklen, DAW-Takte und Looper auf dem Smartphone. „Neustart / auf 0“ stoppt an der nächsten Takt-Eins, macht einen Takt Pause und beginnt bei Zyklus 0 – der Stream läuft dabei lückenlos weiter.",
+      "bezug": [
+        "signalfluss/station",
+        "jam-zyklus/loop-stoppt-nie",
+        "audio-kern/clock"
+      ]
+    },
+    {
+      "id": "mix",
+      "titel": "Mix an alle Musiker",
+      "stand": "läuft",
+      "satz": "Der fertige Mix eines Zyklus – die Grundlage, zu der alle den nächsten spielen.",
+      "punkte": [
+        "Mix n = Backing-Loop + alles, was in Zyklus n gespielt wurde",
+        "Alle hören denselben Mix ab derselben Eins – jedes Stück ist vor seinem Einsatz da",
+        "Jeder spielt tight, egal wie weit entfernt – solange der Zyklus rechtzeitig durchs Netz kommt"
+      ],
+      "werte": [
+        [
+          "Summe",
+          "Pegel × Pan je Spur, Pan mit konstanter Leistung"
+        ],
+        [
+          "Begrenzer",
+          "weich (tanh-artig) bei −1 dBFS – acht laute Spuren übersteuern nicht"
+        ],
+        [
+          "Übergänge",
+          "5 ms Überblendung gegen Knacken"
+        ],
+        [
+          "Fehlendes Stück",
+          "Lücke still, Ränder 2 ms geblendet, Rest wird gemischt"
+        ],
+        [
+          "Spur-Regler",
+          "Pegel 0…1 (Standard 0,8), Pan −1…1, Stumm, Solo"
+        ],
+        [
+          "Vorlauf Web-Client",
+          "0,1 s mit Mix in Stücken (komplett ≈ 75–85 ms vor Zyklusende da), 0,2 s mit ganzem Mix"
+        ]
+      ],
+      "bezug": [
+        "jam-zyklus/latenz",
+        "jam-zyklus/stream",
+        "jam-zyklus/jam-server"
+      ]
+    },
+    {
+      "id": "stream",
+      "titel": "Live-Stream",
+      "stand": "läuft",
+      "satz": "Dieselben Mixe, Zyklus an Zyklus, als durchgehender Stream für Zuhörer.",
+      "punkte": [
+        "Lückenlos: fehlt ein Mix, kommt Stille – nie ein Abriss",
+        "Bitgleich zum Mix der Station, Zyklus für Zyklus geprüft",
+        "Fällt die Station aus, läuft Stille weiter; kommt sie zurück, kommt die Musik zurück"
+      ],
+      "werte": [
+        [
+          "Format",
+          "MP3 192 kbit/s für Radio-Apps; WAV/PCM 16 Bit, 48 kHz, Stereo (≈ 1,5 Mbit/s) im Browser"
+        ],
+        [
+          "Puffer",
+          "≈ 2 s Startreserve"
+        ],
+        [
+          "Metadaten",
+          "ICY-Titel („Now Playing“) wie bei Icecast"
+        ],
+        [
+          "Hörer",
+          "bis 50 gleichzeitig"
+        ],
+        [
+          "Drift-Ausgleich",
+          "höchstens 1 Sample je 1 000, Stockungen bis 5 s werden nachgeholt"
+        ],
+        [
+          "Dauerprobe",
+          "0 Abrisse, 0 Lücken, 0 Unterläufe"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/radio",
+        "signalfluss/zuhoerer",
+        "jam-zyklus/mix"
+      ]
+    },
+    {
+      "id": "latenz",
+      "titel": "Latenz = 1 Zyklus",
+      "stand": "läuft",
+      "satz": "Statt gegen die Netzwerk-Latenz zu kämpfen, wird sie zum festen Versatz von genau einem Zyklus.",
+      "punkte": [
+        "Zyklus n spielen, in Zyklus n+1 hören alle den Mix",
+        "Eigenes Signal direkt am Gerät",
+        "Funktioniert unabhängig von der Entfernung – solange ein Zyklus durchs Netz passt"
+      ],
+      "werte": [
+        [
+          "Versatz Musiker",
+          "genau 1 Zyklus (8 s bei 4 Takten, 120 BPM)"
+        ],
+        [
+          "Versatz Zuhörer",
+          "1 Zyklus + ≈ 2 s Puffer"
+        ],
+        [
+          "Im Selbsttest",
+          "Prüfsignal: Mix n enthält genau Zyklus n und kommt erst in Zyklus n+1"
+        ]
+      ],
+      "mehr": "Das Prinzip ist als Interval-Sync bekannt: Niemand hört die anderen in Echtzeit, alle hören dieselbe Vergangenheit – und die ist garantiert im Takt. Bei wiederholten Patterns, Loops und Grooves fällt der Versatz musikalisch kaum auf; er wird Teil des Spiels.",
+      "bezug": [
+        "signalfluss/station",
+        "jam-zyklus/mix",
+        "jam-zyklus/drums"
+      ]
+    },
+    {
+      "id": "loop-stoppt-nie",
+      "titel": "Der Loop stoppt nie",
+      "stand": "läuft",
+      "satz": "Ein hängender Teilnehmer bremst niemanden aus.",
+      "punkte": [
+        "Toleranz: 1,5 s nach Zyklusende",
+        "Was später kommt, fehlt nur in diesem einen Mix",
+        "Abgebrochene Verbindungen bremsen die Zyklen nicht"
+      ],
+      "werte": [
+        [
+          "Toleranz",
+          "1,5 s"
+        ],
+        [
+          "Teil-Zyklen",
+          "fehlt ein Stück, wird der Rest gemischt (Anteil wird gemeldet)"
+        ],
+        [
+          "Früher Mix",
+          "sind alle Stücke da, wird in den letzten 150 ms schon gemischt"
+        ]
+      ],
+      "bezug": [
+        "jam-zyklus/jam-server",
+        "jam-zyklus/stream"
+      ]
+    },
+    {
+      "id": "nie-stille",
+      "titel": "Nie Stille",
+      "stand": "läuft",
+      "satz": "Die Session hat immer einen Groove – auch nachts um drei ohne Musiker.",
+      "punkte": [
+        "Ohne Musiker läuft der Backing-Loop als automatisches Programm 24/7",
+        "Gesten lenken die Stimmung: Schütteln hebt die Energie",
+        "BPM und Takte setzt der Session-Host"
+      ],
+      "werte": [
+        [
+          "Gesten",
+          "heute über den Session-Host; direkt aus der Bridge geplant"
+        ]
+      ],
+      "bezug": [
+        "jam-zyklus/backing-loop",
+        "signalfluss/controller",
+        "signalfluss/radio"
+      ]
+    }
+  ]
+}

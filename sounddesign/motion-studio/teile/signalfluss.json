@@ -1,0 +1,303 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "signalfluss",
+  "titel": "Signalfluss",
+  "bild": "studio-ueberblick.svg",
+  "teile": [
+    {
+      "id": "controller",
+      "titel": "Controller",
+      "satz": "Bewegung wird zur Spielhilfe – jeder spielt mit dem, was er gerade in der Hand hat.",
+      "punkte": [
+        "Smartphone (Android): Kippen, Neigen und Drehen als Regler, Schütteln und Klopfen als Trigger, dazu Pads, Knobs und Fader am Bildschirm",
+        "Mehrere Smartphones gleichzeitig: jedes mit eigener Nummer und eigenem MIDI-Port",
+        "Joy-Con L/R per Bluetooth: Gyro, Tasten und Stick – geplant",
+        "Session-Host: lädt per Code ein, setzt BPM für alle",
+        "Web-Client: im Browser mitspielen, ohne Installation"
+      ],
+      "bezug": [
+        "signalfluss/motion-bridge",
+        "audio-kern/android",
+        "audio-kern/browser"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Smartphone",
+          "Android-App, sendet per WLAN oder VPN an die Bridge"
+        ],
+        [
+          "Sensoren",
+          "Gyro, Beschleunigung, Schwerkraft, Lage – bis 200 Hz"
+        ],
+        [
+          "Daten",
+          "32-Bit-Werte mit Zeitstempel je Paket (OSC über UDP)"
+        ],
+        [
+          "Lage",
+          "relativ zur Mitte: einmal „Mitte“ tippen, dann zählt nur die Bewegung"
+        ],
+        [
+          "Mehrere Geräte",
+          "Nummer 1–16; Master/Slave-Verbund: eigener Port je Gerät läuft, Rollen in Arbeit"
+        ],
+        [
+          "Instrumente als MIDI",
+          "Bass, Mono, Poly, Duo, Kristall und Sampler der App spielen ihre Noten über die Bridge in die DAW – je Instrument ein eigener Kanal, läuft seit 25.11.2026"
+        ],
+        [
+          "Joy-Con",
+          "geplant – Bluetooth direkt an der Bridge, Gyro ±2000 °/s, Beschleunigung ±8 g, Vibration als Takt-Puls"
+        ],
+        [
+          "Web-Client",
+          "im Browser, verbindet sich direkt mit der Station"
+        ],
+        [
+          "Session-Host",
+          "Einladung per Einmal-Code (48 h gültig), setzt BPM und Takte"
+        ]
+      ],
+      "mehr": "Jedes Smartphone ist dieselbe App – es unterscheidet sich nur durch seine Nummer. Damit mehrere Geräte in der DAW nicht ineinanderlaufen, bekommt jedes seinen eigenen virtuellen MIDI-Port. Geplant ist ein Verbund: Ein Master gibt Takt und Tempo vor, Slaves folgen, und der Master kann sie einstellen oder als Gruppe steuern – alles über die Bridge, nie direkt von Gerät zu Gerät. Die App spielt auch für sich allein: mit eigenem Player, Effekten, Looper und Sequencer."
+    },
+    {
+      "id": "motion-bridge",
+      "titel": "Motion-Bridge",
+      "satz": "Die Desktop-App wandelt Sensordaten in Steuersignale – lokal, ohne Cloud.",
+      "punkte": [
+        "Sensor → MIDI CC (7/14 Bit), Note mit Velocity, Pitchbend und OSC",
+        "Gesten (Schütteln, Klopfen, Kippen, Drehen) als Trigger – Schwellen werden noch am Gerät eingemessen",
+        "Mapping frei zuweisbar: Bereich, Totzone, Kurve, Glättung – in einer Mapping-Datei, nie fest im Programm",
+        "Sendet MIDI-Clock mit 24 ppqn inkl. Start/Stop",
+        "Auto-Sync: Bewegungen ohne Zuordnung bekommen selbst freie CCs bzw. Noten; MIDI-Panik setzt alles zurück"
+      ],
+      "bezug": [
+        "audio-kern/mapping",
+        "audio-kern/clock",
+        "signalfluss/daw",
+        "jam-zyklus/jam-server"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Eingang",
+          "OSC über UDP, nur eigenes Netz und VPN"
+        ],
+        [
+          "Gemessen",
+          "Smartphone → Bridge → MIDI → DAW mit 200 Hz, Schwankung im Median ≈ 2 ms, 99 % unter ≈ 9 ms"
+        ],
+        [
+          "Ziel",
+          "Bewegung → hörbare Änderung unter 20 ms im Mittel, unter 40 ms in 99 % der Fälle"
+        ],
+        [
+          "Modi",
+          "absolut, relativ, umschalten, halten, Impuls, Schwelle; Kopplung und Bedingung je Regel"
+        ],
+        [
+          "Makros",
+          "1–64, Glättung per Tiefpass"
+        ],
+        [
+          "Ausgabe",
+          "nur bei Änderung – kein MIDI-Dauerfeuer; je Smartphone ein eigener MIDI-Port"
+        ],
+        [
+          "Clock",
+          "MIDI-Clock 24 ppqn, PLL glättet Netzwerk-Zittern, eine Uhr für alle Geräte"
+        ],
+        [
+          "Aufnahme",
+          "Bewegung als Datei, abspielbar wie ein echtes Gerät; prüft, welche Bewegungen belegt sind"
+        ],
+        [
+          "Selbsttest",
+          "69/69, auch über echtes Netz mit Latenz-Messung"
+        ]
+      ],
+      "mehr": "Nur die Bridge spricht mit den Geräten. Was ein Sensorwert bewirkt, steht ausschließlich in der Mapping-Datei – so lässt sich jede Zuordnung austauschen, ohne das Programm anzufassen. Die Zeitbasis ist die Empfangsuhr der Bridge; aus Zeitstempeln im Strom misst sie Latenz und Schwankung je Gerät. Als nächster Schritt übernimmt sie die Clock der Station, damit DAW und Smartphones dem Jam-Server folgen."
+    },
+    {
+      "id": "daw",
+      "titel": "DAW (optional)",
+      "satz": "Wer eine DAW nutzt, bindet sie ein. Pflicht ist sie nicht.",
+      "punkte": [
+        "Erscheint als virtueller MIDI-Port – MIDI-Learn wie bei jedem Controller",
+        "Folgt der Clock der Bridge (MIDI-Sync)",
+        "Eigenes VST3-Plugin mit 16 Makros, Bewegungsdaten per OSC und Clock-Anzeige",
+        "Als Sendemaschine der Session vorgesehen – noch offen"
+      ],
+      "bezug": [
+        "audio-kern/vst3",
+        "signalfluss/motion-bridge",
+        "audio-kern/clock"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Wege",
+          "MIDI-Learn über den virtuellen Port (Hauptweg) · eigenes Plugin mit feinen 32-Bit-Werten, als Automation aufnehmbar"
+        ],
+        [
+          "MIDI",
+          "CC 7 oder 14 Bit, Noten mit Velocity, Pitchbend"
+        ],
+        [
+          "Geprüft in",
+          "Ableton Live 12 (Intro): Sends, Plugin-Makros, Automation-Arm per MIDI-Learn"
+        ],
+        [
+          "Clock",
+          "24 ppqn, Start/Continue/Stop"
+        ],
+        [
+          "Mehrere Smartphones",
+          "je Gerät ein eigener Port – Spuren bleiben getrennt"
+        ],
+        [
+          "Ohne Max for Live",
+          "alles geht über MIDI und das eigene Plugin"
+        ]
+      ],
+      "mehr": "Die DAW ist Gast, nicht Fundament: Der Jam-Server mischt selbst, die Session läuft auch ganz ohne DAW. Als Sendemaschine der Session ist die DAW rechtlich weitgehend geklärt – eine Lizenz, ein Bediener, ein eigener Rechner –, offen sind die Rückfrage beim Hersteller und die technische Anbindung."
+    },
+    {
+      "id": "station",
+      "titel": "Caelum Station",
+      "satz": "Der Jam-Server: bis zu acht Musiker spielen im selben Loop, synchron über das Netz – mit eigenem Mix im Server.",
+      "punkte": [
+        "Interval-Sync: gespielt in Zyklus n, gehört von allen in Zyklus n+1 – Netzwerk-Latenz spielt keine Rolle",
+        "Oberste Uhr der Session: sendet ihre Clock an die Bridge – die Übernahme dort ist in Arbeit",
+        "Backing-Loop, wenn niemand spielt – die Session ist nie still",
+        "Läuft als Prototyp im eigenen Netz; der Web-Client spielt schon mit – Sessions mit mehreren echten Musikern stehen noch aus"
+      ],
+      "bezug": [
+        "jam-zyklus/jam-server",
+        "jam-zyklus/latenz",
+        "jam-zyklus/backing-loop",
+        "jam-zyklus/mix"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Zyklus",
+          "4 Takte bei 120 BPM = 8 s (einstellbar, gilt ab nächstem Zyklus)"
+        ],
+        [
+          "Spuren",
+          "bis 8 je Raum, Zahl stellt der Admin ein; Solo und Stumm je Spur"
+        ],
+        [
+          "Verbindung",
+          "WebSocket, eigene Implementierung"
+        ],
+        [
+          "Audio je Spur",
+          "PCM 16 Bit, 48 kHz, Stereo"
+        ],
+        [
+          "Mix fertig",
+          "≈ 6–9 ms nach Zyklusende"
+        ],
+        [
+          "Zugang",
+          "Einladungs-Code; ohne Code nur Zuhörer"
+        ],
+        [
+          "Netz",
+          "nur lokales Netz und VPN – keine Cloud, kein Konto"
+        ],
+        [
+          "Aufnahme",
+          "nur auf ausdrücklichen Befehl von Session-Host oder Admin: je Spur scharf schalten, trocken als eigene WAV"
+        ],
+        [
+          "Selbsttest",
+          "66/66"
+        ]
+      ],
+      "mehr": "Die Station ist ohne fremde Pakete gebaut, auch der WebSocket. Gespeichert wird nichts, solange Session-Host oder Admin nicht ausdrücklich eine Spur aufnehmen: Zyklen liegen nur im Speicher, die letzten zwei je Spur. Öffentlich wird nie die Station selbst, sondern nur das Radio – und das erst nach Freigabe."
+    },
+    {
+      "id": "radio",
+      "titel": "Caelum Radio",
+      "satz": "Der Mix der Session als Live-Stream – mit Now Playing und moderiertem Live-Chat, komplett selbst gebaut.",
+      "punkte": [
+        "Holt den Mix von der Station und streamt ihn lückenlos weiter",
+        "Now Playing zeigt Teil, BPM, Zyklus, Stimmung und wer gerade spielt",
+        "Live-Chat mit Moderation: löschen, stummschalten, verlangsamen, anheften",
+        "Mehrere Stationen = mehrere Sender, Wechsel ohne Neuladen; Sendername frei wählbar",
+        "Mitspiel-Anfrage: Hörer bitten um eine Einladung, die Moderation bestätigt"
+      ],
+      "bezug": [
+        "jam-zyklus/stream",
+        "signalfluss/zuhoerer",
+        "signalfluss/station"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Format",
+          "MP3 192 kbit/s (eigener Encoder) für Radio-Apps; WAV/PCM 16 Bit, 48 kHz, Stereo im Browser"
+        ],
+        [
+          "Kompatibel",
+          "Icecast-Metadaten (ICY), Playlist für Radio-Apps"
+        ],
+        [
+          "Hörer",
+          "bis 50 gleichzeitig"
+        ],
+        [
+          "Puffer",
+          "≈ 2 s Startreserve"
+        ],
+        [
+          "Chat-Verlauf",
+          "50 Nachrichten / 2 h, nur im Speicher"
+        ],
+        [
+          "Netz",
+          "privat im lokalen Netz oder per VPN; öffentlich erst nach Freigabe"
+        ],
+        [
+          "Selbsttest",
+          "72/72, Dauerprobe ohne Abriss"
+        ]
+      ],
+      "mehr": "Die Radio-Uhr gibt alle 20 ms exakt Zeit × 48 000 Samples aus – kommt nichts nach, Stille statt Abriss. Kleine Uhr-Abweichungen zwischen Station und Radio gleicht sie unhörbar aus (höchstens ein Sample je 1 000), kurze Stockungen bis 5 s holt sie nach. Geht die Station weg, läuft Stille weiter; kommt sie zurück, ist die Musik sofort wieder da."
+    },
+    {
+      "id": "zuhoerer",
+      "titel": "Zuhörer",
+      "satz": "Hören live zu und chatten – ohne mitzuspielen.",
+      "punkte": [
+        "Versatz: 1 Zyklus plus ≈ 2 s Puffer",
+        "Hören im Browser, in Radio-Apps oder im Media-Player – keine App nötig",
+        "Chatten mit Namen; mitspielen nur per Einladung – anfragen direkt auf der Radio-Seite"
+      ],
+      "bezug": [
+        "jam-zyklus/stream",
+        "signalfluss/radio",
+        "jam-zyklus/latenz"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Zugang",
+          "ohne Code: nur zuhören"
+        ],
+        [
+          "Player",
+          "Webseite mit Pegel, Now Playing und Chat"
+        ],
+        [
+          "Handy",
+          "Seite passt auf 375 px Breite"
+        ]
+      ]
+    }
+  ]
+}

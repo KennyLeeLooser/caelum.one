@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="de" data-thema="dunkel">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caelum Motion Studio · Bilder der Idee · Caelum GmbH</title>
+<meta name="description" content="Caelum Motion Studio in Bildern: Signalfluss, Jam-Zyklus, Audio-Kern, Klang-Verbund, Pult, Hierarchie und KI-Master – jeder Kernteil einzeln anklickbar, dazu eine Hörprobe.">
+<link rel="canonical" href="https://www.caelum.one/sounddesign/motion-studio/">
+<meta property="og:title" content="Caelum Motion Studio · Caelum GmbH">
+<meta property="og:description" content="Bilder der Idee">
+<meta property="og:url" content="https://www.caelum.one/sounddesign/motion-studio/">
+<meta property="og:image" content="https://www.caelum.one/assets/logo-512.png">
+<link rel="icon" type="image/svg+xml" href="/assets/logo-linie.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
+<link rel="stylesheet" href="/assets/recht.css?v=2">
+<link rel="stylesheet" href="/assets/developer.css?v=2">
+<link rel="stylesheet" href="/assets/bereich.css?v=4">
+<link rel="stylesheet" href="studio.css?v=2">
+</head>
+<body class="dev bereich">
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. Bilder: Strang G (CaelumMotion/bild, oeffentlich.mjs), 26.11.2026. KI-Beitrag (Claude, GB-7) – Freigabe durch Kenny Looser ausstehend (GB-8). -->
+<header>
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Caelum GmbH"><img src="/assets/logo-linie-hell.svg" alt=""><span>Caelum GmbH</span></a>
+    <nav>
+      <a class="dev-schalter an" href="/sounddesign/" aria-label="Caelum Motion Studio verlassen, zurück zu Sound Design" title="Zurück zu Sound Design"><span class="spur"><i></i></span><b>Motion Studio</b></a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="bereich">
+  <section class="kopf">
+    <p class="ueber">/sounddesign/motion-studio</p>
+    <h1>Caelum Motion Studio · Bilder der Idee</h1>
+  </section>
+<section class="cms" aria-labelledby="cms-ueberschrift">
+  <p class="cms-marke">Caelum Motion Studio</p>
+  <h2 id="cms-ueberschrift">Bewegung wird MIDI. Acht Musiker, ein Loop.</h2>
+  <p class="cms-satz">Smartphone-Sensoren als Controller, Jam-Session über das Netz im selben Takt, live gestreamt. Jeder Kernteil lässt sich einzeln ansehen.</p>
+
+  <ol class="cms-kette" aria-label="Ablauf">
+    <li><b>1</b>Controller</li>
+    <li><b>2</b>Wandlung</li>
+    <li><b>3</b>Jam-Session</li>
+    <li><b>4</b>Stream</li>
+  </ol>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">1</span>
+      <span><span class="cms-titel">Signalfluss</span>
+            <span class="cms-kurz">Sensor → MIDI/OSC → Jam-Server → Live-Stream.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="studio-ueberblick.svg" data-kacheln="teile/signalfluss.json" width="1200" height="640" loading="lazy"
+           alt="Signalfluss: Smartphone als Controller (Joy-Con geplant), Motion-Bridge wandelt in MIDI und OSC, Caelum Station synchronisiert die Session, Caelum Radio streamt den Mix mit Chat."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>MIDI CC, Note, Pitchbend, OSC</li>
+        <li>DAW optional</li>
+        <li>Daten bleiben im lokalen Netz</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">2</span>
+      <span><span class="cms-titel">Der Jam-Zyklus</span>
+            <span class="cms-kurz">Gespielt in Zyklus n, gehört von allen in n+1 – Latenz wird zum Groove.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="jam-runde.svg" data-kacheln="teile/jam-zyklus.json" width="1200" height="680" loading="lazy"
+           alt="Zeitachse über vier Zyklen zu je 8 Sekunden: Was in Zyklus n gespielt wird, hören alle in Zyklus n+1."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>1 Zyklus = 4 Takte = 8 s</li>
+        <li>Der Loop stoppt nie</li>
+        <li>Backing-Loop bei Leerlauf</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">3</span>
+      <span><span class="cms-titel">Ein Audio-Kern</span>
+            <span class="cms-kurz">Eine DSP-Engine in C++ – identisch als App, VST3-Plugin und im Browser.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="aufbau-kern.svg" data-kacheln="teile/audio-kern.json" width="1200" height="660" loading="lazy"
+           alt="Audio-Kern in C++ mit drei Plattformen: Android-App, VST3-Plugin und Browser, abgesichert durch den Null-Test."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>Echtzeitsicher, ohne Fremd-Bibliotheken</li>
+        <li>Null-Test: Differenz 0</li>
+        <li>Android, VST3, Browser</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">4</span>
+      <span><span class="cms-titel">Klang-Verbund</span>
+            <span class="cms-kurz">Eine Uhr für alle Werkzeuge, ein Klang in App, Plugin und Browser – Samples laufen im Takt mit.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="klang-verbund.svg" data-kacheln="teile/klang-verbund.json" width="1200" height="680" loading="lazy"
+           alt="Klang-Verbund: die Caelum Station als eine Uhr, der Motion-Bridge, Android-App, Web-Studio, caelum.one und Radio folgen; ein Klang in App, Kern und Browser; Samples als One-Shot, Live oder Loop mit Freigabe."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>Station gibt den Takt vor</li>
+        <li>Muster und Klang als gemeinsame Daten</li>
+        <li>Samples: One-Shot, Live, Loop (geplant)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">5</span>
+      <span><span class="cms-titel">Das Pult</span>
+            <span class="cms-kurz">Acht Kanalzüge, Grundmuster und Summe – eine KI regelt mit, der Mensch hat Vorrang.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="pult.svg" data-kacheln="teile/pult.json" width="1200" height="680" loading="lazy"
+           alt="Pult: acht Kanalzüge mit Angleich, Pan, Aufnahme, Mute, Solo und Fader in dB, ein Zug für das Grundmuster, Summe mit Pegel und Tempo; KI am Pult; Hardware-Pult geplant."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>Fader in dB, Mute, Solo, Pan</li>
+        <li>Doppelklick = 0 dB</li>
+        <li>EQ, Kompressor, Hall (geplant)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">6</span>
+      <span><span class="cms-titel">Hierarchie</span>
+            <span class="cms-kurz">Vom Netz bis zum Spieler: neun Ebenen, eine Uhr – mit Band-Crossfadern 64 Kombinationen.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="hierarchie.svg" data-kacheln="teile/hierarchie.json" width="1200" height="720" loading="lazy"
+           alt="Hierarchie in neun Ebenen: Netz, Pförtner, Sender, Crossfader, Decks, Stationen, Mixer, Spuren, Spieler; der Ton steigt nach oben, gesteuert von der Seite durch Inhaber, KI-Master und Wachhund; Band-Crossfader und Stationen-Matrix geplant."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>Ton steigt von den Spielern zu den Hörern</li>
+        <li>Eine Uhr durch alle Ebenen</li>
+        <li>3 Bänder × 4 Stationen (geplant)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">7</span>
+      <span><span class="cms-titel">KI-Master</span>
+            <span class="cms-kurz">Eine KI leitet, spielt mit und regelt – Wächter, Wachhund und Pförtner halten die Musik am Laufen.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-bild"><img src="ki-master.svg" data-kacheln="teile/ki-master.json" width="1200" height="680" loading="lazy"
+           alt="KI-Master mit Leiten, Not-Aus, Mitspielen und Pult; darunter Wächter, Wachhund und Pförtner; darüber der Vorrang des Inhabers."></div>
+      <p class="cms-wisch">Zum Ansehen seitlich wischen.</p>
+      <ul class="cms-punkte">
+        <li>Der Mensch hat immer Vorrang</li>
+        <li>Wechsel nur auf der Takt-Eins</li>
+        <li>Musik stoppt nie</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="cms-karte" name="cms-studio">
+    <summary>
+      <span class="cms-nr">♪</span>
+      <span><span class="cms-titel">Hörprobe</span>
+            <span class="cms-kurz">Sound-Design zum Anhören – der Punkt zeigt, was Tonhöhe und Filter gerade tun.</span></span>
+      <svg class="cms-pfeil" viewBox="0 0 28 28" aria-hidden="true"><path d="M8 11 L14 17 L20 11"/></svg>
+    </summary>
+    <div class="cms-inhalt">
+      <div class="cms-klangprobe" data-klangprobe="klangprobe/" data-probe="proben/sounddesign.probe.json">
+        <p class="cms-satz">Die Hörprobe lädt beim Aufklappen. ▶ startet sie – kein Autostart.</p>
+      </div>
+    </div>
+  </details>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Caelum GmbH · Regensdorf</span>
+    <span><a href="/impressum.html">Impressum</a> · <a href="/datenschutz.html">Datenschutz</a> · <a href="/agb.html">AGB</a></span>
+  </div>
+</footer>
+<script src="kacheln.js?v=1" defer></script>
+<script type="module" src="hoerprobe.js?v=1"></script>
+<script src="/assets/sprache.js?v=9" defer></script>
+</body>
+</html>

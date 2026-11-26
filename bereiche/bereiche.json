@@ -140,6 +140,7 @@
       "kartenTitel": "Werkzeuge",
       "karten": [
         { "titel": "Caelum Motion", "untertitel": "Bewegung wird Klang", "text": "Neigen und Schwenken von Handy oder Joy-Con steuern Regler und Effekte in Ableton – live. Hier im Browser zum Ausprobieren.", "status": "Prototyp", "tags": ["VST3", "Ableton", "Android"], "link": "#motion", "knopf": "Im Browser ausprobieren" },
+        { "titel": "Caelum Motion Studio", "untertitel": "Bilder der Idee", "text": "Signalfluss, Jam-Zyklus, Audio-Kern, Pult und KI-Master in Bildern – jeder Kernteil einzeln anklickbar, dazu eine Hörprobe.", "status": "Konzept", "tags": ["Bilder", "Hörprobe"], "link": "/sounddesign/motion-studio/", "knopf": "Bilder ansehen →" },
         { "titel": "Caelum Station", "untertitel": "Zusammen spielen", "text": "Der nächste Schritt nach Motion: mit dem Team in Runden spielen und live im Radio hören.", "status": "In Planung", "tags": ["Team", "Radio"], "link": "/sounddesign/station/", "knopf": "Als Nächstes: Station →" },
         { "titel": "Caelum Cut", "untertitel": "Ton im Schnitt", "text": "Lautstärke und weiche oder harte Übergänge – der Ton läuft im Videoschnitt mit.", "status": "In Planung", "tags": ["Windows", "Video"] }
       ],

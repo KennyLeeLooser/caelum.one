@@ -1,0 +1,311 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "pult",
+  "titel": "Pult",
+  "bild": "pult.svg",
+  "teile": [
+    {
+      "id": "kanalzug",
+      "titel": "Acht Kanalzüge",
+      "satz": "Jeder Mitspieler bekommt einen Kanalzug – aufgebaut von oben nach unten wie an einem klassischen Analogpult.",
+      "punkte": [
+        "Ein Zug je Spur, bis zu acht Mitspieler",
+        "Oben Name und Art der Spur (Mensch oder KI)",
+        "Reihenfolge wie gewohnt: Angleich · Klang · Pan · Aufnahme · Mute/Solo · Fader",
+        "Auf dem Smartphone scrollen die Züge quer, die Summe bleibt rechts stehen"
+      ],
+      "bezug": [
+        "pult/summe",
+        "jam-zyklus/jam-server",
+        "klang-verbund/hauptfenster"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Kanalzüge",
+          "8 Spuren + Grundmuster + Summe"
+        ],
+        [
+          "Ort",
+          "Master-Ansicht der Station, umschaltbar Spuren | Pult"
+        ],
+        [
+          "Bedienung",
+          "Werte springen nicht, solange man einen Regler hält"
+        ]
+      ],
+      "mehr": "Der Aufbau folgt einem Pult, das Musiker kennen: man findet jeden Regler dort, wo man ihn erwartet. Das Aussehen ist eigenes Caelum-Design. Die Ansicht ist gebaut und wartet auf die Prüfung im Live-Betrieb."
+    },
+    {
+      "id": "angleich",
+      "titel": "Angleich (Gain)",
+      "satz": "Statt eines Gain-Reglers gleicht die Station jede Spur selbst auf dieselbe Lautheit an – das Pult zeigt nur, um wie viel.",
+      "punkte": [
+        "Gemessen wird je Runde, ohne Pausen (gegatete RMS)",
+        "Ziel −22 dBFS je Spur, in kleinen Schritten",
+        "Ein Trim von Hand kommt später dazu"
+      ],
+      "bezug": [
+        "pult/summe",
+        "pult/regeln"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Ziel je Spur",
+          "−22 dBFS"
+        ],
+        [
+          "Bereich",
+          "±12 dB"
+        ],
+        [
+          "Schritt",
+          "höchstens 6 dB je Runde"
+        ]
+      ],
+      "mehr": "Wer leise spielt, wird hörbar; wer laut spielt, deckt die anderen nicht zu. Darum muss niemand vor dem Spielen einpegeln. Am Pult steht der Wert als Anzeige, damit man sieht, wie weit die Station schon ausgleicht."
+    },
+    {
+      "id": "stufe2",
+      "titel": "EQ, Kompressor, Hall",
+      "satz": "Klangregler je Kanalzug – Low Cut, Kompressor mit einem Regler, 3-Band-EQ und Hall-Send – sind als zweite Stufe geplant.",
+      "punkte": [
+        "Low Cut 100 Hz als Schalter",
+        "Kompressor mit einem Regler",
+        "EQ: Höhen 10 kHz · Mitten (Frequenz + dB) · Tiefen 80 Hz",
+        "Hall-Send je Spur, Rücklauf in der Summe",
+        "Trim von Hand neben dem automatischen Angleich"
+      ],
+      "bezug": [
+        "audio-kern/effekte",
+        "pult/kanalzug"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Stufe",
+          "2 – braucht Rechenarbeit im Mix der Station"
+        ]
+      ],
+      "mehr": "Diese Regler verändern den Klang, nicht nur die Lautstärke. Dafür muss die Station jede Spur im Mix bearbeiten. Das kommt, wenn die erste Stufe im Live-Betrieb sitzt."
+    },
+    {
+      "id": "bedienen",
+      "titel": "Pan, Aufnahme, Mute, Solo",
+      "satz": "Pan, Aufnahme-Taste und Mute/Solo wirken sofort im Mix, den alle hören – auch die Zuhörer im Radio.",
+      "punkte": [
+        "Pan: Doppelklick setzt die Mitte",
+        "● Aufnahme scharf: die Spur wird mitgeschnitten",
+        "M stumm, S solo",
+        "Diese Tasten stellt nur ein Mensch, nie die KI"
+      ],
+      "bezug": [
+        "pult/regeln",
+        "jam-zyklus/stream"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Pan",
+          "links … Mitte … rechts"
+        ],
+        [
+          "Aufnahme",
+          "Zustimmung des Spielers vorgesehen"
+        ]
+      ],
+      "mehr": "Was man am Pult einstellt, hört man genau so im Live-Ausgang – es gibt keinen getrennten Vorhör-Mix. Die Befehle kennt die Station schon; das Pult zeigt sie als Tasten."
+    },
+    {
+      "id": "fader",
+      "titel": "Fader in dB",
+      "satz": "Der Fader zeigt dB wie am echten Pult: 0 dB ist die Grundstellung, Doppelklick setzt ihn dorthin zurück.",
+      "punkte": [
+        "0 dB = Grundstellung jeder Spur",
+        "Unten aus, oben gut +1,9 dB",
+        "Daneben die Lautheit der Spur je Runde",
+        "Fader stellen Mensch und KI – der Mensch hat Vorrang"
+      ],
+      "bezug": [
+        "pult/ki-master",
+        "pult/angleich"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Grundstellung",
+          "0 dB"
+        ],
+        [
+          "Bereich am Pult",
+          "aus … +1,9 dB (die Station nimmt bis +10 dB an)"
+        ],
+        [
+          "Anzeige",
+          "Lautheit je Runde"
+        ]
+      ],
+      "mehr": "Der Fader wirkt nach dem Angleich: die Station sorgt für gleich laut, der Fader für die Balance im Song. Fader in dB ist bei der Station gebaut und gesichert; die Pult-Ansicht wird nach der nächsten Probe im Live-Betrieb geprüft."
+    },
+    {
+      "id": "grundmuster",
+      "titel": "Zug G – Grundmuster",
+      "satz": "Ein eigener Zug für den Grundbeat, der immer läuft: Teil wählen und festhalten, an oder aus.",
+      "punkte": [
+        "Teile: ruhig · treiben · offen · schweben",
+        "Teil festhalten, sonst wechselt er mit der Session",
+        "Ausschalten nur mit Rückfrage – die Musik darf nie stoppen",
+        "Eigener Fader ±6 dB ist geplant"
+      ],
+      "bezug": [
+        "klang-verbund/uhr",
+        "jam-zyklus/jam-server"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Teile",
+          "4"
+        ],
+        [
+          "Fader",
+          "−6 … +6 dB (geplant)"
+        ]
+      ],
+      "mehr": "Das Grundmuster füllt jede Lücke: Ist niemand da oder fällt eine Spur aus, läuft der Beat weiter. Darum fragt das Pult nach, bevor es ihn ausschaltet."
+    },
+    {
+      "id": "summe",
+      "titel": "Summe",
+      "satz": "Die Summe zeigt, was alle hören: Pegel links und rechts, wie weit die Station nachregelt, Tempo und Runde.",
+      "punkte": [
+        "Pegel L/R mit der Spitze, rot ab −1 dBFS",
+        "Main ±dB: die Station hält die Summe selbst im Ziel",
+        "Tempo mit Tap: drei gleichmäßige Schläge setzen die BPM",
+        "Runde und Anzahl der scharfen Spuren",
+        "Ein Main-Fader von Hand ist geplant"
+      ],
+      "bezug": [
+        "pult/angleich",
+        "klang-verbund/uhr",
+        "signalfluss/radio"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Ziel Summe",
+          "−18 dBFS"
+        ],
+        [
+          "Bereich",
+          "−6 … +9 dB, höchstens 1,5 dB je Runde"
+        ],
+        [
+          "Spitze",
+          "höchstens −1 dBFS, danach Begrenzer"
+        ],
+        [
+          "Tempo",
+          "40–240 BPM"
+        ]
+      ],
+      "mehr": "Die Summe ist der Mix, der ins Radio geht. Die Station hält ihn automatisch auf Lautstärke und schützt ihn mit einem Begrenzer vor Übersteuerung. Das Bild zeigt die Pegelanzeige im Takt."
+    },
+    {
+      "id": "ki-master",
+      "titel": "KI am Pult",
+      "satz": "Eine KI hört den Mix wie ein Tontechniker und stellt Fader in kleinen Schritten nach – der Mensch hat immer Vorrang.",
+      "punkte": [
+        "Misst den Mix, den die Zuhörer hören: Spitze, Lautheit, Kick",
+        "Erst vorschlagen, dann selbst regeln",
+        "Höchstens eine Änderung, höchstens 1,5 dB je Runde",
+        "Greift ein Mensch ein, hält sie 4 Runden still",
+        "Nie Neustart, nie Tempo, nie eine Spur entfernen"
+      ],
+      "bezug": [
+        "pult/fader",
+        "pult/regeln",
+        "signalfluss/radio"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Modi",
+          "lesen · vorschlagen · regeln"
+        ],
+        [
+          "Schritt",
+          "≤ 1,5 dB je Runde, etwa alle 3 Runden"
+        ],
+        [
+          "Kick-Betonung",
+          "≥ 6 dB in den Teilen treiben und offen"
+        ],
+        [
+          "Stillhalten",
+          "4 Runden ≈ 32 s bei 120 BPM"
+        ]
+      ],
+      "mehr": "Die KI kümmert sich um die Musik im Mix: trägt die Kick, deckt eine Spur alles zu, kippt etwas über? Sie korrigiert dort, wo der automatische Angleich an seine Grenze kommt. Im Pult steht ihr Protokoll, damit man jede Änderung nachlesen kann. Gebaut, im Live-Betrieb noch nicht gelaufen."
+    },
+    {
+      "id": "regeln",
+      "titel": "Wer stellt was",
+      "satz": "Klare Zuständigkeit: Lautheit regelt die Station, die Balance Mensch und KI, alles andere nur der Mensch.",
+      "punkte": [
+        "Angleich und Summe: automatisch",
+        "Fader: Mensch und KI, der Mensch hat Vorrang",
+        "Pan, Mute, Solo, Aufnahme, Tempo: nur der Mensch",
+        "Die Station merkt sich je Spur, wer den Fader zuletzt gesetzt hat"
+      ],
+      "bezug": [
+        "pult/ki-master",
+        "pult/angleich",
+        "pult/bedienen"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Automatisch",
+          "Angleich je Spur, Summe"
+        ],
+        [
+          "Mensch · KI",
+          "Fader"
+        ],
+        [
+          "Nur Mensch",
+          "Pan · Mute · Solo · ● · Tempo · Neustart"
+        ]
+      ],
+      "mehr": "So regelt niemand gegen den anderen: die KI stellt nie einen Wert zurück, den ein Mensch gerade gesetzt hat, und arbeitet nicht gegen den automatischen Angleich."
+    },
+    {
+      "id": "bedienteil",
+      "titel": "Hardware-Pult",
+      "satz": "Ein echtes Pult soll das Studio steuern: Fader, Mute und Solo kommen als MIDI und wirken wie am Bildschirm.",
+      "punkte": [
+        "Pult im DAW-Steuermodus sendet MIDI",
+        "Welche Meldungen genau, wird am Gerät gemessen",
+        "Was ein Regler bewirkt, steht in einer Zuordnung – nicht im Programm"
+      ],
+      "bezug": [
+        "signalfluss/motion-bridge",
+        "pult/fader"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Stufe",
+          "3"
+        ],
+        [
+          "Weg",
+          "Pult → MIDI → Motion-Bridge → Station"
+        ]
+      ],
+      "mehr": "Wer lieber echte Fader in der Hand hat, nimmt sein eigenes Pult. Die Motion-Bridge übersetzt seine MIDI-Meldungen; dieselbe Zuordnung lässt sich für andere Pulte anpassen."
+    }
+  ]
+}

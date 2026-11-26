@@ -1,0 +1,258 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "ki-master",
+  "titel": "KI-Master",
+  "bild": "ki-master.svg",
+  "teile": [
+    {
+      "id": "vorrang",
+      "titel": "Der Inhaber hat Vorrang",
+      "satz": "Über allem steht der Mensch: greift der Inhaber ein, hält der KI-Master vier Runden still und stellt den Wert des Inhabers nie zurück.",
+      "punkte": [
+        "4 Runden Stillhalten, dann vom neuen Stand aus weiter",
+        "Neustart, Grundmuster aus, Tempo, Spur entfernen, Einladungen: nur auf das Wort des Inhabers",
+        "Regel „Niemals Unterbruch“: der KI-Master löst nie etwas aus, das Uhr oder Strom anhält"
+      ],
+      "bezug": [
+        "hierarchie/inhaber",
+        "pult/regeln"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Stillhalten",
+          "4 Runden ≈ 32 s bei 120 BPM"
+        ]
+      ],
+      "mehr": "Die KI ist ein Helfer am Pult, kein zweiter Chef. Was sich nicht rückgängig machen lässt, entscheidet der Mensch."
+    },
+    {
+      "id": "ki-master",
+      "titel": "KI-Master",
+      "satz": "Der KI-Master ist eine KI am Station-PC – mit denselben Rechten wie der Inhaber dort, aber nur vom eigenen Rechner aus.",
+      "punkte": [
+        "Meldet sich als Gastgeber an, ohne eigenes Passwort",
+        "Liest den Zustand jeder Ebene mit",
+        "Greift in kleinen, umkehrbaren Schritten ein"
+      ],
+      "bezug": [
+        "hierarchie/ki-master",
+        "ki-master/leiten",
+        "ki-master/spieler"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Anmeldung",
+          "Gastgeber über die eigene Maschine"
+        ],
+        [
+          "Probe",
+          "14 von 14 bestanden"
+        ]
+      ],
+      "mehr": "Der Inhaber wollte eine KI, die als Master mitwirkt – wie an einem Mischpult. Der KI-Master hat zwei Hälften: Controller und Spieler, und die Hände am Pult."
+    },
+    {
+      "id": "leiten",
+      "titel": "Leiten",
+      "satz": "Der KI-Master schaltet zwischen Deck A und B – nur wenn beide bereit sind und genau auf der Takt-Eins.",
+      "punkte": [
+        "Prüft vorher: Deck bereit, Station lebt, keine Warnung",
+        "Wechsel auf der Takt-Eins, höchstens 128 Samples daneben",
+        "Ein Unterlauf zählt als Fehler"
+      ],
+      "bezug": [
+        "hierarchie/crossfader",
+        "hierarchie/decks"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Genauigkeit",
+          "≤ 128 Samples"
+        ],
+        [
+          "Wechsel",
+          "nur mit ausdrücklicher Bestätigung"
+        ]
+      ],
+      "mehr": "So lässt sich eine Station erneuern, während die andere sendet – die Hörer merken nichts."
+    },
+    {
+      "id": "notaus",
+      "titel": "Not-Aus · Freigeben",
+      "satz": "Im Notfall nimmt der KI-Master das Live-Audio weg: alle Spuren stumm, Grundmuster aus – und merkt sich den Stand davor.",
+      "punkte": [
+        "Wirkt ab dem übernächsten Mix",
+        "Freigeben stellt den gemerkten Stand wieder her",
+        "Hat Vorrang vor dem Regelkreis am Pult"
+      ],
+      "bezug": [
+        "ki-master/vorrang",
+        "pult/ki-master"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Wirkung",
+          "ab dem übernächsten Mix"
+        ]
+      ],
+      "mehr": "Not-Aus ist der eine große Eingriff, den der KI-Master hat. Er ist vollständig umkehrbar."
+    },
+    {
+      "id": "spieler",
+      "titel": "Spielt mit",
+      "satz": "Der KI-Master holt sich eine Einladung und spielt selbst eine Spur – er hört die Runde davor und antwortet darauf.",
+      "punkte": [
+        "Perkussion: Conga und Rassel auf den Off-Beats",
+        "Fläche: ein Akkord je Takt",
+        "Arpeggio: Glocken durch den Akkord",
+        "Macht Platz, wenn die Runde davor voll war"
+      ],
+      "bezug": [
+        "hierarchie/spieler",
+        "jam-zyklus/jam-server"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Instrumente",
+          "Perkussion · Fläche · Arpeggio"
+        ],
+        [
+          "Varietät",
+          "je Schritt eine kleine Änderung"
+        ]
+      ],
+      "mehr": "Er meldet sich dabei als KI an – für alle sichtbar. Varietät bringt er über Stimmung, Geste und Instrument, nie über Pegel und Pan."
+    },
+    {
+      "id": "regelkreis",
+      "titel": "Am Pult",
+      "satz": "Die zweite Hälfte des KI-Masters hört den Mix wie ein Tontechniker und stellt nur Fader – höchstens 1,5 dB je Runde.",
+      "punkte": [
+        "Misst den Mix, den die Hörer hören",
+        "Erst vorschlagen, dann selbst regeln",
+        "Regelt nicht gegen den automatischen Angleich"
+      ],
+      "bezug": [
+        "pult/ki-master",
+        "pult/fader"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Schritt",
+          "≤ 1,5 dB je Runde, etwa alle 3 Runden"
+        ]
+      ],
+      "mehr": "Einzelheiten in Kapitel 5 „Pult“."
+    },
+    {
+      "id": "waechter",
+      "titel": "Wächter",
+      "satz": "Der Wächter prüft, ob eine Probe zählt: er startet nur bei Ruhe, schaut jede Minute nach dem echten Aufbau und fällt ein Urteil.",
+      "punkte": [
+        "Vor dem Start: Last im Mittel ≤ 60 %, keine fremden Prüfläufe",
+        "Jede Minute: Radio erreichbar, Station verbunden, Unterläufe, Fehler",
+        "Bestanden nur ohne Unterbruch und ohne Neustart",
+        "Im Selbsttest wartet ein Last-Wächter ab 85 % bis 30 s und wiederholt nur Zeitprüfungen"
+      ],
+      "bezug": [
+        "ki-master/wachhund",
+        "signalfluss/radio"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Ruhe-Grenze",
+          "≤ 60 %"
+        ],
+        [
+          "belastete Minute",
+          "> 90 %"
+        ],
+        [
+          "Last-Wächter",
+          "wartet ab 85 %, höchstens 30 s"
+        ]
+      ],
+      "mehr": "Ein Lauf, der von Neustarts oder parallelen Tests gestört wird, sagt nichts aus. Darum trennt der Wächter Ursache und Wirkung und schreibt jede Störung mit."
+    },
+    {
+      "id": "wachhund",
+      "titel": "Wachhund",
+      "satz": "Der Wachhund schaut alle zwei Sekunden nach Stationen, Radio und Bridge und startet nur, was wirklich weg ist.",
+      "punkte": [
+        "Länger als 10 s weg, Adresse dreimal frei und kein Prozess mehr da → Neustart im eigenen Prozess",
+        "Nach Standby oder Zeitsprung 30 s Schonfrist",
+        "Adresse belegt, aber keine Antwort → nur Alarm, nie ein zweiter Prozess",
+        "Mehr als 5 Starts in 10 min → Alarm statt Kreisel",
+        "Pause für abgesprochene Neustarts",
+        "Fällt eine Station aus, startet sie als Folgerin der lebenden"
+      ],
+      "bezug": [
+        "hierarchie/wachhund",
+        "hierarchie/stationen"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Blick",
+          "alle 2 s"
+        ],
+        [
+          "Grenze",
+          "10 s, Adresse 3× frei, kein Prozess"
+        ],
+        [
+          "Schonfrist",
+          "30 s nach Standby"
+        ],
+        [
+          "Alarm",
+          "> 5 Starts in 10 min"
+        ]
+      ],
+      "mehr": "Der Inhaber: „Watchdogs sind wichtig.“ Seit dem 25.11. ist er standby-fest: nach dem Aufwachen meldete das Netz eine Adresse fälschlich als frei – darum prüft er jetzt zusätzlich die Prozessliste und wartet 30 s."
+    },
+    {
+      "id": "pfoertner",
+      "titel": "Pförtner",
+      "satz": "Ein festes Tor vor dem Radio hält die Verbindungen, während dahinter ein Werk erneuert wird – live seit 25.11.2026.",
+      "punkte": [
+        "Je Dienst ein Tor, es rechnet keinen Klang",
+        "Werk A sendet, Werk B wird erneuert – dann wechselt das Tor auf der Takt-Eins",
+        "Live geprüft: an der Naht 0 Samples Sprung, der Hörer bleibt verbunden",
+        "Fällt ein Werk aus, schaltet das Tor auf das andere",
+        "Live vor dem Radio seit 25.11.2026; das Tor vor der Station ist geplant"
+      ],
+      "bezug": [
+        "hierarchie/pfoertner",
+        "ki-master/leiten"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Sprung an der Naht",
+          "0 Samples (live geprüft A → B → A)"
+        ],
+        [
+          "Wartezeit des Hörers",
+          "0–1 ms"
+        ],
+        [
+          "Radio",
+          "läuft seit 25.11.2026"
+        ],
+        [
+          "Station",
+          "Tor geplant"
+        ]
+      ],
+      "mehr": "Der Inhaber: „ja Pförtner planen“, dann „Ja, bauen“. Ohne Tor ist jedes Update ein Unterbruch. Gelöst ist auch die Kernfrage: der MP3-Strom wechselt an einer Rahmengrenze auf der Takt-Eins ohne Einbruch."
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "_kopf": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "format": "caelum-klangprobe/1",
+  "titel": "Sound Design im Plugin",
+  "text": "Akkord C3–E3–G3 und Hi-Hat bei 120 BPM, durch das Plugin Caelum Motion. Der Punkt zeigt, was die Hand gerade tut: links/rechts die Tonhöhe, unten/oben den Filter.",
+  "audio": "sounddesign.wav",
+  "quelle": "dist/vst-sounddesign-hoerprobe.wav (vst/bau/Hoerprobe_artefacts/Release/Hoerprobe.exe)",
+  "achsen": {
+    "x": "Tonhöhe",
+    "y": "Filter"
+  },
+  "abschnitte": [
+    {
+      "name": "Aus (Original)",
+      "sekunden": 3,
+      "an": false,
+      "weg": {
+        "art": "fest",
+        "x": 0.5,
+        "y": 0.5
+      },
+      "info": "Sound Design aus: So klingt die Spur ohne Plugin-Eingriff."
+    },
+    {
+      "name": "An, Punkt in der Mitte",
+      "sekunden": 3,
+      "weg": {
+        "art": "fest",
+        "x": 0.5,
+        "y": 0.5
+      },
+      "info": "Sound Design an, Punkt in der Mitte: neutral – es klingt wie vorher. Kein Sprung beim Einschalten."
+    },
+    {
+      "name": "Tonhöhe: links → rechts",
+      "sekunden": 8,
+      "weg": {
+        "art": "linie",
+        "von": {
+          "x": 0,
+          "y": 0.5
+        },
+        "nach": {
+          "x": 1,
+          "y": 0.5
+        }
+      },
+      "info": "Die Hand fährt von links nach rechts: Makro 1 verschiebt die Tonhöhe des Kerns von tief nach hoch."
+    },
+    {
+      "name": "Filter: unten → oben",
+      "sekunden": 8,
+      "weg": {
+        "art": "linie",
+        "von": {
+          "x": 0.5,
+          "y": 0
+        },
+        "nach": {
+          "x": 0.5,
+          "y": 1
+        }
+      },
+      "info": "Von unten nach oben: Makro 2 öffnet den Filter – erst dumpf, dann hell."
+    },
+    {
+      "name": "Kreis (beide zugleich)",
+      "sekunden": 8,
+      "weg": {
+        "art": "kreis",
+        "mitte": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "radius": 0.45
+      },
+      "info": "Ein Kreis bewegt beide Achsen gleichzeitig: Tonhöhe und Filter wandern miteinander."
+    },
+    {
+      "name": "Halten bei Filter unten",
+      "sekunden": 4,
+      "weg": {
+        "art": "fest",
+        "x": 0.5,
+        "y": 0.15
+      },
+      "halten": true,
+      "haltenAb": 0.25,
+      "info": "Nach einer Sekunde greift „Halten“: Die Werte bleiben stehen, auch wenn die Hand sich weiterbewegt (Kupplung wie in der Brücke)."
+    },
+    {
+      "name": "Zurück in die Mitte",
+      "sekunden": 3,
+      "weg": {
+        "art": "fest",
+        "x": 0.5,
+        "y": 0.5
+      },
+      "info": "Zurück in die Mitte: wieder neutral."
+    }
+  ]
+}

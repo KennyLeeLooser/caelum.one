@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. -->
+
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-labelledby="titel beschr">
+  <title id="titel">Caelum Motion Studio – Signalfluss</title>
+  <desc id="beschr">Sensoren des Smartphones (Joy-Con geplant) werden in der Motion-Bridge zu MIDI und OSC. Der Jam-Server Caelum Station synchronisiert bis zu acht Musiker in 4-Takt-Zyklen und mischt selbst. Caelum Radio sendet den Mix als Live-Stream mit Chat. Eine DAW ist optional.</desc>
+  <defs>
+    <style>
+      .bg { fill: #262624; }
+      .card { fill: #30302E; stroke: #3D3D3A; stroke-width: 1.5; }
+      .haupt { fill: #30302E; stroke: #C8479A; stroke-width: 2.5; }
+      .gast { fill: none; stroke: #9C9A94; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .h { fill: #E8E6E1; font-size: 26px; font-weight: 600; }
+      .sub { fill: #9C9A94; font-size: 15px; }
+      .t { fill: #E8E6E1; font-size: 17px; font-weight: 600; }
+      .s { fill: #C9C6BF; font-size: 13.5px; }
+      .m { fill: #9C9A94; font-size: 12px; }
+      .f { fill: #6E6C66; font-size: 11.5px; }
+      .lab { fill: #9C9A94; font-size: 11px; }
+      .labA { fill: #C8479A; font-size: 11px; font-weight: 600; }
+      .stA { fill: #C8479A; font-size: 15px; font-weight: 600; }
+      .nr { fill: #C8479A; }
+      .nrT { fill: #FFFFFF; font-size: 13px; font-weight: 700; }
+      .big { fill: #E8E6E1; font-size: 26px; font-weight: 600; }
+      .ic { fill: none; stroke: #C9C6BF; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+      .icA { fill: none; stroke: #C8479A; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+      .ring { fill: none; stroke: #3D3D3A; stroke-width: 12; }
+      .ringA { fill: none; stroke: #C8479A; stroke-width: 12; }
+      .spur { fill: #6E6C66; }
+      .p { fill: none; stroke: #C9C6BF; stroke-width: 2; stroke-linecap: round; }
+      .pg { fill: none; stroke: #9C9A94; stroke-width: 2; stroke-dasharray: 6 5; stroke-linecap: round; }
+      .pA { fill: none; stroke: #C8479A; stroke-width: 3; stroke-linecap: round; }
+      .ende { fill: #C9C6BF; }
+      .endeA { fill: #C8479A; }
+      .puls { fill: #C8479A; }
+      .zeiger { fill: #C8479A; stroke: #262624; stroke-width: 3; }
+      .pegel { fill: #C8479A; }
+      .kippen { transform-box: fill-box; transform-origin: 50% 50%; animation: kippen 4s ease-in-out infinite; }
+      .kreisen { animation: kreisen 8s linear infinite; }
+      .welle1 { animation: welle 2s ease-in-out infinite; }
+      .welle2 { animation: welle 2s ease-in-out infinite reverse; }
+      @keyframes kippen { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-9deg); } 75% { transform: rotate(7deg); } }
+      @keyframes kreisen { to { transform: rotate(360deg); } }
+      @keyframes welle { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+      @media (prefers-reduced-motion: reduce) { .bewegt { display: none; } .kippen, .kreisen, .welle1, .welle2 { animation: none; } }
+      @media (prefers-color-scheme: light) {
+        .bg { fill: #FAF9F6; }
+        .card, .haupt { fill: #FFFFFF; }
+        .card { stroke: #D9D6CF; }
+        .haupt { stroke: #B03A85; }
+        .gast { stroke: #6E6C66; }
+        .h, .t, .big { fill: #1F1E1D; }
+        .s { fill: #3D3D3A; }
+        .sub, .m, .lab { fill: #5F5D58; }
+        .f { fill: #8A877F; }
+        .labA, .stA, .nr, .puls, .pegel, .endeA { fill: #B03A85; }
+        .ic { stroke: #3D3D3A; }
+        .icA, .ringA, .pA { stroke: #B03A85; }
+        .ring { stroke: #E6E3DC; }
+        .spur { fill: #B8B5AD; }
+        .p { stroke: #3D3D3A; }
+        .ende { fill: #3D3D3A; }
+        .pg { stroke: #6E6C66; }
+        .zeiger { fill: #B03A85; stroke: #FAF9F6; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="640" rx="16" class="bg"/>
+  <text x="40" y="54" class="h">Signalfluss</text>
+  <text x="40" y="80" class="sub">Bewegung → MIDI → Jam-Session → Live-Stream · bis zu 8 Musiker im selben Loop, Zuhörer live dabei</text>
+
+  
+  <circle cx="54" cy="122" r="13" class="nr"/><text x="54" y="127" text-anchor="middle" class="nrT">1</text>
+  <text x="76" y="127" class="stA">Controller</text>
+  <circle cx="334" cy="122" r="13" class="nr"/><text x="334" y="127" text-anchor="middle" class="nrT">2</text>
+  <text x="356" y="127" class="stA">Wandlung</text>
+  <circle cx="614" cy="122" r="13" class="nr"/><text x="614" y="127" text-anchor="middle" class="nrT">3</text>
+  <text x="636" y="127" class="stA">Jam-Session</text>
+  <circle cx="934" cy="122" r="13" class="nr"/><text x="934" y="127" text-anchor="middle" class="nrT">4</text>
+  <text x="956" y="127" class="stA">Stream</text>
+
+  
+  <rect x="40" y="150" width="220" height="390" rx="12" class="card" data-teil="controller"/>
+  <text x="58" y="180" class="t">Controller</text>
+  <text x="58" y="199" class="m">Bewegung als Spielhilfe</text>
+
+  <g>
+    <g class="kippen">
+      <rect x="60" y="222" width="20" height="32" rx="4" class="ic"/>
+      <line x1="67" y1="249" x2="73" y2="249" class="ic"/>
+    </g>
+    <text x="94" y="236" class="s">Smartphone (Android)</text>
+    <text x="94" y="253" class="m">Gyro · Beschleunigung · Pads</text>
+  </g>
+
+  <rect x="58" y="290" width="10" height="32" rx="5" class="ic"/>
+  <rect x="72" y="290" width="10" height="32" rx="5" class="ic"/>
+  <circle cx="63" cy="300" r="1.6" class="ic"/>
+  <circle cx="77" cy="312" r="1.6" class="ic"/>
+  <text x="94" y="304" class="s">Joy-Con L / R</text>
+  <text x="94" y="321" class="m">Gyro · Tasten · Stick · geplant</text>
+
+  <circle cx="70" cy="370" r="7" class="ic"/>
+  <path d="M57,394 Q57,381 70,381 Q83,381 83,394" class="ic"/>
+  <text x="94" y="377" class="s">Session-Host</text>
+  <text x="94" y="394" class="m">lädt ein · setzt BPM</text>
+
+  <rect x="57" y="438" width="26" height="22" rx="3" class="ic"/>
+  <line x1="57" y1="444" x2="83" y2="444" class="ic"/>
+  <text x="94" y="447" class="s">Web-Client</text>
+  <text x="94" y="464" class="m">im Browser, ohne Installation</text>
+
+  
+  <rect x="320" y="150" width="220" height="180" rx="12" class="card" data-teil="motion-bridge"/>
+  <text x="338" y="180" class="t">Motion-Bridge</text>
+  <text x="338" y="199" class="m">Desktop-App, lokal</text>
+  <text x="338" y="230" class="s">Sensor → MIDI CC · Note</text>
+  <text x="338" y="250" class="s">Pitchbend · OSC</text>
+  <text x="338" y="272" class="s">Gesten als Trigger</text>
+  <text x="338" y="294" class="s">Mapping frei zuweisbar</text>
+  <text x="338" y="316" class="m">MIDI-Clock · 24 ppqn</text>
+
+  
+  <rect x="320" y="370" width="220" height="92" rx="12" class="gast" data-teil="daw"/>
+  <text x="338" y="398" class="t">DAW (optional)</text>
+  <text x="338" y="418" class="m">z. B. Ableton Live</text>
+  <text x="338" y="442" class="s">virtueller MIDI-Port · Sync</text>
+
+  
+  <rect x="600" y="150" width="260" height="390" rx="12" class="haupt" data-teil="station"/>
+  <text x="618" y="180" class="t">Caelum Station</text>
+  <text x="618" y="199" class="m">Jam-Server · Interval-Sync</text>
+  
+  <g transform="translate(730 290)">
+    <circle r="62" class="ring"/>
+    <path d="M0,-62 A62,62 0 0 1 62,0" class="ringA kreisen"/>
+    <line x1="0" y1="-69" x2="0" y2="-55" stroke-width="3" class="ic"/>
+    <line x1="69" y1="0" x2="55" y2="0" stroke-width="3" class="ic"/>
+    <line x1="0" y1="69" x2="0" y2="55" stroke-width="3" class="ic"/>
+    <line x1="-69" y1="0" x2="-55" y2="0" stroke-width="3" class="ic"/>
+    <text x="0" y="4" text-anchor="middle" class="big">8 s</text>
+    <text x="0" y="24" text-anchor="middle" class="m">je Zyklus</text>
+    <text x="78" y="-50" class="lab">Takt 1</text>
+    <text x="78" y="58" class="lab">Takt 2</text>
+    <text x="-78" y="58" text-anchor="end" class="lab">Takt 3</text>
+    <text x="-78" y="-50" text-anchor="end" class="lab">Takt 4</text>
+  </g>
+  <text x="618" y="392" class="s">Gespielt in Zyklus n,</text>
+  <text x="618" y="410" class="s">gehört von allen in n+1.</text>
+  <text x="618" y="436" class="m">4 Takte · 120 BPM · 8 Spuren</text>
+  <text x="618" y="454" class="m">Mix direkt im Server</text>
+  <text x="618" y="472" class="m">Backing-Loop bei Leerlauf</text>
+  
+  <g>
+    <rect x="618" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="646" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="674" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="702" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="730" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="758" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="786" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+    <rect x="814" y="494" width="22" height="26" rx="3" class="spur" opacity="0.35"/>
+  </g>
+  <g class="bewegt">
+    <rect x="618" y="494" width="22" height="26" rx="3" class="pegel"><animate attributeName="opacity" values="0.25;0.9;0.4;0.8;0.25" dur="2s" repeatCount="indefinite"/></rect>
+    <rect x="646" y="494" width="22" height="26" rx="3" class="pegel"><animate attributeName="opacity" values="0.7;0.3;0.85;0.35;0.7" dur="2.6s" repeatCount="indefinite"/></rect>
+    <rect x="674" y="494" width="22" height="26" rx="3" class="pegel"><animate attributeName="opacity" values="0.4;0.85;0.3;0.6;0.4" dur="3.1s" repeatCount="indefinite"/></rect>
+  </g>
+
+  
+  <rect x="920" y="150" width="240" height="200" rx="12" class="card" data-teil="radio"/>
+  <text x="938" y="180" class="t">Caelum Radio</text>
+  <text x="938" y="199" class="m">Live-Stream, Icecast-kompatibel</text>
+  <circle cx="1124" cy="232" r="4" class="icA"/>
+  <path d="M1114,222 A14,14 0 0 0 1114,242 M1134,222 A14,14 0 0 1 1134,242" class="icA welle1"/>
+  <path d="M1107,215 A24,24 0 0 0 1107,249 M1141,215 A24,24 0 0 1 1141,249" class="icA welle2"/>
+  <text x="938" y="232" class="s">HTTP-Audiostream</text>
+  <text x="938" y="254" class="s">Now Playing · Live-Chat</text>
+  <text x="938" y="286" class="m">Browser, Radio-Apps, Media-Player</text>
+  <text x="938" y="304" class="m">privat: lokales Netz oder VPN</text>
+  <text x="938" y="322" class="m">Zuhörer brauchen keine App</text>
+
+  <rect x="920" y="400" width="240" height="140" rx="12" class="card" data-teil="zuhoerer"/>
+  <path d="M1112,446 L1112,436 A16,16 0 0 1 1144,436 L1144,446" class="ic"/>
+  <rect x="1108" y="440" width="8" height="14" rx="3" class="ic"/>
+  <rect x="1140" y="440" width="8" height="14" rx="3" class="ic"/>
+  <text x="938" y="430" class="t">Zuhörer</text>
+  <text x="938" y="458" class="s">hören zu und chatten</text>
+  <text x="938" y="480" class="m">spielen nicht mit</text>
+  <text x="938" y="498" class="m">Versatz: 1 Zyklus + ca. 2 s</text>
+  <text x="938" y="514" class="m">Puffer gegen Aussetzer</text>
+  
+  <g class="bewegt">
+    <rect x="1112" y="494" width="6" height="26" rx="2" class="pegel" transform="translate(0 0)"><animate attributeName="height" values="8;24;12;20;8" dur="1.6s" repeatCount="indefinite"/><animate attributeName="y" values="512;496;508;500;512" dur="1.6s" repeatCount="indefinite"/></rect>
+    <rect x="1124" y="494" width="6" height="26" rx="2" class="pegel"><animate attributeName="height" values="20;10;24;8;20" dur="1.9s" repeatCount="indefinite"/><animate attributeName="y" values="500;510;496;512;500" dur="1.9s" repeatCount="indefinite"/></rect>
+    <rect x="1136" y="494" width="6" height="26" rx="2" class="pegel"><animate attributeName="height" values="12;22;8;18;12" dur="1.4s" repeatCount="indefinite"/><animate attributeName="y" values="508;498;512;502;508" dur="1.4s" repeatCount="indefinite"/></rect>
+  </g>
+
+  
+  <path d="M262,238 H312" class="pA"/><circle cx="315" cy="238" r="3.5" class="endeA"/>
+  <text x="272" y="230" class="labA">OSC</text>
+  <path d="M262,306 H312" class="pg"/><circle cx="315" cy="306" r="3" class="ende"/>
+  <text x="264" y="298" class="lab">Bluetooth</text>
+  <path d="M542,240 H592" class="pA"/><circle cx="595" cy="240" r="3.5" class="endeA"/>
+  <text x="550" y="232" class="labA">MIDI</text>
+  <path d="M430,332 V362" class="pg"/><circle cx="430" cy="365" r="3" class="ende"/>
+  <text x="440" y="353" class="lab">MIDI · Clock</text>
+  <path d="M542,416 H592" class="pg"/><circle cx="595" cy="416" r="3" class="ende"/>
+  <text x="550" y="408" class="lab">Audio</text>
+  <path d="M262,490 H592" class="p"/><circle cx="595" cy="490" r="3" class="ende"/>
+  <text x="280" y="482" class="lab">WebSocket · Loop-Blöcke hoch</text>
+  <path d="M598,520 H268" class="p"/><circle cx="265" cy="520" r="3" class="ende"/>
+  <text x="280" y="535" class="lab">Mix des letzten Zyklus zurück</text>
+  <path d="M862,240 H912" class="pA"/><circle cx="915" cy="240" r="3.5" class="endeA"/>
+  <text x="868" y="232" class="labA">Mix</text>
+  <path d="M1040,356 V394" class="pA"/><circle cx="1040" cy="356" r="3.5" class="endeA"/><circle cx="1040" cy="394" r="3.5" class="endeA"/>
+  <text x="1052" y="380" class="labA">Stream · Chat</text>
+
+  <text x="40" y="584" class="m">Bewegungsdaten bleiben im lokalen Netz oder VPN. Die DAW ist optional – der Jam-Server mischt selbst.</text>
+  <text x="40" y="606" class="f">Entwurf 24.11.2026 · Caelum GmbH · gestrichelt = optional oder geplant</text>
+
+  
+  <g class="bewegt">
+    <g>
+      <circle cx="730" cy="228" r="6" class="zeiger"/>
+      <animateTransform attributeName="transform" type="rotate" from="0 730 290" to="360 730 290" dur="8s" repeatCount="indefinite"/>
+    </g>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M262,238 H312" dur="8s" begin="0s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.08;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.07;0.08;1" dur="8s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M542,240 H592" dur="8s" begin="0.8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.08;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.07;0.08;1" dur="8s" begin="0.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4" class="puls" opacity="0">
+      <animateMotion path="M262,490 H592" dur="8s" begin="1.2s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.2;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="0;0.8;0.8;0;0" keyTimes="0;0.01;0.19;0.2;1" dur="8s" begin="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M862,240 H912" dur="8s" begin="0s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.08;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.07;0.08;1" dur="8s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4" class="puls" opacity="0">
+      <animateMotion path="M598,520 H268" dur="8s" begin="0s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.2;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="0;0.8;0.8;0;0" keyTimes="0;0.01;0.19;0.2;1" dur="8s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" class="puls" opacity="0">
+      <animateMotion path="M1040,356 V394" dur="8s" begin="2s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.08;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.07;0.08;1" dur="8s" begin="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

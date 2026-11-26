@@ -1,0 +1,485 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "audio-kern",
+  "titel": "Audio-Kern",
+  "bild": "aufbau-kern.svg",
+  "teile": [
+    {
+      "id": "referenz",
+      "titel": "Referenz",
+      "stand": "läuft",
+      "satz": "Der Klang stammt aus der Android-App und wurde Zeile für Zeile nach C++ portiert – mit dem Anspruch, dass jedes Sample gleich bleibt.",
+      "punkte": [
+        "Die Java-DSP der App ist die Messlatte für jede Plattform",
+        "Effekte, EQ, 808 und Looper einzeln portiert und verglichen",
+        "Schon eine Abweichung von 0,001 in einem einzigen Wert fällt auf"
+      ],
+      "werte": [
+        [
+          "Portierung",
+          "gleiche Datentypen und Rechenreihenfolge wie das Original"
+        ],
+        [
+          "Gleitkomma",
+          "strikt IEEE-754 float, kein FMA, kein Fast-Math"
+        ],
+        [
+          "Änderungsweg",
+          "erst Referenz ändern, dann C++ nachziehen, dann prüfen"
+        ]
+      ],
+      "mehr": "Bitgleichheit zwischen Java und C++ ist nur möglich, weil beide Seiten Gleitkomma streng rechnen. Compiler-Optimierungen, die Multiplikation und Addition verschmelzen (FMA) oder Rechenschritte umstellen (Fast-Math), sind deshalb bewusst abgeschaltet – sonst wäre der Unterschied zwar unhörbar, aber nicht mehr nachweisbar null.",
+      "bezug": [
+        "audio-kern/validierung",
+        "audio-kern/null-test"
+      ]
+    },
+    {
+      "id": "audio-kern",
+      "titel": "Audio-Kern",
+      "stand": "läuft",
+      "satz": "Die DSP-Engine in C++: einmal geschrieben, auf jeder Plattform gleich – mit einer einzigen C-Schnittstelle für App, Plugin und Browser.",
+      "punkte": [
+        "Heute im Kern: 20 Effekte, EQ, 808-Drums und Looper – jeder Baustein einzeln anklickbar",
+        "Geplant im Kern: Clock und Mapping (heute noch in App bzw. Bridge)",
+        "Echtzeitsicher: keine Speicher-Allokation und keine Sperren im Audio-Thread – kein Knacken",
+        "Ohne Fremd-Bibliotheken"
+      ],
+      "werte": [
+        [
+          "Version",
+          "0.3.1"
+        ],
+        [
+          "Schnittstelle",
+          "C-ABI, eine Header-Datei für JNI, JUCE und WebAssembly"
+        ],
+        [
+          "Blockgröße",
+          "bis 256 Frames; größere Blöcke teilt der Kern selbst"
+        ],
+        [
+          "Speicher",
+          "≈ 4 MB bei 48 kHz, einmal beim Start reserviert"
+        ],
+        [
+          "Parameter",
+          "Nummer + Wert (0–47), Werte außerhalb werden geklemmt"
+        ],
+        [
+          "Regler-Glättung",
+          "gleiten je Block (≈ 30 ms), ohne Zipper-Geräusche"
+        ],
+        [
+          "Größe (Android, arm64)",
+          "≈ 424 KB, in der App mit Anbindung ≈ 428 KB"
+        ]
+      ],
+      "mehr": "Regler dürfen aus jedem Thread gesetzt werden; der Audio-Thread liest sie einmal je Block. Alles, was Speicher braucht (Ringe für Echo, Hall, Beat Masher und Rückwärts), wird beim Start angelegt. Im Audio-Thread wird nur gerechnet – deshalb bleibt die Rechenzeit gleichmäßig und vorhersagbar.",
+      "bezug": [
+        "audio-kern/effekte",
+        "audio-kern/looper",
+        "audio-kern/validierung"
+      ]
+    },
+    {
+      "id": "effekte",
+      "titel": "20 Effekte",
+      "stand": "läuft",
+      "satz": "20 Performance-Effekte, jeder mit zwei Reglern: Stärke und Charakter.",
+      "punkte": [
+        "Bass, Höhen, Telefon, Pumpen (Kompressor), Filter, Auto Filter, Auto Pan, Laut",
+        "Hall, Chorus, Breite, Echo, Pitch",
+        "Bitcrusher, Beat Masher, Verzerrer, Ringmod, Gate, Rückwärts, Phaser"
+      ],
+      "werte": [
+        [
+          "Regler je Effekt",
+          "Stärke 0…1 und Charakter 0…1 (z. B. Hall: Raumgröße)"
+        ],
+        [
+          "Bipolar (−1…1)",
+          "Filter, Höhen, Pitch, Breite"
+        ],
+        [
+          "Tempo-synchron",
+          "Beat Masher, Echo, Gate, Rückwärts, Auto Filter, Auto Pan"
+        ],
+        [
+          "Tempo-Bereich",
+          "40–240 BPM, Standard 120"
+        ],
+        [
+          "Gesten-Ausschlag",
+          "voller Effekt bei 35° Neigung (einstellbar)"
+        ],
+        [
+          "Prüfung",
+          "alle 20 bitgleich zur Referenz"
+        ]
+      ],
+      "mehr": "Beat Masher und Rückwärts sind Performance-Effekte zum Halten: gedrückt greifen sie in den laufenden Takt ein, losgelassen spielt die Musik nahtlos weiter. Filter, Höhen, Pitch und Breite arbeiten in beide Richtungen um die Mitte – ideal für Kippbewegungen am Smartphone.",
+      "bezug": [
+        "audio-kern/android",
+        "signalfluss/controller",
+        "audio-kern/null-test"
+      ]
+    },
+    {
+      "id": "eq",
+      "titel": "EQ · 8 Bänder",
+      "stand": "läuft",
+      "satz": "Ein 8-Band-Equalizer mit Stereo-Balance über das ganze hörbare Spektrum.",
+      "punkte": [
+        "Feste Mittenfrequenzen von Sub-Bass bis Air",
+        "Bitgleich zur Referenz geprüft",
+        "Als eigenes Plugin „Motion EQ“ geplant"
+      ],
+      "werte": [
+        [
+          "Bänder",
+          "60 Hz · 150 Hz · 400 Hz · 1 kHz · 2,4 kHz · 6 kHz · 10 kHz · 15 kHz"
+        ],
+        [
+          "Bereich",
+          "±12 dB je Band"
+        ],
+        [
+          "Dazu",
+          "Stereo-Balance"
+        ],
+        [
+          "Hohe Bänder",
+          "bei niedriger Abtastrate automatisch unter 45 % der Abtastrate begrenzt"
+        ]
+      ],
+      "bezug": [
+        "audio-kern/vst3",
+        "audio-kern/effekte"
+      ]
+    },
+    {
+      "id": "drums-808",
+      "titel": "808 · 16 Voices",
+      "stand": "läuft",
+      "satz": "Eine 808-Drum-Machine, komplett synthetisch gerechnet – keine Samples, jeder Schlag entsteht neu.",
+      "punkte": [
+        "Bass Drum, Rim Shot, Snare, Hand Clap, Claves, Cowbell, Maracas, Cymbal",
+        "Low/Mid/High Tom und Low/Mid/High Conga",
+        "Closed Hat und Open Hat mit Choke: Closed Hat schneidet Open Hat ab"
+      ],
+      "werte": [
+        [
+          "Stimmen",
+          "16"
+        ],
+        [
+          "Regler je Stimme",
+          "Ton, Länge, Pegel – dazu Master"
+        ],
+        [
+          "Synthese",
+          "PolyBLEP-Oszillatoren für Metall-Klänge, Biquad-Filter, Rauschgenerator"
+        ],
+        [
+          "Anschlag",
+          "aus jedem Thread, sample-genau im nächsten Block"
+        ],
+        [
+          "Prüfung",
+          "3/3 Fälle bitgleich, auch bei 44,1 kHz und ungeraden Blockgrößen"
+        ]
+      ],
+      "mehr": "Weil die Stimmen gerechnet statt abgespielt werden, lassen sich Ton und Länge stufenlos und live verändern – auch per Bewegung. Die Drum-Machine treibt den Sequencer der App und ist die Klangquelle für den Backing-Loop.",
+      "bezug": [
+        "jam-zyklus/backing-loop",
+        "audio-kern/looper"
+      ]
+    },
+    {
+      "id": "clock",
+      "titel": "Clock · Swing",
+      "stand": "geplant",
+      "satz": "Eine Uhr für alles. Heute läuft sie in App und Bridge – in den Kern zieht sie als nächster Schritt.",
+      "punkte": [
+        "App: eine sample-genaue Uhr für Sequencer, Looper, Klick und Vorzähler, mit Swing",
+        "Bridge: sendet MIDI-Clock mit 24 ppqn, Start/Continue/Stop",
+        "Im Kern geplant: dieselbe Uhr für App, Plugin und Browser"
+      ],
+      "werte": [
+        [
+          "MIDI-Clock",
+          "24 ppqn, PLL glättet Netzwerk-Zittern"
+        ],
+        [
+          "Swing",
+          "in der App einstellbar"
+        ],
+        [
+          "Im Kern",
+          "geplant"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/motion-bridge",
+        "jam-zyklus/jam-server",
+        "audio-kern/looper"
+      ]
+    },
+    {
+      "id": "mapping",
+      "titel": "Mapping · Smoothing",
+      "stand": "geplant",
+      "satz": "Macht aus rohen Sensorwerten saubere Regler. Heute in der Bridge, im Kern geplant – damit App, Plugin und Browser gleich reagieren.",
+      "punkte": [
+        "Bereich auf 0…1, Totzone um die Mitte, Kurve",
+        "Modi: absolut, relativ, umschalten, halten, Impuls, Schwelle",
+        "Glättung per Tiefpass gegen Zittern"
+      ],
+      "werte": [
+        [
+          "Ausgabe",
+          "MIDI CC 7/14 Bit, Note mit Velocity, Pitchbend, OSC"
+        ],
+        [
+          "Ausgabe-Regel",
+          "nur bei Änderung – kein MIDI-Dauerfeuer"
+        ],
+        [
+          "Im Kern",
+          "geplant"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/motion-bridge",
+        "signalfluss/controller"
+      ]
+    },
+    {
+      "id": "looper",
+      "titel": "Looper",
+      "stand": "läuft",
+      "satz": "Mehrspur-Looper mit Overdub – lock-free gebaut, der Audio-Thread wartet nie.",
+      "punkte": [
+        "Länge frei, in Takten oder in Sekunden",
+        "Overdub vom Mikrofon mit Latenz-Ausgleich oder intern live (Spur schweigt beim Aufnehmen, kein Doppelklang)",
+        "Quantisieren auf Schlag oder Takt, Undo, Duplizieren, Spur entfernen, Mixdown, Wellenbild"
+      ],
+      "werte": [
+        [
+          "Spuren",
+          "4, erweiterbar bis 8"
+        ],
+        [
+          "Länge",
+          "bis 1:00 je Loop"
+        ],
+        [
+          "Format",
+          "16 Bit je Spur"
+        ],
+        [
+          "Threading",
+          "ohne Sperren: Bedienung und Mikrofon über Ringpuffer"
+        ],
+        [
+          "Belastungstest",
+          "≈ 3 200 Bedienbefehle gegen ≈ 1,1 Mio. Audio-Blöcke, nichts verloren"
+        ],
+        [
+          "Prüfung",
+          "6/6 Fälle bitgleich, auch mit echtem zweitem Thread"
+        ]
+      ],
+      "mehr": "Speicher für neue Aufnahmen legt der Bedien-Thread vorab bereit und gibt ihn auch wieder frei. Der Audio-Thread nimmt Befehle am Anfang des nächsten Blocks entgegen (höchstens ein Block Verzögerung) und reserviert selbst nie Speicher – so bleibt auch beim wilden Tippen alles knackfrei.",
+      "bezug": [
+        "audio-kern/drums-808",
+        "audio-kern/android",
+        "jam-zyklus/latenz"
+      ]
+    },
+    {
+      "id": "validierung",
+      "titel": "Validierung",
+      "stand": "läuft",
+      "satz": "Jede Änderung wird gegen die Referenz geprüft – und auf dem Smartphone gemessen.",
+      "punkte": [
+        "87 von 87 Tests grün, Referenz und C++ bitgleich",
+        "Selbsttest bei jedem Start: der Kern prüft sich selbst, bevor er Ton macht",
+        "Am Gerät schneller als die Java-Referenz"
+      ],
+      "werte": [
+        [
+          "Tests",
+          "87/87"
+        ],
+        [
+          "Gleichheit",
+          "36/36 Effekt-Fälle + 3 762 Kurvenwerte, 808 3/3, Looper 6/6"
+        ],
+        [
+          "Hörprobe",
+          "42 s, 21 Abschnitte, alle 4 032 000 Samples identisch"
+        ],
+        [
+          "Selbsttest",
+          "24 feste Fälle, ≈ 15 ms, Ergebnis „bitgleich“"
+        ],
+        [
+          "Rechenzeit am Smartphone",
+          "Median 136 µs je Block (Java 204 µs)"
+        ],
+        [
+          "Spitze (99 %)",
+          "182–245 µs je nach Last am Gerät (Java 253–451 µs)"
+        ],
+        [
+          "Budget",
+          "5,33 ms je Block (256 Samples bei 48 kHz) – Kern nutzt 2,6 %"
+        ]
+      ],
+      "bezug": [
+        "audio-kern/null-test",
+        "audio-kern/referenz",
+        "audio-kern/android"
+      ]
+    },
+    {
+      "id": "android",
+      "titel": "Android-App",
+      "stand": "läuft",
+      "satz": "Der Kern läuft in der App – angebunden über JNI, mit stillem Rückfall auf die Java-Referenz.",
+      "punkte": [
+        "Systemweite Effekte für alle Apps am Gerät",
+        "Looper, Sequencer und Drums",
+        "Am Gerät bitgleich zur Referenz, schneller als Java"
+      ],
+      "werte": [
+        [
+          "Anbindung",
+          "JNI"
+        ],
+        [
+          "Bibliothek",
+          "arm64 ≈ 428 KB, armv7 ≈ 318 KB"
+        ],
+        [
+          "Laden",
+          "≈ 18 ms inkl. Selbsttest"
+        ],
+        [
+          "Ausgabe heute",
+          "AudioTrack; Puffer von 131 auf ≈ 78 ms verkleinert, ohne Aussetzer"
+        ],
+        [
+          "AAudio",
+          "≈ 86–88 ms gemessen – am Gerät kein Gewinn, Einsatz offen"
+        ],
+        [
+          "Rückfall",
+          "ohne Kern still auf Java – die App spielt immer"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/controller",
+        "audio-kern/effekte",
+        "audio-kern/validierung"
+      ]
+    },
+    {
+      "id": "vst3",
+      "titel": "VST3-Plugin",
+      "stand": "läuft",
+      "satz": "Der Kern als VST3-Plugin, läuft in Ableton Live – JUCE nur als Wrapper um den eigenen Kern.",
+      "punkte": [
+        "16 Makros als Automations-Parameter, per MIDI-Map belegbar",
+        "Folgt der MIDI-Clock der Bridge, empfängt OSC-Bewegungsdaten",
+        "Sound-Design-XY-Feld und Clock-Anzeige (BPM, Taktart, Takt.Schlag)"
+      ],
+      "werte": [
+        [
+          "Format",
+          "VST3"
+        ],
+        [
+          "Getestet in",
+          "Ableton Live 12"
+        ],
+        [
+          "Wrapper",
+          "JUCE"
+        ],
+        [
+          "Geplant",
+          "Motion EQ und Motion Synth als eigene Plugins"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/daw",
+        "audio-kern/eq",
+        "signalfluss/motion-bridge"
+      ]
+    },
+    {
+      "id": "browser",
+      "titel": "Browser",
+      "stand": "geplant",
+      "satz": "Der Kern im Browser über WebAssembly und AudioWorklet – der Web-Client steht schon, der Kern zieht als Nächstes ein.",
+      "punkte": [
+        "Jam-Client für die Caelum Station ohne Installation",
+        "AudioWorklet-Player spielt heute schon sample-genau",
+        "Geplant: Kern als WebAssembly, Smartphone als Controller im Browser"
+      ],
+      "werte": [
+        [
+          "Audio",
+          "AudioWorklet"
+        ],
+        [
+          "Kern",
+          "WebAssembly – geplant"
+        ],
+        [
+          "Controller",
+          "Smartphone-Sensoren im Browser – geplant"
+        ]
+      ],
+      "bezug": [
+        "signalfluss/station",
+        "jam-zyklus/drums",
+        "audio-kern/null-test"
+      ]
+    },
+    {
+      "id": "null-test",
+      "titel": "Null-Test",
+      "stand": "in Arbeit",
+      "satz": "Gleiches Eingangssignal ergibt auf allen Plattformen das gleiche Ausgangssignal – abgezogen bleibt Stille.",
+      "punkte": [
+        "Ausgänge voneinander abgezogen: Differenz 0 (innerhalb der Toleranz)",
+        "Heute: Referenz ↔ C++ und Referenz ↔ Smartphone bitgleich",
+        "Als Nächstes: derselbe Test im Plugin und im Browser"
+      ],
+      "werte": [
+        [
+          "Toleranz",
+          "1 · 10⁻⁴ – erreicht wird 0"
+        ],
+        [
+          "Am Smartphone",
+          "1 920 000 Werte bitgleich, trocken und mit allen Dauer-Effekten"
+        ],
+        [
+          "Gegenprobe",
+          "eine absichtlich verfälschte Referenz wird erkannt"
+        ]
+      ],
+      "mehr": "Der Null-Test kommt aus dem Studio: zwei Signale gegenphasig summieren – bleibt nichts übrig, sind sie identisch. Hier passiert das rechnerisch, Sample für Sample, und mit einer Gegenprobe: Eine bewusst um 0,001 verfälschte Referenz muss auffallen, sonst gilt der Test nicht.",
+      "bezug": [
+        "audio-kern/validierung",
+        "audio-kern/referenz",
+        "audio-kern/vst3"
+      ]
+    }
+  ]
+}

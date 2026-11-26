@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. -->
+
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-labelledby="titel beschr">
+  <title id="titel">Caelum Motion Studio – der KI-Master</title>
+  <desc id="beschr">Der KI-Master ist die KI am Station-PC: er leitet Übergaben zwischen Decks, gibt Not-Aus, spielt selbst mit und regelt am Pult die Fader. Der Inhaber hat immer Vorrang. Drei Schutzfiguren sorgen dafür, dass die Musik nie stoppt: der Wächter prüft Proben, der Wachhund startet ausgefallene Dienste neu, der geplante Pförtner hält die festen Adressen, damit Updates ohne Lücke gehen.</desc>
+  <defs>
+    <style>
+      .bg { fill: #262624; }
+      .card { fill: #30302E; stroke: #3D3D3A; stroke-width: 1.5; }
+      .haupt { fill: #30302E; stroke: #C8479A; stroke-width: 2.5; }
+      .gast { fill: none; stroke: #9C9A94; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .chip { fill: #262624; stroke: #3D3D3A; stroke-width: 1.2; }
+      .chipA { fill: #262624; stroke: #C8479A; stroke-width: 1.5; }
+      .chipG { fill: none; stroke: #9C9A94; stroke-width: 1.2; stroke-dasharray: 4 4; }
+      .klein { fill: #3D3D3A; }
+      .h { fill: #E8E6E1; font-size: 26px; font-weight: 600; }
+      .sub { fill: #9C9A94; font-size: 15px; }
+      .t { fill: #E8E6E1; font-size: 16px; font-weight: 600; }
+      .s { fill: #C9C6BF; font-size: 13px; }
+      .m { fill: #9C9A94; font-size: 12px; }
+      .f { fill: #6E6C66; font-size: 11px; }
+      .z { fill: #C9C6BF; font-size: 11px; font-weight: 600; }
+      .stA { fill: #C8479A; font-size: 13px; font-weight: 600; }
+      .gross { fill: #C8479A; font-size: 30px; font-weight: 700; }
+      .nr { fill: #C8479A; }
+      .nrG { fill: none; stroke: #9C9A94; stroke-width: 1.5; stroke-dasharray: 3 3; }
+      .nrT { fill: #FFFFFF; font-size: 12px; font-weight: 700; }
+      .nrTG { fill: #9C9A94; font-size: 12px; font-weight: 700; }
+      .p { fill: none; stroke: #C9C6BF; stroke-width: 2; stroke-linecap: round; }
+      .pg { fill: none; stroke: #9C9A94; stroke-width: 2; stroke-dasharray: 6 5; stroke-linecap: round; }
+      .pA { fill: none; stroke: #C8479A; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .spitze { fill: #C8479A; }
+      .kappe { fill: #E8E6E1; }
+      .leer { fill: transparent; }
+      @media (prefers-reduced-motion: reduce) { .bewegt { display: none; } }
+      @media (prefers-color-scheme: light) {
+        .bg, .chip, .chipA { fill: #FAF9F6; }
+        .card, .haupt { fill: #FFFFFF; }
+        .card, .chip { stroke: #D9D6CF; }
+        .haupt, .chipA { stroke: #B03A85; }
+        .gast, .chipG, .nrG { stroke: #6E6C66; }
+        .klein { fill: #D9D6CF; }
+        .h, .t { fill: #1F1E1D; }
+        .s, .z { fill: #3D3D3A; }
+        .sub, .m, .nrTG { fill: #5F5D58; }
+        .f { fill: #8A877F; }
+        .stA, .gross, .nr, .spitze { fill: #B03A85; }
+        .kappe { fill: #3D3D3A; }
+        .p { stroke: #3D3D3A; }
+        .pg { stroke: #6E6C66; }
+        .pA { stroke: #B03A85; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="680" rx="16" class="bg"/>
+  <text x="40" y="54" class="h">KI-Master</text>
+  <text x="40" y="80" class="sub">Eine KI am Station-PC: leitet, spielt mit, regelt – und drei Schutzfiguren halten die Musik am Laufen.</text>
+
+  
+  <rect x="40" y="100" width="1120" height="50" rx="12" class="haupt" data-teil="vorrang"/>
+  <text x="62" y="131" class="t">Inhaber hat Vorrang</text>
+  <text x="250" y="131" class="s">greift er ein, hält die KI 4 Runden still · Neustart, Tempo, Spur entfernen nur auf sein Wort · niemals Unterbruch</text>
+
+  
+  <path d="M400,215 H450" class="p"/><path d="M400,296 H450" class="p"/>
+  <path d="M750,215 H800" class="p"/><path d="M750,296 H800" class="p"/>
+  <path d="M600,330 V356 H370 V384" class="p"/>
+  <path d="M600,330 V384" class="p"/>
+  <path d="M600,356 H830 V384" class="p"/>
+
+  
+  <rect x="450" y="176" width="300" height="154" rx="12" class="haupt" data-teil="ki-master"/>
+  <circle cx="478" cy="206" r="13" class="nr"/><text x="478" y="210" text-anchor="middle" class="nrT">KI</text>
+  <text x="500" y="212" class="t">KI-Master</text>
+  <text x="470" y="240" class="s">Gastgeber am Station-PC</text>
+  <text x="470" y="262" class="m">liest jede Ebene mit</text>
+  <text x="470" y="282" class="m">greift klein und umkehrbar ein</text>
+  <text x="470" y="312" class="f">läuft</text>
+
+  
+  <rect x="40" y="176" width="360" height="72" rx="12" class="card" data-teil="leiten"/>
+  <text x="58" y="204" class="t">Leiten</text>
+  <text x="58" y="228" class="m">Übergabe Deck A ↔ B auf der Takt-Eins · Lage lesen</text>
+
+  <rect x="40" y="260" width="360" height="72" rx="12" class="card" data-teil="notaus"/>
+  <text x="58" y="288" class="t">Not-Aus · Freigeben</text>
+  <text x="58" y="312" class="m">alle Spuren stumm, Grundmuster aus – Stand wird gemerkt</text>
+
+  <rect x="800" y="176" width="360" height="72" rx="12" class="card" data-teil="spieler"/>
+  <text x="818" y="204" class="t">Spielt mit</text>
+  <text x="818" y="228" class="m">eigene Spur als KI: Perkussion · Fläche · Arpeggio</text>
+
+  <rect x="800" y="260" width="360" height="72" rx="12" class="card" data-teil="regelkreis"/>
+  <text x="818" y="288" class="t">Am Pult</text>
+  <text x="818" y="312" class="m">hört den Mix, stellt Fader ≤ 1,5 dB je Runde</text>
+
+  
+  <text x="40" y="376" class="m">Drei Schutzfiguren – damit die Musik nie stoppt</text>
+
+  <rect x="40" y="384" width="360" height="232" rx="12" class="card" data-teil="waechter"/>
+  <text x="58" y="414" class="t">Wächter</text>
+  <text x="58" y="436" class="s">prüft vor und während einer Probe</text>
+  <text x="58" y="462" class="m">vor dem Start: Ruhe, Last ≤ 60 %</text>
+  <text x="58" y="482" class="m">jede Minute: Radio, Station, Unterläufe</text>
+  <text x="58" y="502" class="m">Urteil: bestanden nur ohne Unterbruch</text>
+  <text x="58" y="522" class="m">im Selbsttest: wartet ab 85 % Last</text>
+  
+  <rect x="58" y="546" width="300" height="10" rx="4" class="klein"/>
+  <rect x="58" y="546" width="160" height="10" rx="4" class="kappe"/>
+  <line x1="238" y1="540" x2="238" y2="562" class="pA"/>
+  <text x="238" y="580" text-anchor="middle" class="f">60 %</text>
+  <line x1="313" y1="540" x2="313" y2="562" class="pg"/>
+  <text x="313" y="580" text-anchor="middle" class="f">85 %</text>
+  <text x="58" y="602" class="f">Last am Station-PC</text>
+
+  <rect x="420" y="384" width="360" height="232" rx="12" class="card" data-teil="wachhund"/>
+  <text x="438" y="414" class="t">Wachhund</text>
+  <text x="438" y="436" class="s">startet nur, was wirklich weg ist</text>
+  <text x="438" y="462" class="m">schaut alle 2 s nach Stationen, Radio, Bridge</text>
+  <text x="438" y="482" class="m">&gt; 10 s weg, 3× frei, kein Prozess → Neustart</text>
+  <text x="438" y="502" class="m">&gt; 5 Starts in 10 min → Alarm statt Kreisel</text>
+  <text x="438" y="522" class="m">Pause für abgesprochene Neustarts</text>
+  
+  <line x1="438" y1="556" x2="762" y2="556" class="p"/>
+  <line x1="438" y1="550" x2="438" y2="562" class="p"/><line x1="478.5" y1="550" x2="478.5" y2="562" class="p"/><line x1="519" y1="550" x2="519" y2="562" class="p"/><line x1="559.5" y1="550" x2="559.5" y2="562" class="p"/><line x1="600" y1="550" x2="600" y2="562" class="p"/><line x1="640.5" y1="550" x2="640.5" y2="562" class="p"/><line x1="681" y1="550" x2="681" y2="562" class="p"/><line x1="721.5" y1="550" x2="721.5" y2="562" class="p"/><line x1="762" y1="550" x2="762" y2="562" class="p"/>
+  <g class="bewegt">
+    <rect x="436" y="546" width="5" height="20" rx="2" class="spitze">
+      <animate attributeName="x" values="436;476.5;476.5;517;517;557.5;557.5;598;598;638.5;638.5;679;679;719.5;719.5;760" keyTimes="0;.06;.125;.185;.25;.31;.375;.435;.5;.56;.625;.685;.75;.81;.875;1" dur="16s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  <text x="438" y="580" class="f">alle 2 s ein Blick</text>
+  <text x="762" y="580" text-anchor="end" class="f">16 s</text>
+  <text x="438" y="602" class="f">nach Standby oder Zeitsprung: 30 s Schonfrist</text>
+
+  <rect x="800" y="384" width="360" height="232" rx="12" class="card" data-teil="pfoertner"/>
+  <text x="818" y="414" class="t">Pförtner</text>
+  <text x="818" y="436" class="s">hält die feste Adresse, tauscht dahinter</text>
+  <rect x="818" y="456" width="70" height="30" rx="6" class="chip"/><text x="853" y="476" text-anchor="middle" class="z">Hörer</text>
+  <path d="M888,471 H918" class="p"/>
+  <rect x="918" y="452" width="70" height="38" rx="6" class="chip"/><text x="953" y="476" text-anchor="middle" class="z">Tor</text>
+  <path d="M988,466 H1010 V462 H1032" class="p"/><path d="M1000,476 H1010 V506 H1032" class="pg"/>
+  <rect x="1032" y="450" width="110" height="26" rx="6" class="chipA"/><text x="1087" y="467" text-anchor="middle" class="z">Werk A · Sendung</text>
+  <rect x="1032" y="494" width="110" height="26" rx="6" class="chipG"/><text x="1087" y="511" text-anchor="middle" class="z">Werk B · neu</text>
+  <text x="818" y="546" class="m">Werkwechsel: 0 Samples Sprung an der Naht</text>
+  <text x="818" y="566" class="m">Hörer bleibt verbunden · Ausfall → anderes Werk</text>
+  <text x="818" y="602" class="f">läuft am Radio seit 25.11. · Station-Tor geplant</text>
+
+  
+  <line x1="40" y1="648" x2="76" y2="648" class="p"/><text x="86" y="652" class="m">läuft</text>
+  <line x1="140" y1="648" x2="176" y2="648" class="pg"/><text x="186" y="652" class="m">geplant</text>
+</svg>

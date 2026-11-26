@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. -->
+
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" font-family="Inter, 'Segoe UI', Arial, sans-serif" role="img" aria-labelledby="titel beschr">
+  <title id="titel">Caelum Motion Studio – Hierarchie vom Netz bis zum Spieler</title>
+  <desc id="beschr">Neun Ebenen von oben nach unten: Netz, Pförtner, Sender, Crossfader, Decks, Stationen, Mixer, Spuren, Spieler. Der Ton fließt von den Spielern nach oben zu den Hörern, gesteuert wird von der Seite durch den Inhaber, den KI-Master und den Wachhund, eine Uhr läuft durch alle Ebenen. Band-Crossfader und Stationen-Matrix sind geplant und ergeben bei drei Bändern und vier Stationen 64 Kombinationen.</desc>
+  <defs>
+    <style>
+      .bg { fill: #262624; }
+      .card { fill: #30302E; stroke: #3D3D3A; stroke-width: 1.5; }
+      .haupt { fill: #30302E; stroke: #C8479A; stroke-width: 2.5; }
+      .gast { fill: none; stroke: #9C9A94; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .chip { fill: #262624; stroke: #3D3D3A; stroke-width: 1.2; }
+      .chipA { fill: #262624; stroke: #C8479A; stroke-width: 1.5; }
+      .chipG { fill: none; stroke: #9C9A94; stroke-width: 1.2; stroke-dasharray: 4 4; }
+      .klein { fill: #3D3D3A; }
+      .h { fill: #E8E6E1; font-size: 26px; font-weight: 600; }
+      .sub { fill: #9C9A94; font-size: 15px; }
+      .t { fill: #E8E6E1; font-size: 16px; font-weight: 600; }
+      .s { fill: #C9C6BF; font-size: 13px; }
+      .m { fill: #9C9A94; font-size: 12px; }
+      .f { fill: #6E6C66; font-size: 11px; }
+      .z { fill: #C9C6BF; font-size: 11px; font-weight: 600; }
+      .stA { fill: #C8479A; font-size: 13px; font-weight: 600; }
+      .gross { fill: #C8479A; font-size: 30px; font-weight: 700; }
+      .nr { fill: #C8479A; }
+      .nrG { fill: none; stroke: #9C9A94; stroke-width: 1.5; stroke-dasharray: 3 3; }
+      .nrT { fill: #FFFFFF; font-size: 12px; font-weight: 700; }
+      .nrTG { fill: #9C9A94; font-size: 12px; font-weight: 700; }
+      .p { fill: none; stroke: #C9C6BF; stroke-width: 2; stroke-linecap: round; }
+      .pg { fill: none; stroke: #9C9A94; stroke-width: 2; stroke-dasharray: 6 5; stroke-linecap: round; }
+      .pA { fill: none; stroke: #C8479A; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .spitze { fill: #C8479A; }
+      .kappe { fill: #E8E6E1; }
+      .leer { fill: transparent; }
+      @media (prefers-reduced-motion: reduce) { .bewegt { display: none; } }
+      @media (prefers-color-scheme: light) {
+        .bg, .chip, .chipA { fill: #FAF9F6; }
+        .card, .haupt { fill: #FFFFFF; }
+        .card, .chip { stroke: #D9D6CF; }
+        .haupt, .chipA { stroke: #B03A85; }
+        .gast, .chipG, .nrG { stroke: #6E6C66; }
+        .klein { fill: #D9D6CF; }
+        .h, .t { fill: #1F1E1D; }
+        .s, .z { fill: #3D3D3A; }
+        .sub, .m, .nrTG { fill: #5F5D58; }
+        .f { fill: #8A877F; }
+        .stA, .gross, .nr, .spitze { fill: #B03A85; }
+        .kappe { fill: #3D3D3A; }
+        .p { stroke: #3D3D3A; }
+        .pg { stroke: #6E6C66; }
+        .pA { stroke: #B03A85; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" rx="16" class="bg"/>
+  <text x="40" y="54" class="h">Hierarchie</text>
+  <text x="40" y="80" class="sub">Vom Netz bis zum Spieler – einfach geschichtet, vielfältig kombiniert. Ton fließt nach oben, gesteuert wird von der Seite.</text>
+
+  
+  <rect x="888" y="98" width="26" height="562" rx="8" class="leer" data-teil="uhr"/>
+  <line x1="901" y1="104" x2="901" y2="654" class="pA"/>
+  <text x="901" y="94" text-anchor="middle" class="stA">Uhr</text>
+
+  
+  <rect x="250" y="104" width="630" height="54" rx="10" class="card" data-teil="netz"/>
+  <circle cx="302" cy="131" r="12" class="nr"/><text x="302" y="135" text-anchor="middle" class="nrT">0</text>
+  <text x="326" y="127" class="t">Netz</text>
+  <text x="326" y="146" class="m">eigenes Netz und VPN · Hörer und Mitspieler von außen</text>
+  <rect x="823" y="112" width="45" height="18" rx="9" class="chip"/><text x="845.5" y="125" text-anchor="middle" class="z">E · H</text>
+  <line x1="880" y1="131" x2="895" y2="131" class="pg"/><rect x="897" y="127" width="8" height="8" rx="2" class="spitze"/>
+  <circle cx="754" cy="138" r="4" class="klein"/>
+  <circle cx="768" cy="138" r="4" class="klein"/>
+  <circle cx="782" cy="138" r="4" class="klein"/>
+  <circle cx="796" cy="138" r="4" class="klein"/>
+  <circle cx="810" cy="138" r="4" class="klein"/>
+
+  
+  <rect x="250" y="166" width="630" height="54" rx="10" class="card" data-teil="pfoertner"/>
+  <circle cx="302" cy="193" r="12" class="nr"/><text x="302" y="197" text-anchor="middle" class="nrT">1</text>
+  <text x="326" y="189" class="t">Pförtner</text>
+  <text x="326" y="208" class="m">hält die feste Adresse, dahinter wechseln die Werke</text>
+  <rect x="823" y="174" width="45" height="18" rx="9" class="chip"/><text x="845.5" y="187" text-anchor="middle" class="z">H · Z</text>
+  <text x="868" y="210" text-anchor="end" class="f">Radio läuft · Station-Tor geplant</text>
+  <line x1="880" y1="193" x2="895" y2="193" class="pg"/><rect x="897" y="189" width="8" height="8" rx="2" class="spitze"/>
+
+  
+  <rect x="250" y="228" width="630" height="54" rx="10" class="card" data-teil="sender"/>
+  <circle cx="302" cy="255" r="12" class="nr"/><text x="302" y="259" text-anchor="middle" class="nrT">2</text>
+  <text x="326" y="251" class="t">Sender</text>
+  <text x="326" y="270" class="m">was die Hörer hören: Strom, Chat, Ausschnitte</text>
+  <rect x="834" y="236" width="34" height="18" rx="9" class="chip"/><text x="851" y="249" text-anchor="middle" class="z">H</text>
+  <line x1="880" y1="255" x2="895" y2="255" class="pg"/><rect x="897" y="251" width="8" height="8" rx="2" class="spitze"/>
+  <rect x="740" y="252" width="28" height="20" rx="5" class="chip"/><text x="754" y="266" text-anchor="middle" class="z">1</text>
+  <rect x="774" y="252" width="28" height="20" rx="5" class="chip"/><text x="788" y="266" text-anchor="middle" class="z">2</text>
+
+  
+  <rect x="250" y="290" width="630" height="54" rx="10" class="card" data-teil="crossfader"/>
+  <circle cx="302" cy="317" r="12" class="nr"/><text x="302" y="321" text-anchor="middle" class="nrT">3</text>
+  <text x="326" y="313" class="t">Crossfader</text>
+  <text x="326" y="332" class="m">blendet zwischen den Decks – nur auf der Takt-Eins</text>
+  <rect x="823" y="298" width="45" height="18" rx="9" class="chip"/><text x="845.5" y="311" text-anchor="middle" class="z">H · Z</text>
+  <line x1="880" y1="317" x2="895" y2="317" class="pg"/><rect x="897" y="313" width="8" height="8" rx="2" class="spitze"/>
+  <text x="740" y="329" class="z">A</text><line x1="754" y1="325" x2="810" y2="325" class="p"/><rect x="774" y="318" width="10" height="14" rx="2" class="kappe"/><text x="816" y="329" class="z">B</text>
+
+  
+  <rect x="250" y="352" width="630" height="54" rx="10" class="card" data-teil="decks"/>
+  <circle cx="302" cy="379" r="12" class="nr"/><text x="302" y="383" text-anchor="middle" class="nrT">4</text>
+  <text x="326" y="375" class="t">Decks</text>
+  <text x="326" y="394" class="m">Mix einer Station mit Runden-Marken</text>
+  <rect x="834" y="360" width="34" height="18" rx="9" class="chip"/><text x="851" y="373" text-anchor="middle" class="z">H</text>
+  <line x1="880" y1="379" x2="895" y2="379" class="pg"/><rect x="897" y="375" width="8" height="8" rx="2" class="spitze"/>
+  <rect x="740" y="376" width="28" height="20" rx="5" class="chip"/><text x="754" y="390" text-anchor="middle" class="z">A</text>
+  <rect x="774" y="376" width="28" height="20" rx="5" class="chip"/><text x="788" y="390" text-anchor="middle" class="z">B</text>
+
+  
+  <rect x="250" y="414" width="630" height="54" rx="10" class="card" data-teil="stationen"/>
+  <circle cx="302" cy="441" r="12" class="nr"/><text x="302" y="445" text-anchor="middle" class="nrT">5</text>
+  <text x="326" y="437" class="t">Stationen</text>
+  <text x="326" y="456" class="m">Takt-Server mit Grundmuster und eigenem Mix · B folgt A</text>
+  <rect x="834" y="422" width="34" height="18" rx="9" class="chip"/><text x="851" y="435" text-anchor="middle" class="z">D</text>
+  <line x1="880" y1="441" x2="895" y2="441" class="pg"/><rect x="897" y="437" width="8" height="8" rx="2" class="spitze"/>
+  <rect x="740" y="438" width="28" height="20" rx="5" class="chip"/><text x="754" y="452" text-anchor="middle" class="z">A</text><path d="M798,448 H772" class="p"/><path d="M778,444 l-6,4 l6,4" class="p"/><rect x="800" y="438" width="28" height="20" rx="5" class="chip"/><text x="814" y="452" text-anchor="middle" class="z">B</text>
+
+  
+  <rect x="250" y="476" width="630" height="54" rx="10" class="card" data-teil="mixer"/>
+  <circle cx="302" cy="503" r="12" class="nr"/><text x="302" y="507" text-anchor="middle" class="nrT">6</text>
+  <text x="326" y="499" class="t">Mixer</text>
+  <text x="326" y="518" class="m">je Station ein Pult: Fader, Pan, Mute, Solo, Aufnahme</text>
+  <rect x="823" y="484" width="45" height="18" rx="9" class="chip"/><text x="845.5" y="497" text-anchor="middle" class="z">D · Z</text>
+  <line x1="880" y1="503" x2="895" y2="503" class="pg"/><rect x="897" y="499" width="8" height="8" rx="2" class="spitze"/>
+  <line x1="746" y1="502" x2="746" y2="522" class="p"/><rect x="742" y="512" width="8" height="5" rx="1.5" class="kappe"/>
+  <line x1="758" y1="502" x2="758" y2="522" class="p"/><rect x="754" y="508" width="8" height="5" rx="1.5" class="kappe"/>
+  <line x1="770" y1="502" x2="770" y2="522" class="p"/><rect x="766" y="514" width="8" height="5" rx="1.5" class="kappe"/>
+  <line x1="782" y1="502" x2="782" y2="522" class="p"/><rect x="778" y="510" width="8" height="5" rx="1.5" class="kappe"/>
+  <line x1="794" y1="502" x2="794" y2="522" class="p"/><rect x="790" y="506" width="8" height="5" rx="1.5" class="kappe"/>
+  <line x1="806" y1="502" x2="806" y2="522" class="p"/><rect x="802" y="511" width="8" height="5" rx="1.5" class="kappe"/>
+
+  
+  <rect x="250" y="538" width="630" height="54" rx="10" class="card" data-teil="spuren"/>
+  <circle cx="302" cy="565" r="12" class="nr"/><text x="302" y="569" text-anchor="middle" class="nrT">7</text>
+  <text x="326" y="561" class="t">Spuren</text>
+  <text x="326" y="580" class="m">bis zu acht je Station, dazu das Grundmuster</text>
+  <rect x="834" y="546" width="34" height="18" rx="9" class="chip"/><text x="851" y="559" text-anchor="middle" class="z">D</text>
+  <line x1="880" y1="565" x2="895" y2="565" class="pg"/><rect x="897" y="561" width="8" height="8" rx="2" class="spitze"/>
+  <rect x="740" y="570" width="6" height="14" rx="1.5" class="klein"/>
+  <rect x="750" y="575" width="6" height="9" rx="1.5" class="klein"/>
+  <rect x="760" y="568" width="6" height="16" rx="1.5" class="klein"/>
+  <rect x="770" y="573" width="6" height="11" rx="1.5" class="klein"/>
+  <rect x="780" y="577" width="6" height="7" rx="1.5" class="klein"/>
+  <rect x="790" y="571" width="6" height="13" rx="1.5" class="klein"/>
+  <rect x="800" y="580" width="6" height="4" rx="1.5" class="klein"/>
+  <rect x="810" y="580" width="6" height="4" rx="1.5" class="klein"/>
+
+  
+  <rect x="250" y="600" width="630" height="54" rx="10" class="card" data-teil="spieler"/>
+  <circle cx="302" cy="627" r="12" class="nr"/><text x="302" y="631" text-anchor="middle" class="nrT">8</text>
+  <text x="326" y="623" class="t">Spieler</text>
+  <text x="326" y="642" class="m">Browser · Android · DAW mit Plugin · KI · Simulation</text>
+  <rect x="717.4" y="608" width="150.6" height="18" rx="9" class="chip"/><text x="792.7" y="621" text-anchor="middle" class="z">I · A · C · E · Z · D</text>
+  <line x1="880" y1="627" x2="895" y2="627" class="pg"/><rect x="897" y="623" width="8" height="8" rx="2" class="spitze"/>
+
+  
+  <line x1="272" y1="648" x2="272" y2="118" class="pA"/>
+  <path d="M264,126 L272,114 L280,126" class="pA"/>
+  <text x="272" y="674" text-anchor="middle" class="stA">Ton</text>
+  <g class="bewegt">
+    <circle cx="272" cy="648" r="5" class="spitze">
+      <animate attributeName="cy" values="648;122" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.85;1" dur="4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  
+  <text x="40" y="116" class="m">Steuerung</text>
+  <rect x="40" y="128" width="180" height="96" rx="12" class="haupt" data-teil="inhaber"/>
+  <text x="58" y="156" class="t">Inhaber</text>
+  <text x="58" y="178" class="s">hat immer Vorrang</text>
+  <text x="58" y="200" class="m">die KI hält 4 Runden still</text>
+
+  <rect x="40" y="238" width="180" height="130" rx="12" class="card" data-teil="ki-master"/>
+  <text x="58" y="266" class="t">KI-Master</text>
+  <text x="58" y="288" class="s">liest jede Ebene</text>
+  <text x="58" y="308" class="m">Übergabe A ↔ B</text>
+  <text x="58" y="326" class="m">Not-Aus · spielt mit</text>
+  <text x="58" y="352" class="f">Kapitel 7</text>
+
+  <rect x="40" y="382" width="180" height="110" rx="12" class="card" data-teil="wachhund"/>
+  <text x="58" y="410" class="t">Wachhund</text>
+  <text x="58" y="432" class="s">startet nur, was weg ist</text>
+  <text x="58" y="452" class="m">Stationen · Radio · Bridge</text>
+  <text x="58" y="474" class="m">nie ein Unterbruch</text>
+
+  <path d="M220,176 H236 V620" class="p"/>
+  <path d="M220,303 H236" class="p"/>
+  <path d="M220,437 H236" class="p"/>
+  <path d="M236,131 H248" class="p"/><path d="M242,127 l6,4 l-6,4" class="p"/>
+  <path d="M236,255 H248" class="p"/><path d="M242,251 l6,4 l-6,4" class="p"/>
+  <path d="M236,317 H248" class="p"/><path d="M242,313 l6,4 l-6,4" class="p"/>
+  <path d="M236,441 H248" class="p"/><path d="M242,437 l6,4 l-6,4" class="p"/>
+  <path d="M236,503 H248" class="p"/><path d="M242,499 l6,4 l-6,4" class="p"/>
+
+  
+  <path d="M914,317 H922 V300 H930" class="pg"/>
+  <rect x="930" y="104" width="230" height="212" rx="12" class="gast" data-teil="band-crossfader"/>
+  <text x="948" y="132" class="t">Band-Crossfader</text>
+  <text x="948" y="152" class="m">je Frequenzband ein Fader</text>
+  <text x="960" y="172" text-anchor="middle" class="f">A</text><line x1="960" y1="180" x2="960" y2="254" class="pg"/><rect x="948" y="190.5" width="24" height="10" rx="3" class="chipG"/><text x="960" y="270" text-anchor="middle" class="f">B</text><text x="960" y="286" text-anchor="middle" class="z">Tief</text>
+  <text x="1040" y="172" text-anchor="middle" class="f">A</text><line x1="1040" y1="180" x2="1040" y2="254" class="pg"/><rect x="1028" y="225.6" width="24" height="10" rx="3" class="chipG"/><text x="1040" y="270" text-anchor="middle" class="f">B</text><text x="1040" y="286" text-anchor="middle" class="z">Mitte</text>
+  <text x="1120" y="172" text-anchor="middle" class="f">A</text><line x1="1120" y1="180" x2="1120" y2="254" class="pg"/><rect x="1108" y="213.9" width="24" height="10" rx="3" class="chipG"/><text x="1120" y="270" text-anchor="middle" class="f">B</text><text x="1120" y="286" text-anchor="middle" class="z">Hoch</text>
+  <text x="948" y="302" class="f">Bass immer nur aus einer Station</text>
+
+  
+  <rect x="930" y="330" width="230" height="324" rx="12" class="gast" data-teil="matrix"/>
+  <text x="948" y="358" class="t">Stationen-Matrix</text>
+  <text x="948" y="378" class="m">welche Station liefert welches Band</text>
+  <rect x="1000" y="392" width="22" height="22" rx="4" class="chipG"/><rect x="1028" y="392" width="22" height="22" rx="4" class="chipA"/><rect x="1056" y="392" width="22" height="22" rx="4" class="chipG"/><rect x="1084" y="392" width="22" height="22" rx="4" class="chipG"/>
+  <rect x="1000" y="420" width="22" height="22" rx="4" class="chipG"/><rect x="1028" y="420" width="22" height="22" rx="4" class="chipG"/><rect x="1056" y="420" width="22" height="22" rx="4" class="chipG"/><rect x="1084" y="420" width="22" height="22" rx="4" class="chipA"/>
+  <rect x="1000" y="448" width="22" height="22" rx="4" class="chipA"/><rect x="1028" y="448" width="22" height="22" rx="4" class="chipG"/><rect x="1056" y="448" width="22" height="22" rx="4" class="chipG"/><rect x="1084" y="448" width="22" height="22" rx="4" class="chipG"/>
+  <text x="992" y="407" text-anchor="end" class="f">Hoch</text><text x="992" y="435" text-anchor="end" class="f">Mitte</text><text x="992" y="463" text-anchor="end" class="f">Tief</text>
+  <text x="1011" y="490" text-anchor="middle" class="f">1</text><text x="1039" y="490" text-anchor="middle" class="f">2</text><text x="1067" y="490" text-anchor="middle" class="f">3</text><text x="1095" y="490" text-anchor="middle" class="f">4</text>
+  <text x="948" y="526" class="gross">4³ = 64</text>
+  <text x="948" y="546" class="f">3 Bänder × 4 Stationen, ganze Stufen</text>
+
+  
+  <line x1="250" y1="696" x2="286" y2="696" class="p"/><text x="296" y="700" class="m">läuft</text>
+  <line x1="350" y1="696" x2="386" y2="696" class="pg"/><text x="396" y="700" class="m">geplant</text>
+  <line x1="470" y1="696" x2="506" y2="696" class="pA"/><text x="516" y="700" class="m">Ton und Uhr</text>
+  <rect x="620" y="688" width="30" height="16" rx="8" class="chip"/><text x="635" y="700" text-anchor="middle" class="z">D</text><text x="660" y="700" class="m">Strang, der die Ebene baut</text>
+</svg>

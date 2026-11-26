@@ -1,0 +1,46 @@
+/* Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. */
+
+.seite.eins { grid-template-columns: minmax(0, 1fr); max-width: 980px; }
+.kp { display: flex; flex-direction: column; gap: 16px; }
+.kp h2 { font-size: 22px; font-weight: 400; margin: 0 0 4px; }
+.kp .hint { margin: 0; }
+.kp-kopf { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+
+.kp-buehne { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.kp-feld { position: relative; background: var(--bg-tief); border-radius: 12px; overflow: hidden; transition: opacity .4s; }
+.kp-feld canvas { display: block; width: 100%; }
+.kp-feld.aus { opacity: .55; }
+.kp-achse { position: absolute; font-size: 12px; color: var(--text-matt); pointer-events: none; }
+.kp-achse.x { left: 50%; bottom: 8px; transform: translateX(-50%); }
+.kp-achse.y { left: 8px; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: left center; margin-left: 8px; }
+
+.kp-seite { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.kp-marken { display: flex; gap: 8px; flex-wrap: wrap; }
+.kp-marke { font-size: 12px; padding: 4px 12px; border-radius: 999px; background: var(--flaeche); color: var(--text-matt);
+  border-left: 3px solid var(--text-blass); transition: color .2s, border-color .2s; }
+.kp-marke.an { color: var(--text); border-left-color: var(--akzent); }
+.kp-werte { display: grid; grid-template-columns: auto minmax(0, 1fr) 44px; gap: 8px 12px; align-items: center; font-size: 13px; color: var(--text-matt); }
+.kp-balken { height: 8px; border-radius: 4px; background: var(--hover); overflow: hidden; }
+.kp-balken i { display: block; height: 100%; width: 50%; background: var(--akzent); }
+.kp-werte code { font: 12px "Cascadia Mono", Consolas, monospace; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+.kp-detail { background: var(--flaeche); border-radius: 12px; padding: 16px; min-height: 112px; }
+.kp-detail h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
+.kp-detail p { margin: 0; color: var(--text-weich); font-size: 13px; }
+
+.kp-leiste { display: flex; gap: 4px; }
+.kp-kachel { position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 8px; min-height: 56px; border-radius: 8px; background: var(--flaeche); text-align: left; overflow: hidden; }
+.kp-kachel:hover { background: var(--hover); }
+.kp-kachel b { font-size: 12px; color: var(--text-matt); font-weight: 600; }
+.kp-kachel span { font-size: 12px; color: var(--text-weich); line-height: 1.3; }
+.kp-kachel i { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--akzent); }
+.kp-kachel.jetzt { background: var(--gewaehlt); }
+.kp-kachel.jetzt b { color: var(--akzent); }
+.kp-uhr { font: 12px "Cascadia Mono", Consolas, monospace; color: var(--text-matt); text-align: right; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 760px) {
+  .kp-buehne { grid-template-columns: minmax(0, 1fr); }
+  .kp-leiste { flex-wrap: wrap; }
+  .kp-kachel { flex: 1 1 calc(33% - 4px); }
+}
+@media (prefers-reduced-motion: reduce) { .kp-feld, .kp-marke { transition: none; } }

@@ -1,0 +1,88 @@
+/* Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten. Stil der Bilder-Sektion (aus webseite.html von Strang G). */
+  
+
+  
+  .cms {
+    --bg: #262624; --surface: #30302E; --hover: #33332F; --line: #3D3D3A;
+    --text: #E8E6E1; --soft: #C9C6BF; --muted: #9C9A94; --accent: #C8479A; --auf-accent: #FFFFFF;
+    --accent-text: #DC6FAE; 
+    color: var(--text); max-width: 1120px; margin: 0 auto; padding: 48px 20px 56px;
+  }
+  :root[data-thema="hell"] .cms { --bg: #FAF9F6; --surface: #FFFFFF; --hover: #F4F2EE; --line: #D9D6CF;
+           --text: #1F1E1D; --soft: #3D3D3A; --muted: #5F5D58; --accent: #B03A85; --accent-text: #B03A85; }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-thema="dunkel"]) .cms { --bg: #FAF9F6; --surface: #FFFFFF; --hover: #F4F2EE; --line: #D9D6CF;
+           --text: #1F1E1D; --soft: #3D3D3A; --muted: #5F5D58; --accent: #B03A85; --accent-text: #B03A85; }
+  }
+  .cms * { box-sizing: border-box; }
+  .cms-marke { color: var(--accent-text); font-size: 13px; font-weight: 600; letter-spacing: .02em; margin: 0 0 8px; }
+  .cms h2 { font-size: clamp(24px, 3.2vw, 34px); line-height: 1.2; font-weight: 600; margin: 0 0 12px; }
+  .cms-satz { color: var(--muted); font-size: 16px; max-width: 640px; margin: 0 0 24px; }
+
+  
+  .cms-kette { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0 0 32px; }
+  .cms-kette li { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line);
+                  border-radius: 999px; padding: 6px 14px 6px 6px; font-size: 14px; }
+  .cms-kette b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+                 background: var(--accent); color: var(--auf-accent); font-size: 12px; }
+  .cms-kette li + li::before { content: "→"; color: var(--muted); margin: 0 6px 0 -2px; order: -1; }
+  .cms-kette li + li { padding-left: 4px; }
+
+  
+  .cms-karte { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 0 0 12px;
+               transition: border-color .2s; }
+  .cms-karte[open] { border-color: var(--accent); }
+  .cms-karte summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 36px 1fr 28px;
+                       align-items: center; gap: 16px; padding: 16px 20px; border-radius: 12px; }
+  .cms-karte summary::-webkit-details-marker { display: none; }
+  .cms-karte summary:hover { background: var(--hover); }
+  .cms-karte summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .cms-nr { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+            border: 1.5px solid var(--accent); color: var(--accent-text); font-weight: 600; transition: background .2s, color .2s; }
+  .cms-karte[open] .cms-nr { background: var(--accent); color: var(--auf-accent); }
+  .cms-titel { font-size: 17px; font-weight: 600; display: block; }
+  .cms-kurz { color: var(--muted); font-size: 14px; display: block; }
+  .cms-pfeil { width: 28px; height: 28px; transition: transform .25s ease; }
+  .cms-pfeil path { fill: none; stroke: var(--soft); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .cms-karte[open] .cms-pfeil { transform: rotate(180deg); }
+
+  
+  @supports (interpolate-size: allow-keywords) {
+    .cms { interpolate-size: allow-keywords; }
+    .cms-karte::details-content { block-size: 0; overflow: hidden; opacity: 0;
+      transition: block-size .35s ease, opacity .3s ease, content-visibility .35s allow-discrete; }
+    .cms-karte[open]::details-content { block-size: auto; opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cms-karte::details-content, .cms-pfeil, .cms-nr { transition: none !important; }
+  }
+
+  .cms-inhalt { padding: 0 20px 20px; }
+  .cms-bild { overflow-x: auto; border-radius: 12px; -webkit-overflow-scrolling: touch; }
+  .cms-bild img, .cms-bild svg { display: block; width: 100%; min-width: 760px; height: auto; }
+  .cms-wisch { display: none; color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+  .cms-punkte { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; padding: 0; margin: 16px 0 0; font-size: 14px; color: var(--soft); }
+  .cms-punkte li { display: flex; align-items: center; gap: 8px; }
+  .cms-punkte li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+  
+  .cms-klangprobe { --bg-tief: var(--hover); --flaeche: var(--surface); --gewaehlt: var(--line);
+    --text-weich: var(--soft); --text-matt: var(--muted); --text-blass: var(--line); --akzent: var(--accent); }
+  .cms-klangprobe .hint { color: var(--muted); font-size: 13px; }
+  .cms-klangprobe button { font: inherit; color: var(--text); border: 0; cursor: pointer; border-radius: 8px; }
+  .cms-klangprobe button:disabled { opacity: .45; cursor: default; }
+  .cms-klangprobe .primary { background: var(--accent); color: var(--auf-accent); font-weight: 600; padding: 12px 24px; border-radius: 10px; min-height: 44px; }
+
+  @media (max-width: 560px) {
+    .cms-kette { display: grid; grid-template-columns: 1fr 1fr; }
+    .cms-kette li + li::before { content: none; }
+    .cms-kette li + li { padding-left: 6px; }
+  }
+  @media (max-width: 800px) {
+    .cms-wisch { display: block; }
+    .cms-karte summary { grid-template-columns: 32px 1fr 24px; gap: 12px; padding: 14px 16px; }
+    .cms-nr { width: 32px; height: 32px; }
+    .cms-inhalt { padding: 0 16px 16px; }
+  }
+
+  /* caelum.one: steht in main.wrap, die schon den Seitenrand setzt */
+  .wrap > .cms { max-width: none; padding: 8px 0 56px; }

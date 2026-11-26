@@ -1,0 +1,350 @@
+{
+  "_copyright": "Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.",
+  "kapitel": "klang-verbund",
+  "titel": "Klang-Verbund",
+  "bild": "klang-verbund.svg",
+  "teile": [
+    {
+      "id": "uhr",
+      "titel": "Eine Uhr",
+      "satz": "Die Caelum Station gibt Tempo, Takt und Runde vor – alle anderen folgen, keiner zählt selbst los.",
+      "punkte": [
+        "BPM, läuft ja/nein, Position in Vierteln und Runde aus einer Quelle – fest im 4/4-Takt",
+        "Jede Runde beginnt auf einer Takt-Eins – Runden, DAW-Takte und Looper decken sich",
+        "Tempo-Wechsel gelten ab der nächsten Runde, für alle gleichzeitig"
+      ],
+      "bezug": [
+        "klang-verbund/bruecke",
+        "jam-zyklus/jam-server",
+        "audio-kern/clock"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Takt an die Bridge",
+          "20× je Sekunde: BPM, läuft, Position in Vierteln"
+        ],
+        [
+          "Tempo",
+          "40–240 BPM"
+        ],
+        [
+          "Standard-Runde",
+          "4 Takte bei 120 BPM = 8 s"
+        ],
+        [
+          "Swing",
+          "gehört zum jeweiligen Grundmuster-Teil, nicht zur Uhr"
+        ]
+      ],
+      "mehr": "Gibt es mehrere Uhren, laufen sie früher oder später auseinander. Darum zählt nur die Station; alle anderen hängen sich an ihren Takt. Fällt sie kurz aus, soll die Bridge im letzten Tempo weiterlaufen statt anzuhalten – das ist noch in Arbeit."
+    },
+    {
+      "id": "hauptfenster",
+      "titel": "Hauptfenster",
+      "satz": "Ein Einstieg statt drei Adressen: Studio, Station oder Radio wählen – jeder sieht, was seine Rolle darf.",
+      "punkte": [
+        "Liegt auf der Station selbst; Radio eingebettet (vom Inhaber bestätigt 24.11.)",
+        "Studio: im Browser mitspielen",
+        "Station: Session leiten (Master)",
+        "Radio: zuhören und chatten",
+        "Rollen in Stufen: A Admin über dem Master, B Master, C Spieler"
+      ],
+      "bezug": [
+        "klang-verbund/web-studio",
+        "klang-verbund/radio",
+        "signalfluss/station"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "A · Admin",
+          "Stationen anlegen und schliessen, Länge, System-Grids"
+        ],
+        [
+          "B · Master",
+          "Gastgeber am Station-PC oder Admin: BPM, Takte, einladen, Pegel, stumm schalten"
+        ],
+        [
+          "C · Spieler",
+          "eine Spur bespielen, eigenen Pegel vorschlagen"
+        ],
+        [
+          "Zugang",
+          "Einladung = Rolle C, Admin-Login = A bzw. B"
+        ]
+      ],
+      "mehr": "Heute sind Master-Menü, Radio und Web-Studio drei getrennte Seiten. Ein gemeinsames Hauptfenster macht es einfacher: man wählt, was man tun will, und sieht nur die Knöpfe der eigenen Rolle."
+    },
+    {
+      "id": "netz",
+      "titel": "Selber vernetzen",
+      "satz": "Später: eigene Stationen anlegen und verbinden – und fremde Plugins einbinden, wo es sauber geht.",
+      "punkte": [
+        "Eigene Station anlegen gibt es schon für Admins",
+        "Stationen untereinander verbinden – geplant",
+        "Fremde VST-Plugins nur am eigenen PC über DAW oder Caelum-Plugin, nie im Browser; der Klang geht als Audio in die Runde"
+      ],
+      "bezug": [
+        "signalfluss/daw",
+        "audio-kern/vst3"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Zuerst",
+          "Online-Aufbau mit einer Uhr und einem Klang"
+        ],
+        [
+          "Danach",
+          "caelum.one öffentlich, dann vernetzen, ganz zuletzt fremde Plugins"
+        ]
+      ],
+      "mehr": "Für den Online-Aufbau reicht der eigene Klang. Fremde Plugins sind die perfekte Stufe: sie laufen nur dort, wo sie installiert sind, und liefern ihren Klang als Audio – so bleibt die Runde für alle gleich."
+    },
+    {
+      "id": "bruecke",
+      "titel": "Motion-Bridge · MIDI-Clock",
+      "satz": "Die Bridge macht aus dem Takt der Station eine MIDI-Clock für DAW und Smartphones.",
+      "punkte": [
+        "24 ppqn mit Start, Stop und Song-Position",
+        "PLL glättet das Zittern im Netz",
+        "Station als oberste Uhr der Bridge: in Arbeit"
+      ],
+      "bezug": [
+        "signalfluss/motion-bridge",
+        "audio-kern/clock",
+        "klang-verbund/uhr"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Clock",
+          "24 ppqn, Start/Continue/Stop"
+        ],
+        [
+          "Heute",
+          "Clock aus dem Takt eines Smartphones"
+        ],
+        [
+          "Neu",
+          "Station vor jedem Smartphone, Freilauf bei Ausfall"
+        ]
+      ],
+      "mehr": "Die MIDI-Clock läuft schon. Damit Ableton und alle Smartphones im Takt der Station laufen, muss die Bridge die Station als erste Quelle nehmen."
+    },
+    {
+      "id": "handy",
+      "titel": "Android-App",
+      "satz": "Drum, Sequenzer, Bass, Vocoder, Synthesizer, Sampler und Looper laufen am Smartphone auf einer eigenen, abtastgenauen Uhr.",
+      "punkte": [
+        "Drum mit Anschlag, Sequenzer mit Lauflicht und Euklid, Bass, Vocoder, Mono- und Poly-Synth mit Arpeggiator, Duo, Kristall, Sampler, Launchpad, Looper",
+        "Eigene Uhr mit Swing, Klick und Vorlauf",
+        "An die Uhr der Station hängen: geplant"
+      ],
+      "bezug": [
+        "audio-kern/android",
+        "signalfluss/controller",
+        "klang-verbund/ein-klang"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Muster",
+          "16–64 Steps, Euklid"
+        ],
+        [
+          "Drums",
+          "16 Stimmen 808, gerechnet, ohne Samples"
+        ],
+        [
+          "Instrumente in der App",
+          "Drum · Sequenzer · Bass · Vocoder · Mono · Poly · Duo · Kristall · Sampler · Launchpad"
+        ]
+      ],
+      "mehr": "Allein spielt die App schon im eigenen Takt. Im Verbund soll sie dem Takt der Station folgen, damit ihr Loop genau auf die Runde passt."
+    },
+    {
+      "id": "web-studio",
+      "titel": "Web-Studio",
+      "satz": "Im Browser mitspielen – im Takt der Runde, mit denselben Drums wie am Smartphone.",
+      "punkte": [
+        "Matrix 16 Instrumente × 16 Steps, Muster A–D",
+        "Drums 808 gleichwertig zur App, Muster im selben Format",
+        "Was man hört, ist genau das, was an die Station geht"
+      ],
+      "bezug": [
+        "audio-kern/browser",
+        "jam-zyklus/mix",
+        "klang-verbund/ein-klang"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Takt",
+          "Runden-Uhr der Station"
+        ],
+        [
+          "Muster",
+          "dasselbe Format wie in der App (16–64 Steps, Euklid) – die Seite zeigt heute nur 16"
+        ],
+        [
+          "Fehlt",
+          "Synth-Stimme, Bedienung für 16–64 Steps, Samples; Mikrofon nur über HTTPS"
+        ]
+      ],
+      "mehr": "Das Web-Studio ist der erste Ort, an dem alle Teile des Verbunds zusammenkommen sollen: eine Uhr, ein Klang und Samples mit Ausweis."
+    },
+    {
+      "id": "caelum-one",
+      "titel": "caelum.one",
+      "satz": "Dieselben Bausteine öffentlich im Browser – ohne Installation.",
+      "punkte": [
+        "Synth und EQ mit Web Audio",
+        "Smartphone bewegen direkt im Browser",
+        "Gleiche Zuordnungs-Datei wie die Bridge"
+      ],
+      "bezug": [
+        "klang-verbund/web-studio",
+        "audio-kern/browser"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Zugang",
+          "öffentlich, nur über HTTPS"
+        ],
+        [
+          "Samples",
+          "Freigabe „öffentlich“ mit Urheber"
+        ]
+      ],
+      "mehr": "caelum.one übernimmt, was im Web-Studio läuft, statt eigene Klänge zu bauen – so klingt es auch öffentlich gleich."
+    },
+    {
+      "id": "radio",
+      "titel": "Caelum Radio",
+      "satz": "Das Radio spielt den Mix eine Runde später – mit Tempo und Runde als Begleitdaten.",
+      "punkte": [
+        "Live-Stream des Mix mit Chat",
+        "Begleitdaten: Runde, BPM, Mitspieler",
+        "Im Strom nur eigene oder freigegebene Musik"
+      ],
+      "bezug": [
+        "signalfluss/radio",
+        "jam-zyklus/mix",
+        "klang-verbund/freigabe"
+      ],
+      "stand": "läuft",
+      "werte": [
+        [
+          "Abstand",
+          "eine Runde hinter den Mitspielern"
+        ]
+      ],
+      "mehr": "Das Radio zählt nicht selbst; es hört der Station zu. Darum braucht es für den Verbund nur die Freigabe-Regel für Samples."
+    },
+    {
+      "id": "ein-klang",
+      "titel": "Ein Klang überall",
+      "satz": "Drums, Synth und Sequenzer-Muster rechnen in App, Kern und Browser gleich – ein Muster klingt überall identisch.",
+      "punkte": [
+        "Drums 808: App und Kern bitgleich geprüft",
+        "Browser: heute gleichwertig; entschieden – der Kern kommt als WebAssembly in den Browser, dann bitgleich",
+        "Synth und Sampler gibt es schon in der App; im Kern sind sie geplant – dann wird der Kern die Vorlage und der Browser zieht nach",
+        "Ein Muster-Format für alle: Steps, Raster, Swing, Anschlag je Stimme – App und Browser haben es schon",
+        "Klänge reisen als Einstellwerte statt als Audio – klein und überall gleich"
+      ],
+      "bezug": [
+        "audio-kern/drums-808",
+        "audio-kern/validierung",
+        "klang-verbund/web-studio"
+      ],
+      "stand": "in Arbeit",
+      "werte": [
+        [
+          "Muster",
+          "16–64 Steps, Euklid"
+        ],
+        [
+          "Prüfung",
+          "Sample für Sample App ↔ Kern; Browser über den Kern als WebAssembly – geplant, als Nächstes"
+        ],
+        [
+          "Synth, Sampler",
+          "in der App gebaut (25.11.2026); im Kern und im Browser geplant"
+        ]
+      ],
+      "mehr": "Wenn alle dieselbe Rechnung haben, muss man nur die Einstellungen schicken. Der Gleichheitstest stellt sicher, dass es auch wirklich gleich klingt."
+    },
+    {
+      "id": "samples",
+      "titel": "Samples im Takt",
+      "satz": "Jedes Sample bekommt einen Ausweis, damit es im Takt sitzt – als One-Shot, Live oder Loop.",
+      "punkte": [
+        "Tempo und Länge: Loops passen sich der Runde an",
+        "Tonhöhe: Samples wie ein Instrument spielen",
+        "Abtastrate: Original bleibt, gespielt wird mit 48 kHz",
+        "Raster: Quantisierung an oder aus, 1/16 bis ganze Runde",
+        "One-Shot spielt einmal ganz · Loop liegt auf der Takt-Eins"
+      ],
+      "bezug": [
+        "klang-verbund/live",
+        "klang-verbund/freigabe",
+        "audio-kern/looper"
+      ],
+      "stand": "geplant",
+      "werte": [
+        [
+          "Arten",
+          "One-Shot · Live · Loop"
+        ],
+        [
+          "Raster",
+          "1/16 · 1/8 · 1/4 · Takt-Eins · Runde · aus"
+        ],
+        [
+          "Abtastrate",
+          "einmal beim Laden auf 48 kHz"
+        ]
+      ],
+      "mehr": "Station, Kern und App rechnen mit 48 kHz. Wird ein Sample einmal beim Laden umgerechnet, hört man beim Einstellen genau das, was in Runde und Radio geht."
+    },
+    {
+      "id": "live",
+      "titel": "Live – je nach Werkzeug",
+      "satz": "Live heisst je Werkzeug etwas anderes – darum wählbar statt fest.",
+      "punkte": [
+        "Sequenzer: spielt im BPM-Rhythmus, immer im Raster",
+        "Drum: nach BPM oder freier Tonwahl, Quantisierung und Takt wählbar",
+        "Mikrofon: immer live; nur für Loops rasten Anfang und Ende auf die Takt-Eins",
+        "Was man beim Spielen hört, geht genau so in die Runde"
+      ],
+      "bezug": [
+        "klang-verbund/samples",
+        "audio-kern/looper"
+      ],
+      "stand": "geplant",
+      "werte": [],
+      "mehr": "Grund-Erkenntnis des Inhabers (24.11.2026): Der Sequenzer lebt vom Raster, die Drum von der Wahl, das Mikrofon vom Moment."
+    },
+    {
+      "id": "freigabe",
+      "titel": "Freigabe",
+      "satz": "Eigene Samples nutzen und teilen – privat, im Raum oder öffentlich mit Urheber.",
+      "punkte": [
+        "Privat: nur für mich",
+        "Im Raum: erscheint bei den Mitspielern als Pad",
+        "Öffentlich: auf caelum.one, immer mit Urheber",
+        "Im Radio nur eigene oder ausdrücklich freigegebene Musik"
+      ],
+      "bezug": [
+        "klang-verbund/radio",
+        "klang-verbund/caelum-one"
+      ],
+      "stand": "geplant",
+      "werte": [],
+      "mehr": "Die Freigabe ist die Grundlage dafür, dass Musik im Radio laufen darf; das Rechtliche wird mit dem Recht-Strang geklärt."
+    }
+  ]
+}
