@@ -403,3 +403,21 @@
 .mf-knob:focus { outline: none; }
 .mf-knob:focus-visible { outline: 2px solid var(--mf-purpur-text); outline-offset: 2px; }
 @media (max-width: 460px) { .mf-knob { width: 56px; height: 56px; } }
+/* Stufe 2 (26.11.2026): Fader ↔ Knobs gleiten waagrecht wie die Wisch-Seiten der App; senkrecht scrollt die Seite weiter */
+.mf-mix-wrap { overflow: hidden; touch-action: pan-y; }
+.mf-mix-bahn { display: flex; transition: transform .32s cubic-bezier(.2, .8, .2, 1); will-change: transform; }
+.mf-mix-bahn[hidden] { display: none; }
+.mf-mix-bahn.zieht { transition: none; }
+.mf-mix-bahn > .mf-mix { flex: 0 0 100%; min-width: 0; }
+.mf-mix-punkte { display: flex; justify-content: center; align-items: center; gap: 10px; margin: -6px 0 8px; }
+.mf-mix-punkte i { width: 7px; height: 7px; border-radius: 50%; background: #4A4252; transition: background .2s, transform .2s; }
+.mf-mix-punkte i.an { background: var(--mf-purpur-text); transform: scale(1.15); }
+.mf-seq-karte .mf-mix-punkte .mf-mix-pfeil { width: 36px; height: 28px; min-height: 0; padding: 0; border: 0; border-radius: 8px; background: transparent; color: #A89DAD;
+  font-size: 22px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.mf-seq-karte .mf-mix-punkte .mf-mix-pfeil:hover { color: #F2EEF5; background: var(--mf-fl); }
+.mf-mix-pfeil.weg { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .mf-mix-bahn, .mf-mix-punkte i { transition: none; } }
+.mf-mix-bahn.rechts { transform: translateX(-100%); }
+.mf-mix-bahn { align-items: flex-start; }   /* jede Seite in eigener Höhe, die Hülle folgt per mixHoehe() */
+.mf-mix-wrap { transition: height .32s cubic-bezier(.2, .8, .2, 1); }
+@media (prefers-reduced-motion: reduce) { .mf-mix-wrap { transition: none; } }

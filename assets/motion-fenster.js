@@ -519,7 +519,7 @@
     // Knobs (Stufe 1, 26.11.2026; MixerSeite.java knobsZeichnen): je Bank 8 Drehregler mit M, Bogen über 270°, Grundwert 0,5 (Mixer.KNOB_GRUND),
     // nach oben ziehen = mehr (220 px = ganzer Weg wie die App), doppelt tippen = Mitte. M ist dasselbe Stumm wie beim Fader dieser Spur.
     // Bank A Knob 1–4 = Panorama der vier Klangkanäle (Mitte = 0), alle übrigen sind MIDI (Kanal Bank + 2, CC 48–55).
-    var mixArt = 0, knobs = [], knobSeiten = [];
+    var mixArt = 0, knobs = [], knobSeiten = [], mixBahnen = [];
     function knobPunkt(w, r) { var a = (135 + 270 * w) * Math.PI / 180; return [(30 + Math.cos(a) * r).toFixed(2), (30 + Math.sin(a) * r).toFixed(2)]; }
     function knobWert(k) { return k.pan ? klemm(k.c.pan / 2 + 0.5, 0, 1) : k.w; }
     function knobText(k, w) {
@@ -613,29 +613,90 @@
     [0, 1, 2, 3].forEach(function (b) {
       var bk = knopf(); wort(bk, 'Bank'); bk.appendChild(document.createTextNode(' ' + BANK[b])); bk.setAttribute('aria-pressed', b === 0 ? 'true' : 'false');
       bk.addEventListener('click', function () { mixBankSetzen(b, true); }); mixBankK.push(bk); mixBaenke.appendChild(bk);
-      var seite = el('div', 'mf-mix'); seite.hidden = b !== 0;
+      // Je Bank eine Bahn mit zwei Seiten nebeneinander (Fader | Knobs), die waagrecht gleitet (Stufe 2, 26.11.2026)
+      var bahn = el('div', 'mf-mix-bahn'); bahn.hidden = b !== 0;
+      var seite = el('div', 'mf-mix');
       for (var s = 0; s < 8; s++) seite.appendChild(zugBauen(b === 0 && s < 4 ? mix[s] : midiZ[b][s], s));
-      mixSeiten.push(seite); mixZuege.appendChild(seite);
-      var ks = el('div', 'mf-mix mf-knobs'); ks.hidden = true;
+      var ks = el('div', 'mf-mix mf-knobs'); ks.inert = true;
       for (var t = 0; t < 8; t++) ks.appendChild(knobBauen(b, t));
-      knobSeiten.push(ks); mixZuege.appendChild(ks);
+      bahn.appendChild(seite); bahn.appendChild(ks);
+      mixSeiten.push(seite); knobSeiten.push(ks); mixBahnen.push(bahn); mixZuege.appendChild(bahn);
     });
-    // Seite Fader ↔ Knobs (wie die App; Stufe 2 bringt das Wischen dazu)
+    // Seite Fader ↔ Knobs wie die App (MixerSeite.java): Knopf, Wischen, Pfeile ‹ › mit Seitenpunkten im Rahmen, Tasten ← →
     var mixArtZ = el('div', 'mf-mix-art'), mixArtK = [];
     ['Fader', 'Knobs'].forEach(function (n, i) {
       var k = knopf(); wort(k, n); k.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
       k.addEventListener('click', function () { mixArtSetzen(i); }); mixArtK.push(k); mixArtZ.appendChild(k);
     });
-    function mixArtSetzen(i) { mixArt = i; mixArtK.forEach(function (k, j) { k.setAttribute('aria-pressed', j === i ? 'true' : 'false'); }); mixBankSetzen(mixBank, false); }
+    // Pfeile + Punkte: nur für Finger und Maus (die Knöpfe „Fader | Knobs“ oben sind der Weg für Tastatur und Vorleser)
+    var mixPunkte = el('div', 'mf-mix-punkte'), mixPfeile = [], mixPunktI = [];
+    mixPunkte.setAttribute('aria-hidden', 'true');
+    [['‹', 0], null, ['›', 1]].forEach(function (p) {
+      if (!p) { [0, 1].forEach(function () { var i = el('i'); mixPunktI.push(i); mixPunkte.appendChild(i); }); return; }
+      var k = knopf(p[0], 'mf-mix-pfeil'); k.tabIndex = -1; k.addEventListener('click', function () { mixArtSetzen(p[1]); });
+      mixPfeile.push(k); mixPunkte.appendChild(k);
+    });
+    function mixArtSetzen(i) {
+      mixArt = i; mixArtK.forEach(function (k, j) { k.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+      mixPunktI.forEach(function (p, j) { p.classList.toggle('an', j === i); });
+      mixPfeile[0].classList.toggle('weg', i === 0); mixPfeile[1].classList.toggle('weg', i === 1);
+      mixBankSetzen(mixBank, false);
+    }
     function mixBankSetzen(b, hand) {
       mixBank = b; mixBankK.forEach(function (k, i) { k.setAttribute('aria-pressed', i === b ? 'true' : 'false'); });
-      mixSeiten.forEach(function (x, i) { x.hidden = i !== b || mixArt !== 0; });
-      knobSeiten.forEach(function (x, i) { x.hidden = i !== b || mixArt !== 1; }); midiZeile();
+      mixBahnen.forEach(function (x, i) { x.hidden = i !== b; x.style.transform = ''; x.classList.toggle('rechts', mixArt === 1); });
+      mixSeiten.forEach(function (x) { x.inert = mixArt !== 0; }); knobSeiten.forEach(function (x) { x.inert = mixArt !== 1; }); midiZeile(); mixHoehe();
       if (hand && mixBeiBank) mixBeiBank(b);
     }
+    // Höhe folgt der gezeigten Seite (Knobs sind niedriger als Fader); ResizeObserver greift auch, wenn die Karte erst später aufgeht
+    function mixHoehe() {
+      var p = mixArt ? knobSeiten[mixBank] : mixSeiten[mixBank], h = p ? p.offsetHeight : 0;
+      if (h) mixZuege.style.height = (h + 12) + 'px';
+    }
+    if ('ResizeObserver' in window) { var mixRo = new ResizeObserver(mixHoehe); mixSeiten.concat(knobSeiten).forEach(function (x) { mixRo.observe(x); }); }
+    // Wischen: waagrecht ziehen schiebt die Bahn mit dem Finger, senkrecht scrollt weiter die Seite (touch-action: pan-y).
+    // Nicht auf Fadern und Drehreglern (dort hält der Finger, wie in der App). Weit genug (20 %) oder schnell genug = Seite wechseln.
+    (function () {
+      var id = null, x0 = 0, y0 = 0, t0 = 0, dx = 0, richtung = 0, breite = 1, bahn = null;
+      function weg(e) { e.stopPropagation(); e.preventDefault(); }
+      mixZuege.addEventListener('pointerdown', function (e) {
+        if (id !== null || (e.pointerType === 'mouse' && e.button > 0) || e.target.closest('.mf-knob, input')) return;
+        id = e.pointerId; x0 = e.clientX; y0 = e.clientY; t0 = performance.now(); dx = 0; richtung = 0;
+        breite = mixZuege.clientWidth || 1; bahn = mixBahnen[mixBank];
+      });
+      mixZuege.addEventListener('pointermove', function (e) {
+        if (e.pointerId !== id) return;
+        dx = e.clientX - x0; var dy = e.clientY - y0;
+        if (!richtung) {
+          if (Math.abs(dx) > 8 && Math.abs(dx) > 1.2 * Math.abs(dy)) { richtung = 1; try { mixZuege.setPointerCapture(id); } catch (x) {} bahn.classList.add('zieht'); }
+          else if (Math.abs(dy) > 10) { id = null; return; }
+          else return;
+        }
+        var off = -mixArt * breite + dx;
+        if (off > 0) off *= 0.3; else if (off < -breite) off = -breite + (off + breite) * 0.3;   // am Rand federt es
+        bahn.style.transform = 'translateX(' + off.toFixed(1) + 'px)';
+      });
+      function ende(e) {
+        if (e.pointerId !== id) return; id = null;
+        if (!richtung) return;
+        bahn.classList.remove('zieht');
+        var v = dx / Math.max(1, performance.now() - t0), ziel = mixArt;   // px je ms
+        if (dx < -breite * 0.2 || v < -0.5) ziel = 1; else if (dx > breite * 0.2 || v > 0.5) ziel = 0;
+        mixArtSetzen(ziel);
+        mixZuege.addEventListener('click', weg, { capture: true, once: true });   // kein Klick auf M/● nach dem Wischen
+        setTimeout(function () { mixZuege.removeEventListener('click', weg, true); }, 0);
+      }
+      mixZuege.addEventListener('pointerup', ende);
+      mixZuege.addEventListener('pointercancel', function (e) { if (e.pointerId === id && richtung) { dx = 0; ende(e); } else if (e.pointerId === id) id = null; });
+    })();
+    mixKarte.addEventListener('keydown', function (e) {
+      if ((e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.altKey || e.ctrlKey || e.metaKey || e.target.closest('.mf-knob, input')) return;
+      e.preventDefault(); mixArtSetzen(e.key === 'ArrowRight' ? 1 : 0); mixArtK[mixArt].focus();
+    });
     midiZeile();
     mixKarte.appendChild(mixBaenke); mixKarte.appendChild(mixArtZ);
-    mixKarte.appendChild(mixZuege); mixKarte.appendChild(mixMidiZ); mixKarte.appendChild(mixLetztZ);
+    mixKarte.appendChild(mixZuege); mixKarte.appendChild(mixPunkte); mixKarte.appendChild(mixMidiZ); mixKarte.appendChild(mixLetztZ);
+    mixArtSetzen(0);
     var bewMix = BEW.kopplung([['k', 'Überblenden'], ['s', 'Panorama']]); mixKarte.appendChild(bewMix.el);
     mixKarte.appendChild(el('p', 'mf-hilfe', 'Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), M = stumm, ● = kommt in den ● Loop. Unter „Knobs“ liegen je Bank 8 Drehregler: nach oben ziehen = mehr, doppelt tippen = Mitte; in Bank A sind Knob 1–4 das Panorama der vier Klangkanäle. Kippen blendet zwischen Sequenzer und TR 808 über. In der App gehen Fader und Drehregler als MIDI an Ableton.'));
     platz.appendChild(mixKarte);
