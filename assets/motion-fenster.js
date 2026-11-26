@@ -493,6 +493,7 @@
         c.z.zug.classList.toggle('stumm', c.stumm);
         if (c.g) { var t = ctx.currentTime; c.g.gain.setTargetAtTime(mixGain(i), t, 0.03); if (c.p.pan) c.p.pan.setTargetAtTime(mixPan(i), t, 0.04); }
       });
+      if (knobs) knobs.forEach(knobZeigen);
     }
     // Kanal im Klangweg (live oder in der OfflineAudioContext des ● Loop): Eingang → Panorama → Ziel (+ Abgriff für die Anzeige)
     function mixKanal(c, i, ziel, live) {
@@ -512,10 +513,74 @@
     var mixMidiZ = el('p', 'mf-mix-midi'), mixLetztZ = el('p', 'mf-mix-midi mf-mix-letzt');
     function midiZeile() {
       mixMidiZ.textContent = ''; wort(mixMidiZ, 'Bank'); mixMidiZ.appendChild(document.createTextNode(' ' + BANK[mixBank] + ' · ')); wort(mixMidiZ, 'MIDI-Kanal');
-      mixMidiZ.appendChild(document.createTextNode(' ' + (mixBank + 2) + ' · Fader CC 40–47 · M CC 72–79 · ● CC 80–87'));
+      if (mixArt === 1) mixMidiZ.appendChild(document.createTextNode(' ' + (mixBank + 2) + ' · Knobs CC 48–55 · M CC 72–79'));
+      else mixMidiZ.appendChild(document.createTextNode(' ' + (mixBank + 2) + ' · Fader CC 40–47 · M CC 72–79 · ● CC 80–87'));
     }
-    function midiGesendet(c, s, art) {   // was Ableton jetzt bekäme (im Browser wird nichts gesendet)
-      var cc = art === 'm' ? 72 + s : art === 'r' ? 80 + s : 40 + s, w = art === 'm' ? (c.stumm ? 127 : 0) : art === 'r' ? (c.rec ? 127 : 0) : faderCC(c.pegel);
+    // Knobs (Stufe 1, 26.11.2026; MixerSeite.java knobsZeichnen): je Bank 8 Drehregler mit M, Bogen über 270°, Grundwert 0,5 (Mixer.KNOB_GRUND),
+    // nach oben ziehen = mehr (220 px = ganzer Weg wie die App), doppelt tippen = Mitte. M ist dasselbe Stumm wie beim Fader dieser Spur.
+    // Bank A Knob 1–4 = Panorama der vier Klangkanäle (Mitte = 0), alle übrigen sind MIDI (Kanal Bank + 2, CC 48–55).
+    var mixArt = 0, knobs = [], knobSeiten = [];
+    function knobPunkt(w, r) { var a = (135 + 270 * w) * Math.PI / 180; return [(30 + Math.cos(a) * r).toFixed(2), (30 + Math.sin(a) * r).toFixed(2)]; }
+    function knobWert(k) { return k.pan ? klemm(k.c.pan / 2 + 0.5, 0, 1) : k.w; }
+    function knobText(k, w) {
+      if (!k.pan) return String(Math.round(w * 127));
+      var p = Math.round((w - 0.5) * 200); return p === 0 ? 'C' : (p < 0 ? 'L ' + (-p) : 'R ' + p);
+    }
+    function knobZeigen(k) {
+      var w = knobWert(k), a = knobPunkt(w, 8), b = knobPunkt(w, 15), t = knobText(k, w);
+      k.wert.setAttribute('stroke-dasharray', (w * 100).toFixed(1) + ' 100');
+      k.zeiger.setAttribute('x1', a[0]); k.zeiger.setAttribute('y1', a[1]); k.zeiger.setAttribute('x2', b[0]); k.zeiger.setAttribute('y2', b[1]);
+      setz(k.zahl, t); k.dreh.setAttribute('aria-valuenow', String(Math.round(w * 127))); k.dreh.setAttribute('aria-valuetext', t);
+      k.m.setAttribute('aria-pressed', k.c.stumm ? 'true' : 'false'); k.zelle.classList.toggle('stumm', k.c.stumm);
+    }
+    function knobSetzen(k, w) {
+      w = klemm(w, 0, 1);
+      if (k.pan) { k.c.pan = Math.abs(w - 0.5) < 0.015 ? 0 : (w - 0.5) * 2; mixSetz(); }   // rastet in der Mitte
+      else { k.w = w; knobZeigen(k); }
+      midiGesendet(k.c, k.s, 'k', knobWert(k));
+    }
+    function knobBauen(b, s) {
+      var pan = b === 0 && s < 4, c = pan ? mix[s] : midiZ[b][s];
+      var k = { s: s, c: c, pan: pan, w: 0.5 }, zelle = el('div', 'mf-mix-zug mf-knob-zelle'), nm = el('span', 'mf-mix-name');
+      if (pan) nm.textContent = c.name; else { zelle.classList.add('mf-midi'); wort(nm, 'Spur'); nm.appendChild(document.createTextNode(' ' + (s + 1))); }
+      zelle.appendChild(nm);
+      var dreh = el('div', 'mf-knob'); dreh.tabIndex = 0; dreh.setAttribute('role', 'slider'); dreh.setAttribute('aria-label', pan ? 'Panorama' : 'Drehregler');
+      dreh.setAttribute('aria-valuemin', '0'); dreh.setAttribute('aria-valuemax', '127');
+      var NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', '0 0 60 60'); svg.setAttribute('aria-hidden', 'true');
+      var bogen = 'M13.03 46.97 A24 24 0 1 1 46.97 46.97';
+      [['path', 'mf-knob-grund'], ['path', 'mf-knob-wert'], ['circle', 'mf-knob-kopf'], ['line', 'mf-knob-zeiger']].forEach(function (p) {
+        var e = document.createElementNS(NS, p[0]); e.setAttribute('class', p[1]);
+        if (p[0] === 'path') { e.setAttribute('d', bogen); e.setAttribute('pathLength', '100'); }
+        if (p[0] === 'circle') { e.setAttribute('cx', '30'); e.setAttribute('cy', '30'); e.setAttribute('r', '17'); }
+        svg.appendChild(e); if (p[1] === 'mf-knob-wert') k.wert = e; else if (p[1] === 'mf-knob-zeiger') k.zeiger = e;
+      });
+      dreh.appendChild(svg); zelle.appendChild(dreh);
+      var y0 = 0, w0 = 0, zieht = false;
+      dreh.addEventListener('pointerdown', function (e) {
+        if (e.button > 0) return; zieht = true; y0 = e.clientY; w0 = knobWert(k);
+        try { dreh.setPointerCapture(e.pointerId); } catch (x) {} dreh.classList.add('aktiv'); e.preventDefault(); dreh.focus({ preventScroll: true });
+      });
+      dreh.addEventListener('pointermove', function (e) { if (zieht) knobSetzen(k, w0 + (y0 - e.clientY) / 220); });
+      function los() { zieht = false; dreh.classList.remove('aktiv'); }
+      dreh.addEventListener('pointerup', los); dreh.addEventListener('pointercancel', los);
+      dreh.addEventListener('dblclick', function () { knobSetzen(k, 0.5); });
+      dreh.addEventListener('keydown', function (e) {
+        var w = knobWert(k), st = e.shiftKey ? 10 / 127 : 1 / 127, n = null;
+        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') n = w + st; else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') n = w - st;
+        else if (e.key === 'PageUp') n = w + 10 / 127; else if (e.key === 'PageDown') n = w - 10 / 127;
+        else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = 1;
+        if (n !== null) { e.preventDefault(); knobSetzen(k, n); }
+      });
+      var zahl = el('b', 'mf-mix-db'); zelle.appendChild(zahl);
+      var kn = el('div', 'mf-mix-k'), m = knopf('M', 'mf-mix-m'); m.setAttribute('aria-label', 'Stumm schalten');
+      m.addEventListener('click', function () { c.stumm = !c.stumm; mixSetz(); midiGesendet(c, s, 'm'); }); kn.appendChild(m); zelle.appendChild(kn);
+      zelle.setAttribute('role', 'group'); if (pan) zelle.setAttribute('aria-label', c.name);
+      k.zelle = zelle; k.dreh = dreh; k.zahl = zahl; k.m = m; knobs.push(k); knobZeigen(k);
+      return zelle;
+    }
+    function midiGesendet(c, s, art, kw) {   // was Ableton jetzt bekäme (im Browser wird nichts gesendet); kw = Knob-Wert 0–1
+      var cc = art === 'm' ? 72 + s : art === 'r' ? 80 + s : art === 'k' ? 48 + s : 40 + s;
+      var w = art === 'm' ? (c.stumm ? 127 : 0) : art === 'r' ? (c.rec ? 127 : 0) : art === 'k' ? Math.round(kw * 127) : faderCC(c.pegel);
       mixLetztZ.textContent = ''; wort(mixLetztZ, 'Zuletzt:'); mixLetztZ.appendChild(document.createTextNode(' ' + BANK[mixBank] + (s + 1) + ' · '));
       wort(mixLetztZ, 'MIDI-Kanal'); mixLetztZ.appendChild(document.createTextNode(' ' + (mixBank + 2) + ' · CC ' + cc + ' = ' + w));
     }
@@ -523,12 +588,9 @@
       var klang = !c.midi, zug = el('div', 'mf-mix-zug'), r = el('input'), db = el('b', 'mf-mix-db'), led = el('span', 'mf-mix-led'), li = el('i');
       var nm = el('span', 'mf-mix-name'); if (klang) nm.textContent = c.name; else { wort(nm, 'Spur'); nm.appendChild(document.createTextNode(' ' + (s + 1))); }
       zug.appendChild(nm); if (!klang) zug.classList.add('mf-midi');
-      if (klang) {
-        var pr = el('input'); pr.type = 'range'; pr.min = '-1'; pr.max = '1'; pr.step = '0.05'; pr.value = '0'; pr.className = 'mf-mix-pan'; pr.setAttribute('aria-label', 'Panorama');
-        pr.addEventListener('input', function () { c.pan = Number(pr.value); mixSetz(); });
-        pr.addEventListener('dblclick', function () { pr.value = '0'; c.pan = 0; mixSetz(); });
-        zug.appendChild(pr); zug.appendChild(el('span', 'mf-mix-lr', 'L · R'));
-      } else { zug.appendChild(el('span', 'mf-mix-cc', 'CC ' + (40 + s))); zug.appendChild(el('span', 'mf-mix-lr', 'MIDI')); }
+      // Panorama der Klangkanäle liegt seit 26.11.2026 auf Bank A Knob 1–4 (wie die App), hier nur die Kennzeichnung
+      if (klang) { var kz = el('span', 'mf-mix-cc'); wort(kz, 'Klang'); zug.appendChild(kz); zug.appendChild(el('span', 'mf-mix-lr', 'Audio')); }
+      else { zug.appendChild(el('span', 'mf-mix-cc', 'CC ' + (40 + s))); zug.appendChild(el('span', 'mf-mix-lr', 'MIDI')); }
       var knoepfe = el('div', 'mf-mix-k'), m = knopf('M', 'mf-mix-m'); m.setAttribute('aria-label', 'Stumm schalten'); m.setAttribute('aria-pressed', 'false');
       m.addEventListener('click', function () { c.stumm = !c.stumm; mixSetz(); midiGesendet(c, s, 'm'); }); knoepfe.appendChild(m);
       var rk = null;
@@ -554,17 +616,28 @@
       var seite = el('div', 'mf-mix'); seite.hidden = b !== 0;
       for (var s = 0; s < 8; s++) seite.appendChild(zugBauen(b === 0 && s < 4 ? mix[s] : midiZ[b][s], s));
       mixSeiten.push(seite); mixZuege.appendChild(seite);
+      var ks = el('div', 'mf-mix mf-knobs'); ks.hidden = true;
+      for (var t = 0; t < 8; t++) ks.appendChild(knobBauen(b, t));
+      knobSeiten.push(ks); mixZuege.appendChild(ks);
     });
+    // Seite Fader ↔ Knobs (wie die App; Stufe 2 bringt das Wischen dazu)
+    var mixArtZ = el('div', 'mf-mix-art'), mixArtK = [];
+    ['Fader', 'Knobs'].forEach(function (n, i) {
+      var k = knopf(); wort(k, n); k.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+      k.addEventListener('click', function () { mixArtSetzen(i); }); mixArtK.push(k); mixArtZ.appendChild(k);
+    });
+    function mixArtSetzen(i) { mixArt = i; mixArtK.forEach(function (k, j) { k.setAttribute('aria-pressed', j === i ? 'true' : 'false'); }); mixBankSetzen(mixBank, false); }
     function mixBankSetzen(b, hand) {
       mixBank = b; mixBankK.forEach(function (k, i) { k.setAttribute('aria-pressed', i === b ? 'true' : 'false'); });
-      mixSeiten.forEach(function (x, i) { x.hidden = i !== b; }); midiZeile();
+      mixSeiten.forEach(function (x, i) { x.hidden = i !== b || mixArt !== 0; });
+      knobSeiten.forEach(function (x, i) { x.hidden = i !== b || mixArt !== 1; }); midiZeile();
       if (hand && mixBeiBank) mixBeiBank(b);
     }
     midiZeile();
-    mixKarte.appendChild(mixBaenke);
+    mixKarte.appendChild(mixBaenke); mixKarte.appendChild(mixArtZ);
     mixKarte.appendChild(mixZuege); mixKarte.appendChild(mixMidiZ); mixKarte.appendChild(mixLetztZ);
     var bewMix = BEW.kopplung([['k', 'Überblenden'], ['s', 'Panorama']]); mixKarte.appendChild(bewMix.el);
-    mixKarte.appendChild(el('p', 'mf-hilfe', 'Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.'));
+    mixKarte.appendChild(el('p', 'mf-hilfe', 'Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), M = stumm, ● = kommt in den ● Loop. Unter „Knobs“ liegen je Bank 8 Drehregler: nach oben ziehen = mehr, doppelt tippen = Mitte; in Bank A sind Knob 1–4 das Panorama der vier Klangkanäle. Kippen blendet zwischen Sequenzer und TR 808 über. In der App gehen Fader und Drehregler als MIDI an Ableton.'));
     platz.appendChild(mixKarte);
     // Pegelanzeige: nur solange die Karte offen und sichtbar ist und Klang da ist
     var mixSicht = false, mixLaeuft = false, mixPuffer = null;

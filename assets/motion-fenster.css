@@ -387,3 +387,19 @@
 .mf-buehne, .mf-buehne * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
 .mf-mix-zug.mf-midi .mf-mix-led { visibility: hidden; }   /* MIDI-Fader haben keinen Klang im Browser */
 @container (max-width: 190px) { .mf-handy:not(.quer) .mf-unten { gap: 8px; } .mf-unten button { min-height: 26px; } }   /* target-size: Abstand ≥ 8 px (Lighthouse 25.11.) */
+/* Knobs (Stufe 1, 26.11.2026, wie MixerSeite.java): Seite Fader ↔ Knobs, je Bank 8 Drehregler mit Bogen über 270° und M */
+.mf-mix-art { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 0 8px; }
+.mf-seq-karte .mf-mix-art button { min-height: 32px; padding: 5px 4px; border-radius: 10px; background: var(--mf-fl); color: #F2EEF5; border: 1px solid transparent; font-size: 13px; text-align: center; }
+.mf-seq-karte .mf-mix-art button[aria-pressed="true"] { background: #3A3242; border-color: var(--mf-purpur-text); }
+.mf-knob { width: 64px; height: 64px; max-width: 100%; touch-action: none; cursor: ns-resize; border-radius: 50%; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.mf-knob svg { display: block; width: 100%; height: 100%; }
+.mf-knob-grund, .mf-knob-wert { fill: none; stroke-width: 6; stroke-linecap: round; }
+.mf-knob-grund { stroke: #14101A; }
+.mf-knob-wert { stroke: var(--mf-purpur); }
+.mf-knob-zelle.stumm .mf-knob-wert { stroke: #5A5060; }
+.mf-knob-kopf { fill: #2C2632; }
+.mf-knob.aktiv .mf-knob-kopf, .mf-knob:focus-visible .mf-knob-kopf { fill: #3A3242; }
+.mf-knob-zeiger { stroke: #F2EEF5; stroke-width: 3; stroke-linecap: round; }
+.mf-knob:focus { outline: none; }
+.mf-knob:focus-visible { outline: 2px solid var(--mf-purpur-text); outline-offset: 2px; }
+@media (max-width: 460px) { .mf-knob { width: 56px; height: 56px; } }

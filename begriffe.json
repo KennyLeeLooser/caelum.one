@@ -1,6 +1,6 @@
 {
   "_kopf": "Begriffe für das Impressum (versteckter Teil „Was der Zweck bedeutet“). Einbauen mit: node CAELUM/tools/begriffe.mjs --einbauen. Einträge mit status \"entwurf\" erscheinen nicht auf der Seite.",
-  "stand": "2026-11-19",
+  "stand": "2026-11-26",
   "schluss": "Diese Liste wächst mit: Ein Skript durchsucht unsere Projekte nach neu eingesetzten Sprachen, Werkzeugen und Diensten. Neue Begriffe kommen hier dazu, sobald ein Mensch sie geprüft und beschrieben hat.",
   "gruppen": [
     {
@@ -465,6 +465,195 @@
             "text:bitlocker"
           ],
           "link": "https://learn.microsoft.com/de-de/windows/security/operating-system-security/data-protection/bitlocker/"
+        }
+      ]
+    },
+    {
+      "id": "bibliotheken",
+      "titel": "Wichtige Wissensbibliotheken – fremde Bausteine, die wir einsetzen",
+      "begriffe": [
+        {
+          "name": "ZXing.Net",
+          "text": "Bibliothek zum Lesen von QR- und Strichcodes (Apache-2.0, Version 0.16.11). Wir nutzen denselben Leser in Caelum Vision, Caelum QR und in der Handy-App – darum lesen alle gleich.",
+          "spuren": [
+            "text:zxing.net"
+          ],
+          "link": "https://github.com/micjahn/ZXing.Net"
+        },
+        {
+          "name": "ZXing-js",
+          "text": "Dieselbe Code-Lesetechnik für den Browser (Apache-2.0); damit liest Caelum Analyse auf caelum.one Codes direkt im Handy-Browser.",
+          "spuren": [
+            "text:@zxing/library",
+            "text:zxing-js"
+          ],
+          "link": "https://github.com/zxing-js/library",
+          "bei": "analyse/"
+        },
+        {
+          "name": "ONNX Runtime",
+          "text": "Laufzeit von Microsoft für KI-Modelle im offenen ONNX-Format (MIT). Rechnet bei uns auf dem eigenen PC, ohne Cloud.",
+          "spuren": [
+            "text:onnxruntime"
+          ],
+          "link": "https://onnxruntime.ai"
+        },
+        {
+          "name": "PaddleOCR",
+          "text": "Freie Texterkennungs-Modelle (Apache-2.0). Caelum Vision nimmt sie als zweite Stufe, wenn die Windows-Texterkennung zu wenig liest.",
+          "spuren": [
+            "text:paddleocr"
+          ],
+          "link": "https://github.com/PaddlePaddle/PaddleOCR"
+        },
+        {
+          "name": "Windows-OCR",
+          "text": "Die in Windows eingebaute Texterkennung (Windows.Media.Ocr). Erste Stufe in Caelum Vision, läuft ganz auf dem PC.",
+          "spuren": [
+            "text:windows.media.ocr"
+          ],
+          "link": "https://learn.microsoft.com/uwp/api/windows.media.ocr"
+        },
+        {
+          "name": "netDxf",
+          "text": "Bibliothek zum Schreiben von DXF-Zeichnungen (MIT). So werden Skizzen vom Handy zu Vektoren für Laser und Viewer.",
+          "spuren": [
+            "text:netdxf"
+          ],
+          "link": "https://github.com/haplokuon/netDxf"
+        },
+        {
+          "name": "PDFium",
+          "text": "PDF-Leser aus dem Chrome-Projekt (BSD/Apache-2.0), bei uns über Docnet.Core eingebunden: PDF-Seiten lesen und als Bild auswerten.",
+          "spuren": [
+            "text:pdfium",
+            "text:docnet"
+          ],
+          "link": "https://pdfium.googlesource.com/pdfium/"
+        }
+      ]
+    },
+    {
+      "id": "abkuerzungen",
+      "titel": "Abkürzungen aus unseren Projekten",
+      "begriffe": [
+        {
+          "name": "OCR",
+          "text": "Optical Character Recognition: Texterkennung – aus einem Foto wird lesbarer, durchsuchbarer Text.",
+          "spuren": [
+            "text:ocr"
+          ]
+        },
+        {
+          "name": "BMK",
+          "text": "Betriebsmittelkennzeichen: Kurzname eines Bauteils im Elektroschema (z. B. -K3 für ein Schütz). Steht auf Gravurschildern.",
+          "spuren": [
+            "text:bmk"
+          ]
+        },
+        {
+          "name": "EAN / GTIN",
+          "text": "European Article Number bzw. Global Trade Item Number: die Nummer unter dem Strichcode auf Verpackungen.",
+          "spuren": [
+            "text:ean_13",
+            "text:gtin"
+          ]
+        },
+        {
+          "name": "UPC",
+          "text": "Universal Product Code: der nordamerikanische Verwandte der EAN.",
+          "spuren": [
+            "text:upc_a"
+          ]
+        },
+        {
+          "name": "ITF",
+          "text": "Interleaved 2 of 5: Strichcode aus Ziffernpaaren, oft auf Kartons (GTIN-14).",
+          "spuren": [
+            "text:itf"
+          ]
+        },
+        {
+          "name": "Data Matrix · Aztec · PDF417",
+          "text": "Weitere 2D-Codes neben dem QR-Code: Data Matrix auf Bauteilen, Aztec auf Fahrkarten, PDF417 auf Ausweisen und Etiketten.",
+          "spuren": [
+            "text:data_matrix",
+            "text:pdf_417"
+          ]
+        },
+        {
+          "name": "DXF",
+          "text": "Drawing Exchange Format: offenes Zeichnungsformat für CAD, Laser und Fräse.",
+          "spuren": [
+            "ext:.dxf",
+            "text:dxf"
+          ]
+        },
+        {
+          "name": "UDP",
+          "text": "User Datagram Protocol: kurze Netzwerk-Rufe ohne feste Verbindung. Damit findet das Handy den PC im WLAN.",
+          "spuren": [
+            "text:udp"
+          ]
+        },
+        {
+          "name": "mDNS",
+          "text": "Multicast DNS: Geräte im eigenen Netz finden sich über Namen, ohne zentralen Server (z. B. Android-Debugging über WLAN).",
+          "spuren": [
+            "text:mdns"
+          ]
+        },
+        {
+          "name": "CA",
+          "text": "Certificate Authority (Zertifizierungsstelle): bestätigt, dass ein Zertifikat echt ist. Caelum Vision hat eine eigene, nur fürs eigene Netz.",
+          "spuren": [
+            "text:lokal-ca"
+          ]
+        },
+        {
+          "name": "AES-256-GCM",
+          "text": "Advanced Encryption Standard mit 256-Bit-Schlüssel im GCM-Modus: verschlüsselt und erkennt Veränderungen. So liegen Geräteschlüssel auf dem Handy.",
+          "spuren": [
+            "text:aes-256-gcm",
+            "text:aesgcm"
+          ]
+        },
+        {
+          "name": "CSP",
+          "text": "Content Security Policy: Regel der Webseite, welche Skripte und Quellen der Browser laden darf – Schutz gegen eingeschleusten Code.",
+          "spuren": [
+            "text:content-security-policy"
+          ]
+        },
+        {
+          "name": "WASM",
+          "text": "WebAssembly: schneller, vorübersetzter Code im Browser. Damit rechnen die Web-Module (z. B. Caelum Cut) direkt am Gerät.",
+          "spuren": [
+            "ext:.wasm",
+            "text:webassembly"
+          ]
+        },
+        {
+          "name": "URP",
+          "text": "Universal Render Pipeline: die Grafik-Pipeline von Unity, die auf PC, Handy und im Browser läuft.",
+          "spuren": [
+            "text:urp"
+          ]
+        },
+        {
+          "name": "UVCS",
+          "text": "Unity Version Control (früher Plastic SCM): Versionsverwaltung für grosse Unity-Projekte, ergänzt Git.",
+          "spuren": [
+            "text:uvcs",
+            "text:plastic"
+          ]
+        },
+        {
+          "name": "Apache-2.0 · MIT · BSD",
+          "text": "Häufige freie Lizenzen: erlauben Nutzung auch in Firmenprodukten, verlangen aber die Nennung der Urheber. Wir führen sie in THIRD-PARTY-NOTICES.",
+          "spuren": [
+            "datei:third-party-notices.md"
+          ]
         }
       ]
     }

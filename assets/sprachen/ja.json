@@ -849,7 +849,7 @@
   "−∞": "−∞",
   "Loops": "ループ",
   "In den ● Loop aufnehmen": "● Loop に録音",
-  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.": "音源ごとに 1 チャンネル：フェーダーをドラッグ（ダブルタップ = 0 dB）、パンは左右、M = ミュート、● = ● Loop に入る。傾けるとシーケンサーと TR 808 をクロスフェードします。アプリでは各バンクに 8 本のフェーダーと 8 個のノブがあり、MIDI として Ableton に送られます。",
+  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), M = stumm, ● = kommt in den ● Loop. Unter „Knobs“ liegen je Bank 8 Drehregler: nach oben ziehen = mehr, doppelt tippen = Mitte; in Bank A sind Knob 1–4 das Panorama der vier Klangkanäle. Kippen blendet zwischen Sequenzer und TR 808 über. In der App gehen Fader und Drehregler als MIDI an Ableton.": "ソースごとに1つのチャンネルストリップ：フェーダーをドラッグ（ダブルタップ = 0 dB）、M = ミュート、● = ● Loop に入る。「Knobs」には各バンクに8つのノブ：上へドラッグ = 増やす、ダブルタップ = 中央。バンク A のノブ 1–4 は4つのサウンドチャンネルのパン。傾けるとシーケンサーと TR 808 をクロスフェード。アプリではフェーダーとノブが MIDI として Ableton に送られます。",
   "Überblenden": "クロスフェード",
   "Auto Filter": "Auto Filter",
   "Auto Pan": "Auto Pan",
@@ -861,5 +861,9 @@
   "Alle aus": "すべてオフ",
   "aus": "オフ",
   "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "パッドを押さえて上にドラッグ = 強く、下 = 弱く。スマホのセンサーを使うときは、パッドを押さえたままスマホを傾けます。離す = 値はそのまま、ダブルタップ = オフ。フィルター：下 = こもる、上 = 細くなる。Auto Filter、Auto Pan、パンピング、ゲート、エコーはテンポに合わせて動きます。アプリではフィルターのパッドはすべてのアプリにも効き、空間と FX は自分のトラックだけに効きます。",
-  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "四角形を認識しました。ここでログイン：現場コードまたは Google で。"
+  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "四角形を認識しました。ここでログイン：現場コードまたは Google で。",
+  "Fader": "Fader",
+  "Knobs": "ノブ",
+  "Drehregler": "ノブ",
+  "Audio": "オーディオ"
 }

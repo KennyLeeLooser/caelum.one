@@ -848,7 +848,7 @@
   "−∞": "−∞",
   "Loops": "Loop",
   "In den ● Loop aufnehmen": "Registra nel ● Loop",
-  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.": "Un canale per sorgente: trascina il fader (doppio tocco = 0 dB), panorama sinistra/destra, M = muto, ● = entra nel ● Loop. Inclinando si sfuma tra sequencer e TR 808. Nell’app ogni banco ha 8 fader e 8 manopole che vanno ad Ableton come MIDI.",
+  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), M = stumm, ● = kommt in den ● Loop. Unter „Knobs“ liegen je Bank 8 Drehregler: nach oben ziehen = mehr, doppelt tippen = Mitte; in Bank A sind Knob 1–4 das Panorama der vier Klangkanäle. Kippen blendet zwischen Sequenzer und TR 808 über. In der App gehen Fader und Drehregler als MIDI an Ableton.": "Un canale per sorgente: trascina il fader (doppio tocco = 0 dB), M = muto, ● = entra nel ● Loop. In «Knobs» ogni banco ha 8 manopole: trascina in su = di più, doppio tocco = centro; nel banco A, le manopole 1–4 sono il panorama dei quattro canali audio. Inclinare fa una dissolvenza incrociata tra Sequencer e TR 808. Nell’app, fader e manopole vanno ad Ableton come MIDI.",
   "Überblenden": "Dissolvenza incrociata",
   "Auto Filter": "Auto Filter",
   "Auto Pan": "Auto Pan",
@@ -860,5 +860,9 @@
   "Alle aus": "Tutti spenti",
   "aus": "spento",
   "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "Tieni premuto un pad e trascina in su = più forte, in giù = più debole; con i sensori del telefono tieni il pad e inclina il telefono. Rilascia = il valore resta, doppio tocco = spento. Filtro: in giù = cupo, in su = sottile. Auto Filter, Auto Pan, Pumping, Gate ed Eco vanno a tempo. Nell’app i pad Filtro agiscono anche su tutte le app, Spazio e FX solo sulla tua traccia.",
-  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "Quadrato riconosciuto. Accedi qui: con il codice del cantiere o con Google."
+  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "Quadrato riconosciuto. Accedi qui: con il codice del cantiere o con Google.",
+  "Fader": "Fader",
+  "Knobs": "Knobs",
+  "Drehregler": "Manopola",
+  "Audio": "Audio"
 }

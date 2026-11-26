@@ -850,7 +850,7 @@
   "−∞": "−∞",
   "Loops": "Loops",
   "In den ● Loop aufnehmen": "Record into ● Loop",
-  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), Panorama links/rechts, M = stumm, ● = kommt in den ● Loop. Kippen blendet zwischen Sequenzer und TR 808 über. In der App liegen hier je Bank 8 Fader und 8 Drehregler, die als MIDI an Ableton gehen.": "One channel strip per source: drag the fader (double-tap = 0 dB), pan left/right, M = mute, ● = goes into the ● Loop. Tilting crossfades between Sequencer and TR 808. In the app, each bank has 8 faders and 8 knobs that go to Ableton as MIDI.",
+  "Ein Kanalzug je Quelle: Fader ziehen (doppelt tippen = 0 dB), M = stumm, ● = kommt in den ● Loop. Unter „Knobs“ liegen je Bank 8 Drehregler: nach oben ziehen = mehr, doppelt tippen = Mitte; in Bank A sind Knob 1–4 das Panorama der vier Klangkanäle. Kippen blendet zwischen Sequenzer und TR 808 über. In der App gehen Fader und Drehregler als MIDI an Ableton.": "One channel strip per source: drag the fader (double-tap = 0 dB), M = mute, ● = goes into the ● Loop. Under “Knobs” each bank has 8 knobs: drag up = more, double-tap = centre; in bank A, knobs 1–4 are the pan of the four sound channels. Tilting crossfades between Sequencer and TR 808. In the app, faders and knobs go to Ableton as MIDI.",
   "Überblenden": "Crossfade",
   "Auto Filter": "Auto Filter",
   "Auto Pan": "Auto Pan",
@@ -862,5 +862,9 @@
   "Alle aus": "All off",
   "aus": "off",
   "Pad halten und nach oben ziehen = stärker, nach unten = schwächer; mit Handy-Sensoren hält man das Pad und neigt das Handy. Loslassen = der Wert bleibt, doppelt tippen = aus. Filter: nach unten dumpf, nach oben dünn. Auto Filter, Auto Pan, Pumpen, Gate und Echo laufen im Takt. In der App wirken Filter-Pads auch auf alle Apps, Raum und FX nur auf den eigenen Track.": "Hold a pad and drag up = stronger, down = weaker; with phone sensors, hold the pad and tilt the phone. Release = the value stays, double-tap = off. Filter: down = muffled, up = thin. Auto Filter, Auto Pan, Pumping, Gate and Echo run in time. In the app, the Filter pads also work on all apps, Space and FX only on your own track.",
-  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "Square recognised. Sign in here: with your site code or with Google."
+  "Viereck erkannt. Hier meldest du dich an: mit dem Baustellen-Code oder mit Google.": "Square recognised. Sign in here: with your site code or with Google.",
+  "Fader": "Fader",
+  "Knobs": "Knobs",
+  "Drehregler": "Knob",
+  "Audio": "Audio"
 }
