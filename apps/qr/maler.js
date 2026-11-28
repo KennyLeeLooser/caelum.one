@@ -1,6 +1,6 @@
 // Copyright © 2026 Caelum GmbH, Kenny Looser. Alle Rechte vorbehalten.
 // KI-Beitrag (Claude, GB-7), 19.11.2026 – freigegeben von Kenny Looser am 19.11.2026 (GB-8).
-// KI-Beitrag (Claude, GB-7), 28.11.2026: Bewegung aus Caelum Bewegung (web/bewegung.js), hier nur QrZiel – Freigabe ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 28.11.2026: Bewegung aus Caelum Bewegung (web/bewegung.js), hier nur QrZiel – freigegeben von Kenny Looser am 28.11.2026 (GB-8).
 // KI-Beitrag (Claude, GB-7), 20.11.2026: Wechsel-Arten wie Wechsel.cs (Tafeln I–V, Blende, keiner) – freigegeben von Kenny Looser am 20.11.2026 (GB-8).
 // Caelum QR · Web – zeichnet einen QR-Code nach Design: ruhend und beim Wechsel nach Wechsel-Art (Rorschach-Tafeln, Blende). Augen und
 // Logo-Feld bleiben beim Wechsel stehen. JavaScript-Fassung von src/CaelumQr/Design.cs (Rgb, Ink, Noise) und Painter.cs

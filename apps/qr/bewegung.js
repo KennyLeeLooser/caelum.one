@@ -3,7 +3,7 @@
 // Eine Bewegungsart rechnet nur, welche Zelle wann wohin kommt und welche Farbart sie bekommt; färben und zeichnen macht der
 // Kunde über das Ziel { zelle(gx, gy, farbe), falz() }. Zahlen wie .NET (rundeGerade, System.Random nachgebaut).
 // Die C#-Fassung ist Master. Kunden kopieren diese Datei unverändert (Caelum QR: web/bewegung.js über den Web-Export).
-// KI-Beitrag (Claude, GB-7), 28.11.2026 – Umzug aus Caelum QR web/maler.js, Entscheid Kenny 28.11.2026, Freigabe ausstehend (GB-8).
+// KI-Beitrag (Claude, GB-7), 28.11.2026 – Umzug aus Caelum QR web/maler.js, Entscheid Kenny 28.11.2026, freigegeben von Kenny Looser am 28.11.2026 (GB-8).
 
 /** Math.Round von .NET: Mitte zur geraden Zahl. */
 export function rundeGerade(v) {
